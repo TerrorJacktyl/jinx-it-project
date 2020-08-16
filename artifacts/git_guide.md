@@ -51,7 +51,7 @@ Don't use the indicative mood.
 
 A quick way to check is to make sure that the following phrase will make sense grammatically.
 
-> If applied, this commit will _replace with subject line_
+> If applied, this commit will __replace with subject line__
 
 [More details][imperative]
 
