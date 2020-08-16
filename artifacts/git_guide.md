@@ -128,3 +128,9 @@ Also see these repos:
 [cc172ff]: https://github.com/torvalds/linux/commit/cc172ff301d8079e941a6eb31758951a6d764084
 [3271542]: https://github.com/spring-projects/spring-boot/commit/3271542d980fc5cb40965612eb183036dc135b0b
 [89a6f83]: https://github.com/spring-projects/spring-boot/commit/89a6f83344dc0217cc658cdecfb2357e4c4a370d
+
+## Branches
+  * Each new feature should be worked on its own branch from master
+  * Branches should be titled `name-current_feature`
+  * Ensure that the branch for successfully merged features is deleted quickly
+  * Ensure at least one other person reviews a pull request before merging
