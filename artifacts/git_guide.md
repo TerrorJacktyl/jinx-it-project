@@ -1,12 +1,12 @@
 # Git Guide
 
-# Commit Messages
+## Commit Messages
 
 Summarised from [this guide](https://chris.beams.io/posts/git-commit/) by Chris Beams.
 
-## 7 Rules
+### 7 Rules
 
-### Separate subject from body with a blank line
+#### Separate subject from body with a blank line
 
 If you need to add additional details to a commit message, add it to the commit body.
 The body can be started by adding a blank line after the first line.
@@ -20,7 +20,7 @@ This can be done by using `git commit` instead of `git commit -m`.
 
 [More details][separate]
 
-### Limit the subject line to 50 characters
+#### Limit the subject line to 50 characters
 
 Anything beyond the 72nd character will be truncated.
 
@@ -28,15 +28,15 @@ If you need more text to explain the commit, use the body (see previous rule).
 
 [More details][limit-50]
 
-### Capitalize the subject line
+#### Capitalize the subject line
 
 [More details][capitalize]
 
-### Do not end the subject line with a period
+#### Do not end the subject line with a period
 
 [More details][end]
 
-### Use the imperative mood in the subject line
+#### Use the imperative mood in the subject line
 
 Word the commit subject line as if you are ordering someone to do something.
 
@@ -55,13 +55,13 @@ A quick way to check is to make sure that the following phrase will make sense g
 
 [More details][imperative]
 
-### Wrap the body at 72 characters
+#### Wrap the body at 72 characters
 
 Git requires you to format the git message yourself, it does not apply word wrap for you.
 
 [More details][wrap-72]
 
-### Use the body to explain _what_ and _why_ vs. _how_
+#### Use the body to explain _what_ and _why_ vs. _how_
 
 Don't describe how a change was made.
 It should be explained by the code and comments.
@@ -70,7 +70,7 @@ Document what was changed and why.
 
 [More details][why-not-how]
 
-## Examples of a good commit messages
+### Examples of a good commit messages
 
     Summarize changes in around 50 characters or less
 
