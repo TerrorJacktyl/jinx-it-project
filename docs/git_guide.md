@@ -135,8 +135,3 @@ Also see these repos:
   * Ensure that the branch for successfully merged features is deleted quickly
   * Ensure at least one other person reviews a pull request before merging
       * If your review depends on a specific member, you are responsible for `@tagging` them in the merge thread.
-
-
-## HackMD Test
-
-This is a test edit.
