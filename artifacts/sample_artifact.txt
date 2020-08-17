@@ -1,0 +1,3 @@
+This is a sample artifact to make Git detect the 'artifacts' folder, because Git does not track empty folders.
+
+Please delete this file when there are genuine artifacts here.
