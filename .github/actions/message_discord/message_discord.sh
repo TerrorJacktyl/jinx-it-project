@@ -11,12 +11,6 @@ else
     DATA="{\"content\":\"$MESSAGE\"}"
 fi
 
-set -x
-env
-echo $MESSAGE
-echo $ENDPOINT
-echo $DATA
-
 curl -X POST \
     -H "Content-Type: application/json" \
     -H "X-GitHub-Event: $GITHUB_EVENT_NAME" \
