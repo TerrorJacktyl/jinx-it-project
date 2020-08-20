@@ -1,0 +1,23 @@
+name: Discord Notification
+
+# Notifies the discord server when a pull request for the master branch is made.
+
+# Valid triggers are documented here: 
+# https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+
+on:
+  pull_request:
+    types: [ assigned, opened, reopened, review_requested ]
+    branches: [ master ]
+
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Send discord notification
+        uses: ./.github/actions/message_discord
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
