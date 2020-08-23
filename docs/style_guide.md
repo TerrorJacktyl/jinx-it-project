@@ -114,3 +114,11 @@ Avoid:
 
 # Typescript / Javascript
 To be completed
+
+# JSON
+
+## Style guide
+
+### Naming
+
+`snake_case`
