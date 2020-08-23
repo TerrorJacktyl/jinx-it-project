@@ -1,4 +1,6 @@
-# Core Features
+# Preperation
+
+## Core Features
 
 **Question**: What do you consider to be the features that are central to the product?
 
@@ -13,7 +15,7 @@
 **Question**: Given these core features, what particular use cases do you have in mind? 
 
 
-# User Stories
+## User Stories
 
 *Should be used as prompts to get additional use cases from client if in-depth requirements and their own use cases are being hard to elicit from them.*
 
@@ -42,10 +44,51 @@
 * **Prompt**: I write fanmade fictional stories and upload them into a portfolio. How can I prevent anyone from read them?!
 * Objective: Get some visibility/privacy criteria for portfolios, and different degrees of visibility
 
-# Expectations
+## Expectations
 
 **Question**: Out of these use cases, which *must* be fulfilled, and what criteria must they meet, so that you consider the product *functional*?
 
 **Question**: Out of these use cases, what criteria must they meet so that you consider the product *successful*?
 
+---
+# Interview Notes
+
+## Most important features
+  * It should be easy to create a portfolio
+  * It should be easy for someone to view a portfolio
+  * Avoid features that would be complicated for people to use
+
+## Examples
+  * [Aubern University Portfolios](https://wp.auburn.edu/writing/eportfolio-project/eportfolio-examples/)
+  * [Dumps Like a Truck](https://www.elizabethsugg.com/dumps-like-a-truck)
+  * [Patience Marsh](https://patiencemarsh.wixsite.com/portfolio)
+  * [Elizabeth Killough](https://www.elizabethsugg.com/)
+
+## See first
+What should a potential employer see first?
+  * Website member's homepage
+  * A menu bar with links to other pages
+  * A profile photo
+  * A link to their resume
+
+## Customisability 
+  * Website members should be able to select from different themes
+  * Website members should be able to reposition elements on their site
+  * Website members should be able to choose what pages are available on their site
+  * Website members should be able to upload pictures and pdfs
+  * When a website member is logged in, they should be able to edit sections of their site by pressing an 'edit' button in the corner of that section.
+
+## Pages
+  * Website member home page
+    * Contains personal details
+  * Website member contact page
+    * Website users can send a message that can only be seen by the appropriate website owner
+  * Custom pages
+    * Website users can choose what images and text to display on these pages
+
+
+## Templates
+  * Can be applied to any pages to change how they are displayed
+  * Can be used to create a new page
+  * Can apply different versions to the same page
 
