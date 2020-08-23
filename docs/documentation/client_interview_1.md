@@ -52,6 +52,7 @@
 
 ---
 # Interview Notes
+Notes based on discussion with client
 
 ## Most important features
   * It should be easy to create a portfolio
