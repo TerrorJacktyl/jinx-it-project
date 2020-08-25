@@ -1,0 +1,32 @@
+version: "3"
+services:
+  database:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_DATABASE: docker
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    volumes:
+#      - "database_data:/var/lib/mysql"
+       - "./mysql:/var/lib/mysql" # comment out if using docker volumes
+    networks:
+      - br
+    restart: always
+  django:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - br
+    restart: unless-stopped
+networks:
+  br:
+    driver: bridge
+#volumes:
+#  database_data:
