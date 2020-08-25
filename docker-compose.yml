@@ -1,0 +1,38 @@
+# Sets the version syntax that we're using. Just a backwards compatability feature
+version: '3'
+services:
+  database:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_DATABASE: docker
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    # volumes:
+      # Comment out if using docker volumes
+      # - "./mysql:/var/lib/mysql"
+    networks:
+      - br
+    restart: always
+  django:
+    # Denotes where to find the instructios for how to build our container, i.e. the Dockerfile
+    build: .
+    command: python jinx_project/manage.py runserver 0.0.0.0:8000
+    # Maps a volume from our local location to /code in our container.
+    # Allows us to have real-time access to the code in our Dockerfile.
+    # Whenever we make a change in our code source code, it'll automatically be mapped
+    # to our docker container without having to rebuild it
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - br
+    restart: unless-stopped
+networks:
+  br:
+    driver: bridge
+#volumes:
+#  database_data:
