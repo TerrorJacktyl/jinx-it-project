@@ -25,6 +25,7 @@ SECRET_KEY = 'z0^u_=7x^l%sw$u14k^tfvy0182ubh!lh6xpyx9=0k4p$d5bc3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Add our server IP '159.89.195.33' later
 ALLOWED_HOSTS = []
 
 # Corsheader settings. TODO: Review these for deployment to the server
@@ -85,8 +86,9 @@ WSGI_APPLICATION = 'jinx_project.wsgi.application'
 # TODO: Configure these settings for MySQL, and research interaction with MySQL container
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': BASE_DIR / 'mysql',
+        # Need to define, USER, PASSWORD, HOST, PORT
     }
 }
 
@@ -115,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Australia/Melbourne'
 
 USE_I18N = True
 
@@ -128,3 +130,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')

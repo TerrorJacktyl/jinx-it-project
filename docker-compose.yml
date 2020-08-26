@@ -2,19 +2,23 @@
 version: '3'
 services:
   database:
+    container_name: jinx_mysql
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: docker
-      MYSQL_DATABASE: docker
-      MYSQL_USER: docker
-      MYSQL_PASSWORD: docker
-    # volumes:
+      MYSQL_ROOT_PASSWORD: jinx
+      # Denotes DB name to be created on image startup
+      MYSQL_DATABASE: jinx_proj
+      # Both fields below only create new user, as root is created by default. Not needed atm
+      # MYSQL_USER: docker
+      # MYSQL_PASSWORD: docker
+    volumes:
       # Comment out if using docker volumes
-      # - "./mysql:/var/lib/mysql"
+      - ./mysql:/var/lib/mysql
     networks:
       - br
     restart: always
   django:
+    container_name: jinx_django
     # Denotes where to find the instructios for how to build our container, i.e. the Dockerfile
     build: .
     command: python jinx_project/manage.py runserver 0.0.0.0:8000
