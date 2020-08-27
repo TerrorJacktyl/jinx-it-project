@@ -47,7 +47,6 @@ const FormDiv = styled.div`
     border-style: groove;
     width: 50%;
     margin: auto;
-
 `
 
 const SignupSchema = Yup.object().shape({
@@ -119,6 +118,7 @@ const Signup = () => {
                     <StyledFormEntry name="password" type="password" />
                     {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
                     <StyledButton variant="contained" type="submit">Sign Up</StyledButton>
+                    {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
                 </Form>
                 )}
             </Formik>
