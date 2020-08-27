@@ -28,21 +28,21 @@ $ docker-compose up
 $ docker-compose build
 ```
 
+Having trouble building? Look under Notes header :)
+
 ## To do
 
 #### Setting up the Database
-- [ x ] Change `~/jinx_project/jinx_project/settings.py` so that it uses <s>MySQL</s> **PostgreSQL** (still uses Sqlite at the moment).
-- [  ] Define a schema for our data.
-- [  ] Configure models in Django and get it CRUDing with the DB.
+- [ x ] Change `~/jinx_project/jinx_project/settings.py` so that it uses Postgres.
+- [ x ] Define a schema for our data.
+- [ x ] Configure models in Django and get it CRUDing with the DB.
 - [  ] Create a basic API allowing the front end some CRUD functionality through Django.
 
 ## Development!
 
 ### Some Notes...
 
-Database container kept stopping and restarting for some reason, even when I had manually exited. Probably not a big deal but still weird
-
-Pretty sure ./mysql was initialised by the docker build and is what causes the permission issues. 
+Jiles: I was having some issues with the initial build. If it doesn't work for you with the specified order, and is complaining about psycopg2, don't worry! Try the build instructions from bottom to top, first building the django container, then both containers with docker-compose up, and finally the top command with manage.py.
 
 ## Issues
 
@@ -75,3 +75,8 @@ $ docker rmi <imagename>
 # won't somebody think of the children!
 $ docker image prune -a
 ```
+
+## Superuser
+
+User: jinx
+Pass: jinxadminpassword
