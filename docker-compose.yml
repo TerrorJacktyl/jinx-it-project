@@ -1,27 +1,18 @@
 # Sets the version syntax that we're using. Just a backwards compatability feature
 version: '3'
 services:
-  database:
-    container_name: jinx_mysql
-    image: mysql:8
-    # Use password authentication over sha_256 password caching
-    command: mysqld --default-authentication-plugin=mysql_native_password
+  db:
+    container_name: jinx_db
+    image: postgres
     environment:
       # Denotes DB name to be created on image startup
-      MYSQL_DATABASE: 'jinx_proj'
-      # Both fields below only create new user, as root is created by default. Not needed atm
-      # MYSQL_USER: 'docker'
-      # MYSQL_PASSWORD: 'docker'
-      MYSQL_ROOT_PASSWORD: 'jinx'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - "3306:3306"
-    volumes:
-      # Comment out if using docker volumes
-      - ./mysql:/var/lib/mysql
-    networks:
-      - br
-    restart: always
+      - POSTGRES_DB=jinx_db
+      # Create a user when the database is initialized. 
+      # Not sure if root exists by default.
+      - POSTGRES_USER=jinx
+      - POSTGRES_PASSWORD=jinx
+    # Unless stopped manually, restart automatically
+    restart: unless-stopped
   django:
     container_name: jinx_django
     # Denotes where to find the instructios for how to build our container, i.e. the Dockerfile
@@ -33,17 +24,17 @@ services:
     # to our docker container without having to rebuild it
     volumes:
       - .:/code
+    # Do not use port 8000 in production - warning by https://docs.docker.com/compose/django/
     ports:
       - "8000:8000"
     depends_on:
-      - database
-    links:
-      - database
-    networks:
-      - br
+      - db
+    # Unless stopped manually, restart automatically
     restart: unless-stopped
-networks:
-  br:
-    driver: bridge
+
+# Not sure why these were there
+# networks:
+#   br:
+#     driver: bridge
 #volumes:
 #  database_data:

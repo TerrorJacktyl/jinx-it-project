@@ -84,16 +84,15 @@ WSGI_APPLICATION = 'jinx_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 # TODO: Configure these settings for MySQL, and research interaction with MySQL container
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': BASE_DIR / 'mysql',
-        'NAME': 'jinx_proj',
-        # Need to define, USER, PASSWORD, HOST, PORT
-        'USER': 'docker',
-        'PASSWORD': 'docker',
-        'HOST': 'database',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'jinx_db',
+        'USER': 'jinx',
+        'PASSWORD': 'jinx',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
