@@ -48,9 +48,9 @@ const Signup = () => {
 
                     setSubmitting(true);
 
-                    axios.post(`localhost:8080/signup`, {
-                        firstName: values.firstName,
-                        lastName: values.lastName,
+                    axios.post(`localhost:8080/api/sign_up`, {
+                        first_name: values.firstName,
+                        last_name: values.lastName,
                         email: values.email,
                         password: values.password,
                     })

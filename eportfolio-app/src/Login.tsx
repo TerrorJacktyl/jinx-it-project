@@ -36,7 +36,7 @@ const Login = () => {
 
                     setSubmitting(true);
 
-                    axios.post(`localhost:8080/login`, {
+                    axios.post(`localhost:8080/api/login`, {
                         email: values.email,
                         password: values.password,
                     })
