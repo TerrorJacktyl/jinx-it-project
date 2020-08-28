@@ -25,11 +25,6 @@ const StyledFormEntry = styled(Field)`
     `}
 `;
 
-const NameEntry = styled.div`
-    display: inline-block;
-    vertical-align:top;
-`
-
 const ErrorMessage = styled.div`
     color: red;
     font-size: 0.8em;
@@ -65,25 +60,23 @@ const SignupSchema = Yup.object().shape({
       .required('Required')
   });
 
-const Signup = () => {
+const Login = () => {
 
     const axios = require('axios').default;
     const [submittionError, setSubmittionError] = useState(false);
 
     return(
         <Layout>
-        <h1>Sign up</h1>
+        <h1>Login</h1>
         <FormDiv>
             <Formik
-                initialValues={{ firstName: '', lastName: '', email: '', password: '' }}
+                initialValues={{ email: '', password: '' }}
                 validationSchema={SignupSchema}
                 onSubmit={(values, { setSubmitting }) => {
 
                     setSubmitting(true);
 
-                    axios.post(`localhost:8080/signup`, {
-                        firstName: values.firstName,
-                        lastName: values.lastName,
+                    axios.post(`localhost:8080/login`, {
                         email: values.email,
                         password: values.password,
                     })
@@ -101,16 +94,6 @@ const Signup = () => {
             >
             {({ errors, touched, isSubmitting }) => (
                 <Form>
-                    <NameEntry>
-                    <EntryTitle>First Name</EntryTitle>
-                    <StyledFormEntry name="firstName" nameentry={true}/>
-                    {errors.firstName && touched.firstName ? (<ErrorMessage>{errors.firstName}</ErrorMessage>) : null}
-                    </NameEntry>
-                    <NameEntry>
-                    <EntryTitle>Last Name</EntryTitle>
-                    <StyledFormEntry name="lastName" nameentry={true}/>
-                    {errors.lastName && touched.lastName ? (<ErrorMessage>{errors.lastName}</ErrorMessage>) : null}
-                    </NameEntry>
                     <EntryTitle>Email</EntryTitle>
                     <StyledFormEntry name="email" type="email" />
                     {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
@@ -127,4 +110,4 @@ const Signup = () => {
     )
 }
 
-export default Signup;
+export default Login;
