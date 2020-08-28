@@ -78,5 +78,5 @@ $ docker image prune -a
 
 ## Superuser
 
-User: jinx
-Pass: jinxadminpassword
+User: `jinx`\
+Pass: `jinxadminpassword`
