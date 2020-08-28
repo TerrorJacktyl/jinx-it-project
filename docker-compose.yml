@@ -26,7 +26,7 @@ services:
       - .:/code
     # Do not use port 8000 in production - warning by https://docs.docker.com/compose/django/
     ports:
-      - "8000:8000"
+      - "8080:8000"
     depends_on:
       - db
     # Unless stopped manually, restart automatically
