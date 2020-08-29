@@ -30,6 +30,33 @@ $ docker-compose build
 
 Having trouble building? Look under Notes header :)
 
+## API requests
+
+To make a sign up and query it yourself:
+1. Run the containers and head to `0.0.0.0:8080/api`. Login with credentials below.
+1. Create a sign up object.
+1. Open up a django shell in the `jinx_django` container with:
+```bash
+$ docker exec -it jinx_django jinx_project/manage.py bash
+```
+4. [Muck around as per this article](https://docs.djangoproject.com/en/3.1/intro/tutorial02/#playing-with-the-api):
+
+```python
+>>> from sign_up.models import SignUp
+# get pk of existing sign ups so we can get one
+>>> for o in SignUp.objects.all():
+...     print(o.pk)
+>>> q = SignUp.objects.get(pk=2)
+# serializing
+>>> from sign_up.serializers import SignUpSerializer
+>>> mySignUp = SignUpSerializer(q)
+>>> mySignUp.data
+# yay, json!
+{'first_name': 'Jack', 'last_name': 'Zezula', 'email': 'jackzezula@tuta.io', 'password': 'jackzezula'}
+```
+
+
+
 ## To do
 
 #### Setting up the Database
