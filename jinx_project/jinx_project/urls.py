@@ -12,7 +12,7 @@ from sign_up import views
 # By contacting this URL, the frontend can make calls to the RESTful API
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'sign_up',views.SignUpView, 'sign_up')
+router.register(r'sign_up', views.SignUpView, 'sign_up')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
