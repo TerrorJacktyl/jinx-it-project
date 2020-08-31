@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 CORS_ORIGIN_ALLOW_ALL = False
 # Whitelist the IP address and Port where the frontend will be served
 CORS_ORIGIN_WHITELIST = (
-        'http://localhost:3000/',
+        'http://localhost:3000',
 )
 
 
