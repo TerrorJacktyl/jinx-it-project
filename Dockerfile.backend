@@ -6,11 +6,13 @@ FROM python:3
 ENV PYTHONUNBUFFERED 1
 # At this point our container if filled with default python packages. Therefore make
 # a directory for our code to be copied to
-RUN mkdir /code
-# Set this new directory in our container as our work directory
-WORKDIR /code
-# Copy everything in the current directory to our newly initialised work directory
-COPY . /code/
+RUN mkdir /backend
+# Set this new directory in our container as our work directory. All subsequent
+# RUN, CMD, COPY, or ADD instructions will be executed here
+WORKDIR /backend
+# Copy all our Django code to our newly initialised work directory
+COPY ./jinx_project/ /backend/
 # Install our python package dependencies with pip, so Django, rest-api-framework etc.
 RUN pip install -r requirements.txt
 
+CMD ["python", "manage.py", "runsever:8000"]
