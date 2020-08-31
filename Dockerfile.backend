@@ -13,6 +13,7 @@ WORKDIR /backend
 # Copy all our Django code to our newly initialised work directory
 COPY ./jinx_project/ /backend/
 # Install our python package dependencies with pip, so Django, rest-api-framework etc.
+RUN ls -a
 RUN pip install -r requirements.txt
 
-CMD ["python", "manage.py", "runsever:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

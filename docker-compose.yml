@@ -11,8 +11,8 @@ services:
       # Not sure if root exists by default.
       - POSTGRES_USER=jinx
       - POSTGRES_PASSWORD=jinx
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
+        # volumes:
+        # - ./postgres:/var/lib/postgresql/data
     # Unless stopped manually, restart automatically
     restart: unless-stopped
   django:
