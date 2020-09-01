@@ -32,7 +32,7 @@ This unit is used as is and requires no modifications.
 
 ## Additional Information
 
-For more information, consult the system manual, `man`, or view the online version at https://www.freedesktop.org/software/systemd/man/systemd.html.
+For more information, consult the system manual, `man systemd`, or view the online version at https://www.freedesktop.org/software/systemd/man/systemd.html.
 
 Replace `systemd` with the following to see more info.
 
