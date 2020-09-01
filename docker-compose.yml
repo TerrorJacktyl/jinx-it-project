@@ -1,0 +1,42 @@
+# Sets the version syntax that we're using. Just a backwards compatability feature
+version: '3'
+services:
+  db:
+    container_name: jinx_db
+    image: postgres
+    environment:
+      # Denotes DB name to be created on image startup
+      - POSTGRES_DB=jinx_db
+      # Create a user when the database is initialized. 
+      # Not sure if root exists by default.
+      - POSTGRES_USER=jinx
+      - POSTGRES_PASSWORD=jinx
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    # Unless stopped manually, restart automatically
+    restart: unless-stopped
+  django:
+    container_name: jinx_django
+    # Denotes where to find the instructios for how to build our container, i.e. the Dockerfile
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    # Maps a volume from our local location to /code in our container.
+    # Allows us to have real-time access to the code in our Dockerfile.
+    # Whenever we make a change in our code source code, it'll automatically be mapped
+    # to our docker container without having to rebuild it
+    volumes:
+      - ./jinx_project:/code
+    # Do not use port 8000 in production - warning by https://docs.docker.com/compose/django/
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+    # Unless stopped manually, restart automatically
+    restart: unless-stopped
+
+# Not sure why these were there
+# networks:
+#   br:
+#     driver: bridge
+# volumes:
+#   postgres: {}
