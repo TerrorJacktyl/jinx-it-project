@@ -36,6 +36,7 @@ services:
     restart: unless-stopped
   react:
     container_name: jinx_react
+    stdin_open: true
     build:
       context: .
       dockerfile: Dockerfile.frontend
