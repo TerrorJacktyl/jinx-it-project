@@ -28,7 +28,7 @@ $ docker-compose up
 $ docker-compose build
 ```
 
-Having trouble building? Look under Notes header :)
+Having trouble building? Look under the Issues header :)
 
 ## Mucking around
 
@@ -54,6 +54,10 @@ $ docker exec -it jinx_django python manage.py migrate
 ```
 
 ### Making API requests to Django
+
+Using the frontend's sign up page:
+1. If it's building successfully the frontend should be accessible through `localhost:3000`. Click sign up in the top right hand corner, and enter some stuff in the fields. If you get a sign up error, then something is cooked and consult the build instructions under issues (probably haven't migrated the DB).
+2. If there is no error, then head to `127.0.0.1:8080/api/sign_up`, you should hopefully see the details that you've just entered!
 
 To make a sign up and query it yourself:
 1. Run the containers and head to `0.0.0.0:8080/api`. Login with credentials below.
@@ -105,13 +109,10 @@ $ psql -d jinx_db -U jinx
 - [ x ] Change `~/jinx_project/jinx_project/settings.py` so that it uses Postgres.
 - [ x ] Define a schema for our data.
 - [ x ] Configure models in Django and get it CRUDing with the DB.
-- [  ] Create a basic API allowing the front end some CRUD functionality through Django.
+- [ x ] Create a basic API allowing the front end some CRUD functionality through Django.
 
-## Development!
+#### Development!
 
-### Some Notes...
-
-Jiles: I was having some issues with the initial build. If it doesn't work for you with the specified order, and is complaining about psycopg2, don't worry! Try the build instructions from bottom to top, first building the django container, then both containers with docker-compose up, and finally the top command with manage.py.
 
 ## Issues
 
@@ -144,6 +145,12 @@ $ docker rmi <imagename>
 # won't somebody think of the children!
 $ docker image prune -a
 ```
+
+### Build instructions not working?
+
+First, make sure to delete any old images of the project using `docker rmi <imagename>` as specified above. Then try building all the required images from scratch using `docker-compose build`. Since the database is built from scratch, django models must be migrated using `docker-compose run django python manage.py migrate`. Everything should now be ready to go, run the containers with `docker-compose up`. Happy hacking!
+
+If the build is complaining about psycopg2, don't worry! First, check jinx_project/requirements.txt and see if `psycopg2-binary>=2.8` is on a line. If not, add it. Now follow the build instructions as specified directly above. 
 
 ## Superuser
 
