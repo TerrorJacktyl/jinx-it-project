@@ -1,0 +1,31 @@
+# can't use alpine for a smaller image as psycopg2-binary
+# binaries won't work
+# TODO: deployment recommendation is to build psycopg2 ourselves instead of
+# using prebuilt binaries
+FROM python:3
+
+# add non root user to run uWSGI with
+RUN useradd uwsgi
+
+# install the uWSGI interface
+RUN pip install uwsgi
+
+# This has to do with std.in/std.out
+ENV PYTHONUNBUFFERED 1
+
+RUN mkdir /code
+WORKDIR /code
+
+# each step of the build process is cached so if requirements are added first
+# then this pip install can be skipped if only the code changes
+COPY requirements.txt /code
+RUN pip install -r requirements.txt
+
+# copy the rest of the project
+COPY jinx_project /code
+
+# let port 8000 through
+EXPOSE 8000
+
+# start the uwsgi server
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
