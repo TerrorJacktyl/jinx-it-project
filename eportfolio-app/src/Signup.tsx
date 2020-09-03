@@ -48,7 +48,7 @@ const Signup = () => {
 
                     setSubmitting(true);
 
-                  axios.post(`http://127.0.0.1:8080/api/sign_up`, {
+                  axios.post(`http://127.0.0.1:8080/api/user`, {
                         first_name: values.firstName,
                         last_name: values.lastName,
                         email: values.email,
