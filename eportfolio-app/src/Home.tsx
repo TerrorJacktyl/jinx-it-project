@@ -1,18 +1,13 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
 import styled from 'styled-components';
-import { SiteLayout } from 'jinxui';
+import { SiteLayout, Button } from 'jinxui';
+
 
 const StickyDiv = styled.div`
   position: sticky;
   top: 0;
   z-index: 999;
 `
-
-const AccountButton = styled(Button)`
-    display: flex;
-    float: right;
-`;
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -33,11 +28,11 @@ const Home = () => {
             <SiteHeader>
                 <HeaderDiv>
                     <a href="/login" >
-                        <AccountButton color="primary">Login</AccountButton>
+                        <Button width={null} textColour="#EEEEEE" backgroundColour={null} hoverColour={null} text="Login"/>
                     </a>
+                    {/*
                     <a href="/signup" >
-                        <AccountButton color="primary">Sign up</AccountButton>
-                    </a>
+                    </a>*/}
                 </HeaderDiv>
             </SiteHeader>
         </StickyDiv>

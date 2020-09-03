@@ -7,3 +7,6 @@ export { default as SubmitButton } from './components/form/SubmitButton';
 
 /* Site */
 export { default as SiteLayout } from './components/site/SiteLayout';
+
+/* Button */
+export { default as Button } from './components/button/Button';
