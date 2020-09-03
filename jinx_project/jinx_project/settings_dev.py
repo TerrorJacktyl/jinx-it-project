@@ -15,3 +15,12 @@ CORS_ALLOWED_ORIGINS = (
 # Disabled in dev environment as dev server will not be behind https
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+
+
+# enable the browsable api
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+}
