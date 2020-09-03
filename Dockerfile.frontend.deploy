@@ -9,10 +9,10 @@ WORKDIR /code
 # dependancies every time code changes, it will only be reinstalled if
 # package.json changes
 
-COPY eportfolio-app/package.json .
+COPY eportfolio-app/package.json eportfolio-app/package-lock.json ./
 
 # don't install development files as those won't be needed
-RUN npm install --production
+RUN npm install
 
 COPY eportfolio-app .
 
