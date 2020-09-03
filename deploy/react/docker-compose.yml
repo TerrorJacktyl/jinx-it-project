@@ -3,7 +3,7 @@ services:
   npm_build:
     build:
       context: ../../
-      dockerfile: Dockerfile.deploy
+      dockerfile: Dockerfile.frontend.deploy
     volumes:
       # directly deploy the built files
       - "/srv/www/frontend:/code/build"
