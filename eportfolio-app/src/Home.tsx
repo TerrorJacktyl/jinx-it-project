@@ -20,8 +20,8 @@ const StyledLink = styled.a`
 const TopBlockDiv = styled.div`
     background: #1C1C1C;
     text-align: center;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
     overflow: auto;
 `
 
