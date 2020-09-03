@@ -3,6 +3,7 @@ import React from 'react';
 
 export type StyledButtonProps = {
     textColour: string;
+    contrastColour: any;
 };
 
 export type StyledButtonDivProps = {
@@ -28,10 +29,10 @@ const ButtonBorder = styled.div<StyledButtonDivProps>`
         border: 2px solid ${borderColour};
     `}
 
-    &:hover{
+    &:hover {
         ${({ hoverColour }) => hoverColour && `
             background-color: ${hoverColour};
-        `
+        `}
     }
 `
 
@@ -53,20 +54,27 @@ const ButtonComponent = styled.button<StyledButtonProps>`
     outline: none;
     box-shadow: none;
     cursor: pointer;
+
+    ${ButtonBorder}:hover & {
+        ${({ contrastColour }) => contrastColour && `
+            color: ${contrastColour};
+        `}
+    }
 `
 
 export type ButtonProps = {
     backgroundColour: any;
     textColour: string;
     hoverColour: any;
+    contrastColour: any;
     width: any;
     text: string;
   } & JSX.IntrinsicElements["button"];
 
-const Button = ({ width, textColour, backgroundColour, hoverColour, text, className}: ButtonProps) => {
+const Button = ({ width, textColour, backgroundColour, hoverColour, contrastColour, text, className}: ButtonProps) => {
     return(
         <ButtonBorder className={className} backgroundColour={backgroundColour} borderColour={textColour} width={width} hoverColour={hoverColour}>
-            <ButtonComponent textColour={textColour}>
+            <ButtonComponent id="button" textColour={textColour} contrastColour={contrastColour}>
                 {text}
             </ButtonComponent>
         </ButtonBorder>

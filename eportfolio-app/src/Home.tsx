@@ -46,8 +46,9 @@ const LogoDiv = styled.div`
 const JinxLogo = styled.img`
     display: block;
     margin: 0 auto;
-    max-width: 380px;
-    height: auto;
+    width: 340px;
+    height: 340px;
+    object-fit: cover;
 `
 
 const BodyDiv = styled.div`
@@ -93,7 +94,7 @@ const Home = () => {
             <SiteHeader>
                 <HeaderDiv>
                     <StyledLink href="/login" >
-                        <StyledLogin width={null} textColour="#EEEEEE" backgroundColour={null} hoverColour={null} text="Login"/>
+                        <StyledLogin width={null} textColour="#EEEEEE" backgroundColour={null} hoverColour="#EEEEEE" contrastColour="#1C1C1C" text="Login"/>
                     </StyledLink>
                 </HeaderDiv>
             </SiteHeader>
@@ -103,7 +104,7 @@ const Home = () => {
             <JinxName>Jinx</JinxName>
             <CatchPhrase>Your portfolio, made simple</CatchPhrase>
             <StyledLink href="/signup" >
-                <StyledSignup width={null} textColour="#00FFC2" backgroundColour={null} hoverColour={null} text="Join Today"/>
+                <StyledSignup width={null} textColour="#00FFC2" backgroundColour={null} hoverColour="#00FFC2" contrastColour="#1C1C1C" text="Join Today"/>
             </StyledLink>
             </TopBlockDiv>
         
