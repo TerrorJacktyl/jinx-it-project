@@ -13,7 +13,6 @@ export type StyledButtonDivProps = {
 }
 
 const ButtonBorder = styled.div<StyledButtonDivProps>`
-    position: absolute;
     border-radius: 5px;
     width: 254px;
     
@@ -64,9 +63,9 @@ export type ButtonProps = {
     text: string;
   } & JSX.IntrinsicElements["button"];
 
-const Button = ({ width, textColour, backgroundColour, hoverColour, text, ...props}: ButtonProps) => {
+const Button = ({ width, textColour, backgroundColour, hoverColour, text, className}: ButtonProps) => {
     return(
-        <ButtonBorder backgroundColour={backgroundColour} borderColour={textColour} width={width} hoverColour={hoverColour}>
+        <ButtonBorder className={className} backgroundColour={backgroundColour} borderColour={textColour} width={width} hoverColour={hoverColour}>
             <ButtonComponent textColour={textColour}>
                 {text}
             </ButtonComponent>
