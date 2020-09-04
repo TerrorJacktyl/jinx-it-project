@@ -1,37 +1,8 @@
 import React, { useState } from 'react';
 import { Formik, Form} from 'formik';
 import * as Yup from 'yup';
-import { ErrorMessage, FormDiv, FormEntry, Button } from 'jinxui';
+import { ErrorMessage, FormDiv, FormEntry, Button, SiteHeader, HeaderDiv, LogoLink, HeaderTitle } from 'jinxui';
 import styled from 'styled-components';
-
-const SiteHeader = styled.header`
-    background: #1C1C1C;
-    opacity: 0.8;
-    margin-bottom: 1.45rem;
-    overflow: auto;
-`;
-
-const LogoDiv = styled.div`
-    position: absolute;
-    left: 0%;
-    top: 0%;
-    bottom: 0%;
-    display: flex;
-    z-index: 1;
-`
-
-
-const HeaderLogo = styled.img`
-    margin: 5px;
-    margin-right: 10px;
-`
-
-const HeaderDiv = styled.div`
-  max-width: 95%;
-  padding: 0.6rem 0.5rem 0.2rem;
-  position: relative;
-  margin: auto;
-`
 
 const StyledFormEntry = styled(FormEntry)`
     margin-top: 15px;
@@ -41,7 +12,7 @@ const StyledFormEntry = styled(FormEntry)`
 const PageDiv = styled.div`
     background: #434343;
     height: 100vh;
-    background-image: url(${require("./images/Logo_Background.svg")});
+    background-image: url(${require("images/Logo_Background.svg")});
     background-position: center; 
     background-repeat: no-repeat; 
     overflow: auto;
@@ -61,14 +32,6 @@ const SignupSchema = Yup.object().shape({
       .required('Required')
   });
 
-const Title = styled.h1`
-    margin-top: 0px;
-    margin-bottom: 10px;
-    color: #EEEEEE;
-    font-weight: 300;
-    position: relative;
-`
-
 const StyledButton = styled(Button)`
   margin: auto;
   margin-top: 30px;
@@ -87,14 +50,8 @@ const Login = () => {
         <PageDiv>
         <SiteHeader>
             <HeaderDiv>
-                <a href="/">
-                <LogoDiv>
-                    <HeaderLogo src={require("./images/Logo_Small.svg")}/>
-                    <HeaderLogo src={require("./images/Logo_Text.svg")}/>
-                </LogoDiv>
-                </a>
-                
-                <Title>Login</Title>
+                <LogoLink />
+                <HeaderTitle>Login</HeaderTitle>
             </HeaderDiv>
         </SiteHeader>
         

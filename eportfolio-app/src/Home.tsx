@@ -99,7 +99,7 @@ const Home = () => {
                 </HeaderDiv>
             </SiteHeader>
             <LogoDiv>
-                <JinxLogo src={require("./images/Logo_Main.png")} />
+                <JinxLogo src={require("images/Logo_Main.png")} />
             </LogoDiv>
             <JinxName>Jinx</JinxName>
             <CatchPhrase>Your portfolio, made simple</CatchPhrase>

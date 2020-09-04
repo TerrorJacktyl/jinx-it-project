@@ -10,3 +10,9 @@ export { default as SiteLayout } from './components/site/SiteLayout';
 
 /* Button */
 export { default as Button } from './components/button/Button';
+
+/* Header */
+export {default as HeaderDiv } from './components/header/HeaderDiv';
+export {default as SiteHeader } from './components/header/SiteHeader';
+export {default as LogoLink } from './components/header/LogoLink';
+export {default as HeaderTitle } from './components/header/HeaderTitle';
