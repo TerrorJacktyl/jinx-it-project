@@ -5,13 +5,32 @@ import { ErrorMessage, FormDiv, FormEntry, Button } from 'jinxui';
 import styled from 'styled-components';
 
 const SiteHeader = styled.header`
-
-  background: #434343;
+    background: #1C1C1C;
+    opacity: 0.8;
+    margin-bottom: 1.45rem;
+    overflow: auto;
 `;
 
+const LogoDiv = styled.div`
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    bottom: 0%;
+    display: flex;
+    z-index: 1;
+`
+
+
+const HeaderLogo = styled.img`
+    margin: 5px;
+    margin-right: 10px;
+`
+
 const HeaderDiv = styled.div`
-  max-width: 90%;
+  max-width: 95%;
   padding: 0.6rem 0.5rem 0.2rem;
+  position: relative;
+  margin: auto;
 `
 
 const StyledFormEntry = styled(FormEntry)`
@@ -25,6 +44,8 @@ const PageDiv = styled.div`
     background-image: url(${require("./images/Logo_Background.svg")});
     background-position: center; 
     background-repeat: no-repeat; 
+    overflow: auto;
+    text-align: center;
 `
 
 const FormTitle = styled.h2`
@@ -41,7 +62,11 @@ const SignupSchema = Yup.object().shape({
   });
 
 const Title = styled.h1`
-    margin-top: 0;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    color: #EEEEEE;
+    font-weight: 300;
+    position: relative;
 `
 
 const StyledButton = styled(Button)`
@@ -50,9 +75,7 @@ const StyledButton = styled(Button)`
 `
 
 const StyledFormDiv = styled(FormDiv)`
-    position: absolute;
-    left: calc(50% - 360px/2);
-    top: calc(50% - 616px/2 - 0.5px);
+  margin-top: 100px;
 `
 
 const Login = () => {
@@ -61,14 +84,21 @@ const Login = () => {
     const [submittionError, setSubmittionError] = useState(false);
 
     return(
-        <div>
+        <PageDiv>
         <SiteHeader>
             <HeaderDiv>
-
+                <a href="/">
+                <LogoDiv>
+                    <HeaderLogo src={require("./images/Logo_Small.svg")}/>
+                    <HeaderLogo src={require("./images/Logo_Text.svg")}/>
+                </LogoDiv>
+                </a>
+                
+                <Title>Login</Title>
             </HeaderDiv>
         </SiteHeader>
-        <PageDiv>
-        <Title>Login</Title>
+        
+        
         <StyledFormDiv>
             <FormTitle>Enter Details</FormTitle>
             <Formik
@@ -108,7 +138,6 @@ const Login = () => {
             </Formik>
         </StyledFormDiv>
         </PageDiv>
-        </div>
     )
 }
 

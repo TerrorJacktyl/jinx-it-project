@@ -8,6 +8,8 @@ const StyledFormEntry = styled(Field)`
     border: 1px solid #EEEEEE;
     box-sizing: border-box;
     background: transparent;
+    color: #EEEEEE;
+    padding-left: 12px;
 `;
 
 export default StyledFormEntry;
