@@ -2,18 +2,34 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { ErrorMessage, EntryTitle, FormDiv, FormEntry, SubmitButton, SiteLayout } from 'jinxui';
+import { ErrorMessage, EntryTitle, FormDiv, FormEntry, SubmitButton, SiteLayout, Button, SiteHeader, HeaderDiv, LogoLink, HeaderTitle } from 'jinxui';
 
 const StyledFormEntry = styled(FormEntry)`
+    margin-top: 15px;
+    margin-bottom: 15px;
+`
+const FormTitle = styled.h2`
+    color: #EEEEEE;
+    font-weight: 300;
+`
 
-    ${({ nameentry }) => nameentry && `
-    max-width: 80%;
-    `}
-`;
+const PageDiv = styled.div`
+    background: #434343;
+    height: 100vh;
+    background-image: url(${require("images/Logo_Background.svg")});
+    background-position: center; 
+    background-repeat: no-repeat; 
+    overflow: auto;
+    text-align: center;
+`
 
-const NameEntry = styled.div`
-    display: inline-block;
-    vertical-align:top;
+const StyledButton = styled(Button)`
+  margin: auto;
+  margin-top: 30px;
+`
+
+const StyledFormDiv = styled(FormDiv)`
+  margin-top: 100px;
 `
 
 const SignupSchema = Yup.object().shape({
@@ -38,9 +54,15 @@ const Signup = () => {
     const [submittionError, setSubmittionError] = useState(false);
 
     return(
-        <SiteLayout>
-        <h1>Sign up</h1>
-        <FormDiv>
+        <PageDiv>
+        <SiteHeader>
+            <HeaderDiv>
+                <LogoLink />
+                <HeaderTitle>Sign Up</HeaderTitle>
+            </HeaderDiv>
+        </SiteHeader>
+        <StyledFormDiv>
+            <FormTitle>Sign up for free!</FormTitle>
             <Formik
                 initialValues={{ firstName: '', lastName: '', email: '', password: '' }}
                 validationSchema={SignupSchema}
@@ -68,29 +90,21 @@ const Signup = () => {
             >
             {({ errors, touched, isSubmitting }) => (
                 <Form>
-                    <NameEntry>
-                    <EntryTitle>First Name</EntryTitle>
-                    <StyledFormEntry name="firstName" nameentry={true}/>
+                    <StyledFormEntry name="firstName" placeholder="First Name"/>
                     {errors.firstName && touched.firstName ? (<ErrorMessage>{errors.firstName}</ErrorMessage>) : null}
-                    </NameEntry>
-                    <NameEntry>
-                    <EntryTitle>Last Name</EntryTitle>
-                    <StyledFormEntry name="lastName" nameentry={true}/>
+                    <StyledFormEntry name="lastName" placeholder="Last Name"/>
                     {errors.lastName && touched.lastName ? (<ErrorMessage>{errors.lastName}</ErrorMessage>) : null}
-                    </NameEntry>
-                    <EntryTitle>Email</EntryTitle>
-                    <StyledFormEntry name="email" type="email" />
+                    <StyledFormEntry name="email" type="email" placeholder="Email"/>
                     {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
-                    <EntryTitle>Password</EntryTitle>
-                    <StyledFormEntry name="password" type="password" />
+                    <StyledFormEntry name="password" type="password" placeholder="Password"/>
                     {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
-                    <SubmitButton variant="contained" type="submit" disabled={isSubmitting}>Sign Up</SubmitButton>
+                    <StyledButton type="submit" disabled={isSubmitting} width={null} textColour="#00FFC2" backgroundColour={null} hoverColour="#00FFC2" contrastColour="#1C1C1C" text="Join" fontSize={null}/>
                     {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
                 </Form>
                 )}
             </Formik>
-        </FormDiv>
-        </SiteLayout>
+        </StyledFormDiv>
+        </PageDiv>
     )
 }
 
