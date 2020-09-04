@@ -4,6 +4,7 @@ import React from 'react';
 export type StyledButtonProps = {
     textColour: string;
     contrastColour: any;
+    fontSize: any;
 };
 
 export type StyledButtonDivProps = {
@@ -41,6 +42,9 @@ const ButtonComponent = styled.button<StyledButtonProps>`
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
+    ${({ fontSize }) => fontSize && `
+        font-size: ${fontSize};
+    `}
     line-height: 35px;
     display: flex;
     align-items: center;
@@ -69,12 +73,13 @@ export type ButtonProps = {
     contrastColour: any;
     width: any;
     text: string;
+    fontSize: any;
   } & JSX.IntrinsicElements["button"];
 
-const Button = ({ width, textColour, backgroundColour, hoverColour, contrastColour, text, className}: ButtonProps) => {
+const Button = ({ width, textColour, backgroundColour, hoverColour, contrastColour, text, fontSize, className}: ButtonProps) => {
     return(
         <ButtonBorder className={className} backgroundColour={backgroundColour} borderColour={textColour} width={width} hoverColour={hoverColour}>
-            <ButtonComponent id="button" textColour={textColour} contrastColour={contrastColour}>
+            <ButtonComponent id="button" textColour={textColour} contrastColour={contrastColour} fontSize={fontSize}>
                 {text}
             </ButtonComponent>
         </ButtonBorder>
