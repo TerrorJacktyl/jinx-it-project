@@ -11,26 +11,27 @@ services:
       # Not sure if root exists by default.
       - POSTGRES_USER=jinx
       - POSTGRES_PASSWORD=jinx
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
+     # volumes:
+       # - ./postgres:/var/lib/postgresql/data
     # Unless stopped manually, restart automatically
     restart: unless-stopped
   django:
     container_name: jinx_django
-    # Denotes where to find the instructios for how to build our container, i.e. the Dockerfile
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    # Denotes where to find the instructions for how to build our container, i.e. the Dockerfile
+    build: 
+      context: .
+      dockerfile: Dockerfile.backend
     # Sets environment varaibles from a file
     env_file:
       - django_dev.env
     environment:
       - DJANGO_DB_PASSWORD=jinx
-    # Maps a volume from our local location to /code in our container.
+    # Maps a volume from our local location to /backend in our container.
     # Allows us to have real-time access to the code in our Dockerfile.
-    # Whenever we make a change in our code source code, it'll automatically be mapped
+    # Whenever we make a change in our source code, it'll automatically be mapped
     # to our docker container without having to rebuild it
     volumes:
-      - ./jinx_project:/code
+      - ./jinx_project:/backend
     # Do not use port 8000 in production - warning by https://docs.docker.com/compose/django/
     ports:
       - "8080:8000"
@@ -38,6 +39,18 @@ services:
       - db
     # Unless stopped manually, restart automatically
     restart: unless-stopped
+  react:
+    container_name: jinx_react
+    # Not too sure what this does, but the React container will exit without it!
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    volumes:
+      - /frontend/node_modules
+      - ./eportfolio-app:/frontend 
+    ports:
+      - "3000:3000"
 
 # Not sure why these were there
 # networks:
