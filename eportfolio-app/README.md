@@ -1,4 +1,4 @@
-## Quickstart Guide
+## Frontend - Quickstart Guide
 
 **Note**: Make sure you have Node.js installed on your computer (this will include npm which will be used to start the app): 
 https://nodejs.org/en/download/
