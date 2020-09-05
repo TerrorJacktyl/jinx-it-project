@@ -3,4 +3,4 @@
 npm run build
 
 mkdir /build
-cp -r /code/build /build
+cp -r /code/build/* /build
