@@ -35,7 +35,10 @@ const SignupSchema = Yup.object().shape({
       .email('Invalid email')
       .required('Required'),
     password: Yup.string()
-      .required('Required')
+      .required('Required'),
+    passwordConfirm: Yup.string()
+        .oneOf([Yup.ref('password'), undefined], "Passwords don't match")
+        .required('Required')
   });
 
 const Signup = () => {
@@ -54,7 +57,7 @@ const Signup = () => {
         <StyledFormDiv>
             <FormTitle>Sign up for free!</FormTitle>
             <Formik
-                initialValues={{ firstName: '', lastName: '', email: '', password: '' }}
+                initialValues={{ firstName: '', lastName: '', email: '', password: '', passwordConfirm: '' }}
                 validationSchema={SignupSchema}
                 onSubmit={(values, { setSubmitting }) => {
 
@@ -88,6 +91,8 @@ const Signup = () => {
                     {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
                     <StyledFormEntry name="password" type="password" placeholder="Password"/>
                     {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+                    <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password"/>
+                    {errors.passwordConfirm && touched.passwordConfirm ? <ErrorMessage>{errors.passwordConfirm}</ErrorMessage> : null}
                     <StyledButton type="submit" disabled={isSubmitting} width={null} textColour="#00FFC2" backgroundColour={null} hoverColour="#00FFC2" contrastColour="#1C1C1C" text="Join" fontSize={null}/>
                     {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
                 </Form>
