@@ -38,6 +38,9 @@ const Home = () => {
                     <a href="/signup" >
                         <AccountButton color="primary">Sign up</AccountButton>
                     </a>
+                    <a href="/profile" >
+                        <AccountButton color="primary">profile</AccountButton>
+                    </a>
                 </HeaderDiv>
             </SiteHeader>
         </StickyDiv>

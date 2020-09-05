@@ -26,7 +26,7 @@ SECRET_KEY = 'z0^u_=7x^l%sw$u14k^tfvy0182ubh!lh6xpyx9=0k4p$d5bc3'
 DEBUG = True
 
 # Add our server IP '159.89.195.33' later
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
 
 # Corsheader settings. TODO: Review these for deployment to the server
 # and read the docs, not sure if localhost will be adequate
