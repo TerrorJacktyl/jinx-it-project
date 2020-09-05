@@ -3,5 +3,9 @@
 npm run build
 
 mkdir -p /build
+
+echo Clearing out /build
 rm -r /build/*
+
+echo Copying over files
 cp -r /code/build/* /build
