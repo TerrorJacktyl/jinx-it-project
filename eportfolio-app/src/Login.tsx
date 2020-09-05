@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form} from 'formik';
 import * as Yup from 'yup';
-import { ErrorMessage, FormDiv, FormEntry, Button, SiteHeader, HeaderDiv, LogoLink, HeaderTitle } from 'jinxui';
+import { ErrorMessage, FormDiv, FormEntry, Button, SiteHeader, HeaderDiv, LogoLink, HeaderTitle, AccountPageDiv } from 'jinxui';
 import styled from 'styled-components';
 
 const StyledFormEntry = styled(FormEntry)`
@@ -9,28 +9,10 @@ const StyledFormEntry = styled(FormEntry)`
     margin-bottom: 15px;
 `
 
-const PageDiv = styled.div`
-    background: #434343;
-    height: 100vh;
-    background-image: url(${require("images/Logo_Background.svg")});
-    background-position: center; 
-    background-repeat: no-repeat; 
-    overflow: auto;
-    text-align: center;
-`
-
 const FormTitle = styled.h2`
     color: #EEEEEE;
     font-weight: 300;
 `
-
-const SignupSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('Invalid email')
-      .required('Required'),
-    password: Yup.string()
-      .required('Required')
-  });
 
 const StyledButton = styled(Button)`
   margin: auto;
@@ -41,13 +23,21 @@ const StyledFormDiv = styled(FormDiv)`
   margin-top: 100px;
 `
 
+const SignupSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Invalid email')
+      .required('Required'),
+    password: Yup.string()
+      .required('Required')
+  });
+
 const Login = () => {
 
     const axios = require('axios').default;
     const [submittionError, setSubmittionError] = useState(false);
 
     return(
-        <PageDiv>
+        <AccountPageDiv>
         <SiteHeader>
             <HeaderDiv>
                 <LogoLink />
@@ -94,7 +84,7 @@ const Login = () => {
                 )}
             </Formik>
         </StyledFormDiv>
-        </PageDiv>
+        </AccountPageDiv>
     )
 }
 

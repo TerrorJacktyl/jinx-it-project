@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { ErrorMessage, EntryTitle, FormDiv, FormEntry, SubmitButton, SiteLayout, Button, SiteHeader, HeaderDiv, LogoLink, HeaderTitle } from 'jinxui';
+import { ErrorMessage, FormDiv, FormEntry, Button, SiteHeader, HeaderDiv, LogoLink, HeaderTitle, AccountPageDiv } from 'jinxui';
 
 const StyledFormEntry = styled(FormEntry)`
     margin-top: 15px;
@@ -11,16 +11,6 @@ const StyledFormEntry = styled(FormEntry)`
 const FormTitle = styled.h2`
     color: #EEEEEE;
     font-weight: 300;
-`
-
-const PageDiv = styled.div`
-    background: #434343;
-    height: 100vh;
-    background-image: url(${require("images/Logo_Background.svg")});
-    background-position: center; 
-    background-repeat: no-repeat; 
-    overflow: auto;
-    text-align: center;
 `
 
 const StyledButton = styled(Button)`
@@ -54,7 +44,7 @@ const Signup = () => {
     const [submittionError, setSubmittionError] = useState(false);
 
     return(
-        <PageDiv>
+        <AccountPageDiv>
         <SiteHeader>
             <HeaderDiv>
                 <LogoLink />
@@ -104,7 +94,7 @@ const Signup = () => {
                 )}
             </Formik>
         </StyledFormDiv>
-        </PageDiv>
+        </AccountPageDiv>
     )
 }
 

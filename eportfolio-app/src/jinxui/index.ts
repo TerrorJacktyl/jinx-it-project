@@ -12,7 +12,10 @@ export { default as SiteLayout } from './components/site/SiteLayout';
 export { default as Button } from './components/button/Button';
 
 /* Header */
-export {default as HeaderDiv } from './components/header/HeaderDiv';
-export {default as SiteHeader } from './components/header/SiteHeader';
-export {default as LogoLink } from './components/header/LogoLink';
-export {default as HeaderTitle } from './components/header/HeaderTitle';
+export { default as HeaderDiv } from './components/header/HeaderDiv';
+export { default as SiteHeader } from './components/header/SiteHeader';
+export { default as LogoLink } from './components/header/LogoLink';
+export { default as HeaderTitle } from './components/header/HeaderTitle';
+
+/* Account */
+export { default as AccountPageDiv} from './components/account/AccountPageDiv';
