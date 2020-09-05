@@ -15,11 +15,17 @@ const HeaderLogo = styled.img`
     margin-right: 10px;
 `
 
+const LogoText = styled(HeaderLogo)`
+    @media (max-width: 480px){
+        display: none;
+    }
+`
+
 const LogoLink = () => (
     <a href="/">
         <LogoDiv>
             <HeaderLogo src={require("images/Logo_Small.svg")}/>
-            <HeaderLogo src={require("images/Logo_Text.svg")}/>
+            <LogoText src={require("images/Logo_Text.svg")}/>
         </LogoDiv>
     </a>
 )
