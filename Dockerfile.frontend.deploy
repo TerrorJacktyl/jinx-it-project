@@ -16,7 +16,7 @@ RUN npm install
 
 COPY eportfolio-app .
 
-CMD ["npm", "run", "build"]
+CMD ["./deploy/react/build.sh"]
 
-# output will be in ./build
+# output will be in /build
 # attach a volume or bind mount to save build results

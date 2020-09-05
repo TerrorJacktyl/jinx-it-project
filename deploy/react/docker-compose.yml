@@ -6,4 +6,4 @@ services:
       dockerfile: Dockerfile.frontend.deploy
     volumes:
       # directly deploy the built files
-      - "/srv/www/frontend:/code/build"
+      - "/srv/www/frontend:/build"
