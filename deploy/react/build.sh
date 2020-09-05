@@ -2,5 +2,6 @@
 # files once building is completed
 npm run build
 
-mkdir /build
+mkdir -p /build
+rm -r /build/*
 cp -r /code/build/* /build
