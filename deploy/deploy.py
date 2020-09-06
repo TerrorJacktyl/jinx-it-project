@@ -12,7 +12,7 @@ curr_dir = pathlib.Path(__file__).parent.absolute()
 # build and deploy react front end
 print('Deploying frontend')
 subprocess.run(
-    ['docker-compose', 'up', '--detach', '--build'],
+    ['docker-compose', 'up', '--build'],
     cwd=curr_dir / 'react',
     check=True
     )
