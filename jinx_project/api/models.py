@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Account(models.Model):
-    """Account is a proxy to Django's built-in User model. Account contains all the 
+    """Account is a proxy to Django's built-in User model. Account contains all the
     user data we'd like to store, rather than extending the built-in User model to contain this.
     This is the recommended method for 'modifying' the built-in User model. See:
     https://docs.djangoproject.com/en/dev/topics/auth/customizing/#extending-the-existing-user-model
@@ -25,13 +25,20 @@ class Account(models.Model):
 
 class Portfolio(models.Model):
     # Link portfolio to account
-    owner = models.OneToOneField(Account, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Account, on_delete=models.CASCADE)
     # Portfolio name e.g. professional, art
     name = models.CharField(max_length=100)
 
 
+class Page(models.Model):
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    # page number (distinct from its id) to allow reordering of pages
+    number = models.IntegerField(default=0)
+
+
 class Section(models.Model):
-    portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=1000)
 
