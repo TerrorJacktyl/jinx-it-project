@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Field } from "formik";
 
 import {
   ErrorMessage,
@@ -32,11 +31,13 @@ const TallStyledFormEntry = styled(StyledFormEntry)`
 `;
 
 const FormTitle = styled.h2`
+  font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
 `;
 
 const FieldTitle = styled.h3`
+  font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
   margin-bottom: 0px;

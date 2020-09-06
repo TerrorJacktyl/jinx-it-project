@@ -17,4 +17,5 @@ router.register(r'user', views.UserView, 'user')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    # path('api/create_profile', CreateProfileView.as_view()),
 ]

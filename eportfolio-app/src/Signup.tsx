@@ -15,16 +15,18 @@ import {
   AccountPageDiv,
 } from "jinxui";
 
-// import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom"; still not working
 
 // Idea on how to submit properly:
 // https://stackoverflow.com/questions/43230194/how-to-use-redirect-in-the-new-react-router-dom-of-reactjs
 
 const StyledFormEntry = styled(FormEntry)`
+  font-family: "Heebo", sans-serif;
   margin-top: 15px;
   margin-bottom: 15px;
 `;
 const FormTitle = styled.h2`
+  font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
 `;
