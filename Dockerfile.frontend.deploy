@@ -12,7 +12,7 @@ WORKDIR /code
 COPY eportfolio-app/package.json eportfolio-app/package-lock.json ./
 
 # don't install development files as those won't be needed
-RUN npm install
+RUN npm install --production
 
 COPY deploy/react/build.sh .
 COPY eportfolio-app .
