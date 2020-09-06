@@ -47,9 +47,3 @@ services:
     ports:
       - "3000:3000"
 
-# Not sure why these were there
-# networks:
-#   br:
-#     driver: bridge
-# volumes:
-#   postgres: {}
