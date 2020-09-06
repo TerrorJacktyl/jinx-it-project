@@ -36,8 +36,8 @@ def main():
         if not re.search(r'^POSTGRES_PASSWORD', data, re.MULTILINE):
             logging.error('Missing POSTGRES_PASSWORD key in environment file')
             return
-        if not re.search(r'^DJANGO_SECRET', data, re.MULTILINE):
-            logging.error('Missing DJANGO_SECRET key in environment file')
+        if not re.search(r'^DJANGO_SECRET_KEY', data, re.MULTILINE):
+            logging.error('Missing DJANGO_SECRET_KEY key in environment file')
             return
 
     # build and deploy django backend
@@ -51,7 +51,8 @@ def main():
     # wait until django container is up
     for _ in range(0,60):
         running_containers = subprocess.check_output(
-            ['docker', 'ps', '--filter', 'status=running', '--format', r'{{.Names}}']
+            ['docker', 'ps', '--filter', 'status=running', '--format', r'{{.Names}}'],
+            encoding='utf8'
         )
         if re.search('django', running_containers):
             break
