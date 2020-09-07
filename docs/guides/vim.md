@@ -21,9 +21,9 @@ a -> Insert mode after moving right 1 character.
 
 I / A -> Insert mode at the first character of a line / Insert mode after the last character of the line
 
-ci<delimiter> -> Clears out the contents within <delimiter>, and puts you in insert mode inside
+ci\<delimiter> -> Clears out the contents within \<delimiter>, and puts you in insert mode inside
 
-ca<delimter> -> Clears out the contents with <delimiter>, the <delimiter>s themselves, and puts you in insert mode
+ca\<delimter> -> Clears out the contents with \<delimiter>, the \<delimiter> themselves, and puts you in insert mode
 
 
 ### UNDO, DELETE, YANK & PASTE
@@ -38,14 +38,14 @@ U -> Undo all changes on one line
 
 CTRL-R -> Redo changes which were undone
 
-di<delimiter> -> Deletes the contents within <delimiter>
+di\<delimiter> -> Deletes the contents within \<delimiter>
 
-da<delimiter> -> Deletes the contents with <delimiter>, and the <delimiter>s themselves
+da\<delimiter> -> Deletes the contents with \<delimiter>, and the \<delimiter> themselves
 
 
 ### SEARCHING
 
-/<pattern> -> Search for <pattern> 
+/\<pattern> -> Search for \<pattern> 
 
 n / N -> With a pattern entered, go to next match / With a pattern entered, go to previous match
 
@@ -61,6 +61,7 @@ v -> Enter visual mode
 V -> Enter visual mode linewise
 
 *Use the below commands once already in visual mode*
+
 d / y -> Delete highlighted content / Yank highlighted content
 
 \> / < -> Shift left / Shift right
@@ -68,8 +69,9 @@ d / y -> Delete highlighted content / Yank highlighted content
 
 ### REPLACE
 
-*For search and replace commands, remember to escape special characters with \*
-:<Start_Line>,<End-Line>s/^/<Symbol> -> Inserts <Symbol> at the start of all lines from <Start> to <End>
+*For search and replace commands, remember to escape special characters with \\*
+
+:<Start\_Line>,<End\_Line>s/^/\<Symbol> -> Inserts \<Symbol> at the start of all lines from \<Start> to \<End>
 
 :%s/<Old\_Word>/<New\_Word>/g -> Replaces all instances of <Old\_Word> with <New\_Word>
 
@@ -77,22 +79,33 @@ d / y -> Delete highlighted content / Yank highlighted content
 ### COMMAND MODE
 
 Quit
+
   :q -> Quit
+
   :q! -> Quit without writing
+
   :wq -> Write and exit
+
   :wq! <file> -> Write to <file>, and exit always
 
 Edit
+
   :e -> Refresh
+
   :e! -> Refresh and discard all changes
+
   :e {file} -> Switch to edit <file>, can use :tabnew <file> to open in a new tab
 
 Insert
+
   :r <file> -> Insert <file> below the cursor
 
 File Exploration
+
   :Vex -> Opens up a vertical window displaying file tree
+
   :tabnew <file\_path> -> Opens file in a new tab
+
 
 ### MISC
 
