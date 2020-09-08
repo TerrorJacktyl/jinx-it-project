@@ -6,7 +6,7 @@ This branch uses Docker to configure:
 1. PostgreSQL
 1. **an api?**
 
-### Preliminary note: permissions
+### Preliminary note: permissions on Linux
 
 You'll need sudo access to run `docker` and `docker-compose`. However, it's **recommended** to [create a new `docker` group and add yourself to it](https://docs.docker.com/engine/install/linux-postinstall/) to avoid invoking sudo all the time. Avoiding this and running docker with sudo may cause permissions for certain files to be revoked from your non-root user, requiring you to use `sudo` when you run docker in future.
 
@@ -16,20 +16,26 @@ If you run `docker` or `docker-compose` with `sudo`, please make sure you _rever
 $ sudo chown -R $USER:$USER .
 ```
 
-## Building
+## Getting started
+
+### Building
 
 ```bash
 # first build, or a rebuild after changing requirements.txt
 $ docker-compose run django python manage.py migrate
-
-# run
-$ docker-compose up
 
 # rebuild
 $ docker-compose build
 ```
 
 Having trouble building? Look under the Issues header :)
+
+### Running
+
+```bash
+# run
+$ docker-compose up
+```
 
 ## Mucking around
 
@@ -73,7 +79,7 @@ To make a sign up and query it yourself:
 1. Open up a django shell in the `jinx_django` container with:
 
 ```bash
-$ docker exec -it jinx_django manage.py bash
+$ docker exec -it jinx_django manage.py shell
 ```
 
 4. [Muck around as per this article](https://docs.djangoproject.com/en/3.1/intro/tutorial02/#playing-with-the-api):
