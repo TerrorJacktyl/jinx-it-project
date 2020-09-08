@@ -4,3 +4,4 @@ django-cors-headers==3.4.0
 djangorestframework==3.11.1
 psycopg2-binary>=2.8
 pytz==2020.1
+coverage==5.2.1
