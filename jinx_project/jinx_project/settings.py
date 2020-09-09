@@ -151,13 +151,26 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
-}
+DRF_DEFAULT_RENDERER_CLASSES = (
+    'rest_framework.renderers.JSONRenderer',
+)
+
+DRF_DEFAULT_AUTHENTICATION_CLASSES = (
+    # for JWT authentication
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # for HTTP basic authentication
+    'rest_framework.authentication.BasicAuthentication',
+)
 
 
 # if development mode, load dev settings to override production settings
 if os.getenv('DJANGO_DEV'):
     from .settings_dev import *
+
+
+# construct REST_FRAMEWORK settings from component fields which can be overriden
+# in dev settings file
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': DRF_DEFAULT_RENDERER_CLASSES,
+    'DEFAULT_AUTHENTICATION_CLASSES': DRF_DEFAULT_AUTHENTICATION_CLASSES,
+}
