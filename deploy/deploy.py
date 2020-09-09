@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 
-# This script is written in python as I could not find a reliable method
-# of getting the path of a bash script
-
-
 import logging
 import pathlib
 import subprocess
 import re
-from time import sleep
 
 
 def main():
@@ -16,7 +11,7 @@ def main():
     logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
     # build and deploy react front end
-    logging.info('Deploying frontend')
+    logging.info('Building and deploying frontend')
     subprocess.run(
         ['docker-compose', 'up', '--build'],
         cwd=curr_dir / 'react',
@@ -40,31 +35,27 @@ def main():
             logging.error('Missing DJANGO_SECRET_KEY key in environment file')
             return
 
-    # build and deploy django backend
-    logging.info('Deploying backend')
+    # build django backend
+    logging.info('Building backend')
     subprocess.run(
-        ['docker-compose', 'up', '--detach', '--build'],
+        ['docker-compose', 'build'],
         cwd=curr_dir / 'django',
         check=True
         )
 
-    # wait until django container is up
-    for _ in range(0,60):
-        running_containers = subprocess.check_output(
-            ['docker', 'ps', '--filter', 'status=running', '--format', r'{{.Names}}'],
-            encoding='utf8'
-        )
-        if re.search('django', running_containers):
-            break
-        sleep(1)
-    else:
-        logging.error('Django could not be started !!!')
-        return
-
-    logging.info('Running database migrations')
     # run database migrations
+    logging.info('Running database migrations')
     subprocess.run(
-        ['docker', 'exec', '-it', 'django', 'python', 'manage.py', 'migrate'],
+        ['docker-compose', 'run', 'django', 'python', 'manage.py', 'migrate'],
+        cwd=curr_dir / 'django',
+        check=True
+        )
+
+    # start backend server
+    logging.info('Running uWSGI server')
+    subprocess.run(
+        ['docker-compose', 'up', '--detach'],
+        cwd=curr_dir / 'django',
         check=True
         )
 
