@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,22 +22,27 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z0^u_=7x^l%sw$u14k^tfvy0182ubh!lh6xpyx9=0k4p$d5bc3'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# Add our server IP '159.89.195.33' later
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+# dot in front will match all our subdomains
+ALLOWED_HOSTS = ['.jinx.systems']
 
-# Corsheader settings. TODO: Review these for deployment to the server
-# and read the docs, not sure if localhost will be adequate
+
+# Corsheader settings.
+# Sets which sites are allowed to contact the api
+# This should be set to where the front end will be served.
 CORS_ORIGIN_ALLOW_ALL = False
-# Whitelist the IP address and Port where the frontend will be served
-CORS_ORIGIN_WHITELIST = (
-        'http://localhost:3000', # do not finish with a /
+CORS_ALLOWED_ORIGINS = (
+    'https://app.jinx.systems',
 )
 
+
+# Prevent browsers from sending cookies if on http
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Application definition
 
@@ -85,18 +92,21 @@ WSGI_APPLICATION = 'jinx_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-# TODO: Configure these settings for MySQL, and research interaction with MySQL container
 
+# TODO: is this secure enough?
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'jinx_db',
         'USER': 'jinx',
-        'PASSWORD': 'jinx',
+        'PASSWORD': os.getenv('DJANGO_DB_PASSWORD'),
         'HOST': 'db',
         'PORT': 5432,
     }
 }
+
+# Keep the connection to the server open instead of closing on each request
+CONN_MAX_AGE = None
 
 
 # Password validation
@@ -121,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-au'
 
 TIME_ZONE = 'Australia/Melbourne'
 
@@ -137,3 +147,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
+
+
+# if development mode, load dev settings to override production settings
+if os.getenv('DJANGO_DEV'):
+    from .settings_dev import *

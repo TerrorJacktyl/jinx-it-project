@@ -21,6 +21,11 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.backend
+    # Sets environment varaibles from a file
+    env_file:
+      - django_dev.env
+    environment:
+      - DJANGO_DB_PASSWORD=jinx
     # Maps a volume from our local location to /backend in our container.
     # Allows us to have real-time access to the code in our Dockerfile.
     # Whenever we make a change in our source code, it'll automatically be mapped
