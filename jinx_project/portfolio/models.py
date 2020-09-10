@@ -1,11 +1,11 @@
 from django.db import models
-from account.models import Account
+from django.contrib.auth.models import User
 
 
 class Portfolio(models.Model):
-    # Link portfolio to account
+    # Link portfolio to user (which is linked to account)
     owner = models.ForeignKey(
-        Account, on_delete=models.CASCADE, related_name='portfolios')
+        User, on_delete=models.CASCADE, related_name='portfolios')
     # Portfolio name e.g. professional, art
     name = models.CharField(max_length=100)
 
@@ -23,18 +23,29 @@ class Page(models.Model):
     def owner(self):
         return self.portfolio.owner
 
+    class Meta:
+        ordering = ['number']
+
 
 class Section(models.Model):
     page = models.ForeignKey(
         Page, on_delete=models.CASCADE, related_name='sections')
     name = models.CharField(max_length=250)
-    description = models.CharField(max_length=1000)
+    # ordering number to order sections on a page
+    number = models.IntegerField()
 
     # not a field for the same reasoning as Page
     @property
     def owner(self):
         return self.page.owner
 
+    class Meta:
+        ordering = ['order']
+
+
+class TextSection(Section):
+    content = models.TextField()
+
 
 class MediaSection(Section):
-    pathToMedia = models.FilePathField()
+    media = models.FileField()
