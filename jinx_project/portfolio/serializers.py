@@ -1,6 +1,4 @@
 from rest_framework import serializers
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
 from .models import Portfolio, Page, Section
 
 # What is a serializer?
@@ -12,16 +10,22 @@ from .models import Portfolio, Page, Section
 class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Portfolio
-        fields = ['name', 'account']
+        fields = ['id', 'owner', 'name', 'pages']
 
 
 class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
-        fields = ['id', 'name', 'portfolio']
+        fields = ['id', 'name', 'number', 'sections']
 
 
-class SectionSerializer(serializers.ModelSerializer):
+class TextSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'number', 'content']
+
+
+class MediaSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ['id', 'name', 'number', 'media']
