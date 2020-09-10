@@ -2,19 +2,17 @@
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
+
+This is boilerplate taken from: https://github.com/Nogostradamus/react-django-YT/blob/master/backend/backendapi/backendapi/urls.py
 """
+
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework import routers
-from user import views
-
-# Defines the URL for the resources that our frontend may want to access.
-# By contacting this URL, the frontend can make calls to the RESTful API
-
-router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'user', views.UserView, 'user')
+from django.urls import path
+from django.conf.urls import include
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', include('api.urls')),
+    path('auth/', obtain_auth_token),
 ]

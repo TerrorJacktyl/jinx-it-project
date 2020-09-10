@@ -15,4 +15,6 @@ COPY ./jinx_project/ /backend/
 # Install our python package dependencies with pip, so Django, rest-api-framework etc.
 RUN pip install -r requirements.txt
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Commented out because it was moved to the docker-compose.yml to enable testing first (which depends on the db)
+# Start server
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
