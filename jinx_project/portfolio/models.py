@@ -32,15 +32,20 @@ class Section(models.Model):
         Page, on_delete=models.CASCADE, related_name='sections')
     name = models.CharField(max_length=250)
     # ordering number to order sections on a page
-    number = models.IntegerField()
+    number = models.IntegerField(default=0)
 
     # not a field for the same reasoning as Page
     @property
     def owner(self):
         return self.page.owner
 
+    @property
+    def type(self):
+        mapping = {'TextSection': 'text', 'MediaSection': 'media'}
+        return mapping[self.__class__.__name__]
+
     class Meta:
-        ordering = ['order']
+        ordering = ['number']
 
 
 class TextSection(Section):
@@ -48,4 +53,7 @@ class TextSection(Section):
 
 
 class MediaSection(Section):
-    media = models.FileField()
+    # TODO: password protect files
+    # Use the following answer for better performance
+    # https://stackoverflow.com/a/43223478
+    media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
