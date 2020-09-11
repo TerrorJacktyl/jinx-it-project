@@ -11,4 +11,5 @@
   
   },
   "prettier.printWidth": 120
+  "python.linting.enabled": true
 }
