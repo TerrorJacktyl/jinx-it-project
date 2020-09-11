@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from . import models
+from . import validators
 
 # What is a serializer?
 # They allows complex data such as querysets and model instances to
@@ -13,11 +14,25 @@ class PortfolioSerializer(serializers.ModelSerializer):
         model = models.Portfolio
         fields = ['id', 'owner', 'name', 'pages']
 
+    def validate_owner(self, value):
+        # prevent user from giving away their portfolio to someone else
+        if self.context['request'].user != value:
+            raise serializers.ValidationError(
+                'You cannot change the owner of a portfolio'
+            )
+        return value
+
 
 class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Page
         fields = ['id', 'name', 'number', 'sections']
+
+    def validate_number(self, value):
+        siblings = len(models.Page.objects.filter(
+            portfolio=self.instance.portfolio))
+        validators.number_in_range(value, siblings)
+        return value
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -29,9 +44,19 @@ class SectionSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             # don't need to show the page as that can be inferred from the url
             'page': {'write_only': True},
-            # don't need to show the number as that can be inferred from the position in the list
-            'number': {'write_only': True},
         }
+
+    def validate_page(self, value):
+        # make sure the new page is owned by the user
+        owner = models.Page.objects.get(pk=value).owner
+        if self.context['request'].user != owner:
+            raise serializers.ValidationError('You do not own this page')
+        return value
+
+    def validate_number(self, value):
+        siblings = len(models.Section.objects.filter(page=self.instance.page))
+        validators.number_in_range(value, siblings)
+        return value
 
 
 class PolymorphSectionSerializer(SectionSerializer):
@@ -52,24 +77,28 @@ class PolymorphSectionSerializer(SectionSerializer):
         try:
             serializer = self.get_serializer_map()[instance.type]
             return serializer(instance, context=self.context).to_representation(instance)
-        except KeyError:
-            return super().to_representation(instance)
+        except KeyError as ex:
+            raise serializers.ValidationError(
+                'Invalid type of section'
+            ) from ex
 
     def to_internal_value(self, data):
         try:
             section_type = data['type']
         except KeyError as ex:
             raise serializers.ValidationError(
-                'type is missing from section') from ex
+                'Type is missing from section'
+            ) from ex
         try:
             serializer = self.get_serializer_map()[section_type]
             validated_data = serializer(
                 context=self.context).to_internal_value(data)
-        except KeyError:
-            validated_data = super().to_internal_value(data)
+        except KeyError as ex:
+            raise serializers.ValidationError(
+                'Invalid type of section'
+            ) from ex
 
         # validators strip keys that are not in the model, so add the type key back
-        # TODO: validate the type key
         validated_data['type'] = section_type
         return validated_data
 

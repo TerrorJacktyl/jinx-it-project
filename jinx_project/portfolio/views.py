@@ -44,11 +44,15 @@ class PageList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return models.Page.objects.filter(portfolio=self.kwargs['portfolio_id'])
+        return models.Page.objects.filter(
+            portfolio__owner=self.request.user,
+            portfolio=self.kwargs['portfolio_id']
+        )
 
     def perform_create(self, serializer):
         portfolio = models.Portfolio.objects.get(
-            pk=self.kwargs['portfolio_id'])
+            pk=self.kwargs['portfolio_id']
+        )
         serializer.save(portfolio=portfolio)
 
 
@@ -64,10 +68,13 @@ class SectionList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        text_sections = models.TextSection.objects.filter(
-            page=self.kwargs['page_id'])
-        media_sections = models.MediaSection.objects.filter(
-            page=self.kwargs['page_id'])
+        filter_param = {
+            'page__portfolio__owner': self.request.user,
+            'page__portfolio': self.kwargs['portfolio_id'],
+            'page': self.kwargs['page_id'],
+        }
+        text_sections = models.TextSection.objects.filter(**filter_param)
+        media_sections = models.MediaSection.objects.filter(**filter_param)
         return list(text_sections) + list(media_sections)
 
     def perform_create(self, serializer):
