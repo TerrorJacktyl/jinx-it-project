@@ -20,12 +20,16 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class TextSectionSerializer(serializers.ModelSerializer):
+    type = serializers.ReadOnlyField()
+    
     class Meta:
         model = TextSection
         fields = ['id', 'name', 'number', 'content', 'type']
 
 
 class MediaSectionSerializer(serializers.ModelSerializer):
+    type = serializers.ReadOnlyField()
+
     class Meta:
         model = MediaSection
         fields = ['id', 'name', 'number', 'media', 'type']
@@ -35,21 +39,29 @@ class SectionSerializer(serializers.ModelSerializer):
     """
     Used to allow for serialization of both text and media sections in one view
     """
+
+    type = serializers.ReadOnlyField()
+
     class Meta:
         model = Section
-        fields = ['id', 'name', 'number']
+        fields = ['id', 'name', 'number', 'type']
 
     # polymorphic section serializer based on this stack overflow question:
     # https://stackoverflow.com/q/19976202
     # https://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
+
+    def get_serializer_map(self):
+        return {
+            'text': TextSectionSerializer,
+            'media': MediaSectionSerializer,
+        }
+
     def to_representation(self, instance):
-        models = [MediaSection, TextSection]
-        for model in models:
-            if isinstance(instance, model):
-                serializer = locals()[model.__name__ + 'Serializer']
-                return serializer(instance, context=self.context).to_representation(instance)
-        # use the default serialiser as a last resort
-        return super().to_representation(instance)
+        try:
+            serializer = self.get_serializer_map()[instance.type]
+            return serializer(instance, context=self.context).to_representation(instance)
+        except KeyError:
+            return super().to_representation(instance)
 
     def to_internal_value(self, data):
         try:
@@ -58,8 +70,16 @@ class SectionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'type is missing from section') from ex
         try:
-            mapping = {'text': TextSectionSerializer,
-                       'media': MediaSectionSerializer}
-            return mapping[section_type](context=self.context).to_internal_value(data)
+            serializer = self.get_serializer_map()[section_type]
+            validated_data = serializer(context=self.context).to_internal_value(data)
         except KeyError:
-            return super().to_internal_value(data)
+            validated_data = super().to_internal_value(data)
+
+        # validators strip keys that are not in the model, so add the type key back
+        # TODO: validate the type key
+        validated_data['type'] = section_type
+        return validated_data
+
+    def create(self, validated_data):
+        serializer = self.get_serializer_map()[validated_data.pop('type')]
+        return serializer(context=self.context).create(validated_data)

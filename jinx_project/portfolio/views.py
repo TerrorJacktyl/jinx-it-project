@@ -64,6 +64,10 @@ class SectionList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Section.objects.filter(page=self.kwargs['page_id'])
+    
+    def perform_create(self, serializer):
+        page = Page.objects.get(pk=self.kwargs['page_id'])
+        serializer.save(page=page)
 
 
 class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
