@@ -60,7 +60,7 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SectionList(generics.ListCreateAPIView):
-    serializer_class = serializers.SectionSerializer
+    serializer_class = serializers.PolymorphSectionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -76,7 +76,7 @@ class SectionList(generics.ListCreateAPIView):
 
 
 class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.SectionSerializer
+    serializer_class = serializers.PolymorphSectionSerializer
     lookup_url_kwarg = 'section_id'
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 

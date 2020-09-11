@@ -20,33 +20,24 @@ class PageSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'number', 'sections']
 
 
-class TextSectionSerializer(serializers.ModelSerializer):
-    type = serializers.ReadOnlyField()
-
-    class Meta:
-        model = models.TextSection
-        fields = ['id', 'name', 'number', 'content', 'type']
-
-
-class MediaSectionSerializer(serializers.ModelSerializer):
-    type = serializers.ReadOnlyField()
-
-    class Meta:
-        model = models.MediaSection
-        fields = ['id', 'name', 'number', 'media', 'type']
-
-
 class SectionSerializer(serializers.ModelSerializer):
-    """
-    Used to allow for serialization of both text and media sections in one view
-    """
-
     type = serializers.ReadOnlyField()
 
     class Meta:
         model = models.Section
-        fields = ['id', 'name', 'number', 'type']
+        fields = ['id', 'name', 'type', 'number', 'page']
+        extra_kwargs = {
+            # don't need to show the page as that can be inferred from the url
+            'page': {'write_only': True},
+            # don't need to show the number as that can be inferred from the position in the list
+            'number': {'write_only': True},
+        }
 
+
+class PolymorphSectionSerializer(SectionSerializer):
+    """
+    Used to allow for serialization of both text and media sections in one view
+    """
     # polymorphic section serializer based on this stack overflow question:
     # https://stackoverflow.com/q/19976202
     # https://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
@@ -85,3 +76,15 @@ class SectionSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         serializer = self.get_serializer_map()[validated_data.pop('type')]
         return serializer(context=self.context).create(validated_data)
+
+
+class TextSectionSerializer(SectionSerializer):
+    class Meta(SectionSerializer.Meta):
+        model = models.TextSection
+        fields = SectionSerializer.Meta.fields + ['content']
+
+
+class MediaSectionSerializer(SectionSerializer):
+    class Meta(SectionSerializer.Meta):
+        model = models.MediaSection
+        fields = SectionSerializer.Meta.fields + ['media']
