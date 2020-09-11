@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
 
@@ -63,7 +64,11 @@ class SectionList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return models.Section.objects.filter(page=self.kwargs['page_id'])
+        text_sections = models.TextSection.objects.filter(
+            page=self.kwargs['page_id'])
+        media_sections = models.MediaSection.objects.filter(
+            page=self.kwargs['page_id'])
+        return list(text_sections) + list(media_sections)
 
     def perform_create(self, serializer):
         page = models.Page.objects.get(pk=self.kwargs['page_id'])
@@ -74,4 +79,38 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.SectionSerializer
     lookup_url_kwarg = 'section_id'
     permission_classes = [permissions.IsAuthenticated, IsOwner]
-    queryset = models.Section.objects.all()
+
+    def get_queryset(self):
+        text_sections = models.TextSection.objects.all()
+        media_sections = models.MediaSection.objects.all()
+        return list(text_sections) + list(media_sections)
+
+    # modified based on code from GenericAPIView default implementation
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Perform the lookup filtering.
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+
+        # find the object with the right key
+        key = self.lookup_field
+        val = self.kwargs[lookup_url_kwarg]
+        obj = None
+        for item in queryset:
+            if str(getattr(item, key)) == val:
+                obj = item
+                break
+        else:
+            raise Http404
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
