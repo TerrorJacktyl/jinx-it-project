@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Portfolio, Page, TextSection, MediaSection, Section
+
+from . import models
 
 # What is a serializer?
 # They allows complex data such as querysets and model instances to
@@ -9,21 +10,21 @@ from .models import Portfolio, Page, TextSection, MediaSection, Section
 
 class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Portfolio
+        model = models.Portfolio
         fields = ['id', 'owner', 'name', 'pages']
 
 
 class PageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Page
+        model = models.Page
         fields = ['id', 'name', 'number', 'sections']
 
 
 class TextSectionSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField()
-    
+
     class Meta:
-        model = TextSection
+        model = models.TextSection
         fields = ['id', 'name', 'number', 'content', 'type']
 
 
@@ -31,7 +32,7 @@ class MediaSectionSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField()
 
     class Meta:
-        model = MediaSection
+        model = models.MediaSection
         fields = ['id', 'name', 'number', 'media', 'type']
 
 
@@ -43,7 +44,7 @@ class SectionSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField()
 
     class Meta:
-        model = Section
+        model = models.Section
         fields = ['id', 'name', 'number', 'type']
 
     # polymorphic section serializer based on this stack overflow question:
@@ -71,7 +72,8 @@ class SectionSerializer(serializers.ModelSerializer):
                 'type is missing from section') from ex
         try:
             serializer = self.get_serializer_map()[section_type]
-            validated_data = serializer(context=self.context).to_internal_value(data)
+            validated_data = serializer(
+                context=self.context).to_internal_value(data)
         except KeyError:
             validated_data = super().to_internal_value(data)
 
