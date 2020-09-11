@@ -9,6 +9,9 @@ class Portfolio(models.Model):
     # Portfolio name e.g. professional, art
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class Page(models.Model):
     portfolio = models.ForeignKey(
@@ -25,6 +28,9 @@ class Page(models.Model):
 
     class Meta:
         ordering = ['number']
+
+    def __str__(self):
+        return self.name
 
 
 class Section(models.Model):
@@ -46,6 +52,9 @@ class Section(models.Model):
 
     class Meta:
         ordering = ['number']
+
+    def __str__(self):
+        return self.name
 
 
 class TextSection(Section):
