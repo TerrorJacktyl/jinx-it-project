@@ -155,8 +155,6 @@ DRF_DEFAULT_RENDERER_CLASSES = (
 )
 
 DRF_DEFAULT_AUTHENTICATION_CLASSES = (
-    # for JWT authentication
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
     # for HTTP basic authentication
     'rest_framework.authentication.BasicAuthentication',
 )
