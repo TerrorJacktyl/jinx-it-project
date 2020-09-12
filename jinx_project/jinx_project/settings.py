@@ -30,6 +30,7 @@ DEBUG = False
 # dot in front will match all our subdomains
 ALLOWED_HOSTS = ['.jinx.systems']
 
+
 # Corsheader settings.
 # Sets which sites are allowed to contact the api
 # This should be set to where the front end will be served.
