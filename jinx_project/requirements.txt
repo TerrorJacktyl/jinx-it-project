@@ -2,6 +2,7 @@ asgiref==3.2.10
 Django==3.1
 django-cors-headers==3.4.0
 djangorestframework==3.11.1
+djoser==2.0.5
 psycopg2-binary>=2.8
 pytz==2020.1
 coverage==5.2.1

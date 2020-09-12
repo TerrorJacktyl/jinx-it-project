@@ -27,4 +27,6 @@ DRF_DEFAULT_AUTHENTICATION_CLASSES = (
     'rest_framework.authentication.BasicAuthentication',
     # for session based authentication. Useful for the browsable API
     'rest_framework.authentication.SessionAuthentication',
+    # tokens to be used by djoser
+    'rest_framework.authentication.TokenAuthentication',
 )

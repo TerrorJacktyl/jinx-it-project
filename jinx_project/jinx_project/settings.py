@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
     'corsheaders',
     # our django apps
     'api',
@@ -155,8 +157,8 @@ DRF_DEFAULT_RENDERER_CLASSES = (
 )
 
 DRF_DEFAULT_AUTHENTICATION_CLASSES = (
-    # for HTTP basic authentication
-    'rest_framework.authentication.BasicAuthentication',
+    # tokens to be used by djoser
+    'rest_framework.authentication.TokenAuthentication',
 )
 
 
