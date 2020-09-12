@@ -62,30 +62,6 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = models.Page.objects.all()
 
-    # after updaing, change number of other pages if reordered
-    # TODO: replace this fragile code with a manager
-    # See: https://www.revsys.com/tidbits/keeping-django-model-objects-ordered/
-    def perform_update(self, serializer):
-        # bug in pylint to do with the super method
-        # https://github.com/PyCQA/pylint/issues/2854
-        # pylint: disable=no-member
-        start = serializer.validated_data['number']  # target
-        end = serializer.instance.number  # current
-        super().perform_update(serializer)
-        delta = 1
-        if start > end:
-            delta = -1
-            start, end = end, start
-        affected = models.Page.objects.filter(
-            portfolio=serializer.instance.portfolio,
-            number__gte=start,
-            number__lte=end,
-        )
-        # perform update will validate the data, don't affect the others if
-        # there are validation errors
-        for page in affected:
-            page.number + delta
-            page.save()
 
 
 class SectionList(generics.ListCreateAPIView):

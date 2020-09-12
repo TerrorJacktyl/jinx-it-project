@@ -1,5 +1,8 @@
 from django.db import models
+from django.db.models import signals
 from django.contrib.auth.models import User
+
+from . import managers
 
 
 class Portfolio(models.Model):
@@ -19,6 +22,8 @@ class Page(models.Model):
     name = models.CharField(max_length=100)
     # page number (distinct from its id) to allow reordering of pages
     number = models.IntegerField(default=0)
+
+    objects = managers.PageManager()
 
     # don't add owner as a field of page as that goes againt relational db
     # normalisation principles
