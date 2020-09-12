@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('user/', include('account.urls')),
+    path('accounts/', include('account.urls')),
     path('', include('portfolio.urls')),
 ]
 

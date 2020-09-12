@@ -1,14 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from djoser.serializers import UserSerializer
+
 from .models import Account
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'password']
-        # Hide passwords from plain sight when viewing users
-        extra_kwargs = {'password': {'write_only': True, 'required': True}}
 
 
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,4 +11,6 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['first_name', 'last_name', 'email', 'user']
+        fields = ['user']
+        read_only_fields = ['user']
+        depth = 1
