@@ -55,8 +55,11 @@ class PageManager(models.Manager):
                 portfolio=instance.portfolio
             ).count()
 
+            # where the page wants to be placed
             target = instance.number
+            # put the page at the end of the list for now
             instance.number = siblings + 1
+            # move the page to its target location
             self.move(instance, target)
             instance.save()
 

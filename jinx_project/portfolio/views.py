@@ -53,6 +53,8 @@ class PageList(generics.ListCreateAPIView):
         portfolio = models.Portfolio.objects.get(
             pk=self.kwargs['portfolio_id']
         )
+        # TODO: portfolio gets set after the data validation occurs to for new
+        # pages, valdiation on portfolio won't work
         serializer.save(portfolio=portfolio)
 
 
@@ -63,12 +65,13 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Page.objects.all()
 
 
-
 class SectionList(generics.ListCreateAPIView):
     serializer_class = serializers.PolymorphSectionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        # double underscore is equivalent to a database join
+        # https://docs.djangoproject.com/en/3.1/topics/db/queries/#lookups-that-span-relationships
         filter_param = {
             'page__portfolio__owner': self.request.user,
             'page__portfolio': self.kwargs['portfolio_id'],
