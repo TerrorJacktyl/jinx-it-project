@@ -16,6 +16,11 @@ CORS_ALLOWED_ORIGINS = (
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
+# User uploaded files
+# Use django defaults
+MEDIA_URL = '' # /uploads/
+MEDIA_ROOT = '' # jinx_project/uploads/
+
 # enable the browsable api in dev
 DRF_DEFAULT_RENDERER_CLASSES = (
     'rest_framework.renderers.JSONRenderer',
