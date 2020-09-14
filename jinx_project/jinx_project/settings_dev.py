@@ -1,3 +1,6 @@
+
+from pathlib import Path
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -18,8 +21,8 @@ SESSION_COOKIE_SECURE = False
 
 # User uploaded files
 # Use django defaults
-MEDIA_URL = '' # /uploads/
-MEDIA_ROOT = '' # jinx_project/uploads/
+MEDIA_URL = '/media/'
+MEDIA_ROOT = Path(__file__).resolve(strict=True).parent.parent / 'media'
 
 # enable the browsable api in dev
 DRF_DEFAULT_RENDERER_CLASSES = (
