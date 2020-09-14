@@ -69,6 +69,5 @@ class TextSection(Section):
 
 class MediaSection(Section):
     # TODO: password protect files
-    # Use the following answer for better performance
-    # https://stackoverflow.com/a/43223478
+    # https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)

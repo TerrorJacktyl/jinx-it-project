@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import AccountSerializer
 from .models import Account
 from .permissions import AccountOwner
+from .swagger import AccountAutoSchema
 
 
 class AccountDetail(generics.RetrieveUpdateAPIView):
@@ -18,3 +19,5 @@ class AccountDetail(generics.RetrieveUpdateAPIView):
         obj = get_object_or_404(self.queryset, user=self.request.user)
         self.check_object_permissions(self.request, obj)
         return obj
+
+    swagger_schema = AccountAutoSchema

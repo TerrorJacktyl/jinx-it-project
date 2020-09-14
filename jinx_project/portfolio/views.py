@@ -5,6 +5,7 @@ from rest_framework import permissions
 
 from . import models
 from . import serializers
+from . import swagger
 
 from .permissions import IsOwner
 
@@ -26,6 +27,8 @@ class PortfolioList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    swagger_schema = swagger.PortfolioAutoSchema
+
 
 class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PortfolioSerializer
@@ -37,6 +40,8 @@ class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     queryset = models.Portfolio.objects.all()
+
+    swagger_schema = swagger.PortfolioAutoSchema
 
 
 class PageList(generics.ListCreateAPIView):
@@ -57,12 +62,15 @@ class PageList(generics.ListCreateAPIView):
         # pages, valdiation on portfolio won't work
         serializer.save(portfolio=portfolio)
 
+    swagger_schema = swagger.PortfolioAutoSchema
+
 
 class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PageSerializer
     lookup_url_kwarg = 'page_id'
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = models.Page.objects.all()
+    swagger_schema = swagger.PortfolioAutoSchema
 
 
 class SectionList(generics.ListCreateAPIView):
@@ -84,6 +92,8 @@ class SectionList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         page = models.Page.objects.get(pk=self.kwargs['page_id'])
         serializer.save(page=page)
+
+    swagger_schema = swagger.PortfolioAutoSchema
 
 
 class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -125,3 +135,5 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
 
         return obj
+
+    swagger_schema = swagger.PortfolioAutoSchema

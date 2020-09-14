@@ -31,10 +31,13 @@ DRF_DEFAULT_RENDERER_CLASSES = (
 )
 
 DRF_DEFAULT_AUTHENTICATION_CLASSES = (
-    # for HTTP basic authentication
-    'rest_framework.authentication.BasicAuthentication',
     # for session based authentication. Useful for the browsable API
     'rest_framework.authentication.SessionAuthentication',
     # tokens to be used by djoser
     'rest_framework.authentication.TokenAuthentication',
 )
+
+SWAGER_DJANGO_SESSIONS = True
+
+LOGIN_URL = '/api/dev-auth/login'
+LOGOUT_URL = 'api/dev-auth/logout'

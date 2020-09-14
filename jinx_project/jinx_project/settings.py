@@ -169,6 +169,16 @@ DRF_DEFAULT_AUTHENTICATION_CLASSES = (
 )
 
 
+SWAGGER_SECURITY_DEFINITIONS = {
+    'Bearer': {
+        'type': 'apiKey',
+        'name': 'Authorization',
+        'in': 'header'
+    }
+}
+
+SWAGER_DJANGO_SESSIONS = False
+
 # if development mode, load dev settings to override production settings
 if os.getenv('DJANGO_DEV'):
     from .settings_dev import *
@@ -179,4 +189,10 @@ if os.getenv('DJANGO_DEV'):
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DRF_DEFAULT_RENDERER_CLASSES,
     'DEFAULT_AUTHENTICATION_CLASSES': DRF_DEFAULT_AUTHENTICATION_CLASSES,
+}
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': SWAGGER_SECURITY_DEFINITIONS,
+    'USE_SESSION_AUTH': SWAGER_DJANGO_SESSIONS,
 }

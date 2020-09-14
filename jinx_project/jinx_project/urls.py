@@ -5,6 +5,8 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 
 """
 
+from pathlib import Path
+
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
@@ -19,11 +21,13 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 # For Swagger:
+swagger_desc = Path(__file__).resolve(strict=True).parent / 'swagger_desc.md'
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Jinx API",
         default_version='v1',
-        description="Main Jinx API",
+        description=open(swagger_desc).read()
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -44,5 +48,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += [
-        path('api/dev-login', include('rest_framework.urls')),
+        path('api/dev-auth/', include('rest_framework.urls')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
