@@ -21,11 +21,11 @@ $ sudo chown -R $USER:$USER .
 ### Building
 
 ```bash
-# first build, or a rebuild after changing requirements.txt
-$ docker-compose run django python manage.py migrate
-
-# rebuild
+# build (standard)
 $ docker-compose build
+
+# build after removing packages from requirements.txt
+$ docker-compose build --no-cache
 ```
 
 Having trouble building? Look under the Issues header :)
@@ -35,6 +35,9 @@ Having trouble building? Look under the Issues header :)
 ```bash
 # run
 $ docker-compose up
+
+# after changing database models (i.e. any changes to a models.py file)
+$ docker-compose run django python manage.py makemigrations && python manage.py migrate
 ```
 
 ## Mucking around
@@ -193,3 +196,11 @@ To fix this:
 ```bash
 ./manage.py makemigrations && ./manage.py migrate
 ```
+
+# API Documentation
+
+This application uses Swagger to automatically document the API
+
+You can access it by running the server and going to `/swagger/` in your web browser
+
+See [drf-yasg documentation](https://drf-yasg.readthedocs.io/en/stable/) for more information
