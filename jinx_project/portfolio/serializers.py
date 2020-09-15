@@ -66,7 +66,7 @@ class SectionSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         siblings = len(models.Section.objects.filter(page=attrs['page']))
         validators.number_in_range(attrs['number'], siblings)
-        return value
+        return attrs
 
     def to_internal_value(self, data: dict):
         if 'page' not in data:
