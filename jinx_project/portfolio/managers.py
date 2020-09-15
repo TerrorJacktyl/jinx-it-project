@@ -7,7 +7,11 @@ from django.db.models import F
 # managers handel interacting with the database
 
 
-class PageManager(models.Manager):
+class OrderManager(models.Manager):
+    def __init__(self, parent_field):
+        super().__init__()
+        self.parent_field = parent_field
+
     def move(self, obj, new_position):
 
         # Queryset is a high level abstraction of a SQL statement.
@@ -28,10 +32,13 @@ class PageManager(models.Manager):
                 # keep start < end
                 start, end = end, start
 
+            filter_args = {
+                self.parent_field: getattr(obj, self.parent_field),
+                'number__gte': start,
+                'number__lt': end,
+            }
             qs.filter(
-                portfolio=obj.portfolio,
-                number__gte=start,
-                number__lt=end,
+                **filter_args
             ).exclude(
                 # Don't update the item being moved
                 pk=obj.pk
@@ -51,8 +58,11 @@ class PageManager(models.Manager):
         # see move function above
         with transaction.atomic():
             # get how many siblings a page has
+            filter_args = {
+                self.parent_field: getattr(instance, self.parent_field)
+            }
             siblings = self.filter(
-                portfolio=instance.portfolio
+                **filter_args
             ).count()
 
             # where the page wants to be placed

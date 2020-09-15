@@ -24,7 +24,7 @@ class Page(models.Model):
     number = models.IntegerField(default=0)
 
     # set a custom manager for page reordering support
-    objects = managers.PageManager()
+    objects = managers.OrderManager(parent_field='portfolio')
 
     # don't add owner as a field of page as that goes againt relational db
     # normalisation principles
@@ -45,6 +45,8 @@ class Section(models.Model):
     name = models.CharField(max_length=250)
     # ordering number to order sections on a page
     number = models.IntegerField(default=0)
+
+    objects = managers.OrderManager(parent_field='page')
 
     # not a field for the same reasoning as Page's owner
     @property
