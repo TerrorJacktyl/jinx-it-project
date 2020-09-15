@@ -26,17 +26,17 @@ class PageInputSerializer(serializers.ModelSerializer):
         model = models.Page
         fields = ['id', 'name', 'number']
 
-    # no portfolio validation needed as portfolio is not a field
-    # to be serialised
-    # if the ability to move pages between portfolios is to be added, add a
-    # validator
+    def validate(self, attrs):
+        siblings = len(models.Page.objects.filter(
+            portfolio=attrs['portfolio']))
+        validators.number_in_range(attrs['number'], siblings)
+        return attrs
 
-    # TODO: validation fails on create as self.instance would be None
-    # def validate_number(self, value):
-    #    siblings = len(models.Page.objects.filter(
-    #        portfolio=self.instance.portfolio))
-    #    validators.number_in_range(value, siblings)
-    #    return value
+    def to_internal_value(self, data: dict):
+        val = super().to_internal_value(data)
+        val['portfolio'] = models.Portfolio.objects.get(
+            pk=self.context['portfolio_id'])
+        return val
 
 
 class PageOutputSerializer(serializers.ModelSerializer):
@@ -63,10 +63,10 @@ class SectionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('You do not own this page')
         return value
 
-    # def validate_number(self, value):
-    #    siblings = len(models.Section.objects.filter(page=self.instance.page))
-    #    validators.number_in_range(value, siblings)
-    #    return value
+    def validate(self, attrs):
+        siblings = len(models.Section.objects.filter(page=attrs['page']))
+        validators.number_in_range(attrs['number'], siblings)
+        return value
 
     def to_internal_value(self, data: dict):
         if 'page' not in data:

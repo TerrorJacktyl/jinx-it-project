@@ -64,13 +64,10 @@ class PageList(generics.ListCreateAPIView):
             portfolio=self.kwargs['portfolio_id']
         )
 
-    def perform_create(self, serializer):
-        portfolio = models.Portfolio.objects.get(
-            pk=self.kwargs['portfolio_id']
-        )
-        # TODO: portfolio gets set after the data validation occurs to for new
-        # pages, valdiation on portfolio won't work
-        serializer.save(portfolio=portfolio)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['portfolio_id'] = self.kwargs['portfolio_id']
+        return context
 
     swagger_schema = swagger.PortfolioAutoSchema
 
@@ -85,6 +82,11 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = models.Page.objects.all()
     swagger_schema = swagger.PortfolioAutoSchema
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['portfolio_id'] = self.kwargs['portfolio_id']
+        return context
 
 
 class SectionList(generics.ListCreateAPIView):
@@ -110,9 +112,6 @@ class SectionList(generics.ListCreateAPIView):
         context['page_id'] = self.kwargs['page_id']
         return context
 
-    def perform_create(self, serializer: serializers.SectionSerializer):
-        serializer.save()
-
     swagger_schema = swagger.PortfolioAutoSchema
 
 
@@ -125,6 +124,11 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         text_sections = models.TextSection.objects.all()
         media_sections = models.MediaSection.objects.all()
         return list(text_sections) + list(media_sections)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['page_id'] = self.kwargs['page_id']
+        return context
 
     # modified based on code from GenericAPIView default implementation
     def get_object(self):
