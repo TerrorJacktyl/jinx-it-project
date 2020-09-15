@@ -2,12 +2,18 @@ asgiref==3.2.10
 Django==3.1
 django-cors-headers==3.4.0
 djangorestframework==3.11.1
-djoser==2.0.5
 psycopg2-binary>=2.8
 pytz==2020.1
 coverage==5.2.1
-hypothesis[cli,django]==5.33.1
 
+# djoser
+django-templated-mail==1.1.1
+djoser==2.0.5
+
+# hypothesis
+sortedcontainers==2.2.2
+attrs==20.2.0
+hypothesis==5.33.1
 
 ## Swagger integration components
 certifi==2020.6.20
