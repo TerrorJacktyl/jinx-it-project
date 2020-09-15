@@ -24,5 +24,5 @@ class Account(models.Model):
 
 # autocreate account on user registration
 @receiver(user_registered)
-def create_account(sender, instance, **kwargs):
-    Account.objects.create(user=instance)
+def create_account(sender, **kwargs):
+    Account.objects.create(user=kwargs['user'])

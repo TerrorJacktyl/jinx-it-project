@@ -4,6 +4,8 @@ from hypothesis.extra.django import TestCase, from_model
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+from unittest import skip
+
 from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
 from account.models import Account
@@ -28,7 +30,7 @@ class PortfolioTest(TestCase):
     def setUp(self):
         """Code run before each test. Setup API access simulation."""
         pass
-
+    @skip
     # test for max of 2 seconds with 10 random examples
     @settings(deadline=2000, max_examples=10)
     # generate a random user and random portfolio name
@@ -50,6 +52,7 @@ class PortfolioTest(TestCase):
             self.assertEqual(response.status_code, 201)
             self.assertEqual(response.data['name'], name)
 
+    @skip
     @settings(deadline=2000, max_examples=10)
     @given(portfolio=generate_portfolio().flatmap(add_pages_to_portfolio))
     def test_retrieve(self, portfolio: Portfolio):
@@ -75,6 +78,7 @@ class PortfolioTest(TestCase):
 
 
 class PageTest(TestCase):
+    @skip
     @settings(deadline=2000, max_examples=10)
     @given(portfolio=generate_portfolio(), name=st.text())
     def test_create(self, portfolio, name):
@@ -94,6 +98,7 @@ class PageTest(TestCase):
             self.assertEqual(response.data['name'], name)
             self.assertEqual(response.data['number'], 0)
 
+    @skip
     @settings(deadline=2000, max_examples=10)
     @given(page=from_model(Page, portfolio=generate_portfolio(), name=st.text(), number=st.just(0))
            .flatmap(add_sections_to_page))

@@ -13,6 +13,8 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
 
+import djoser.views
+from rest_framework.routers import DefaultRouter
 
 # For Swagger:
 from django.conf.urls import url
@@ -34,12 +36,17 @@ schema_view = get_schema_view(
 )
 
 
+djoser_routes = DefaultRouter(trailing_slash=False)
+djoser_routes.register('users', djoser.views.UserViewSet)
+
+
 urlpatterns = [
     # Main site
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    path('auth/', include(djoser_routes.urls)),
+    path('auth/token/login', djoser.views.TokenCreateView.as_view(), name='login'),
+    path('auth/token/logout', djoser.views.TokenDestroyView.as_view(), name='logout'),
     # Swagger
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

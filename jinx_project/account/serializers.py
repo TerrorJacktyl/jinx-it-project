@@ -15,3 +15,17 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
         model = Account
         fields = ['user', 'first_name', 'last_name']
         depth = 1
+
+    def update(self, instance, validated_data):
+        instance.user.first_name = (
+            validated_data
+            .get('user', {})
+            .get('first_name', instance.user.first_name)
+        )
+        instance.user.last_name = (
+            validated_data
+            .get('user', {})
+            .get('last_name', instance.user.last_name)
+        )
+        instance.user.save()
+        return instance
