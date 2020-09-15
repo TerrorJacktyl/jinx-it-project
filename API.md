@@ -7,7 +7,7 @@ Here's a quick summary: `​/api​/portfolios​/{portfolio_id}​/pages​/{pa
 
 Warning! The swagger docs may not reflect the actual API. I have documented known disrepancies in the swagger docs description.
 
-[readme]: [README.md]
+[readme]: README.md
 
 ### Authentication
 The [djoser docs][djoser] has a great example for how the token authentication operates.
@@ -16,7 +16,7 @@ Here's a summary:
  1. Send a request to `/auth/token/login` with your username and password. A token will be returned.
  2. On subsequent requests that need authentication, add the token in the request header. ie, `Authorization: Token b704c9fc3655635646356ac2950269f352ea1139`
 
-[djoser]: [https://djoser.readthedocs.io/en/latest/sample_usage.html]
+[djoser]: https://djoser.readthedocs.io/en/latest/sample_usage.html
 
 ### How to create a new user
 
