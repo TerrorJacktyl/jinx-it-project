@@ -11,7 +11,10 @@ from .permissions import IsOwner
 
 
 class PortfolioList(generics.ListCreateAPIView):
-    serializer_class = serializers.PortfolioSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return serializers.PortfolioInputSerializer
+        return serializers.PortfolioOutputSerializer
 
     # only allow signed in users to see their portfolios
     permission_classes = [permissions.IsAuthenticated]
@@ -31,7 +34,10 @@ class PortfolioList(generics.ListCreateAPIView):
 
 
 class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.PortfolioSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.PortfolioInputSerializer
+        return serializers.PortfolioOutputSerializer
 
     # key to use in url configuration
     lookup_url_kwarg = 'portfolio_id'
@@ -45,7 +51,11 @@ class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class PageList(generics.ListCreateAPIView):
-    serializer_class = serializers.PageSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return serializers.PageInputSerializer
+        return serializers.PageOutputSerializer
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -66,7 +76,11 @@ class PageList(generics.ListCreateAPIView):
 
 
 class PageDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.PageSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.PageInputSerializer
+        return serializers.PageOutputSerializer
+
     lookup_url_kwarg = 'page_id'
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = models.Page.objects.all()
@@ -89,9 +103,15 @@ class SectionList(generics.ListCreateAPIView):
         media_sections = models.MediaSection.objects.filter(**filter_param)
         return list(text_sections) + list(media_sections)
 
-    def perform_create(self, serializer):
-        page = models.Page.objects.get(pk=self.kwargs['page_id'])
-        serializer.save(page=page)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        # kind of redundant as context['view'] would have the kwargs but just in case
+        # the urls change
+        context['page_id'] = self.kwargs['page_id']
+        return context
+
+    def perform_create(self, serializer: serializers.SectionSerializer):
+        serializer.save()
 
     swagger_schema = swagger.PortfolioAutoSchema
 
