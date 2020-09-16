@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['.jinx.systems']
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = (
     'https://app.jinx.systems',
+    'http://localhost:3000'
 )
 
 
