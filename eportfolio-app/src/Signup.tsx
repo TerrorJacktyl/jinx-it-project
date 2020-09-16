@@ -15,7 +15,7 @@ import {
   AccountPageDiv,
 } from "jinxui";
 
-// import { Redirect } from "react-router-dom"; still not working
+import { Redirect } from "react-router-dom";
 
 // Idea on how to submit properly:
 // https://stackoverflow.com/questions/43230194/how-to-use-redirect-in-the-new-react-router-dom-of-reactjs
@@ -46,6 +46,7 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
+// We'll need to ensure that this schema is more strict than Django's user sign up
 const SignupSchema = Yup.object().shape({
   firstName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
   lastName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
@@ -57,62 +58,84 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Signup = () => {
+
+  const [redirect, setRedirect] = useState(false);
+
+  const onRegister = () => {
+    return <Redirect to="/login" />
+  }
+
   const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
-  return (
-    <AccountPageDiv>
-      <SiteHeader>
-        <HeaderDiv>
-          <LogoLink />
-          <HeaderTitle>Sign Up</HeaderTitle>
-        </HeaderDiv>
-      </SiteHeader>
-      <StyledFormDiv>
-        <FormTitle>Sign up for free!</FormTitle>
-        <Formik
-          initialValues={{ firstName: "", lastName: "", email: "", password: "", passwordConfirm: "" }}
-          validationSchema={SignupSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
 
-            axios
-              .post(`http://127.0.0.1:8080/api/user`, {
-                first_name: values.firstName,
-                last_name: values.lastName,
-                email: values.email,
-                password: values.password,
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
-              })
-              .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
-          }}
-        >
-          {({ errors, touched, isSubmitting }) => (
-            <Form>
-              <StyledFormEntry name="firstName" placeholder="First Name" />
-              {errors.firstName && touched.firstName ? <ErrorMessage>{errors.firstName}</ErrorMessage> : null}
+  if (redirect)
+    return onRegister();
+  else
+    return (
+      <AccountPageDiv>
+        <SiteHeader>
+          <HeaderDiv>
+            <LogoLink />
+            <HeaderTitle>Sign Up</HeaderTitle>
+          </HeaderDiv>
+        </SiteHeader>
+        <StyledFormDiv>
+          <FormTitle>Sign up for free!</FormTitle>
+          <Formik
+            initialValues={{ firstName: "", lastName: "", email: "", password: "", passwordConfirm: "" }}
+            validationSchema={SignupSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
 
-              <StyledFormEntry name="lastName" placeholder="Last Name" />
-              {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
+              axios
+                .post(`http://127.0.0.1:8080/auth/users`,
+                  {
+                    username: values.email,
+                    password: values.password,
+                    email: values.email,
+                  }
+                  // {
+                  // first_name: values.firstName,
+                  // last_name: values.lastName,
+                  // email: values.email,
+                  // password: values.password,
+                  // }
+                )
+                .then(function (response: any) {
+                  console.log(response);
+                  setSubmitting(false);
+                  if (response.data['email']) { // only present if successful
+                    console.log(response.data);
+                    setRedirect(true);
+                  }
+                })
+                .catch(function (error: any) {
+                  setSubmittionError(true);
+                  setSubmitting(false);
+                  console.log(error);
+                  console.log(submittionError);
+                });
+            }}
+          >
+            {({ errors, touched, isSubmitting }) => (
+              <Form>
+                <StyledFormEntry name="firstName" placeholder="First Name" />
+                {errors.firstName && touched.firstName ? <ErrorMessage>{errors.firstName}</ErrorMessage> : null}
 
-              <StyledFormEntry name="email" type="email" placeholder="Email" />
-              {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+                <StyledFormEntry name="lastName" placeholder="Last Name" />
+                {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
 
-              <StyledFormEntry name="password" type="password" placeholder="Password" />
-              {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+                <StyledFormEntry name="email" type="email" placeholder="Email" />
+                {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
 
-              <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password" />
-              {errors.passwordConfirm && touched.passwordConfirm ? (
-                <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
-              ) : null}
-              <StyledLink href="/profile">
+                <StyledFormEntry name="password" type="password" placeholder="Password" />
+                {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+
+                <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password" />
+                {errors.passwordConfirm && touched.passwordConfirm ? (
+                  <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
+                ) : null}
+
                 <StyledButton
                   type="submit"
                   disabled={isSubmitting}
@@ -124,15 +147,14 @@ const Signup = () => {
                   text="Join"
                   fontSize={null}
                 />
-              </StyledLink>
-              {submittionError ? 
-                <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
-            </Form>
-          )}
-        </Formik>
-      </StyledFormDiv>
-    </AccountPageDiv>
-  );
+                {submittionError ?
+                  <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
+              </Form>
+            )}
+          </Formik>
+        </StyledFormDiv>
+      </AccountPageDiv>
+    );
 };
 
 export default Signup;
