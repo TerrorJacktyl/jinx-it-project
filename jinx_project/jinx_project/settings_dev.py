@@ -16,11 +16,17 @@ CORS_ALLOWED_ORIGINS = (
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
+# enable the browsable api in dev
+DRF_DEFAULT_RENDERER_CLASSES = (
+    'rest_framework.renderers.JSONRenderer',
+    'rest_framework.renderers.BrowsableAPIRenderer',
+)
 
-# enable the browsable api
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    )
-}
+DRF_DEFAULT_AUTHENTICATION_CLASSES = (
+    # for HTTP basic authentication
+    'rest_framework.authentication.BasicAuthentication',
+    # for session based authentication. Useful for the browsable API
+    'rest_framework.authentication.SessionAuthentication',
+    # tokens to be used by djoser
+    'rest_framework.authentication.TokenAuthentication',
+)

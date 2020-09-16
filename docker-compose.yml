@@ -3,7 +3,8 @@ version: "3"
 services:
   db:
     container_name: jinx_db
-    image: postgres
+    # freeze the database version in case there are breaking changes in an update
+    image: postgres:12.4-alpine
     environment:
       # Denotes DB name to be created on image startup
       - POSTGRES_DB=jinx_db

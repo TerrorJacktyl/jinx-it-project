@@ -9,7 +9,6 @@ This is boilerplate taken from: https://github.com/Nogostradamus/react-django-YT
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
-from rest_framework.authtoken.views import obtain_auth_token
 
 # For Swagger:
 from django.conf.urls import url
@@ -33,7 +32,8 @@ urlpatterns = [
     # Main site
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('auth/', obtain_auth_token),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
     # Swagger
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
