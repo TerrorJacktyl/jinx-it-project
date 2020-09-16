@@ -3,7 +3,8 @@ import './App.css';
 import Login from './Login';
 import Signup from './Signup';
 import Home from './Home';
-import Profile from './Profile'
+import Profile from './Profile';
+import Portfolio from './Portfolio';
 import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" exact component={Login}/>
           <Route path="/signup" exact component={Signup}/>
           <Route path="/profile" exact component={Profile}/>
+          <Route path="/portfolio" exact component={Portfolio}/>
         </Switch>
       </div>
     </Router>
