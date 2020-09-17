@@ -30,6 +30,10 @@ $ docker-compose build --no-cache
 
 Having trouble building? Look under the Issues header :)
 
+#### Warning: did you just change the models in the database?
+
+If you changed a model that will affect existing data in your database, _a rebuild will not be enough to refresh your data_. You will need to remove the postgres image to wipe your database with `docker rmi postgres` before you do a rebuild.
+
 ### Running
 
 ```bash
