@@ -132,3 +132,8 @@ class MediaSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
         model = models.MediaSection
         fields = SectionSerializer.Meta.fields + ['media']
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = models.ImageSection
+        fields = ['name', 'image']

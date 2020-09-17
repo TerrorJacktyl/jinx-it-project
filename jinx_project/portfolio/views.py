@@ -161,3 +161,11 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
     swagger_schema = swagger.PortfolioAutoSchema
+
+
+class ImgList(generics.ListCreateAPIView):
+    queryset = models.ImageSection.objects.all()
+    serializer = serializers.ImageSerializer
+    lookup_url_kwarg = 'img_id'
+
+    swagger_schema = swagger.SwaggerAutoSchema

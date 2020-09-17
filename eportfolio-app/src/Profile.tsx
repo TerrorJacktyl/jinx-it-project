@@ -54,6 +54,14 @@ const StyledButton = styled(Button)`
   position: relative;
 `;
 
+const StyledUploadButton = styled(Button)`
+  display: inline;
+  margin-top: 30px;
+  margin-right: 30px;
+  display: block;
+  position: relative;
+`;
+
 const StyledCancelButton = styled(Button)`
   display: inline;
   float: left;
@@ -73,9 +81,11 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
-
 const ProfileSchema = Yup.object().shape({
-  websiteName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
+  websiteName: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
   biography: Yup.string().min(2, "Too Short!"),
   academicHistory: Yup.string().min(2, "Too Short!"),
   professionalHistory: Yup.string().min(2, "Too Short!"),
@@ -84,6 +94,7 @@ const ProfileSchema = Yup.object().shape({
 const Profile = () => {
   const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
+  const [imageFile, setImageFile] = useState<File|null>(new File([""], "nullfile"));
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -128,20 +139,54 @@ const Profile = () => {
             <Form>
               <FieldTitle>Website Name</FieldTitle>
               <StyledFormEntry name="websiteName" />
-              {errors.websiteName && touched.websiteName ? <ErrorMessage>{errors.websiteName}</ErrorMessage> : null}
-
+              {errors.websiteName && touched.websiteName ? (
+                <ErrorMessage>{errors.websiteName}</ErrorMessage>
+              ) : null}
+              <StyledUploadButton
+                type="submit"
+                disabled={isSubmitting}
+                width={null}
+                textColour="#00FFC2"
+                backgroundColour={null}
+                hoverColour="#00FFC2"
+                contrastColour="#1C1C1C"
+                text="Upload"
+                fontSize={null}
+              />
+              <input
+                id="file"
+                name="file"
+                type="file"
+                onChange={(event) => {
+                  if (event.currentTarget.files) {
+                    setImageFile(event.currentTarget.files[0])
+                  } else {
+                    setImageFile(new File([""], "blank_file"))
+                  }
+                  console.log("Image file upload attempted")
+                  console.log(imageFile)
+                }}
+              />
               <FieldTitle>Biography</FieldTitle>
               <TallStyledFormEntry component="textarea" name="biography" />
-              {errors.biography && touched.biography ? <ErrorMessage>{errors.biography}</ErrorMessage> : null}
+              {errors.biography && touched.biography ? (
+                <ErrorMessage>{errors.biography}</ErrorMessage>
+              ) : null}
 
               <FieldTitle>Academic History</FieldTitle>
-              <TallStyledFormEntry component="textarea" name="academicHistory" />
+              <TallStyledFormEntry
+                component="textarea"
+                name="academicHistory"
+              />
               {errors.academicHistory && touched.academicHistory ? (
                 <ErrorMessage>{errors.academicHistory}</ErrorMessage>
               ) : null}
 
               <FieldTitle>Professional History</FieldTitle>
-              <TallStyledFormEntry component="textarea" name="professionalHistory" />
+              <TallStyledFormEntry
+                component="textarea"
+                name="professionalHistory"
+              />
               {errors.professionalHistory && touched.professionalHistory ? (
                 <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
               ) : null}
@@ -170,7 +215,11 @@ const Profile = () => {
                   fontSize={null}
                 />
               </div>
-              {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
+              {submittionError ? (
+                <ErrorMessage>
+                  Error signing up. Please try again later.
+                </ErrorMessage>
+              ) : null}
             </Form>
           )}
         </Formik>

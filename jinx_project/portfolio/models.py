@@ -73,3 +73,7 @@ class MediaSection(Section):
     # TODO: password protect files
     # https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
+
+class ImageSection(models.Model):
+    name = models.CharField(max_length = 50)
+    img = models.ImageField(upload_to = 'images/')

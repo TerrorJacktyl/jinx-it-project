@@ -36,4 +36,9 @@ urlpatterns = [
         views.SectionDetail.as_view(),
         name='section_detail',
     ),
+    path(
+        'portfolios/<img_id>/media',
+        views.ImgList.as_view(),
+        name = 'image_list'
+    )
 ]
