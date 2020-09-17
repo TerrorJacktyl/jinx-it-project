@@ -32,9 +32,10 @@ class AccountTest(TestCase):
                 'password': password,
                 'email': email,
             }, follow=True)
-            assume(response.status_code < 400) 
+            assume(response.status_code < 400)
             self.assertEqual(response.data['username'], username)
-            self.assertEqual(response.data['email'], BaseUserManager.normalize_email(email))
+            self.assertEqual(
+                response.data['email'], BaseUserManager.normalize_email(email))
 
         with self.subTest(msg='login'):
             response = client.post('/auth/token/login', {
@@ -62,5 +63,6 @@ class AccountTest(TestCase):
             self.assertLess(response.status_code, 400)
             self.assertEqual(response.data['first_name'], first_name)
             self.assertEqual(response.data['last_name'], last_name)
-            self.assertEqual(response.data['user']['email'], BaseUserManager.normalize_email(email))
+            self.assertEqual(
+                response.data['user']['email'], BaseUserManager.normalize_email(email))
             self.assertEqual(response.data['user']['username'], username)

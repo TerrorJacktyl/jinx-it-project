@@ -12,6 +12,7 @@ from .permissions import IsOwner
 
 class PortfolioList(generics.ListCreateAPIView):
     def get_serializer_class(self):
+        # Allows this url to handle GET and POST with different serializers
         if self.request.method in ['POST']:
             return serializers.PortfolioInputSerializer
         return serializers.PortfolioOutputSerializer

@@ -4,13 +4,11 @@ from django.db.models import F
 # order management code adapted from
 # https://www.revsys.com/tidbits/keeping-django-model-objects-ordered/
 
-# managers handel interacting with the database
+# managers handle interacting with the database
 
 
 class OrderManager(models.Manager):
-    def __init__(self, parent_field):
-        super().__init__()
-        self.parent_field = parent_field
+    parent_field = None
 
     def move(self, obj, new_position):
 
@@ -76,3 +74,11 @@ class OrderManager(models.Manager):
             return instance
 
     # TODO: move item on post/patch request
+
+
+class PageManager(OrderManager):
+    parent_field = 'portfolio'
+
+
+class SectionManager(OrderManager):
+    parent_field = 'page'

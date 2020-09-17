@@ -23,7 +23,9 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     command: >
-      bash -c "python manage.py test
+      bash -c "
+      python manage.py makemigrations && python manage.py migrate
+      && python manage.py test
       && python manage.py runserver 0.0.0.0:8000"
     # Sets environment varaibles from a file
     env_file:
