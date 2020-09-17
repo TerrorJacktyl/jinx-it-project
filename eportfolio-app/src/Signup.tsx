@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
+import API from './API';
 
 import styled from "styled-components";
 import { Formik, Form } from "formik";
@@ -15,11 +17,6 @@ import {
   AccountPageDiv,
 } from "jinxui";
 
-import { Redirect } from "react-router-dom";
-
-// Idea on how to submit properly:
-// https://stackoverflow.com/questions/43230194/how-to-use-redirect-in-the-new-react-router-dom-of-reactjs
-
 const StyledFormEntry = styled(FormEntry)`
   font-family: "Heebo", sans-serif;
   margin-top: 15px;
@@ -30,6 +27,12 @@ const FormTitle = styled.h2`
   color: #eeeeee;
   font-weight: 300;
 `;
+
+const FormText = styled.h4`
+  font-family: "Heebo", sans-serif;
+  color: #eeeeee;
+  font-weight: 300;
+`
 
 const StyledButton = styled(Button)`
   margin: auto;
@@ -59,13 +62,14 @@ const SignupSchema = Yup.object().shape({
 
 const Signup = () => {
 
+  // This could be parametrized to accept multiple different redirects
+  // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
   const [redirect, setRedirect] = useState(false);
 
   const onRegister = () => {
     return <Redirect to="/login" />
   }
 
-  const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
 
   if (redirect)
@@ -87,8 +91,8 @@ const Signup = () => {
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
 
-              axios
-                .post(`http://127.0.0.1:8080/auth/users`,
+              API
+                .post(`auth/users`,
                   {
                     username: values.email,
                     password: values.password,
@@ -147,6 +151,9 @@ const Signup = () => {
                   text="Join"
                   fontSize={null}
                 />
+
+                <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
+
                 {submittionError ?
                   <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
               </Form>

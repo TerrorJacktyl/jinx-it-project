@@ -13,6 +13,9 @@ import {
   AccountPageDiv,
 } from "jinxui";
 import styled from "styled-components";
+import { UserContext } from "jinxui";
+
+import API from './API';
 
 const StyledFormEntry = styled(FormEntry)`
   font-family: "Heebo", sans-serif;
@@ -40,7 +43,6 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Login = () => {
-  const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
 
   return (
@@ -60,8 +62,8 @@ const Login = () => {
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
 
-            axios
-              .post(`localhost:8080/api/login`, {
+            API
+              .post(`auth/token/login`, {
                 email: values.email,
                 password: values.password,
               })
@@ -81,10 +83,10 @@ const Login = () => {
             <Form>
               <StyledFormEntry name="email" type="email" placeholder="Email address" />
               {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
-              
+
               <StyledFormEntry name="password" type="password" placeholder="Password" />
               {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
-              
+
               <StyledButton
                 type="submit"
                 disabled={isSubmitting}
@@ -97,7 +99,7 @@ const Login = () => {
                 fontSize={null}
               />
               {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
-              
+
               <StyledButton
                 width={null}
                 textColour="#EEEEEE"
@@ -111,8 +113,7 @@ const Login = () => {
           )}
         </Formik>
       </StyledFormDiv>
-    </AccountPageDiv>
-  );
-};
+    </AccountPageDiv>)
+}
 
 export default Login;
