@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
 
-# TODO: Look into Django's user authentication. This will do for now
+from djoser.signals import user_registered
 
 
 class Account(models.Model):
@@ -14,10 +15,14 @@ class Account(models.Model):
     # Link the account model to Django's default User model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # Our user fields
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=80)
-    email = models.EmailField(max_length=250)
+    # TODO: additional fields
+    # default user defines username, firstname, lastname, email
 
     def _str_(self):
-        return self.first_name
+        return self.user.first_name
+
+
+# autocreate account on user registration
+@receiver(user_registered)
+def create_account(sender, **kwargs):
+    Account.objects.create(user=kwargs['user'])
