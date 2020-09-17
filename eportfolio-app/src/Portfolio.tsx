@@ -133,7 +133,7 @@ const Portfolio = () => {
   }
   const fetchPortfolios = async () => {
     const portfolios = await axios.get(
-      `http://127.0.0.1:8080/api/portfolios`, { auth: token }
+      `http://127.0.0.1:8080/api/portfolios`, { headers: {'Authorization': 'Token ' + token} }
     );
     setPortfolios(portfolios);
   };
