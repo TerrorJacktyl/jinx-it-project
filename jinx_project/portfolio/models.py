@@ -75,5 +75,9 @@ class MediaSection(Section):
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
 
 class ImageSection(models.Model):
-    name = models.CharField(max_length = 50)
-    # img = models.ImageField(upload_to = 'images/')
+    name = models.CharField(max_length = 100)
+    content = models.TextField(null = True)
+    image = models.ImageField(upload_to = 'images', null = True)
+
+    def __str__(self):
+        return self.name

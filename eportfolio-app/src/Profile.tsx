@@ -300,12 +300,17 @@ const Profile = () => {
         <div>
         <button
           onClick={() => {
-            // const fd = new FormData();
-            // fd.append('image', imageFile, imageFile.name);
+            const form_data = new FormData();
+            form_data.append('image', imageFile, imageFile.name);
             axios
-              .post('http://127.0.0.1:8080/api/images', {
-                name: "Kevin"
+              .post('http://127.0.0.1:8080/api/images', form_data, {
+                headers: {
+                  'content-type': 'multipart/form-data'
+                }
               })
+                // name: "Kevin"
+                // name: imageFile.name,
+                // image: imageFile
               .then(function (response: any){
                 console.log(response);
               })
@@ -313,7 +318,7 @@ const Profile = () => {
                 console.log(error)
               });
           }}
-        />
+        >Upload</button>
         </div>
       </StyledFormDiv>
     </AccountPageDiv>

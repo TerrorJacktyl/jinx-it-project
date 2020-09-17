@@ -3,6 +3,11 @@ from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
 
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework import status
+
 from . import models
 from . import serializers
 from . import swagger
@@ -164,20 +169,21 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
     swagger_schema = swagger.PortfolioAutoSchema
 
 
-class ImageList(generics.ListCreateAPIView):
-    queryset = models.ImageSection.objects.all()
-    def get_serializer_class(self):
-        if self.request in ["POST"]:
-            return serializers.ImageInputSerializer
-        return serializers.ImageInputSerializer
+# class ImageList(generics.ListCreateAPIView):
 
-    def get_queryset(self):
-        return models.ImageSection.objects.all()
+    # queryset = models.ImageSection.objects.all()
+    # def get_serializer_class(self):
+    #     if self.request in ["POST"]:
+    #         return serializers.ImageInputSerializer
+    #     return serializers.ImageInputSerializer
 
-    def perform_create(self, serializer):
-        serializer.save()
+    # def get_queryset(self):
+    #     return models.ImageSection.objects.all()
+
+    # def perform_create(self, serializer):
+    #     serializer.save()
         
-    swagger_schema = swagger.SwaggerAutoSchema
+    # swagger_schema = swagger.SwaggerAutoSchema
 
 # class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = models.ImageSection.objects.all()
@@ -185,3 +191,28 @@ class ImageList(generics.ListCreateAPIView):
 #     lookup_url_kwarg = 'image_id'
 
 #     swagger_schema = swagger.SwaggerAutoSchema
+
+# class ImageView(APIView):
+#     serializer_class = serializers.ImageInputSerializer
+#     parser_classes = (MultiPartParser, FormParser)
+
+#     def get(self, request, *args, **kwargs):
+#         images = models.ImageSection.objects.all()
+#         serializer = serializers.ImageInputSerializer(images, many=True)
+#         return Response(serializer.data)
+#     def post(self, request, *args, **kwargs):
+#         image_serializer = serializers.ImageInputSerializer(data=request.data)
+#         if image_serializer.is_valid():
+#             image_serializer.save()
+#             return Response(image_serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#             print('error', image_serializer.errors)
+#             return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     swagger_schema = swagger.PortfolioAutoSchema
+#     # swagger_schema = swagger.SwaggerAutoSchema
+
+class ImageView(generics.CreateAPIView):
+    serializer_class = serializers.ImageInputSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    

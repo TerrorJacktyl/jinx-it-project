@@ -136,7 +136,7 @@ class MediaSectionSerializer(SectionSerializer):
 class ImageInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ImageSection
-        fields = ["name"]
+        fields = '__all__'
 
 # class ImageSerializer(serializers.ModelSerializer):
 #     class Meta:
