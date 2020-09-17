@@ -164,9 +164,24 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
     swagger_schema = swagger.PortfolioAutoSchema
 
 
-class ImgList(generics.ListCreateAPIView):
+class ImageList(generics.ListCreateAPIView):
     queryset = models.ImageSection.objects.all()
-    serializer = serializers.ImageSerializer
-    lookup_url_kwarg = 'img_id'
+    def get_serializer_class(self):
+        if self.request in ["POST"]:
+            return serializers.ImageInputSerializer
+        return serializers.ImageInputSerializer
 
+    def get_queryset(self):
+        return models.ImageSection.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save()
+        
     swagger_schema = swagger.SwaggerAutoSchema
+
+# class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = models.ImageSection.objects.all()
+#     serializer = serializers.ImageInputSerializer
+#     lookup_url_kwarg = 'image_id'
+
+#     swagger_schema = swagger.SwaggerAutoSchema
