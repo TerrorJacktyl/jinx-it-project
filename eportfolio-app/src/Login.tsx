@@ -11,11 +11,9 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  useUser,
 } from "jinxui";
 import styled from "styled-components";
-import { UserContext } from "jinxui";
-
-import API from './API';
 
 const StyledFormEntry = styled(FormEntry)`
   font-family: "Heebo", sans-serif;
@@ -45,6 +43,8 @@ const SignupSchema = Yup.object().shape({
 const Login = () => {
   const [submittionError, setSubmittionError] = useState(false);
 
+  const { login, logout } = useUser();
+
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -61,22 +61,7 @@ const Login = () => {
           validationSchema={SignupSchema}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
-
-            API
-              .post(`auth/token/login`, {
-                email: values.email,
-                password: values.password,
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
-              })
-              .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
+            // login(values.email, values.password);
           }}
         >
           {({ errors, touched, isSubmitting }) => (
@@ -113,7 +98,7 @@ const Login = () => {
           )}
         </Formik>
       </StyledFormDiv>
-    </AccountPageDiv>)
+    </AccountPageDiv >)
 }
 
 export default Login;

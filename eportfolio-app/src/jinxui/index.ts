@@ -22,6 +22,9 @@ export { default as AccountPageDiv } from "./components/account/AccountPageDiv";
 
 /* Context */
 export {
+  // IUserContext, // won't work as export in jinxui ~OuO~
   UserContextProvider,
   UserContext,
 } from "./components/contexts/UserContext";
+
+export { useUser } from "./hooks/useUser";
