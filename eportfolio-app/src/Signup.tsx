@@ -112,7 +112,7 @@ const Signup = () => {
               {errors.passwordConfirm && touched.passwordConfirm ? (
                 <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
               ) : null}
-              <StyledLink href="/profile">
+              <StyledLink href="/edit">
                 <StyledButton
                   type="submit"
                   disabled={isSubmitting}

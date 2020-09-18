@@ -89,11 +89,17 @@ const Button2 = styled.button`
   font-size: 24px;
   line-height: 35px;
   text-align: center;
-  margin: auto;
+  margin-left: 0px;
+  margin-right: auto;
+  margin-top: 30px;
+  display: block;
+
+  // margin: auto;
   background-color: transparent;
   border: 2px solid #00FFC2;
   border-radius: 5px;
-  width: 362px;
+  max-width: 362px;
+  width: 100%;
   height: 43px;
   :hover {
     background-color: #00FFC2;

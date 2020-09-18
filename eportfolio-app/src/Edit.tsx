@@ -56,15 +56,17 @@ const TestButton = styled.button`
   box-shadow: none;
   cursor: pointer;
 `;
-// const BlankUser = styled.img`
-//   display: block;
-//   max-width: 362px;
-//   width: 100%;
-//   margin-right: 30px;
-//   height: auto;
-//   align: left;
-//   margin-top: 30px;
-// `;
+const BlankUser = styled.img`
+  display: block;
+  max-width: 362px;
+  width: 100%;
+  margin-right: 30px;
+  height: auto;
+  align: left;
+  margin-top: 30px;
+  border: 2px solid #FFFFFF;
+  border-radius: 10px;
+`;
 
 const FormTitle = styled.h2`
   font-family: "Heebo", sans-serif;
@@ -143,12 +145,13 @@ const ProfileSchema = Yup.object().shape({
   professionalHistory: Yup.string().min(2, "Too Short!"),
 });
 
-const Profile = () => {
+const Edit = () => {
   const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
   const [imageFile, setImageFile] = useState<File>(
     new File(["images/blank_user.png"], "blank_user.png")
   );
+  const [imageURL, setImageURL] = useState("http://localhost:8080/media/images/blank_user.png")
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -169,7 +172,6 @@ const Profile = () => {
           validationSchema={ProfileSchema}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
-
             axios
               .post(`http://127.0.0.1:8080/api/create_profile`, {
                 websiteName: values.websiteName,
@@ -197,8 +199,9 @@ const Profile = () => {
                 {errors.websiteName && touched.websiteName ? (
                   <ErrorMessage>{errors.websiteName}</ErrorMessage>
                 ) : null}
-                {/* <BlankUser src={require("images/blank_user.png")} /> */}
+                <BlankUser src={imageURL} />
                 {/* <BlankUser src={require("images/" + imageFile.name)}/> */}
+                {/* <img src={imageURL} alt ="" width="100" height="100"></img> */}
                 <BrowseButton
                   id="file"
                   name="file"
@@ -206,12 +209,6 @@ const Profile = () => {
                   onChange={(event) => {
                     if (event.currentTarget.files) {
                       setImageFile(event.currentTarget.files[0]);
-                      console.log(
-                        "Image currently registered to imageFile state:"
-                      );
-                      console.log(imageFile);
-                      console.log("Image file that will replace it:");
-                      console.log(event.currentTarget.files[0]);
                     } else {
                       setImageFile(new File([""], "blank_file"));
                     }
@@ -230,41 +227,15 @@ const Profile = () => {
                         },
                       })
                       .then(function (response: any) {
-                        console.log(response);
+                        console.log(response.data.image);
+                        setImageURL(response.data.image);
                       })
                       .catch(function (error: any) {
                         console.log(error);
-                      });
+                    });
                   }}>
                   Upload
                 </Button2>
-                <StyledUploadButton
-                  type="button"
-                  width={null}
-                  textColour="#00FFC2"
-                  backgroundColour={null}
-                  hoverColour="#00FFC2"
-                  contrastColour="#1C1C1C"
-                  text="Upload"
-                  fontSize={null}
-                  action={() => {
-                    const form_data = new FormData();
-                    form_data.append("image", imageFile, imageFile.name);
-                    form_data.append("name", imageFile.name);
-                    axios
-                      .post("http://127.0.0.1:8080/api/images/", form_data, {
-                        headers: {
-                          "Content-Type": "multipart/form-data",
-                        },
-                      })
-                      .then(function (response: any) {
-                        console.log(response);
-                      })
-                      .catch(function (error: any) {
-                        console.log(error);
-                      });
-                  }}
-                />
                 <br></br>
                 <FieldTitle>Biography</FieldTitle>
 
@@ -324,98 +295,10 @@ const Profile = () => {
               </MinimalDivStyle>
             </Form>
           )}
-        </Formik>
-        <BrowseButton
-          id="file"
-          name="file"
-          type="file"
-          onChange={(event) => {
-            if (event.currentTarget.files) {
-              setImageFile(event.currentTarget.files[0]);
-              console.log("Image currently registered to imageFile state:");
-              console.log(imageFile);
-              console.log("Image file that will replace it:");
-              console.log(event.currentTarget.files[0]);
-            } else {
-              setImageFile(new File([""], "blank_file"));
-            }
-          }}
-        />
-        <div>
-          <button
-            type="button"
-            onClick={() => {
-              const form_data = new FormData();
-              form_data.append("image", imageFile, imageFile.name);
-              form_data.append("name", imageFile.name);
-              axios
-                .post("http://127.0.0.1:8080/api/images/", form_data, {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                })
-                .then(function (response: any) {
-                  console.log(response);
-                })
-                .catch(function (error: any) {
-                  console.log(error);
-                });
-            }}
-          >
-            Upload
-          </button>
-          <StyledPublishButton
-            type="button"
-            width={null}
-            textColour="#00FFC2"
-            backgroundColour={null}
-            hoverColour="#00FFC2"
-            contrastColour="#1C1C1C"
-            text="Publish"
-            fontSize={null}
-            action={() => {
-              const form_data = new FormData();
-              form_data.append("image", imageFile, imageFile.name);
-              form_data.append("name", imageFile.name);
-              axios
-                .post("http://127.0.0.1:8080/api/images/", form_data, {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                })
-                .then(function (response: any) {
-                  console.log(response);
-                })
-                .catch(function (error: any) {
-                  console.log(error);
-                });
-            }}
-          />
-          <TestButton
-            onClick={() => {
-              const form_data = new FormData();
-              form_data.append("image", imageFile, imageFile.name);
-              form_data.append("name", imageFile.name);
-              axios
-                .post("http://127.0.0.1:8080/api/images/", form_data, {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                  },
-                })
-                .then(function (response: any) {
-                  console.log(response);
-                })
-                .catch(function (error: any) {
-                  console.log(error);
-                });
-            }}
-          >
-            TEST
-          </TestButton>
-        </div>
+        </Formik>          
       </StyledFormDiv>
     </AccountPageDiv>
   );
 };
 
-export default Profile;
+export default Edit;
