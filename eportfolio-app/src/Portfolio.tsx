@@ -98,6 +98,10 @@ type Section = {
   content: string
 };
 
+type TextSectionProps = {
+  title: string,
+  content: string
+};
 
 const Portfolio = () => {
   const axios = require("axios").default;
@@ -172,18 +176,20 @@ const Portfolio = () => {
       </SiteHeader>
       <StyledFormDiv>
         <FormTitle>{pages.length !== 0 ? pages[0].name : null}</FormTitle>
+        {sections.length !== 0 ? (
+          sections.map((section: Section) => <TextSection title={section.name} content={section.content} />
+        )) : null}
       </StyledFormDiv>
-      {/*{sections.length !== 0 ? (sections.map((section: Section) => <TextSection title={section.name} content={section.content} />)) : null}*/}
     </AccountPageDiv>
 
   );
 }
 
-//const TextSection: React.FC = (title: string, content: string) => (
-//  <div>
-//    <FieldTitle>{title}</FieldTitle>
-//    <FormDiv>{content}</FormDiv>
-//  </div>
-//);
+const TextSection: React.FC<TextSectionProps> = ({ title, content }) => (
+  <div>
+    <FieldTitle>{title}</FieldTitle>
+    <FormDiv>{content}</FormDiv>
+  </div>
+);
 
 export default Portfolio;
