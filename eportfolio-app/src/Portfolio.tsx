@@ -76,11 +76,25 @@ const StyledLink = styled.a`
 `;
 
 
+type Portfolio = {
+  id: number,
+  owner: number
+  name: string,
+  pages: number[]
+};
+
+type Page = {
+  id: number,
+  name: string,
+  number: number,
+  sections: number[]
+};
+
 type Section = {
-  id: string,
+  id: number,
   name: string,
   type: string,
-  numer: number,
+  number: number,
   content: string
 };
 
@@ -97,6 +111,7 @@ const Portfolio = () => {
   const [sections, setSections] = useState([]);
   useEffect(() => {
     // Pretty hacky with the returns, but couldn't find a better way to do it :(
+    // the token POST shouldn't be needed later, will get from React context
     axios
       .post(
         `http://127.0.0.1:8080/auth/token/login`, account
@@ -119,15 +134,23 @@ const Portfolio = () => {
         const { token, portfolios } = prevResps
         console.log(token);
         console.log(portfolios);
-        // Can also setToken if needed later
+        setToken(token);
         setPortfolios(portfolios);
-        // No need to GET pages as porfolio will have all its pages as an attribute
-        setPages(portfolios.pages);
         return axios
-          .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages/${portfolios[0].pages[0]}/sections`, {
+          .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages`, {
             headers: { 
               'Authorization': `Token ${token}`
             } 
+          })
+          .then((pageResp: any) => {
+            console.log(pageResp);
+            setPages(pageResp.data);
+            return axios
+              .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages/${portfolios[0].pages[0]}/sections`, {
+                headers: { 
+                  'Authorization': `Token ${token}`
+                } 
+              })
           })
       })
       .then((sectionResp: any) => {
@@ -136,10 +159,6 @@ const Portfolio = () => {
       })
   }, []);
 
-//  fetchAll();
-  //fetchPortfolios();
-  //fetchPages();
-  //fetchSections();
 
   return (
     <AccountPageDiv>      
@@ -147,7 +166,7 @@ const Portfolio = () => {
         <HeaderDiv>
           <LogoLink />
           <HeaderTitle>
-            {"yeah nah"}
+            {"yeup"}
           </HeaderTitle>
         </HeaderDiv>
       </SiteHeader>
