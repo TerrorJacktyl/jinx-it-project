@@ -123,6 +123,7 @@ const Signup = () => {
                   contrastColour="#1C1C1C"
                   text="Join"
                   fontSize={null}
+                  action = {null}
                 />
               </StyledLink>
               {submittionError ? 

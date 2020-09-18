@@ -95,6 +95,7 @@ const Login = () => {
                 contrastColour="#1C1C1C"
                 text="Login"
                 fontSize={null}
+                action = {null}
               />
               {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
               
@@ -106,6 +107,7 @@ const Login = () => {
                 contrastColour="#1C1C1C"
                 text="Reset Password"
                 fontSize={"20px"}
+                action = {null}
               />
             </Form>
           )}

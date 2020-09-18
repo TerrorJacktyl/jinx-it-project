@@ -16,7 +16,7 @@ class SectionInline(admin.TabularInline):
 
 @admin.register(models.ImageSection)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'content', 'image']
+    list_display = ['name', 'image']
 
 @admin.register(models.Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):

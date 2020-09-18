@@ -8,6 +8,7 @@ import {
   FormDiv,
   FormEntry,
   Button,
+  Button2,
   SiteHeader,
   HeaderDiv,
   LogoLink,
@@ -38,15 +39,32 @@ const TallStyledFormEntry = styled(StyledFormEntry)`
   rows: 6;
 `;
 
-const BlankUser = styled.img`
-  display: block;
-  max-width: 362px;
-  width: 100%;
-  margin-right: 30px;
-  height: auto;
-  align: left;
-  margin-top: 30px;
+const TestButton = styled.button`
+  font-family: "Heebo", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 35px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+  background-color: transparent;
+  border-color: transparent;
+  color: white
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
 `;
+// const BlankUser = styled.img`
+//   display: block;
+//   max-width: 362px;
+//   width: 100%;
+//   margin-right: 30px;
+//   height: auto;
+//   align: left;
+//   margin-top: 30px;
+// `;
 
 const FormTitle = styled.h2`
   font-family: "Heebo", sans-serif;
@@ -199,6 +217,27 @@ const Profile = () => {
                     }
                   }}
                 />
+                <Button2
+                type="button"
+                onClick={() => {
+                    const form_data = new FormData();
+                    form_data.append("image", imageFile, imageFile.name);
+                    form_data.append("name", imageFile.name);
+                    axios
+                      .post("http://127.0.0.1:8080/api/images/", form_data, {
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
+                      })
+                      .then(function (response: any) {
+                        console.log(response);
+                      })
+                      .catch(function (error: any) {
+                        console.log(error);
+                      });
+                  }}>
+                  Upload
+                </Button2>
                 <StyledUploadButton
                   type="button"
                   width={null}
@@ -208,20 +247,23 @@ const Profile = () => {
                   contrastColour="#1C1C1C"
                   text="Upload"
                   fontSize={null}
-                  // onClick={() => {
-                  //   // const fd = new FormData();
-                  //   // fd.append('image', imageFile, imageFile.name);
-                  //   axios
-                  //     .post('http://127.0.0.1:8080/api/create_profile', {
-                  //       websiteName: "Kevin"
-                  //     })
-                  //     .then(function (response: any){
-                  //       console.log(response);
-                  //     })
-                  //     .catch(function (error: any) {
-                  //       console.log(error)
-                  //     });
-                  // }}
+                  action={() => {
+                    const form_data = new FormData();
+                    form_data.append("image", imageFile, imageFile.name);
+                    form_data.append("name", imageFile.name);
+                    axios
+                      .post("http://127.0.0.1:8080/api/images/", form_data, {
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
+                      })
+                      .then(function (response: any) {
+                        console.log(response);
+                      })
+                      .catch(function (error: any) {
+                        console.log(error);
+                      });
+                  }}
                 />
                 <br></br>
                 <FieldTitle>Biography</FieldTitle>
@@ -259,6 +301,7 @@ const Profile = () => {
                     contrastColour="#1C1C1C"
                     text="Publish"
                     fontSize={null}
+                    action={null}
                   />
                 </div>
                 <StyledLink href="/">
@@ -270,6 +313,7 @@ const Profile = () => {
                     contrastColour="#1C1C1C"
                     text="Cancel"
                     fontSize={null}
+                    action={null}
                   />
                 </StyledLink>
                 {submittionError ? (
@@ -298,27 +342,76 @@ const Profile = () => {
           }}
         />
         <div>
-        <button
-          onClick={() => {
-            const form_data = new FormData();
-            form_data.append('image', imageFile, imageFile.name);
-            axios
-              .post('http://127.0.0.1:8080/api/images', form_data, {
-                headers: {
-                  'content-type': 'multipart/form-data'
-                }
-              })
-                // name: "Kevin"
-                // name: imageFile.name,
-                // image: imageFile
-              .then(function (response: any){
-                console.log(response);
-              })
-              .catch(function (error: any) {
-                console.log(error)
-              });
-          }}
-        >Upload</button>
+          <button
+            type="button"
+            onClick={() => {
+              const form_data = new FormData();
+              form_data.append("image", imageFile, imageFile.name);
+              form_data.append("name", imageFile.name);
+              axios
+                .post("http://127.0.0.1:8080/api/images/", form_data, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then(function (response: any) {
+                  console.log(response);
+                })
+                .catch(function (error: any) {
+                  console.log(error);
+                });
+            }}
+          >
+            Upload
+          </button>
+          <StyledPublishButton
+            type="button"
+            width={null}
+            textColour="#00FFC2"
+            backgroundColour={null}
+            hoverColour="#00FFC2"
+            contrastColour="#1C1C1C"
+            text="Publish"
+            fontSize={null}
+            action={() => {
+              const form_data = new FormData();
+              form_data.append("image", imageFile, imageFile.name);
+              form_data.append("name", imageFile.name);
+              axios
+                .post("http://127.0.0.1:8080/api/images/", form_data, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then(function (response: any) {
+                  console.log(response);
+                })
+                .catch(function (error: any) {
+                  console.log(error);
+                });
+            }}
+          />
+          <TestButton
+            onClick={() => {
+              const form_data = new FormData();
+              form_data.append("image", imageFile, imageFile.name);
+              form_data.append("name", imageFile.name);
+              axios
+                .post("http://127.0.0.1:8080/api/images/", form_data, {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then(function (response: any) {
+                  console.log(response);
+                })
+                .catch(function (error: any) {
+                  console.log(error);
+                });
+            }}
+          >
+            TEST
+          </TestButton>
         </div>
       </StyledFormDiv>
     </AccountPageDiv>

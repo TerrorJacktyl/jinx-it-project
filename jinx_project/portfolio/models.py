@@ -75,9 +75,11 @@ class MediaSection(Section):
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
 
 class ImageSection(models.Model):
+    #   Image upload tutorial
+    #   https://medium.com/@emeruchecole9/uploading-images-to-rest-api-backend-in-react-js-b931376b5833
+    
     name = models.CharField(max_length = 100)
-    content = models.TextField(null = True)
     image = models.ImageField(upload_to = 'images', null = True)
 
     def __str__(self):
-        return self.name
+        return self.name #

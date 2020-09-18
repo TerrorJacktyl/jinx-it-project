@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React from "react";
+import { CardActionArea } from "@material-ui/core";
 
 export type StyledButtonProps = {
   textColour: string;
@@ -80,6 +81,27 @@ const ButtonComponent = styled.button<StyledButtonProps>`
   }
 `;
 
+const Button2 = styled.button`
+  font-family: "Heebo", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: #00FFC2;
+  font-size: 24px;
+  line-height: 35px;
+  text-align: center;
+  margin: auto;
+  background-color: transparent;
+  border: 2px solid #00FFC2;
+  border-radius: 5px;
+  width: 362px;
+  height: 43px;
+  :hover {
+    background-color: #00FFC2;
+    color: black; 
+  }
+  cursor: pointer;
+`;
+
 export type ButtonProps = {
   backgroundColour: any;
   textColour: string;
@@ -88,6 +110,8 @@ export type ButtonProps = {
   width: any;
   text: string;
   fontSize: any;
+  action: any;
+  // type?: string;
 } & JSX.IntrinsicElements["button"];
 
 const Button = ({
@@ -99,6 +123,8 @@ const Button = ({
   text,
   fontSize,
   className,
+  action,
+  // type
 }: ButtonProps) => {
   return (
     <ButtonBorder
@@ -108,11 +134,21 @@ const Button = ({
       width={width}
       hoverColour={hoverColour}
     >
-      <ButtonComponent id="button" textColour={textColour} contrastColour={contrastColour} fontSize={fontSize}>
+      <ButtonComponent
+      type = "button"
+      id="button" 
+      textColour={textColour} 
+      contrastColour={contrastColour} 
+      fontSize={fontSize} 
+      onClick = {action}
+      >
         {text}
       </ButtonComponent>
     </ButtonBorder>
   );
 };
 
-export default Button;
+export {
+  Button,
+  Button2
+};
