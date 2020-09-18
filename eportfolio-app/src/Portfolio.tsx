@@ -106,9 +106,9 @@ const Portfolio = () => {
     password: 'yeupyeup'
   }
   const [token, setToken] = useState(null);
-  const [portfolios, setPortfolios] = useState([]);
-  const [pages, setPages] = useState([]);
-  const [sections, setSections] = useState([]);
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [pages, setPages] = useState<Page[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   useEffect(() => {
     // Pretty hacky with the returns, but couldn't find a better way to do it :(
     // the token POST shouldn't be needed later, will get from React context
@@ -143,7 +143,7 @@ const Portfolio = () => {
             } 
           })
           .then((pageResp: any) => {
-            console.log(pageResp);
+            console.log(pageResp.data);
             setPages(pageResp.data);
             return axios
               .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages/${portfolios[0].pages[0]}/sections`, {
@@ -166,14 +166,14 @@ const Portfolio = () => {
         <HeaderDiv>
           <LogoLink />
           <HeaderTitle>
-            {"yeup"}
+            {portfolios.length !== 0 ? portfolios[0].name : null}
           </HeaderTitle>
         </HeaderDiv>
       </SiteHeader>
       <StyledFormDiv>
-        <FormTitle>{"yeah nah"}</FormTitle>
+        <FormTitle>{pages.length !== 0 ? pages[0].name : null}</FormTitle>
       </StyledFormDiv>
-      {/*{sections.map((section: Section) => <TextSection title={section.name} content={section.content} />)}*/}
+      {/*{sections.length !== 0 ? (sections.map((section: Section) => <TextSection title={section.name} content={section.content} />)) : null}*/}
     </AccountPageDiv>
 
   );
