@@ -92,68 +92,54 @@ const Portfolio = () => {
     password: 'yeupyeup'
   }
   const [token, setToken] = useState(null);
-  const [portfolios, setPortfolios] = useState(null);
-  const [pages, setPages] = useState(null);
-  const [sections, setSections] = useState(null);
-//  useEffect(() => {
-//    axios
-//      .get(`http://127.0.0.1:8080/auth/token/login`, { auth: account })
-//      .then((response: any) => {
-//        setToken(response);
-//        console.log(response);
-//        return axios.get(`http://127.0.0.1:8080/api/portfolios`, { auth: token })
-//      })
-//      .then((response: any) => {
-//        setPortfolios(response);
-//        console.log(response);
-//        return axios.get(`http://127.0.0.1:8080/api/portfolios/${response[0].id}/pages`, { auth: token }) 
-//      })
-//      .then((response: any) => {
-//        setPages(response);
-//        console.log(response);
-//        return axios.get('http://127.0.0.1:8080/api/portfolios/' + portfolios[0].id + '/pages/' + pages[0].id + '/sections', { auth: token })
-//      })
-//      .then((response: any) => {
-//        setSections(response);
-//        console.log(response);
-//      })
-//      .catch((error: any) => {
-//        console.log(error);
-//      });
-//  }, []);{
-  const fetchToken = async () => {
-    const token = await axios.post(
-      `http://127.0.0.1:8080/auth/token/login`, account
-    )
-    .catch((error: any) => {
-      console.log(error);
-    });
-    setToken(token.auth_token);
-    console.log(token);
-  }
-  const fetchPortfolios = async () => {
-    const portfolios = await axios.get(
-      `http://127.0.0.1:8080/api/portfolios`, { headers: {'Authorization': 'Token ' + token} }
-    );
-    setPortfolios(portfolios);
-  };
-  const fetchPages = async () => {
-    const pages = await axios.get(
-      `http://127.0.0.1:8080/api/porfolios/${portfolios[0].id}/pages`, { auth: token }
-    );
-    setPages(pages);
-  }
-  const fetchSections = async () => {
-    const sections = await axios.get(
-      `http://127.0.0.1:8080/api/portfolios/'${portfolios[0].id}/pages/${pages[0].id}/sections`, { auth: token }
-    );
-    setSections(sections);
-  };
+  const [portfolios, setPortfolios] = useState([]);
+  const [pages, setPages] = useState([]);
+  const [sections, setSections] = useState([]);
+  useEffect(() => {
+    // Pretty hacky with the returns, but couldn't find a better way to do it :(
+    axios
+      .post(
+        `http://127.0.0.1:8080/auth/token/login`, account
+      )
+      .then((tokenResp: any) => {
+        console.log(tokenResp.data);
+        return (axios
+          .get(`http://127.0.0.1:8080/api/portfolios`, { 
+            headers: { 
+              'Authorization': `Token ${tokenResp.data.auth_token}`
+            } 
+          })
+          .then((portfolioResp: any) => ({
+            token: tokenResp.data.auth_token,
+            portfolios: portfolioResp.data
+          }))
+        );
+      })
+      .then((prevResps: any) => {
+        const { token, portfolios } = prevResps
+        console.log(token);
+        console.log(portfolios);
+        // Can also setToken if needed later
+        setPortfolios(portfolios);
+        // No need to GET pages as porfolio will have all its pages as an attribute
+        setPages(portfolios.pages);
+        return axios
+          .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages/${portfolios[0].pages[0]}/sections`, {
+            headers: { 
+              'Authorization': `Token ${token}`
+            } 
+          })
+      })
+      .then((sectionResp: any) => {
+        console.log(sectionResp.data);
+        setSections(sectionResp.data);
+      })
+  }, []);
 
-  fetchToken();
-  fetchPortfolios();
-  fetchPages();
-  fetchSection();
+//  fetchAll();
+  //fetchPortfolios();
+  //fetchPages();
+  //fetchSections();
 
   return (
     <AccountPageDiv>      
@@ -161,12 +147,12 @@ const Portfolio = () => {
         <HeaderDiv>
           <LogoLink />
           <HeaderTitle>
-            {portfolios[0].name}
+            {"yeah nah"}
           </HeaderTitle>
         </HeaderDiv>
       </SiteHeader>
       <StyledFormDiv>
-        <FormTitle>{page[0].name}</FormTitle>
+        <FormTitle>{"yeah nah"}</FormTitle>
       </StyledFormDiv>
       {/*{sections.map((section: Section) => <TextSection title={section.name} content={section.content} />)}*/}
     </AccountPageDiv>
