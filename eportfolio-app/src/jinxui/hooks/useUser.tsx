@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { UserContext } from 'jinxui';
 import { IUserContext } from '../components/contexts/UserContext';
 import API from '../../API';
+import { AxiosResponse } from 'axios';
 
 export const useUser = () => {
     const [state, setState] = useContext(UserContext);
@@ -10,10 +11,17 @@ export const useUser = () => {
     const LOGOUT_PATH = 'auth/token/logout';
     const ACCOUNT_PATH = 'api/accounts/me';
 
-    function login(username: string, password: string) {
-        API.post(LOGIN_PATH, { username: username, password: password })
-            .then(response => console.log(response.data))
-            .catch(error => console.log(error));
+    async function login(username: string, password: string): Promise<AxiosResponse<any>> {
+        const response = await API.post(LOGIN_PATH, { username: username, password: password });
+
+        return new Promise((resolve, reject) => {
+            if ('auth_token' in response.data) {
+                resolve(response.data);
+            }
+            else
+                reject(response);
+        })
+
         // .then(response => {
         //     console.log(response);
         //     console.log(response.data);

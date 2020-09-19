@@ -15,6 +15,7 @@ import {
 } from "jinxui";
 import styled from "styled-components";
 
+// The styling isn't DRY - where are we putting this?
 const StyledFormEntry = styled(FormEntry)`
   font-family: "Heebo", sans-serif;
   margin-top: 15px;
@@ -26,6 +27,12 @@ const FormTitle = styled.h2`
   font-weight: 300;
 `;
 
+const FormText = styled.h4`
+  font-family: "Heebo", sans-serif;
+  color: #eeeeee;
+  font-weight: 300;
+`
+
 const StyledButton = styled(Button)`
   margin: auto;
   margin-top: 30px;
@@ -34,6 +41,12 @@ const StyledButton = styled(Button)`
 const StyledFormDiv = styled(FormDiv)`
   margin-top: 100px;
 `;
+
+const StyledLink = styled.a`
+  text-decoration: none;
+  position: relative;
+`;
+
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -61,7 +74,9 @@ const Login = () => {
           validationSchema={SignupSchema}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
-            login(values.email, values.password);
+            login(values.email, values.password)
+              .then(data => console.log(data))
+              .catch(response => console.error(response));
           }}
         >
           {({ errors, touched, isSubmitting }) => (
@@ -94,7 +109,11 @@ const Login = () => {
                 text="Reset Password"
                 fontSize={"20px"}
               />
+
+              <StyledLink href="/signup" ><FormText>Sign up for an account</FormText></StyledLink>
+
             </Form>
+
           )}
         </Formik>
       </StyledFormDiv>

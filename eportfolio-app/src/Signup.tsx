@@ -37,7 +37,6 @@ const FormText = styled.h4`
 const StyledButton = styled(Button)`
   margin: auto;
   margin-top: 30px;
-
 `;
 
 const StyledFormDiv = styled(FormDiv)`
