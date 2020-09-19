@@ -61,7 +61,7 @@ const Login = () => {
           validationSchema={SignupSchema}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
-            // login(values.email, values.password);
+            login(values.email, values.password);
           }}
         >
           {({ errors, touched, isSubmitting }) => (
