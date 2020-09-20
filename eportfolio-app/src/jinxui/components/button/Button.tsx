@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React from "react";
-import { CardActionArea } from "@material-ui/core";
 
 export type StyledButtonProps = {
   textColour: string;

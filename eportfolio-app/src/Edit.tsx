@@ -39,23 +39,7 @@ const TallStyledFormEntry = styled(StyledFormEntry)`
   rows: 6;
 `;
 
-const TestButton = styled.button`
-  font-family: "Heebo", sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 35px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  margin: auto;
-  background-color: transparent;
-  border-color: transparent;
-  color: white
-  outline: none;
-  box-shadow: none;
-  cursor: pointer;
-`;
+
 const BlankUser = styled.img`
   display: block;
   max-width: 362px;
@@ -116,12 +100,6 @@ const StyledCancelButton = styled(StyledButton)`
     float: left;
   }
 `;
-const StyledUploadButton = styled(StyledButton)`
-  margin-left: 0px;
-  width: auto;
-  max-width: 362px;
-`;
-
 const StyledFormDiv = styled(WideFormDiv)`
   margin-top: 70px;
   height: auto;
@@ -149,8 +127,7 @@ const Edit = () => {
   const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
   const [imageFile, setImageFile] = useState<File>(
-    new File(["images/blank_user.png"], "blank_user.png")
-  );
+    new File(["http://localhost:8080/media/images/blank_user.png"], "blank_user.png"));
   const [imageURL, setImageURL] = useState("http://localhost:8080/media/images/blank_user.png")
   return (
     <AccountPageDiv>
@@ -220,10 +197,12 @@ const Edit = () => {
                     const form_data = new FormData();
                     form_data.append("image", imageFile, imageFile.name);
                     form_data.append("name", imageFile.name);
+                    form_data.append("owner", "2")
                     axios
                       .post("http://127.0.0.1:8080/api/images/", form_data, {
                         headers: {
                           "Content-Type": "multipart/form-data",
+                          "Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"
                         },
                       })
                       .then(function (response: any) {

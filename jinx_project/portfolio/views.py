@@ -215,4 +215,4 @@ class ImageView(generics.CreateAPIView):
     serializer_class = serializers.ImageInputSerializer
     parser_classes = (MultiPartParser, FormParser)
 
-    
+    permission_classes = [permissions.IsAuthenticated]

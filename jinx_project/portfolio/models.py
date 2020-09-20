@@ -78,8 +78,16 @@ class ImageSection(models.Model):
     #   Image upload tutorial
     #   https://medium.com/@emeruchecole9/uploading-images-to-rest-api-backend-in-react-js-b931376b5833
     
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='images')
     name = models.CharField(max_length = 100)
     image = models.ImageField(upload_to = 'images', null = True)
+
+
+
+    # @property
+    # def owner(self):
+    #     return self.portfolio.owner
 
     def __str__(self):
         return self.name #
