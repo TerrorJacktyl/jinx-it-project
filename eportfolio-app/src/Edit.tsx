@@ -7,8 +7,8 @@ import {
   ErrorMessage,
   FormDiv,
   FormEntry,
-  Button,
   Button2,
+  Button3,
   SiteHeader,
   HeaderDiv,
   LogoLink,
@@ -39,6 +39,9 @@ const TallStyledFormEntry = styled(StyledFormEntry)`
   rows: 6;
 `;
 
+const UploadButton = styled(Button3)`
+  max-width: 362px;
+`;
 
 const BlankUser = styled.img`
   display: block;
@@ -77,23 +80,26 @@ const FieldTitle = styled.h3`
   text-align: left;
 `;
 
-const StyledButton = styled(Button)`
-  margin: auto;
-  margin-top: 30px;
-  margin-bottom: 30px;
+
+const StyledPublishButton = styled(Button3)`
   @media (max-width: 600px) {
+    margin-left: auto;
+    margin-right: auto;  
     align: centre;
     position: relative;
   }
-`;
-
-const StyledPublishButton = styled(StyledButton)`
   @media (min-width: 600px) {
     float: right;
   }
 `;
 
-const StyledCancelButton = styled(StyledButton)`
+const StyledCancelButton = styled(Button2)`
+  @media (max-width: 600px) {
+    margin-left: auto;
+    margin-right: auto;
+    align: centre;
+    position: relative;
+  }  
   @media (min-width: 600px) {
     display: block;
     position: relative;
@@ -115,20 +121,29 @@ const StyledLink = styled.a`
 
 const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string()
-    .min(2, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
-  biography: Yup.string().min(2, "Too Short!"),
-  academicHistory: Yup.string().min(2, "Too Short!"),
-  professionalHistory: Yup.string().min(2, "Too Short!"),
 });
+
+function post_section(portfolio_id: string, section_id: string, data: any) {
+  const axios = require("axios").default;
+  const auth_header = {"Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"}
+  axios.post(`http://127.0.0.1:8080/api/portfolios/${portfolio_id}/pages/${section_id}/sections`,
+    data, {headers: auth_header})
+  .then(function (response: any) {
+    console.log(response)
+  })
+  .catch(function (error: any) {
+                      console.log(error)
+                    })
+}
 
 const Edit = () => {
   const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
   const [imageFile, setImageFile] = useState<File>(
-    new File(["http://localhost:8080/media/images/blank_user.png"], "blank_user.png"));
-  const [imageURL, setImageURL] = useState("http://localhost:8080/media/images/blank_user.png")
+    new File(["http://127.0.0.1:8080/media/images/blank_user.png"], "blank_user.png"));
+  const [imageURL, setImageURL] = useState("http://127.0.0.1:8080/media/images/blank_user.png")
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -148,13 +163,30 @@ const Edit = () => {
           }}
           validationSchema={ProfileSchema}
           onSubmit={(values, { setSubmitting }) => {
+            const portfolio_data    = {name: values.websiteName}
+            const page_data         = {name: "home", number: "0"}
+            const bio_data          = {name: "biography", number: "0", content: values.biography, type: "text"}
+            const academic_data     = {name: "academic_history", number: "0", content: values.academicHistory, type: "text"}
+            const professional_data = {name: "professional_history", number: "0", content: values.professionalHistory, type: "text"}
+            const auth_header = {"Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"}
             setSubmitting(true);
             axios
-              .post(`http://127.0.0.1:8080/api/create_profile`, {
-                websiteName: values.websiteName,
-                biography: values.biography,
-                academicHistory: values.academicHistory,
-                professionalHistory: values.professionalHistory,
+              .post(`http://127.0.0.1:8080/api/portfolios`, 
+                portfolio_data, {headers: auth_header})
+              .then(function (portf_response: any) {
+                axios
+                  .post(`http://127.0.0.1:8080/api/portfolios/${portf_response.data.id}/pages`, 
+                    page_data, {headers: auth_header})
+                  .then(function (page_response: any) {
+                    console.log(page_response);
+                    post_section(portf_response.data.id, page_response.data.id, bio_data);
+                    post_section(portf_response.data.id, page_response.data.id, academic_data);
+                    post_section(portf_response.data.id, page_response.data.id, professional_data);
+                  }).catch(function (error2: any) {
+                    setSubmittionError(true);
+                    setSubmitting(false);
+                    console.log(error2);
+                  });
               })
               .then(function (response: any) {
                 console.log(response);
@@ -177,8 +209,6 @@ const Edit = () => {
                   <ErrorMessage>{errors.websiteName}</ErrorMessage>
                 ) : null}
                 <BlankUser src={imageURL} />
-                {/* <BlankUser src={require("images/" + imageFile.name)}/> */}
-                {/* <img src={imageURL} alt ="" width="100" height="100"></img> */}
                 <BrowseButton
                   id="file"
                   name="file"
@@ -191,7 +221,7 @@ const Edit = () => {
                     }
                   }}
                 />
-                <Button2
+                <UploadButton
                 type="button"
                 onClick={() => {
                     const form_data = new FormData();
@@ -206,7 +236,7 @@ const Edit = () => {
                         },
                       })
                       .then(function (response: any) {
-                        console.log(response.data.image);
+                        console.log(response);
                         setImageURL(response.data.image);
                       })
                       .catch(function (error: any) {
@@ -214,7 +244,7 @@ const Edit = () => {
                     });
                   }}>
                   Upload
-                </Button2>
+                </UploadButton>
                 <br></br>
                 <FieldTitle>Biography</FieldTitle>
 
@@ -241,30 +271,16 @@ const Edit = () => {
                   <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
                 ) : null}
                 <div>
-                  <StyledPublishButton
-                    type="submit"
-                    disabled={isSubmitting}
-                    width={null}
-                    textColour="#00FFC2"
-                    backgroundColour={null}
-                    hoverColour="#00FFC2"
-                    contrastColour="#1C1C1C"
-                    text="Publish"
-                    fontSize={null}
-                    action={null}
-                  />
+                  <StyledPublishButton 
+                  type = "submit">
+                    Publish
+                  </StyledPublishButton>
                 </div>
                 <StyledLink href="/">
                   <StyledCancelButton
-                    width={null}
-                    textColour="#EEEEEE"
-                    backgroundColour={null}
-                    hoverColour="#EEEEEE"
-                    contrastColour="#1C1C1C"
-                    text="Cancel"
-                    fontSize={null}
-                    action={null}
-                  />
+                  type = "button">
+                    Cancel
+                  </StyledCancelButton>
                 </StyledLink>
                 {submittionError ? (
                   <ErrorMessage>

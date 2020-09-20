@@ -11,6 +11,7 @@ export { default as SiteLayout } from './components/site/SiteLayout';
 /* Button */
 export { Button } from './components/button/Button';
 export { Button2 } from "./components/button/Button";
+export { Button3 } from "./components/button/Button";
 
 /* Header */
 export { default as HeaderDiv } from './components/header/HeaderDiv';

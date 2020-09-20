@@ -84,27 +84,35 @@ const Button2 = styled.button`
   font-family: "Heebo", sans-serif;
   font-style: normal;
   font-weight: normal;
-  color: #00FFC2;
+  color: #EEEEEE;
   font-size: 24px;
   line-height: 35px;
   text-align: center;
   margin-left: 0px;
   margin-right: auto;
   margin-top: 30px;
+  margin-bottom: 30px;
   display: block;
-
-  // margin: auto;
   background-color: transparent;
-  border: 2px solid #00FFC2;
-  border-radius: 5px;
-  max-width: 362px;
+  border:none;
+  max-width: 255px;
   width: 100%;
   height: 43px;
+  :hover {
+    color: #00FFC2; 
+  }
+  cursor: pointer;
+`;
+
+const Button3 = styled(Button2)`
+  border-radius: 5px;
+  color: #00FFC2;
+  border: 2px solid #00FFC2;
+  border-radius: 5px;
   :hover {
     background-color: #00FFC2;
     color: black; 
   }
-  cursor: pointer;
 `;
 
 export type ButtonProps = {
@@ -155,5 +163,6 @@ const Button = ({
 
 export {
   Button,
-  Button2
+  Button2,
+  Button3
 };

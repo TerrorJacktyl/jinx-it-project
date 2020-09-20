@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth.models import User
+from datetime import datetime
 
 from . import managers
 
@@ -77,12 +78,19 @@ class MediaSection(Section):
 class ImageSection(models.Model):
     #   Image upload tutorial
     #   https://medium.com/@emeruchecole9/uploading-images-to-rest-api-backend-in-react-js-b931376b5833
-    
+    def image_path(self, filename):
+        _now = datetime.now()
+        return 'images/{user}/{year}/{month}/{day}/{file}'.format(
+            user =  self.owner, 
+            file =  filename,
+            year =  _now.strftime('%Y'),
+            month = _now.strftime('%m'),
+            day =   _now.strftime('%d') )
+
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='images')
     name = models.CharField(max_length = 100)
-    image = models.ImageField(upload_to = 'images', null = True)
-
+    image = models.ImageField(upload_to = image_path, null = True)
 
 
     # @property
