@@ -156,6 +156,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# User uploaded file
+# we don't actually have a cdn lol, but just in case this project grows big enough to need one
+MEDIA_URL = 'https://cdn.jinx.systems/'
+MEDIA_ROOT = '/srv/media/'
+
 DRF_DEFAULT_RENDERER_CLASSES = (
     'rest_framework.renderers.JSONRenderer',
 )
@@ -165,6 +170,16 @@ DRF_DEFAULT_AUTHENTICATION_CLASSES = (
     'rest_framework.authentication.TokenAuthentication',
 )
 
+
+SWAGGER_SECURITY_DEFINITIONS = {
+    'Bearer': {
+        'type': 'apiKey',
+        'name': 'Authorization',
+        'in': 'header'
+    }
+}
+
+SWAGER_DJANGO_SESSIONS = False
 
 # if development mode, load dev settings to override production settings
 if os.getenv('DJANGO_DEV'):
@@ -176,4 +191,10 @@ if os.getenv('DJANGO_DEV'):
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DRF_DEFAULT_RENDERER_CLASSES,
     'DEFAULT_AUTHENTICATION_CLASSES': DRF_DEFAULT_AUTHENTICATION_CLASSES,
+}
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': SWAGGER_SECURITY_DEFINITIONS,
+    'USE_SESSION_AUTH': SWAGER_DJANGO_SESSIONS,
 }

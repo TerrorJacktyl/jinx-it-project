@@ -4,10 +4,12 @@ from django.db.models import F
 # order management code adapted from
 # https://www.revsys.com/tidbits/keeping-django-model-objects-ordered/
 
-# managers handel interacting with the database
+# managers handle interacting with the database
 
 
-class PageManager(models.Manager):
+class OrderManager(models.Manager):
+    parent_field = None
+
     def move(self, obj, new_position):
 
         # Queryset is a high level abstraction of a SQL statement.
@@ -28,10 +30,13 @@ class PageManager(models.Manager):
                 # keep start < end
                 start, end = end, start
 
+            filter_args = {
+                self.parent_field: getattr(obj, self.parent_field),
+                'number__gte': start,
+                'number__lt': end,
+            }
             qs.filter(
-                portfolio=obj.portfolio,
-                number__gte=start,
-                number__lt=end,
+                **filter_args
             ).exclude(
                 # Don't update the item being moved
                 pk=obj.pk
@@ -51,15 +56,29 @@ class PageManager(models.Manager):
         # see move function above
         with transaction.atomic():
             # get how many siblings a page has
+            filter_args = {
+                self.parent_field: getattr(instance, self.parent_field)
+            }
             siblings = self.filter(
-                portfolio=instance.portfolio
+                **filter_args
             ).count()
 
+            # where the page wants to be placed
             target = instance.number
+            # put the page at the end of the list for now
             instance.number = siblings + 1
+            # move the page to its target location
             self.move(instance, target)
             instance.save()
 
             return instance
 
     # TODO: move item on post/patch request
+
+
+class PageManager(OrderManager):
+    parent_field = 'portfolio'
+
+
+class SectionManager(OrderManager):
+    parent_field = 'page'

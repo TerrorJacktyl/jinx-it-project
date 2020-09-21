@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+
+from djoser.signals import user_registered
 
 
 class Account(models.Model):
@@ -17,3 +20,9 @@ class Account(models.Model):
 
     def _str_(self):
         return self.user.first_name
+
+
+# autocreate account on user registration
+@receiver(user_registered)
+def create_account(sender, **kwargs):
+    Account.objects.create(user=kwargs['user'])

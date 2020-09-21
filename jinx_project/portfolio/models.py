@@ -23,6 +23,7 @@ class Page(models.Model):
     # page number (distinct from its id) to allow reordering of pages
     number = models.IntegerField(default=0)
 
+    # set a custom manager for page reordering support
     objects = managers.PageManager()
 
     # don't add owner as a field of page as that goes againt relational db
@@ -45,7 +46,9 @@ class Section(models.Model):
     # ordering number to order sections on a page
     number = models.IntegerField(default=0)
 
-    # not a field for the same reasoning as Page
+    objects = managers.SectionManager()
+
+    # not a field for the same reasoning as Page's owner
     @property
     def owner(self):
         return self.page.owner
@@ -68,6 +71,5 @@ class TextSection(Section):
 
 class MediaSection(Section):
     # TODO: password protect files
-    # Use the following answer for better performance
-    # https://stackoverflow.com/a/43223478
+    # https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)

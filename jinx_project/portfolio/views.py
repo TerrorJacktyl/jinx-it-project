@@ -5,12 +5,17 @@ from rest_framework import permissions
 
 from . import models
 from . import serializers
+from . import swagger
 
 from .permissions import IsOwner
 
 
 class PortfolioList(generics.ListCreateAPIView):
-    serializer_class = serializers.PortfolioSerializer
+    def get_serializer_class(self):
+        # Allows this url to handle GET and POST with different serializers
+        if self.request.method in ['POST']:
+            return serializers.PortfolioInputSerializer
+        return serializers.PortfolioOutputSerializer
 
     # only allow signed in users to see their portfolios
     permission_classes = [permissions.IsAuthenticated]
@@ -26,9 +31,14 @@ class PortfolioList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    swagger_schema = swagger.PortfolioAutoSchema
+
 
 class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.PortfolioSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.PortfolioInputSerializer
+        return serializers.PortfolioOutputSerializer
 
     # key to use in url configuration
     lookup_url_kwarg = 'portfolio_id'
@@ -38,9 +48,15 @@ class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = models.Portfolio.objects.all()
 
+    swagger_schema = swagger.PortfolioAutoSchema
+
 
 class PageList(generics.ListCreateAPIView):
-    serializer_class = serializers.PageSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return serializers.PageInputSerializer
+        return serializers.PageOutputSerializer
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -49,19 +65,29 @@ class PageList(generics.ListCreateAPIView):
             portfolio=self.kwargs['portfolio_id']
         )
 
-    def perform_create(self, serializer):
-        portfolio = models.Portfolio.objects.get(
-            pk=self.kwargs['portfolio_id']
-        )
-        serializer.save(portfolio=portfolio)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['portfolio_id'] = self.kwargs['portfolio_id']
+        return context
+
+    swagger_schema = swagger.PortfolioAutoSchema
 
 
 class PageDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.PageSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.PageInputSerializer
+        return serializers.PageOutputSerializer
+
     lookup_url_kwarg = 'page_id'
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = models.Page.objects.all()
+    swagger_schema = swagger.PortfolioAutoSchema
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['portfolio_id'] = self.kwargs['portfolio_id']
+        return context
 
 
 class SectionList(generics.ListCreateAPIView):
@@ -69,6 +95,8 @@ class SectionList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        # double underscore is equivalent to a database join
+        # https://docs.djangoproject.com/en/3.1/topics/db/queries/#lookups-that-span-relationships
         filter_param = {
             'page__portfolio__owner': self.request.user,
             'page__portfolio': self.kwargs['portfolio_id'],
@@ -78,9 +106,14 @@ class SectionList(generics.ListCreateAPIView):
         media_sections = models.MediaSection.objects.filter(**filter_param)
         return list(text_sections) + list(media_sections)
 
-    def perform_create(self, serializer):
-        page = models.Page.objects.get(pk=self.kwargs['page_id'])
-        serializer.save(page=page)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        # kind of redundant as context['view'] would have the kwargs but just in case
+        # the urls change
+        context['page_id'] = self.kwargs['page_id']
+        return context
+
+    swagger_schema = swagger.PortfolioAutoSchema
 
 
 class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -92,6 +125,11 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         text_sections = models.TextSection.objects.all()
         media_sections = models.MediaSection.objects.all()
         return list(text_sections) + list(media_sections)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['page_id'] = self.kwargs['page_id']
+        return context
 
     # modified based on code from GenericAPIView default implementation
     def get_object(self):
@@ -122,3 +160,5 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
 
         return obj
+
+    swagger_schema = swagger.PortfolioAutoSchema

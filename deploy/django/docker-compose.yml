@@ -30,6 +30,8 @@ services:
       - "DJANGO_DB_PASSWORD=${POSTGRES_PASSWORD}"
     depends_on:
       - db
+    volumes:
+      - jinx_user_files:/srv/media
     networks:
       - br_internal
       - br_django
@@ -45,3 +47,4 @@ networks:
       name: br_django
 volumes:
   jinx_database: {}
+  jinx_user_files: {}

@@ -9,36 +9,40 @@ from . import validators
 # easily rendered into JSON, XML, etc. to suit our needs
 
 
-class PortfolioSerializer(serializers.ModelSerializer):
+class PortfolioInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Portfolio
+        fields = ['id', 'name']
+
+
+class PortfolioOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Portfolio
         fields = ['id', 'owner', 'name', 'pages']
 
-    def validate_owner(self, value):
-        # prevent user from giving away their portfolio to someone else
-        if self.context['request'].user != value:
-            raise serializers.ValidationError(
-                'You cannot change the owner of a portfolio'
-            )
-        return value
+
+class PageInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Page
+        fields = ['id', 'name', 'number']
+
+    def validate(self, attrs):
+        siblings = len(models.Page.objects.filter(
+            portfolio=attrs['portfolio']))
+        validators.number_in_range(attrs['number'], siblings)
+        return attrs
+
+    def to_internal_value(self, data: dict):
+        val = super().to_internal_value(data)
+        val['portfolio'] = models.Portfolio.objects.get(
+            pk=self.context['portfolio_id'])
+        return val
 
 
-class PageSerializer(serializers.ModelSerializer):
+class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Page
         fields = ['id', 'name', 'number', 'sections']
-
-    # no portfolio validation needed as portfolio is not a field
-    # to be serialised
-    # if the ability to move pages between portfolios is to be added, add a 
-    # validator
-
-    # TODO: validation fails on create as self.instance would be None
-    #def validate_number(self, value):
-    #    siblings = len(models.Page.objects.filter(
-    #        portfolio=self.instance.portfolio))
-    #    validators.number_in_range(value, siblings)
-    #    return value
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -54,15 +58,20 @@ class SectionSerializer(serializers.ModelSerializer):
 
     def validate_page(self, value):
         # make sure the new page is owned by the user
-        owner = models.Page.objects.get(pk=value).owner
+        owner = value.owner
         if self.context['request'].user != owner:
             raise serializers.ValidationError('You do not own this page')
         return value
 
-    def validate_number(self, value):
-        siblings = len(models.Section.objects.filter(page=self.instance.page))
-        validators.number_in_range(value, siblings)
-        return value
+    def validate(self, attrs):
+        siblings = len(models.Section.objects.filter(page=attrs['page']))
+        validators.number_in_range(attrs['number'], siblings)
+        return attrs
+
+    def to_internal_value(self, data: dict):
+        if 'page' not in data:
+            data['page'] = self.context['page_id']
+        return super().to_internal_value(data)
 
 
 class PolymorphSectionSerializer(SectionSerializer):

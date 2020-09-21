@@ -1,3 +1,6 @@
+
+from pathlib import Path
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -16,6 +19,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
+# User uploaded files
+# Use django defaults
+MEDIA_URL = '/media/'
+MEDIA_ROOT = Path(__file__).resolve(strict=True).parent.parent / 'media'
+
 # enable the browsable api in dev
 DRF_DEFAULT_RENDERER_CLASSES = (
     'rest_framework.renderers.JSONRenderer',
@@ -23,10 +31,13 @@ DRF_DEFAULT_RENDERER_CLASSES = (
 )
 
 DRF_DEFAULT_AUTHENTICATION_CLASSES = (
-    # for HTTP basic authentication
-    'rest_framework.authentication.BasicAuthentication',
     # for session based authentication. Useful for the browsable API
     'rest_framework.authentication.SessionAuthentication',
     # tokens to be used by djoser
     'rest_framework.authentication.TokenAuthentication',
 )
+
+SWAGER_DJANGO_SESSIONS = True
+
+LOGIN_URL = '/api/dev-auth/login'
+LOGOUT_URL = 'api/dev-auth/logout'
