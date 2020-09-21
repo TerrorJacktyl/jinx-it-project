@@ -4,76 +4,19 @@ import styled from "styled-components";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
-  ErrorMessage,
-  FormDiv,
-  FormEntry,
-  Button,
   SiteHeader,
   HeaderDiv,
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  PageName,
+  SectionName,
+  TextSectionDiv,
+  PageDiv,
+  UserContext,
+  useUser
 } from "jinxui";
 
-
-const WideFormDiv = styled(FormDiv)`
-  width: 920px;
-`;
-
-const StyledFormEntry = styled(FormEntry)`
-  width: 850px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-`;
-
-const TallStyledFormEntry = styled(StyledFormEntry)`
-  height: 360px;
-  control: textarea;
-  rows: 6;
-`;
-
-const FormTitle = styled.h2`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
-  font-weight: 300;
-`;
-
-const FieldTitle = styled.h3`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
-  font-weight: 300;
-  margin-bottom: 0px;
-  margin-left: 30px;
-  text-align: left;
-`;
-
-const StyledButton = styled(Button)`
-  display: inline;
-  float: right;
-  margin-top: 30px;
-  margin-right: 30px;
-  display: block;
-  position: relative;
-`;
-
-const StyledCancelButton = styled(Button)`
-  display: inline;
-  float: left;
-  margin-top: 30px;
-  margin-left: 30px;
-  display: block;
-  position: relative;
-`;
-
-const StyledFormDiv = styled(WideFormDiv)`
-  margin-top: 100px;
-  height: 1520px;
-`;
-
-const StyledLink = styled.a`
-  text-decoration: none;
-  position: relative;
-`;
 
 
 type Portfolio = {
@@ -174,12 +117,12 @@ const Portfolio = () => {
           </HeaderTitle>
         </HeaderDiv>
       </SiteHeader>
-      <StyledFormDiv>
-        <FormTitle>{pages.length !== 0 ? pages[0].name : null}</FormTitle>
+      <PageDiv>
+        <PageName>{pages.length !== 0 ? pages[0].name : null}</PageName>
         {sections.length !== 0 ? (
           sections.map((section: Section) => <TextSection title={section.name} content={section.content} />
         )) : null}
-      </StyledFormDiv>
+      </PageDiv>
     </AccountPageDiv>
 
   );
@@ -187,8 +130,8 @@ const Portfolio = () => {
 
 const TextSection: React.FC<TextSectionProps> = ({ title, content }) => (
   <div>
-    <FieldTitle>{title}</FieldTitle>
-    <FormDiv>{content}</FormDiv>
+    <SectionName>{title}</SectionName>
+    <TextSectionDiv>{content}</TextSectionDiv>
   </div>
 );
 
