@@ -35,6 +35,10 @@ class TextSectionAdmin(admin.ModelAdmin):
     list_display = ['name', 'page', 'number', 'content']
 
 
+@admin.register(models.ImageTextSection)
+class ImageTextSectionAdmin(admin.ModelAdmin):
+    list_display = ['name', 'page', 'number', 'content', 'image']
+
 @admin.register(models.MediaSection)
 class MediaSectionAdmin(admin.ModelAdmin):
     list_display = ['name', 'page', 'number', 'media']

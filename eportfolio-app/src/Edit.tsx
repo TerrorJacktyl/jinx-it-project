@@ -125,7 +125,7 @@ const ProfileSchema = Yup.object().shape({
     .required("Required"),
 });
 
-function post_section(portfolio_id: string, section_id: string, data: any) {
+function post_section(portfolio_id: string, section_id: string, data: any,) {
   const axios = require("axios").default;
   const auth_header = {"Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"}
   axios.post(`http://127.0.0.1:8080/api/portfolios/${portfolio_id}/pages/${section_id}/sections`,
@@ -165,7 +165,7 @@ const Edit = () => {
           onSubmit={(values, { setSubmitting }) => {
             const portfolio_data    = {name: values.websiteName}
             const page_data         = {name: "home", number: "0"}
-            const bio_data          = {name: "biography", number: "0", content: values.biography, type: "text"}
+            const bio_data          = {name: "biography", number: "0", content: values.biography, type: "imageText", image: imageURL}
             const academic_data     = {name: "academic_history", number: "0", content: values.academicHistory, type: "text"}
             const professional_data = {name: "professional_history", number: "0", content: values.professionalHistory, type: "text"}
             const auth_header = {"Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"}

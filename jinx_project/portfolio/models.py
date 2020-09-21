@@ -56,7 +56,11 @@ class Section(models.Model):
 
     @property
     def type(self):
-        mapping = {'TextSection': 'text', 'MediaSection': 'media'}
+        mapping = {
+            'TextSection': 'text', 
+            'MediaSection': 'media',
+            'ImageTextSection': 'image_text'
+            }
         return mapping[self.__class__.__name__]
 
     class Meta:
@@ -69,6 +73,9 @@ class Section(models.Model):
 class TextSection(Section):
     content = models.TextField()
 
+class ImageTextSection(Section):
+    content = models.TextField()
+    image = models.CharField(max_length = 200)
 
 class MediaSection(Section):
     # TODO: password protect files

@@ -109,7 +109,8 @@ class SectionList(generics.ListCreateAPIView):
         }
         text_sections = models.TextSection.objects.filter(**filter_param)
         media_sections = models.MediaSection.objects.filter(**filter_param)
-        return list(text_sections) + list(media_sections)
+        imageText_sections = models.ImageTextSection.objects.filter(**filter_param)
+        return list(text_sections) + list(media_sections) + list(imageText_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -129,7 +130,8 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         text_sections = models.TextSection.objects.all()
         media_sections = models.MediaSection.objects.all()
-        return list(text_sections) + list(media_sections)
+        imageText_sections = models.ImageTextSection.objects.all()
+        return list(text_sections) + list(media_sections) + list(imageText_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
