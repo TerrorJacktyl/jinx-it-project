@@ -55,7 +55,7 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Login = () => {
-  const [submittionError, setSubmittionError] = useState(false);
+  const [submittionError, setSubmittionError] = useState('');
   const [redirect, setRedirect] = useState(false);
 
   const { login } = useUser();
@@ -89,7 +89,11 @@ const Login = () => {
                   setRedirect(true);
                   console.log(data);
                 })
-                .catch(response => console.error(response));
+                .catch(error => {
+                  // Manually unpack error here
+                  setSubmittionError(error.response.data.non_field_errors[0]);
+                  console.log(error.response.data.non_field_errors[0]);
+                });
             }}
           >
             {({ errors, touched, isSubmitting }) => (
@@ -111,7 +115,7 @@ const Login = () => {
                   text="Login"
                   fontSize={null}
                 />
-                {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
+                {submittionError ? <ErrorMessage>Error logging in: {submittionError}.</ErrorMessage> : null}
 
                 <StyledButton
                   width={null}

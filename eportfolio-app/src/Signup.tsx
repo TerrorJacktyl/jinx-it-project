@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import API from './API';
 
 import styled from "styled-components";
 import { Formik, Form } from "formik";
@@ -15,6 +14,7 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  useUser,
 } from "jinxui";
 
 const StyledFormEntry = styled(FormEntry)`
@@ -22,6 +22,7 @@ const StyledFormEntry = styled(FormEntry)`
   margin-top: 15px;
   margin-bottom: 15px;
 `;
+
 const FormTitle = styled.h2`
   font-family: "Heebo", sans-serif;
   color: #eeeeee;
@@ -65,11 +66,13 @@ const Signup = () => {
   // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
   const [redirect, setRedirect] = useState(false);
 
+  const { signup, login, setAccountDetails } = useUser();
+
   const onRegister = () => {
     return <Redirect to="/login" />
   }
 
-  const [submittionError, setSubmittionError] = useState(false);
+  const [submittionError, setSubmittionError] = useState('');
 
   if (redirect)
     return onRegister();
@@ -90,33 +93,25 @@ const Signup = () => {
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
 
-              API
-                .post(`auth/users`,
-                  {
-                    username: values.email,
-                    password: values.password,
-                    email: values.email,
-                  }
-                  // {
-                  // first_name: values.firstName,
-                  // last_name: values.lastName,
-                  // email: values.email,
-                  // password: values.password,
-                  // }
-                )
+              // This promise chain is gross, but it handles PUTing the user details
+              signup(values.email, values.password, values.firstName, values.lastName)
                 .then(function (response: any) {
                   console.log(response);
-                  setSubmitting(false);
-                  if (response.data['email']) { // only present if successful
-                    console.log(response.data);
-                    setRedirect(true);
-                  }
+                  return response;
                 })
-                .catch(function (error: any) {
-                  setSubmittionError(true);
+                .then((response: any) => {
+                  return login(values.email, values.password);
+                })
+                .then((config: any) => {
+                  // Making this work involved sacrificing a small lamb
+                  setAccountDetails(values.firstName, values.lastName, config);
+                  setSubmitting(false);
+                  setRedirect(true);
+                })
+                .catch(function (error) {
                   setSubmitting(false);
                   console.log(error);
-                  console.log(submittionError);
+                  setSubmittionError(error);
                 });
             }}
           >
@@ -154,12 +149,12 @@ const Signup = () => {
                 <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
 
                 {submittionError ?
-                  <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
+                  <ErrorMessage>Error signing up: {submittionError}.</ErrorMessage> : null}
               </Form>
             )}
           </Formik>
         </StyledFormDiv>
-      </AccountPageDiv>
+      </AccountPageDiv >
     );
 };
 
