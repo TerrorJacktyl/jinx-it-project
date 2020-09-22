@@ -96,7 +96,7 @@ const Login = () => {
                     console.log(error.response.data.non_field_errors[0]);
                   }
                   else{
-                    setSubmittionError("Unable to login as service is currently unavailable, please try again later");
+                    setSubmittionError("Service is currently unavailable, please try again later");
                     console.error("Unable to connect to API for login");
                   }                  
                 });
