@@ -96,6 +96,19 @@ export const useUser = () => {
             .catch(error => { throw error });
     }
 
+    async function getAccountDetails(konfig: AxiosRequestConfig = config){
+        API.get(ACCOUNT_PATH, konfig)
+            .then(response => {
+                setState((state: IUserContext) => {
+                    return {
+                        ...state,
+                        firstName: JSON.parse(response.data.first_name),
+                    };
+                });
+            })
+            .catch(error => { throw error });
+    }
+
     return {
         userData: state,
         login,
