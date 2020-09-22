@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from 'jinxui';
 import { IUserContext, defaultUserContext } from 'jinxui';
 import API from '../../API';
@@ -13,6 +13,7 @@ export const useUser = () => {
     const LOGIN_PATH = 'auth/token/login';
     const LOGOUT_PATH = 'auth/token/logout';
     const ACCOUNT_PATH = 'api/accounts/me';
+    const SIGNUP_PATH = 'auth/users';
 
     /**
      * Abstract the login procedure. Returns the auth_token if login succeeded, 
@@ -20,77 +21,91 @@ export const useUser = () => {
      * @param username 
      * @param password 
      */
-    async function login(username: string, password: string): Promise<AxiosResponse<any>> {
-        const response = await API.post(LOGIN_PATH, { username: username, password: password });
-
-        return new Promise((resolve, reject) => {
-            // Login successful
+    async function login(username: string, password: string) {
+        try {
+            const response = await API.post(LOGIN_PATH, { username: username, password: password });
             if ('auth_token' in response.data) {
-                resolve(response.data);
                 // Set auth header to authenticate future requests
-                setConfig({
+                const config = {
                     headers: {
                         'Authorization': 'Token ' + response.data.auth_token
                     }
-                });
+                }
+                setConfig(config);
                 // Update internal state about user
-                setState((state: IUserContext) => {
+                // Do not return until internal state has been updated
+                await setState((state: IUserContext) => {
                     return {
                         ...state, username: username,
                         token: response.data['auth_token'],
                         authenticated: true,
                     };
                 });
+                return config;
             }
-            // Login failed
-            else {
-                reject(response);
-            }
-        });
+        } catch (e) {
+            throw e;
+        }
     }
 
+    // Another style: await with try catch
     async function logout() {
-        const response = await API.post(LOGOUT_PATH);
-
-        return new Promise((resolve, reject) => {
-            // Swagger currently returns 204 (unexpected) status for logout
-            // Change this when API has well-defined logout success response
+        try {
+            const response = await API.post(LOGOUT_PATH);
+            // make the success more concrete when we've defined a status code on backend
             if (response.status in [200, 201, 202, 203, 204]) {
                 // Update internal user state to reflect sign out
                 setState(defaultUserContext);
                 // Wipe axios headers, we just killed our token
                 setConfig({});
-                resolve(response);
+                return response;
             }
-            else
-                reject(response);
-        });
+        } catch (e) {
+            throw e.message;
+        }
     }
 
-    async function setAccountDetails(first_name?: string, last_name?: string) {
-        const response = await API.put(ACCOUNT_PATH, {
+    // Declaring a function as async means the return gets wrapped in a promise
+    async function signup(email: string, password: string, first_name?: string, last_name?: string) {
+        try {
+            const response = await API.post(SIGNUP_PATH,
+                {
+                    username: email,
+                    password: password,
+                    email: email,
+                }
+            );
+            return response;
+        } catch (e) {
+            throw e.response.data.username[0];
+        }
+    }
+
+    /**
+     * Update the logged in user's account details.
+     * @param first_name 
+     * @param last_name 
+     * @param konfig ignore this, you don't need this argument - only used for sign up trickery
+     */
+    async function setAccountDetails(first_name?: string, last_name?: string, konfig: AxiosRequestConfig = config) {
+        API.put(ACCOUNT_PATH, {
             first_name: first_name,
             last_name: last_name,
-        }, config);
-
-        return new Promise((resolve, reject) => {
-            if (isSuccessful(response))
-                resolve(response);
-            else
-                reject(response);
-        })
+        }, konfig)
+            .then(response => response)
+            .catch(error => { throw error });
     }
-
-    // async function getPortfolio(id?: number) {
-    //     const response = await API.get();
-    // }
 
     return {
+        userData: state,
         login,
         logout,
+        signup,
+        setAccountDetails,
+        // Expose the axios config so you can edit headers yourself
+        // Preferably don't do this - abstract your call into this hook
+        // so the hook is the only one that manages its state (easier to debug)
+        config,
+        setConfig,
     }
-}
-
-const isSuccessful = (response: AxiosResponse) => {
-    return (response.status === 200);
 }
