@@ -66,18 +66,18 @@ export const useUser = () => {
     }
 
     // Declaring a function as async means the return gets wrapped in a promise
-    async function signup(email: string, password: string, first_name?: string, last_name?: string) {
+    async function signup(username: string, email: string, password: string, first_name?: string, last_name?: string) {
         try {
             const response = await API.post(SIGNUP_PATH,
                 {
-                    username: email,
+                    username: username,
                     password: password,
                     email: email,
                 }
             );
             return response;
         } catch (e) {
-            throw e.response.data.username[0];
+            throw e.response;
         }
     }
 
