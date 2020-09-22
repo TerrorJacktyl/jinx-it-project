@@ -86,7 +86,7 @@ class PolymorphSectionSerializer(SectionSerializer):
         return {
             'text': TextSectionSerializer,
             'media': MediaSectionSerializer,
-            'imageText' : ImageTextSectionSerializer
+            'image_text' : ImageTextSectionSerializer
         }
 
     def to_representation(self, instance):
@@ -131,7 +131,14 @@ class TextSectionSerializer(SectionSerializer):
 class ImageTextSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
         model = models.ImageTextSection
-        fields = SectionSerializer.Meta.fields + ['content', 'image']
+        fields = SectionSerializer.Meta.fields + ['image', 'content']
+
+# class ImageTextSectionSerializer(SectionSerializer):
+#     class Meta(SectionSerializer.Meta):
+#         model = models.ImageTextSection
+#         fields = SectionSerializer.Meta.fields + ['content']
+
+        # fields = SectionSerializer.Meta.fields + ['content', 'image']
 
 class MediaSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
@@ -140,10 +147,5 @@ class MediaSectionSerializer(SectionSerializer):
 
 class ImageInputSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ImageSection
+        model = models.Image
         fields = '__all__'
-
-# class ImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.ImageSection
-#         fields = ['name', 'image']

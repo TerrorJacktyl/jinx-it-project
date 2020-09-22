@@ -127,7 +127,7 @@ const ProfileSchema = Yup.object().shape({
 
 function post_section(portfolio_id: string, section_id: string, data: any,) {
   const axios = require("axios").default;
-  const auth_header = {"Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"}
+  const auth_header = {"Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"}
   axios.post(`http://127.0.0.1:8080/api/portfolios/${portfolio_id}/pages/${section_id}/sections`,
     data, {headers: auth_header})
   .then(function (response: any) {
@@ -143,7 +143,7 @@ const Edit = () => {
   const [submittionError, setSubmittionError] = useState(false);
   const [imageFile, setImageFile] = useState<File>(
     new File(["http://127.0.0.1:8080/media/images/blank_user.png"], "blank_user.png"));
-  const [imageURL, setImageURL] = useState("http://127.0.0.1:8080/media/images/blank_user.png")
+  const [imageResponse, setImageResponse] = useState({image: "http://127.0.0.1:8080/media/images/blank_user.png", id: "0"})
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -165,10 +165,11 @@ const Edit = () => {
           onSubmit={(values, { setSubmitting }) => {
             const portfolio_data    = {name: values.websiteName}
             const page_data         = {name: "home", number: "0"}
-            const bio_data          = {name: "biography", number: "0", content: values.biography, type: "imageText", image: imageURL}
+            // const bio_data          = {name: "biography", number: "0", content: values.biography, type: "image_text", image: imageResponse.id}
+            const bio_data          = {name: "biography", number: "0", image: imageResponse.id, content: values.biography, type: "image_text"}
             const academic_data     = {name: "academic_history", number: "0", content: values.academicHistory, type: "text"}
             const professional_data = {name: "professional_history", number: "0", content: values.professionalHistory, type: "text"}
-            const auth_header = {"Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"}
+            const auth_header       = {"Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"}
             setSubmitting(true);
             axios
               .post(`http://127.0.0.1:8080/api/portfolios`, 
@@ -208,7 +209,7 @@ const Edit = () => {
                 {errors.websiteName && touched.websiteName ? (
                   <ErrorMessage>{errors.websiteName}</ErrorMessage>
                 ) : null}
-                <BlankUser src={imageURL} />
+                <BlankUser src={imageResponse.image} />
                 <BrowseButton
                   id="file"
                   name="file"
@@ -229,15 +230,15 @@ const Edit = () => {
                     form_data.append("name", imageFile.name);
                     form_data.append("owner", "2")
                     axios
-                      .post("http://127.0.0.1:8080/api/images/", form_data, {
+                      .post("http://localhost:8080/api/images/", form_data, {
                         headers: {
                           "Content-Type": "multipart/form-data",
-                          "Authorization": "Token 8295edf270ca01fc8fefabf5e2d508507a970fcd"
+                          "Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"
                         },
                       })
                       .then(function (response: any) {
                         console.log(response);
-                        setImageURL(response.data.image);
+                        setImageResponse(response.data);
                       })
                       .catch(function (error: any) {
                         console.log(error);

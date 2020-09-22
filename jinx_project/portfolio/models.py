@@ -59,7 +59,7 @@ class Section(models.Model):
         mapping = {
             'TextSection': 'text', 
             'MediaSection': 'media',
-            'ImageTextSection': 'image_text'
+            'ImageTextSection': 'text'
             }
         return mapping[self.__class__.__name__]
 
@@ -73,16 +73,14 @@ class Section(models.Model):
 class TextSection(Section):
     content = models.TextField()
 
-class ImageTextSection(Section):
-    content = models.TextField()
-    image = models.CharField(max_length = 200)
+
 
 class MediaSection(Section):
     # TODO: password protect files
     # https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
 
-class ImageSection(models.Model):
+class Image(models.Model):
     #   Image upload tutorial
     #   https://medium.com/@emeruchecole9/uploading-images-to-rest-api-backend-in-react-js-b931376b5833
     def image_path(self, filename):
@@ -100,9 +98,13 @@ class ImageSection(models.Model):
     image = models.ImageField(upload_to = image_path, null = True)
 
 
-    # @property
-    # def owner(self):
-    #     return self.portfolio.owner
+    @property
+    def owner(self):
+        return self.portfolio.owner
 
     def __str__(self):
-        return self.name #
+        return self.name
+
+class ImageTextSection(Section):
+    image = models.ForeignKey(Image, on_delete=models.PROTECT)
+    content = models.TextField()

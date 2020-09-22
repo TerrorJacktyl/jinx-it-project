@@ -108,9 +108,10 @@ class SectionList(generics.ListCreateAPIView):
             'page': self.kwargs['page_id'],
         }
         text_sections = models.TextSection.objects.filter(**filter_param)
+        image_text_sections = models.ImageTextSection.objects.filter(**filter_param)
         media_sections = models.MediaSection.objects.filter(**filter_param)
-        imageText_sections = models.ImageTextSection.objects.filter(**filter_param)
-        return list(text_sections) + list(media_sections) + list(imageText_sections)
+        # imageText_sections = models.ImageTextSection.objects.filter(**filter_param)
+        return list(text_sections) + list(media_sections) + list(image_text_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -129,9 +130,11 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         text_sections = models.TextSection.objects.all()
+        image_text_sections = models.ImageTextSection.objects.all()
+
         media_sections = models.MediaSection.objects.all()
-        imageText_sections = models.ImageTextSection.objects.all()
-        return list(text_sections) + list(media_sections) + list(imageText_sections)
+        # imageText_sections = models.ImageTextSection.objects.all()
+        return list(text_sections) + list(media_sections) + list(image_text_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -197,21 +200,6 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 # class ImageView(APIView):
 #     serializer_class = serializers.ImageInputSerializer
 #     parser_classes = (MultiPartParser, FormParser)
-
-#     def get(self, request, *args, **kwargs):
-#         images = models.ImageSection.objects.all()
-#         serializer = serializers.ImageInputSerializer(images, many=True)
-#         return Response(serializer.data)
-#     def post(self, request, *args, **kwargs):
-#         image_serializer = serializers.ImageInputSerializer(data=request.data)
-#         if image_serializer.is_valid():
-#             image_serializer.save()
-#             return Response(image_serializer.data, status=status.HTTP_201_CREATED)
-#         else:
-#             print('error', image_serializer.errors)
-#             return Response(image_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#     swagger_schema = swagger.PortfolioAutoSchema
-#     # swagger_schema = swagger.SwaggerAutoSchema
 
 class ImageView(generics.CreateAPIView):
     serializer_class = serializers.ImageInputSerializer

@@ -14,7 +14,7 @@ class SectionInline(admin.TabularInline):
     # don't allow adding
     max_num = 0
 
-@admin.register(models.ImageSection)
+@admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ['name', 'image']
 
@@ -37,7 +37,7 @@ class TextSectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.ImageTextSection)
 class ImageTextSectionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'page', 'number', 'content', 'image']
+    list_display = ['name', 'page', 'number', 'content']
 
 @admin.register(models.MediaSection)
 class MediaSectionAdmin(admin.ModelAdmin):
