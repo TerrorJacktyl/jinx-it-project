@@ -14,6 +14,7 @@ import {
   AccountPageDiv,
   useUser,
 } from "jinxui";
+import { Alert } from '@material-ui/lab';
 import styled from "styled-components";
 
 // The styling isn't DRY - where are we putting this?
@@ -48,6 +49,12 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
+const StyledAlert = styled(Alert)`
+  width: 80%;
+  margin: auto;
+  margin-top: 10px;
+`
+
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
@@ -79,6 +86,7 @@ const Login = () => {
 
         <StyledFormDiv>
           <FormTitle>Enter Details</FormTitle>
+          {submittionError ? <StyledAlert severity="error">Error logging in: {submittionError}.</StyledAlert> : null}
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={SignupSchema}
@@ -96,7 +104,7 @@ const Login = () => {
                     console.log(error.response.data.non_field_errors[0]);
                   }
                   else{
-                    setSubmittionError("Service is currently unavailable, please try again later");
+                    setSubmittionError("service is currently unavailable, please try again later");
                     console.error("Unable to connect to API for login");
                   }                  
                 });
@@ -121,7 +129,6 @@ const Login = () => {
                   text="Login"
                   fontSize={null}
                 />
-                {submittionError ? <ErrorMessage>Error logging in: {submittionError}.</ErrorMessage> : null}
 
                 <StyledButton
                   width={null}
