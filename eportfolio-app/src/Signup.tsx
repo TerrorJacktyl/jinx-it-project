@@ -118,28 +118,25 @@ const Signup = () => {
                   console.log(error);
                   
                   var errorVar = null;
-                  if (error.data){
-                    if (error.data.non_field_errors && error.data.non_field_errors[0]){
-                      setSubmittionError(error.data.non_field_errors[0]);
-                      console.log(error.data.non_field_errors[0]);
+                  if (error.response){
+                    if (error.response.data.non_field_errors){
+                      errorVar = error.response.data.non_field_errors;
                     }
-                    else if (error.data.password){
-                      errorVar = error.data.password;
+                    else if (error.response.data.password){
+                      errorVar = error.response.data.password;
                     }
-                    else if (error.data.username){
-                      errorVar = error.data.username;
+                    else if (error.response.data.username){
+                      errorVar = error.response.data.username;
                     }
-                    else if (error.data.email){
-                      errorVar = error.data.email;
+                    else if (error.response.data.email){
+                      errorVar = error.response.data.email;
                     }
- 
                   }
                   if (errorVar){
                     let i = 0;
                     for (i = 0; i < errorVar.length; i++){
                       setSubmittionError(submittionError.concat(errorVar[i]));
                     }
-                    console.log(error);
                   }
                   else{
                     setSubmittionError("service is currently unavailable, please try again later");

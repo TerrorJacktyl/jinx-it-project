@@ -77,7 +77,7 @@ export const useUser = () => {
             );
             return response;
         } catch (e) {
-            throw e.response;
+            throw e
         }
     }
 
