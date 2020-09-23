@@ -50,7 +50,7 @@ const StyledLink = styled.a`
 `;
 
 const SignupSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").required("Required"),
   password: Yup.string().required("Required"),
 });
 
@@ -81,11 +81,11 @@ const Login = () => {
           <FormTitle>Enter Details</FormTitle>
           {submittionError ? <FormAlert severity="error">Error logging in: {submittionError}.</FormAlert> : null}
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ username: "", password: "" }}
             validationSchema={SignupSchema}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
-              login(values.email, values.password)
+              login(values.username, values.password)
                 .then(data => {
                   setRedirect(true);
                   console.log(data);
@@ -105,8 +105,8 @@ const Login = () => {
           >
             {({ errors, touched, isSubmitting }) => (
               <Form>
-                <StyledFormEntry name="email" type="email" placeholder="Email address" />
-                {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+                <StyledFormEntry name="username" type="username" placeholder="Username" />
+                {errors.username && touched.username ? <ErrorMessage>{errors.username}</ErrorMessage> : null}
 
                 <StyledFormEntry name="password" type="password" placeholder="Password" />
                 {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}

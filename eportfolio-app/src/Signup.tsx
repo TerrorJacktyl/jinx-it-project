@@ -104,7 +104,7 @@ const Signup = () => {
                   return response;
                 })
                 .then((response: any) => {
-                  return login(values.email, values.password);
+                  return login(values.username, values.password);
                 })
                 .then((config: any) => {
                   // Making this work involved sacrificing a small lamb
