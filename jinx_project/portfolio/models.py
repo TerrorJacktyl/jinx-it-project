@@ -98,13 +98,13 @@ class Image(models.Model):
     image = models.ImageField(upload_to = image_path, null = True)
 
 
-    @property
-    def owner(self):
-        return self.portfolio.owner
+    # @property
+    # def owner(self):
+    #     return self.portfolio.owner
 
     def __str__(self):
         return self.name
 
 class ImageTextSection(Section):
-    image = models.ForeignKey(Image, on_delete=models.PROTECT)
+    image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
     content = models.TextField()

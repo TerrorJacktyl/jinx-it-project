@@ -148,4 +148,9 @@ class MediaSectionSerializer(SectionSerializer):
 class ImageInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
-        fields = '__all__'
+        fields = ['id', 'name', 'image']
+
+class ImageOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Image
+        fields = ['id', 'owner', 'name', 'image']

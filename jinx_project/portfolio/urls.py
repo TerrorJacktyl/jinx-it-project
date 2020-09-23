@@ -38,7 +38,12 @@ urlpatterns = [
     ),
     path(
         'images/',
-        views.ImageView.as_view(),
+        views.ImageList.as_view(),
+        name = 'image_list',
+    ),
+    path(
+        'images/<image_id>',
+        views.ImageDetail.as_view(),
         name = 'image_list',
     ),
 ]
