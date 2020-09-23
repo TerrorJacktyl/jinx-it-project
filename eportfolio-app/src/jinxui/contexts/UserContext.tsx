@@ -7,6 +7,7 @@ export const defaultUserContext: IUserContext = {
     token: '',
     authenticated: false,
     theme: 'light',
+    config: {},
 }
 
 // Define the context to hold a state object and its setState function.
