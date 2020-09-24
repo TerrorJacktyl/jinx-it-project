@@ -3,6 +3,7 @@ import { IUserContext } from 'jinxui';
 
 export const defaultUserContext: IUserContext = {
     username: '',
+    firstName: '',
     token: '',
     authenticated: false,
     theme: 'light',

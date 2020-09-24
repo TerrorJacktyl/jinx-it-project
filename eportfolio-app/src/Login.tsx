@@ -12,6 +12,7 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  FormAlert,
   useUser,
 } from "jinxui";
 import styled from "styled-components";
@@ -48,14 +49,91 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
-
 const SignupSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").matches(/^[a-zA-Z0-9_@+.-]+$/, "Can only contain letters, numbers, and some special characters").required("Required"),
   password: Yup.string().required("Required"),
 });
 
 const Login = () => {
+<<<<<<< HEAD
+  const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
+
+  return (
+    <AccountPageDiv>
+      <SiteHeader>
+        <HeaderDiv>
+          <LogoLink />
+          <HeaderTitle>Login</HeaderTitle>
+        </HeaderDiv>
+      </SiteHeader>
+
+      <StyledFormDiv>
+        <FormTitle>Enter Details</FormTitle>
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={SignupSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(true);
+
+            axios
+              .post(`localhost:8080/api/login`, {
+                email: values.email,
+                password: values.password,
+              })
+              .then(function (response: any) {
+                console.log(response);
+                setSubmitting(false);
+              })
+              .catch(function (error: any) {
+                setSubmittionError(true);
+                setSubmitting(false);
+                console.log(error);
+                console.log(submittionError);
+              });
+          }}
+        >
+          {({ errors, touched, isSubmitting }) => (
+            <Form>
+              <StyledFormEntry name="email" type="email" placeholder="Email address" />
+              {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+              
+              <StyledFormEntry name="password" type="password" placeholder="Password" />
+              {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+              
+              <StyledButton
+                type="submit"
+                disabled={isSubmitting}
+                width={null}
+                textColour="#00FFC2"
+                backgroundColour={null}
+                hoverColour="#00FFC2"
+                contrastColour="#1C1C1C"
+                text="Login"
+                fontSize={null}
+                action = {null}
+              />
+              {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
+              
+              <StyledButton
+                width={null}
+                textColour="#EEEEEE"
+                backgroundColour={null}
+                hoverColour="#EEEEEE"
+                contrastColour="#1C1C1C"
+                text="Reset Password"
+                fontSize={"20px"}
+                action = {null}
+              />
+            </Form>
+          )}
+        </Formik>
+      </StyledFormDiv>
+    </AccountPageDiv>
+  );
+};
+=======
+  const [submittionError, setSubmittionError] = useState('');
   const [redirect, setRedirect] = useState(false);
 
   const { login } = useUser();
@@ -79,23 +157,34 @@ const Login = () => {
 
         <StyledFormDiv>
           <FormTitle>Enter Details</FormTitle>
+          {submittionError ? <FormAlert severity="error">Error logging in: {submittionError}.</FormAlert> : null}
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ username: "", password: "" }}
             validationSchema={SignupSchema}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
-              login(values.email, values.password)
+              login(values.username, values.password)
                 .then(data => {
                   setRedirect(true);
                   console.log(data);
                 })
-                .catch(response => console.error(response));
+                .catch(error => {
+                  // Manually unpack error here
+                  if (error.response !== undefined){
+                    setSubmittionError(error.response.data.non_field_errors[0]);
+                    console.log(error.response.data.non_field_errors[0]);
+                  }
+                  else{
+                    setSubmittionError("service is currently unavailable, please try again later");
+                    console.error("Unable to connect to API for login");
+                  }                  
+                });
             }}
           >
             {({ errors, touched, isSubmitting }) => (
               <Form>
-                <StyledFormEntry name="email" type="email" placeholder="Email address" />
-                {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+                <StyledFormEntry name="username" type="username" placeholder="Username" />
+                {errors.username && touched.username ? <ErrorMessage>{errors.username}</ErrorMessage> : null}
 
                 <StyledFormEntry name="password" type="password" placeholder="Password" />
                 {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
@@ -111,7 +200,6 @@ const Login = () => {
                   text="Login"
                   fontSize={null}
                 />
-                {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
 
                 <StyledButton
                   width={null}
@@ -133,5 +221,6 @@ const Login = () => {
       </AccountPageDiv >)
   }
 }
+>>>>>>> nima/login
 
 export default Login;

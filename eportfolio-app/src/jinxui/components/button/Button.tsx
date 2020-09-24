@@ -80,6 +80,41 @@ const ButtonComponent = styled.button<StyledButtonProps>`
   }
 `;
 
+const Button2 = styled.button`
+  font-family: "Heebo", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: #EEEEEE;
+  font-size: 24px;
+  line-height: 35px;
+  text-align: center;
+  margin-left: 0px;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: block;
+  background-color: transparent;
+  border:none;
+  max-width: 255px;
+  width: 100%;
+  height: 43px;
+  :hover {
+    color: #00FFC2; 
+  }
+  cursor: pointer;
+`;
+
+const Button3 = styled(Button2)`
+  border-radius: 5px;
+  color: #00FFC2;
+  border: 2px solid #00FFC2;
+  border-radius: 5px;
+  :hover {
+    background-color: #00FFC2;
+    color: black; 
+  }
+`;
+
 export type ButtonProps = {
   backgroundColour: any;
   textColour: string;
@@ -88,6 +123,8 @@ export type ButtonProps = {
   width: any;
   text: string;
   fontSize: any;
+  action: any;
+  // type?: string;
 } & JSX.IntrinsicElements["button"];
 
 const Button = ({
@@ -99,6 +136,8 @@ const Button = ({
   text,
   fontSize,
   className,
+  action,
+  // type
 }: ButtonProps) => {
   return (
     <ButtonBorder
@@ -108,11 +147,22 @@ const Button = ({
       width={width}
       hoverColour={hoverColour}
     >
-      <ButtonComponent id="button" textColour={textColour} contrastColour={contrastColour} fontSize={fontSize}>
+      <ButtonComponent
+      type = "button"
+      id="button" 
+      textColour={textColour} 
+      contrastColour={contrastColour} 
+      fontSize={fontSize} 
+      onClick = {action}
+      >
         {text}
       </ButtonComponent>
     </ButtonBorder>
   );
 };
 
-export default Button;
+export {
+  Button,
+  Button2,
+  Button3
+};

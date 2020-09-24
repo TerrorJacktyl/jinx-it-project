@@ -34,3 +34,6 @@ ruamel.yaml.clib==0.2.2
 six==1.15.0
 uritemplate==3.0.1
 urllib3==1.25.10
+
+## Image processing
+Pillow==7.2.0

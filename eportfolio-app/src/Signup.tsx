@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import API from './API';
 
 import styled from "styled-components";
 import { Formik, Form } from "formik";
@@ -15,6 +14,8 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  FormAlert,
+  useUser,
 } from "jinxui";
 
 const StyledFormEntry = styled(FormEntry)`
@@ -22,6 +23,7 @@ const StyledFormEntry = styled(FormEntry)`
   margin-top: 15px;
   margin-bottom: 15px;
 `;
+
 const FormTitle = styled.h2`
   font-family: "Heebo", sans-serif;
   color: #eeeeee;
@@ -41,6 +43,7 @@ const StyledButton = styled(Button)`
 
 const StyledFormDiv = styled(FormDiv)`
   margin-top: 100px;
+  height: 700px;
 `;
 
 const StyledLink = styled.a`
@@ -50,26 +53,87 @@ const StyledLink = styled.a`
 
 // We'll need to ensure that this schema is more strict than Django's user sign up
 const SignupSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-  lastName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
+  firstName: Yup.string().min(2, "Too Short!").max(150, "Too Long!").required("Required"),
+  lastName: Yup.string().min(2, "Too Short!").max(150, "Too Long!").required("Required"),
+  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").matches(/^[a-zA-Z0-9_@+.-]+$/, "Can only contain letters, numbers, and some special characters").required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().required("Required"),
+  password: Yup.string().min(8, "Too Short!").matches(/(?!^\d+$)^.+$/, "Password cannot consist of only numbers").required("Required"),
   passwordConfirm: Yup.string()
     .oneOf([Yup.ref("password"), undefined], "Passwords don't match")
     .required("Required"),
 });
 
 const Signup = () => {
+<<<<<<< HEAD
+  const axios = require("axios").default;
+  const [submittionError, setSubmittionError] = useState(false);
+  return (
+    <AccountPageDiv>
+      <SiteHeader>
+        <HeaderDiv>
+          <LogoLink />
+          <HeaderTitle>Sign Up</HeaderTitle>
+        </HeaderDiv>
+      </SiteHeader>
+      <StyledFormDiv>
+        <FormTitle>Sign up for free!</FormTitle>
+        <Formik
+          initialValues={{ firstName: "", lastName: "", email: "", password: "", passwordConfirm: "" }}
+          validationSchema={SignupSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(true);
+
+            axios
+              .post(`http://127.0.0.1:8080/api/user`, {
+                first_name: values.firstName,
+                last_name: values.lastName,
+                email: values.email,
+                password: values.password,
+              })
+              .then(function (response: any) {
+                console.log(response);
+                setSubmitting(false);
+              })
+              .catch(function (error: any) {
+                setSubmittionError(true);
+                setSubmitting(false);
+                console.log(error);
+                console.log(submittionError);
+              });
+          }}
+        >
+          {({ errors, touched, isSubmitting }) => (
+            <Form>
+              <StyledFormEntry name="firstName" placeholder="First Name" />
+              {errors.firstName && touched.firstName ? <ErrorMessage>{errors.firstName}</ErrorMessage> : null}
+
+              <StyledFormEntry name="lastName" placeholder="Last Name" />
+              {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
+
+              <StyledFormEntry name="email" type="email" placeholder="Email" />
+              {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+
+              <StyledFormEntry name="password" type="password" placeholder="Password" />
+              {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+
+              <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password" />
+              {errors.passwordConfirm && touched.passwordConfirm ? (
+                <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
+              ) : null}
+              <StyledLink href="/edit">
+=======
 
   // This could be parametrized to accept multiple different redirects
   // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
   const [redirect, setRedirect] = useState(false);
 
+  const { signup, login, setAccountDetails } = useUser();
+
   const onRegister = () => {
     return <Redirect to="/login" />
   }
 
-  const [submittionError, setSubmittionError] = useState(false);
+  const [submittionError, setSubmittionError] = useState('');
 
   if (redirect)
     return onRegister();
@@ -84,39 +148,58 @@ const Signup = () => {
         </SiteHeader>
         <StyledFormDiv>
           <FormTitle>Sign up for free!</FormTitle>
+          {submittionError ? <FormAlert severity="error">Error logging in: {submittionError}.</FormAlert> : null}
           <Formik
-            initialValues={{ firstName: "", lastName: "", email: "", password: "", passwordConfirm: "" }}
+            initialValues={{ firstName: "", lastName: "", username: "", email: "", password: "", passwordConfirm: "" }}
             validationSchema={SignupSchema}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
 
-              API
-                .post(`auth/users`,
-                  {
-                    username: values.email,
-                    password: values.password,
-                    email: values.email,
-                  }
-                  // {
-                  // first_name: values.firstName,
-                  // last_name: values.lastName,
-                  // email: values.email,
-                  // password: values.password,
-                  // }
-                )
+              // This promise chain is gross, but it handles PUTing the user details
+              signup(values.username, values.email, values.password, values.firstName, values.lastName)
                 .then(function (response: any) {
                   console.log(response);
-                  setSubmitting(false);
-                  if (response.data['email']) { // only present if successful
-                    console.log(response.data);
-                    setRedirect(true);
-                  }
+                  return response;
                 })
-                .catch(function (error: any) {
-                  setSubmittionError(true);
+                .then((response: any) => {
+                  return login(values.username, values.password);
+                })
+                .then((config: any) => {
+                  // Making this work involved sacrificing a small lamb
+                  setAccountDetails(values.firstName, values.lastName, config);
                   setSubmitting(false);
+                  setRedirect(true);
+                })
+                .catch(function (error) {
+                  setSubmitting(false);
+
                   console.log(error);
-                  console.log(submittionError);
+                  
+                  var errorVar = null;
+                  if (error.response){
+                    if (error.response.data.non_field_errors){
+                      errorVar = error.response.data.non_field_errors;
+                    }
+                    else if (error.response.data.password){
+                      errorVar = error.response.data.password;
+                    }
+                    else if (error.response.data.username){
+                      errorVar = error.response.data.username;
+                    }
+                    else if (error.response.data.email){
+                      errorVar = error.response.data.email;
+                    }
+                  }
+                  if (errorVar){
+                    let i = 0;
+                    for (i = 0; i < errorVar.length; i++){
+                      setSubmittionError(submittionError.concat(errorVar[i]));
+                    }
+                  }
+                  else{
+                    setSubmittionError("service is currently unavailable, please try again later");
+                    console.error("Unable to connect to API for login (or unknown error)");
+                  }
                 });
             }}
           >
@@ -127,6 +210,9 @@ const Signup = () => {
 
                 <StyledFormEntry name="lastName" placeholder="Last Name" />
                 {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
+
+                <StyledFormEntry name="username" placeholder="Username" />
+                {errors.username && touched.username ? <ErrorMessage>{errors.username}</ErrorMessage> : null}
 
                 <StyledFormEntry name="email" type="email" placeholder="Email" />
                 {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
@@ -139,6 +225,7 @@ const Signup = () => {
                   <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
                 ) : null}
 
+>>>>>>> nima/login
                 <StyledButton
                   type="submit"
                   disabled={isSubmitting}
@@ -149,17 +236,15 @@ const Signup = () => {
                   contrastColour="#1C1C1C"
                   text="Join"
                   fontSize={null}
+                  action = {null}
                 />
 
                 <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
-
-                {submittionError ?
-                  <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
               </Form>
             )}
           </Formik>
         </StyledFormDiv>
-      </AccountPageDiv>
+      </AccountPageDiv >
     );
 };
 

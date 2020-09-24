@@ -72,6 +72,15 @@ class ClientTest(TestCase):
                 "content": "I'm a giraffe!"},
             format='json'
         )
+
+        self.client.post(
+            "/api/portfolios/" + str(portfolio_id) + \
+            "/pages/" + str(page_id) + "/sections",
+            {"name": "Academic", "number": 1, "type": "text",
+                "content": "I'm a banana!"},
+            format='json'
+        )
+
         # Check the pages and sections were created properly
         self.assertIsNotNone(self.client.get(
             "/api/portfolios/1/pages/1/sections").json())

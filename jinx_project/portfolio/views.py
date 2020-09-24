@@ -3,12 +3,16 @@ from django.http import Http404
 from rest_framework import generics
 from rest_framework import permissions
 
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework import status
+
 from . import models
 from . import serializers
 from . import swagger
 
 from .permissions import IsOwner
-
 
 class PortfolioList(generics.ListCreateAPIView):
     def get_serializer_class(self):
@@ -103,8 +107,9 @@ class SectionList(generics.ListCreateAPIView):
             'page': self.kwargs['page_id'],
         }
         text_sections = models.TextSection.objects.filter(**filter_param)
+        image_text_sections = models.ImageTextSection.objects.filter(**filter_param)
         media_sections = models.MediaSection.objects.filter(**filter_param)
-        return list(text_sections) + list(media_sections)
+        return list(text_sections) + list(media_sections) + list(image_text_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -123,8 +128,10 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         text_sections = models.TextSection.objects.all()
+        image_text_sections = models.ImageTextSection.objects.all()
+
         media_sections = models.MediaSection.objects.all()
-        return list(text_sections) + list(media_sections)
+        return list(text_sections) + list(media_sections) + list(image_text_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -162,3 +169,44 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
     swagger_schema = swagger.PortfolioAutoSchema
+
+
+class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.ImageInputSerializer
+    # These parses required for receiving over image data
+    parser_classes = (MultiPartParser, FormParser)
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        # Allows this url to handle GET and POST with different serializers
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.ImageInputSerializer
+        return serializers.ImageOutputSerializer
+
+    lookup_url_kwarg = 'image_id'
+
+    def get_queryset(self):
+        return models.Image.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ImageList(generics.ListCreateAPIView):
+    serializer_class = serializers.ImageInputSerializer
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get_serializer_class(self):
+        # Allows this url to handle GET and POST with different serializers
+        if self.request.method in ['POST']:
+            return serializers.ImageInputSerializer
+        return serializers.ImageOutputSerializer
+
+    def get_queryset(self):
+        return models.Image.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    permission_classes = [permissions.IsAuthenticated]

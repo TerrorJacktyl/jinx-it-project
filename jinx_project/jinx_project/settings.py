@@ -158,8 +158,12 @@ STATIC_URL = '/static/'
 
 # User uploaded file
 # we don't actually have a cdn lol, but just in case this project grows big enough to need one
-MEDIA_URL = 'https://cdn.jinx.systems/'
-MEDIA_ROOT = '/srv/media/'
+
+# MEDIA_URL = 'https://cdn.jinx.systems/'
+# MEDIA_ROOT = '/srv/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 
 DRF_DEFAULT_RENDERER_CLASSES = (
     'rest_framework.renderers.JSONRenderer',
