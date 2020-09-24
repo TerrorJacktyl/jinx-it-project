@@ -10,13 +10,10 @@ export { default as FormAlert} from "./components/form/FormAlert";
 export { default as SiteLayout } from "./components/site/SiteLayout";
 
 /* Button */
-<<<<<<< HEAD
 export { Button } from './components/button/Button';
 export { Button2 } from "./components/button/Button";
 export { Button3 } from "./components/button/Button";
-=======
-export { default as Button } from "./components/button/Button";
->>>>>>> nima/login
+
 
 /* Header */
 export { default as HeaderDiv } from "./components/header/HeaderDiv";
@@ -25,9 +22,6 @@ export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
 
 /* Account */
-<<<<<<< HEAD
-export { default as AccountPageDiv } from './components/account/AccountPageDiv';
-=======
 export { default as AccountPageDiv } from "./components/account/AccountPageDiv";
 
 /* Context */
@@ -40,4 +34,3 @@ export {
 export type { IUserContext } from "./contexts/index";
 
 export { useUser } from "./hooks/useUser";
->>>>>>> nima/login

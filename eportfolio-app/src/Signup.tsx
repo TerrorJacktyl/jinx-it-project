@@ -64,65 +64,6 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Signup = () => {
-<<<<<<< HEAD
-  const axios = require("axios").default;
-  const [submittionError, setSubmittionError] = useState(false);
-  return (
-    <AccountPageDiv>
-      <SiteHeader>
-        <HeaderDiv>
-          <LogoLink />
-          <HeaderTitle>Sign Up</HeaderTitle>
-        </HeaderDiv>
-      </SiteHeader>
-      <StyledFormDiv>
-        <FormTitle>Sign up for free!</FormTitle>
-        <Formik
-          initialValues={{ firstName: "", lastName: "", email: "", password: "", passwordConfirm: "" }}
-          validationSchema={SignupSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-
-            axios
-              .post(`http://127.0.0.1:8080/api/user`, {
-                first_name: values.firstName,
-                last_name: values.lastName,
-                email: values.email,
-                password: values.password,
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
-              })
-              .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
-          }}
-        >
-          {({ errors, touched, isSubmitting }) => (
-            <Form>
-              <StyledFormEntry name="firstName" placeholder="First Name" />
-              {errors.firstName && touched.firstName ? <ErrorMessage>{errors.firstName}</ErrorMessage> : null}
-
-              <StyledFormEntry name="lastName" placeholder="Last Name" />
-              {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
-
-              <StyledFormEntry name="email" type="email" placeholder="Email" />
-              {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
-
-              <StyledFormEntry name="password" type="password" placeholder="Password" />
-              {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
-
-              <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password" />
-              {errors.passwordConfirm && touched.passwordConfirm ? (
-                <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
-              ) : null}
-              <StyledLink href="/edit">
-=======
-
   // This could be parametrized to accept multiple different redirects
   // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
   const [redirect, setRedirect] = useState(false);
@@ -224,8 +165,6 @@ const Signup = () => {
                 {errors.passwordConfirm && touched.passwordConfirm ? (
                   <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
                 ) : null}
-
->>>>>>> nima/login
                 <StyledButton
                   type="submit"
                   disabled={isSubmitting}
@@ -236,9 +175,7 @@ const Signup = () => {
                   contrastColour="#1C1C1C"
                   text="Join"
                   fontSize={null}
-                  action = {null}
                 />
-
                 <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
               </Form>
             )}

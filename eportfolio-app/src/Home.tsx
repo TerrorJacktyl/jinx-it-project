@@ -105,7 +105,6 @@ const Home = () => {
                   contrastColour="#1C1C1C"
                   text="Login"
                   fontSize={null}
-                  action = {null}
                 />
               </StyledLink>
             </HeaderDiv>
@@ -124,7 +123,6 @@ const Home = () => {
               contrastColour="#1C1C1C"
               text="Join Today"
               fontSize={null}
-              action = {null}
             />
           </StyledLink>
         </TopBlockDiv>

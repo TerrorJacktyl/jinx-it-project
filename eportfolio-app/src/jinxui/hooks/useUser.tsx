@@ -14,6 +14,7 @@ export const useUser = () => {
     const LOGOUT_PATH = 'auth/token/logout';
     const ACCOUNT_PATH = 'api/accounts/me';
     const SIGNUP_PATH = 'auth/users';
+    const IMAGE_PATH = 'api/images/';
 
     /**
      * Abstract the login procedure. Returns the auth_token if login succeeded, 
@@ -109,12 +110,24 @@ export const useUser = () => {
             .catch(error => { throw error });
     }
 
+    // Declaring a function as async means the return gets wrapped in a promise
+    async function uploadImage(file: File, name: string) {
+        const form_data = new FormData();
+        form_data.append("image", file, file.name);
+        form_data.append("name", name);
+        console.log(config)
+        API.post(IMAGE_PATH, form_data, config)
+            .then(response => response)
+            .catch(error => {throw error});
+    }
+
     return {
         userData: state,
         login,
         logout,
         signup,
         setAccountDetails,
+        uploadImage,
         // Expose the axios config so you can edit headers yourself
         // Preferably don't do this - abstract your call into this hook
         // so the hook is the only one that manages its state (easier to debug)
