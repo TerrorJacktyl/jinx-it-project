@@ -38,6 +38,18 @@ class PageInputSerializer(serializers.ModelSerializer):
             pk=self.context['portfolio_id'])
         return val
 
+    def update(self, instance, validated_data):
+        # update the ordering later
+        number = validated_data.pop('number')
+
+        # update the other fields
+        super().update(instance, validated_data)
+
+        # move the item
+        models.Page.objects.move(instance, number)
+
+        return instance
+
 
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
@@ -118,8 +130,23 @@ class PolymorphSectionSerializer(SectionSerializer):
         return validated_data
 
     def create(self, validated_data):
+        # remove type as it is not a real fields on the model
+        # trying to set the type will cause an error
         serializer = self.get_serializer_map()[validated_data.pop('type')]
         return serializer(context=self.context).create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('type', None)
+        # update the ordering later
+        number = validated_data.pop('number')
+
+        # update the other fields
+        super().update(instance, validated_data)
+
+        # move the item
+        models.Section.objects.move(instance, number)
+
+        return instance
 
 
 class TextSectionSerializer(SectionSerializer):
