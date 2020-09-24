@@ -89,6 +89,14 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
         context['portfolio_id'] = self.kwargs['portfolio_id']
         return context
 
+    def perform_destroy(self, instance):
+        parent_id = instance.portfolio
+        # really missing haskell's type system now :(
+        # pylint can't figure out that the superclass has the perform_destroy method
+        # pylint: disable=no-member
+        super().perform_destroy(instance)
+        models.Page.objects.normalise(parent_id)
+
 
 class SectionList(generics.ListCreateAPIView):
     serializer_class = serializers.PolymorphSectionSerializer
@@ -162,3 +170,9 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
     swagger_schema = swagger.PortfolioAutoSchema
+
+    def perform_destroy(self, instance):
+        parent_id = instance.page
+        # pylint: disable=no-member
+        super().perform_destroy(instance)
+        models.Section.objects.normalise(parent_id)
