@@ -126,6 +126,6 @@ export const useUser = () => {
         // Expose the axios config so you can edit headers yourself
         // Preferably don't do this - abstract your call into this hook
         // so the hook is the only one that manages its state (easier to debug)
-        config: state.config,
+        // config: state.config,
     }
 }
