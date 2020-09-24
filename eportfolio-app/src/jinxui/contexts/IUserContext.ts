@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+
 // Type for user context state
 export interface IUserContext {
   username: string;
@@ -6,4 +8,5 @@ export interface IUserContext {
   // Set true when user logged in; set false when token is invalid
   authenticated: boolean;
   theme: string;
+  config: AxiosRequestConfig;
 }

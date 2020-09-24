@@ -175,9 +175,7 @@ const Signup = () => {
                   contrastColour="#1C1C1C"
                   text="Join"
                   fontSize={null}
-                  action = {null}
                 />
-
                 <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
               </Form>
             )}

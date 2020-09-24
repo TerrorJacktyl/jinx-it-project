@@ -7,13 +7,11 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 export const useUser = () => {
     const [state, setState] = useContext(UserContext);
 
-    // Used to specify authentication as a custom header when logged in
-    const [config, setConfig] = useState<AxiosRequestConfig>({});
-
     const LOGIN_PATH = 'auth/token/login';
     const LOGOUT_PATH = 'auth/token/logout';
     const ACCOUNT_PATH = 'api/accounts/me';
     const SIGNUP_PATH = 'auth/users';
+    const IMAGE_PATH = 'api/images/';
 
     /**
      * Abstract the login procedure. Returns the auth_token if login succeeded, 
@@ -31,7 +29,6 @@ export const useUser = () => {
                         'Authorization': 'Token ' + response.data.auth_token
                     }
                 }
-                setConfig(config);
                 // Update internal state about user
                 // Do not return until internal state has been updated
                 await setState((state: IUserContext) => {
@@ -39,6 +36,7 @@ export const useUser = () => {
                         ...state, username: username,
                         token: response.data['auth_token'],
                         authenticated: true,
+                        config: config,
                     };
                 });
                 return config;
@@ -56,8 +54,6 @@ export const useUser = () => {
             if (response.status in [200, 201, 202, 203, 204]) {
                 // Update internal user state to reflect sign out
                 setState(defaultUserContext);
-                // Wipe axios headers, we just killed our token
-                setConfig({});
                 return response;
             }
         } catch (e) {
@@ -87,7 +83,7 @@ export const useUser = () => {
      * @param last_name 
      * @param konfig ignore this, you don't need this argument - only used for sign up trickery
      */
-    async function setAccountDetails(first_name?: string, last_name?: string, konfig: AxiosRequestConfig = config) {
+    async function setAccountDetails(first_name?: string, last_name?: string, konfig: AxiosRequestConfig = state.config) {
         API.put(ACCOUNT_PATH, {
             first_name: first_name,
             last_name: last_name,
@@ -96,8 +92,8 @@ export const useUser = () => {
             .catch(error => { throw error });
     }
 
-    async function getAccountDetails(konfig: AxiosRequestConfig = config){
-        API.get(ACCOUNT_PATH, konfig)
+    async function getAccountDetails() {
+        API.get(ACCOUNT_PATH, state.config)
             .then(response => {
                 setState((state: IUserContext) => {
                     return {
@@ -109,16 +105,27 @@ export const useUser = () => {
             .catch(error => { throw error });
     }
 
+    // Declaring a function as async means the return gets wrapped in a promise
+    async function uploadImage(file: File, name: string) {
+        const form_data = new FormData();
+        form_data.append("image", file, file.name);
+        form_data.append("name", name);
+        console.log(state.config)
+        API.post(IMAGE_PATH, form_data, state.config)
+            .then(response => response)
+            .catch(error => { throw error });
+    }
+
     return {
         userData: state,
         login,
         logout,
         signup,
         setAccountDetails,
+        uploadImage,
         // Expose the axios config so you can edit headers yourself
         // Preferably don't do this - abstract your call into this hook
         // so the hook is the only one that manages its state (easier to debug)
-        config,
-        setConfig,
+        // config: state.config,
     }
 }

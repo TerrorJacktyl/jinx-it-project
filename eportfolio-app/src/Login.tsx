@@ -61,7 +61,7 @@ const Login = () => {
   const { login } = useUser();
 
   const onLogin = () => {
-    return <Redirect to="/profile" />
+    return <Redirect to="/edit" />
   }
 
   if (redirect) {

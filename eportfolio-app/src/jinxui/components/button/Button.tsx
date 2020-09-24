@@ -123,8 +123,6 @@ export type ButtonProps = {
   width: any;
   text: string;
   fontSize: any;
-  action: any;
-  // type?: string;
 } & JSX.IntrinsicElements["button"];
 
 const Button = ({
@@ -136,8 +134,6 @@ const Button = ({
   text,
   fontSize,
   className,
-  action,
-  // type
 }: ButtonProps) => {
   return (
     <ButtonBorder
@@ -147,14 +143,7 @@ const Button = ({
       width={width}
       hoverColour={hoverColour}
     >
-      <ButtonComponent
-      type = "button"
-      id="button" 
-      textColour={textColour} 
-      contrastColour={contrastColour} 
-      fontSize={fontSize} 
-      onClick = {action}
-      >
+      <ButtonComponent id="button" textColour={textColour} contrastColour={contrastColour} fontSize={fontSize}>
         {text}
       </ButtonComponent>
     </ButtonBorder>

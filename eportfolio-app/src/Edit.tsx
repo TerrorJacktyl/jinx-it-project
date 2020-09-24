@@ -14,6 +14,7 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  useUser
 } from "jinxui";
 
 const MinimalDivStyle = styled.div`
@@ -144,6 +145,7 @@ const Edit = () => {
   const [imageFile, setImageFile] = useState<File>(
     new File(["http://127.0.0.1:8080/media/images/blank_user.png"], "blank_user.png"));
   const [imageResponse, setImageResponse] = useState({image: "http://127.0.0.1:8080/media/images/blank_user.png", id: "0"})
+  const { uploadImage } = useUser();
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -225,25 +227,34 @@ const Edit = () => {
                 <UploadButton
                 type="button"
                 onClick={() => {
-                    const form_data = new FormData();
-                    form_data.append("image", imageFile, imageFile.name);
-                    form_data.append("name", imageFile.name);
-                    form_data.append("owner", "2")
-                    axios
-                      .post("http://localhost:8080/api/images/", form_data, {
-                        headers: {
-                          "Content-Type": "multipart/form-data",
-                          "Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"
-                        },
-                      })
-                      .then(function (response: any) {
-                        console.log(response);
-                        setImageResponse(response.data);
-                      })
-                      .catch(function (error: any) {
-                        console.log(error);
-                    });
-                  }}>
+                  uploadImage(imageFile, imageFile.name)
+                    .then(data => {
+                      console.log(data);
+                    })
+                    .catch(error =>{
+                      console.log(error)
+                    })
+                  }}
+                >
+                  {/* //   const form_data = new FormData();
+                  //   form_data.append("image", imageFile, imageFile.name);
+                  //   form_data.append("name", imageFile.name);
+                  //   form_data.append("owner", "2")
+                  //   axios
+                  //     .post("http://localhost:8080/api/images/", form_data, {
+                  //       headers: {
+                  //         "Content-Type": "multipart/form-data",
+                  //         "Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"
+                  //       },
+                  //     })
+                  //     .then(function (response: any) {
+                  //       console.log(response);
+                  //       setImageResponse(response.data);
+                  //     })
+                  //     .catch(function (error: any) {
+                  //       console.log(error);
+                  //   });
+                  // }}> */}
                   Upload
                 </UploadButton>
                 <br></br>
