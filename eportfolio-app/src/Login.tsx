@@ -50,7 +50,7 @@ const StyledLink = styled.a`
 `;
 
 const SignupSchema = Yup.object().shape({
-  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").required("Required"),
+  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").matches(/^[a-zA-Z0-9_@+.-]+$/, "Can only contain letters, numbers, and some special characters").required("Required"),
   password: Yup.string().required("Required"),
 });
 
