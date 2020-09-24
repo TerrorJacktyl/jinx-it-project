@@ -17,6 +17,10 @@ import {
   useUser
 } from "jinxui";
 
+const TextSectionContainer = styled.div`
+  padding-left: 12px;
+  padding-right: 12px;
+`;
 
 
 type Portfolio = {
@@ -129,10 +133,10 @@ const Portfolio = () => {
 }
 
 const TextSection: React.FC<TextSectionProps> = ({ title, content }) => (
-  <div>
+  <TextSectionContainer>
     <SectionName>{title}</SectionName>
     <TextSectionDiv>{content}</TextSectionDiv>
-  </div>
+  </TextSectionContainer>
 );
 
 export default Portfolio;
