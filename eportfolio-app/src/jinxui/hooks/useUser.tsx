@@ -11,7 +11,8 @@ export const useUser = () => {
     const LOGOUT_PATH = 'auth/token/logout';
     const ACCOUNT_PATH = 'api/accounts/me';
     const SIGNUP_PATH = 'auth/users';
-    const IMAGE_PATH = 'api/images/';
+    const IMAGE_PATH = 'api/images';
+    const PORTFOLIOS_PATH = 'api/portfolios'
 
     /**
      * Abstract the login procedure. Returns the auth_token if login succeeded, 
@@ -110,8 +111,35 @@ export const useUser = () => {
         const form_data = new FormData();
         form_data.append("image", file, file.name);
         form_data.append("name", name);
-        console.log(state.config)
-        API.post(IMAGE_PATH, form_data, state.config)
+        const result = API.post(IMAGE_PATH, form_data, state.config)
+            .then(response => response)
+            .catch(error => { throw error });
+        return result
+    }
+
+    async function postPortfolio(data: any) {
+        const result = API.post(PORTFOLIOS_PATH, {
+            name: data.name
+        }, state.config)
+            .then(response => response)
+            .catch(error => { throw error });
+        return result
+    }
+
+    async function postPage(portfolio_id: string, data: any) {
+        const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages"
+        const result = API.post(path, {
+            name: data.name,
+            number: data.number
+        }, state.config)
+            .then(response => response)
+            .catch(error => { throw error });
+        return result
+    }
+
+    async function postSection(portfolio_id: string, page_id: string, data: any) {
+        const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections"
+        const result = API.post(path, data, state.config)
             .then(response => response)
             .catch(error => { throw error });
     }
@@ -123,6 +151,9 @@ export const useUser = () => {
         signup,
         setAccountDetails,
         uploadImage,
+        postPortfolio,
+        postPage,
+        postSection
         // Expose the axios config so you can edit headers yourself
         // Preferably don't do this - abstract your call into this hook
         // so the hook is the only one that manages its state (easier to debug)

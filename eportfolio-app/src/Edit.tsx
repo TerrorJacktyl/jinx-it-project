@@ -17,6 +17,8 @@ import {
   useUser
 } from "jinxui";
 
+const FRONT_END_URL = 'http://localhost:3000/'
+
 const MinimalDivStyle = styled.div`
   margin-left: 30px;
   margin-right: 30px;
@@ -126,26 +128,25 @@ const ProfileSchema = Yup.object().shape({
     .required("Required"),
 });
 
-function post_section(portfolio_id: string, section_id: string, data: any,) {
-  const axios = require("axios").default;
-  const auth_header = {"Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"}
-  axios.post(`http://127.0.0.1:8080/api/portfolios/${portfolio_id}/pages/${section_id}/sections`,
-    data, {headers: auth_header})
+function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any,) {
+  postSection(portfolio_id, page_id, data)
   .then(function (response: any) {
     console.log(response)
   })
   .catch(function (error: any) {
-                      console.log(error)
-                    })
+    console.log(error)
+  })
 }
 
 const Edit = () => {
-  const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
-  const [imageFile, setImageFile] = useState<File>(
-    new File(["http://127.0.0.1:8080/media/images/blank_user.png"], "blank_user.png"));
-  const [imageResponse, setImageResponse] = useState({image: "http://127.0.0.1:8080/media/images/blank_user.png", id: "0"})
-  const { uploadImage } = useUser();
+  const [imageFile, setImageFile] 
+    = useState<File>(
+      new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
+    );
+  const [imageResponse, setImageResponse] 
+    = useState({image: FRONT_END_URL + "blank_user.png", id: "0"})
+  const { uploadImage, postPortfolio, postPage, postSection } = useUser();
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -167,40 +168,34 @@ const Edit = () => {
           onSubmit={(values, { setSubmitting }) => {
             const portfolio_data    = {name: values.websiteName}
             const page_data         = {name: "home", number: "0"}
-            // const bio_data          = {name: "biography", number: "0", content: values.biography, type: "image_text", image: imageResponse.id}
             const bio_data          = {name: "biography", number: "0", image: imageResponse.id, content: values.biography, type: "image_text"}
             const academic_data     = {name: "academic_history", number: "0", content: values.academicHistory, type: "text"}
             const professional_data = {name: "professional_history", number: "0", content: values.professionalHistory, type: "text"}
-            const auth_header       = {"Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"}
             setSubmitting(true);
-            axios
-              .post(`http://127.0.0.1:8080/api/portfolios`, 
-                portfolio_data, {headers: auth_header})
-              .then(function (portf_response: any) {
-                axios
-                  .post(`http://127.0.0.1:8080/api/portfolios/${portf_response.data.id}/pages`, 
-                    page_data, {headers: auth_header})
-                  .then(function (page_response: any) {
-                    console.log(page_response);
-                    post_section(portf_response.data.id, page_response.data.id, bio_data);
-                    post_section(portf_response.data.id, page_response.data.id, academic_data);
-                    post_section(portf_response.data.id, page_response.data.id, professional_data);
-                  }).catch(function (error2: any) {
-                    setSubmittionError(true);
-                    setSubmitting(false);
-                    console.log(error2);
-                  });
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
+            postPortfolio(portfolio_data)
+            .then(function (portfolio_response: any) {
+              const portfolio_id = portfolio_response.data.id
+              postPage(portfolio_id, page_data)
+              .then(function (page_response: any) {
+                console.log(page_response)
+                const page_id = page_response.data.id
+                PostSection(postSection, portfolio_id, page_id, bio_data)
+                PostSection(postSection, portfolio_id, page_id, academic_data)
+                PostSection(postSection, portfolio_id, page_id, professional_data)
               })
               .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
+                console.log(error)
+                setSubmitting(false)
+              })
+              console.log(portfolio_response);
+              setSubmitting(false);
+            })
+            .catch(function (error: any) {
+              setSubmittionError(true);
+              setSubmitting(false);
+              console.log(error);
+              console.log(submittionError);
+            });
           }}
         >
           {({ errors, touched, isSubmitting }) => (
@@ -228,33 +223,15 @@ const Edit = () => {
                 type="button"
                 onClick={() => {
                   uploadImage(imageFile, imageFile.name)
-                    .then(data => {
-                      console.log(data);
+                    .then(response => {
+                      console.log(response);
+                      setImageResponse(response.data)
                     })
                     .catch(error =>{
                       console.log(error)
                     })
                   }}
                 >
-                  {/* //   const form_data = new FormData();
-                  //   form_data.append("image", imageFile, imageFile.name);
-                  //   form_data.append("name", imageFile.name);
-                  //   form_data.append("owner", "2")
-                  //   axios
-                  //     .post("http://localhost:8080/api/images/", form_data, {
-                  //       headers: {
-                  //         "Content-Type": "multipart/form-data",
-                  //         "Authorization": "Token dbb2f87bc7bde0f9cdc390d92c1ab6655563cb5e"
-                  //       },
-                  //     })
-                  //     .then(function (response: any) {
-                  //       console.log(response);
-                  //       setImageResponse(response.data);
-                  //     })
-                  //     .catch(function (error: any) {
-                  //       console.log(error);
-                  //   });
-                  // }}> */}
                   Upload
                 </UploadButton>
                 <br></br>
