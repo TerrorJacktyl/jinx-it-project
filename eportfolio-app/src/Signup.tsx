@@ -97,7 +97,7 @@ const Signup = () => {
               setSubmitting(true);
 
               // This promise chain is gross, but it handles PUTing the user details
-              signup(values.username, values.email, values.password, values.firstName, values.lastName)
+              signup(values.email, values.password, values.firstName, values.lastName)
                 .then(function (response: any) {
                   console.log(response);
                   return response;

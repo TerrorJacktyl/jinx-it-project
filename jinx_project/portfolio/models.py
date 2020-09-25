@@ -59,7 +59,8 @@ class Section(models.Model):
         mapping = {
             'TextSection': 'text', 
             'MediaSection': 'media',
-            'ImageTextSection': 'text'
+            'ImageSection': 'image',
+            'ImageTextSection': 'text',
             }
         return mapping[self.__class__.__name__]
 
@@ -108,3 +109,6 @@ class Image(models.Model):
 class ImageTextSection(Section):
     image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
     content = models.TextField()
+
+class ImageSection(Section):
+    image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)

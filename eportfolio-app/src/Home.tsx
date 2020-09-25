@@ -26,7 +26,6 @@ const TopBlockDiv = styled.div`
 
 const StyledLogin = styled(SecondaryButton)`
   margin-top: 20px;
-  // position: relative;
   margin-right: 30px;
   margin-left: auto;
 `;

@@ -14,15 +14,36 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
-  useUser
+  useUser,
 } from "jinxui";
 
-const FRONT_END_URL = 'http://localhost:3000/'
+const FRONT_END_URL = "http://localhost:3000/";
 
 const MinimalDivStyle = styled.div`
   margin-left: 30px;
   margin-right: 30px;
   width: auto;
+
+`;
+
+const StyledTable = styled.table`
+  width: 100%;
+  padding: 10px;
+  vertical-align: top;
+  table-layout: fixed;
+  border-spacing: 30px;
+`;
+
+const RowDiv = styled.div`
+  overflow: auto;
+`;
+
+const ColDiv = styled.div`
+  float: left;
+  width: 50%;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const WideFormDiv = styled(FormDiv)`
@@ -42,19 +63,30 @@ const TallStyledFormEntry = styled(StyledFormEntry)`
   rows: 6;
 `;
 
+const HalfStyledFormEntry = styled(TallStyledFormEntry)`
+  height: 480px;
+  max-width: 500px;
+  margin-left: 0px;
+  align: right;
+
+`;
+
 const UploadButton = styled(PrimaryButton)`
   max-width: 362px;
+  margin-left: 30px;
+  float: right;
 `;
 
 const BlankUser = styled.img`
   display: block;
   max-width: 362px;
-  width: 100%;
-  margin-right: 30px;
+  width: 95%;
+  margin-right: 0px;
+  margin-left: 0px;
   height: auto;
-  align: left;
+  float: right;
   margin-top: 30px;
-  border: 2px solid #FFFFFF;
+  border: 2px solid #ffffff;
   border-radius: 10px;
 `;
 
@@ -66,12 +98,9 @@ const FormTitle = styled.h2`
 
 const BrowseButton = styled.input`
   color: #eeeeee;
-  align: left;
   margin-top: 10px;
   margin-left: 0px;
-  display: block;
-  align: left;
-  text-align: left;
+
 `;
 
 const FieldTitle = styled.h3`
@@ -83,11 +112,10 @@ const FieldTitle = styled.h3`
   text-align: left;
 `;
 
-
-const StyledPublishButton = styled(SecondaryButton)`
+const StyledPublishButton = styled(PrimaryButton)`
   @media (max-width: 600px) {
     margin-left: auto;
-    margin-right: auto;  
+    margin-right: auto;
     align: centre;
     position: relative;
   }
@@ -96,13 +124,13 @@ const StyledPublishButton = styled(SecondaryButton)`
   }
 `;
 
-const StyledCancelButton = styled(PrimaryButton)`
+const StyledCancelButton = styled(SecondaryButton)`
   @media (max-width: 600px) {
     margin-left: auto;
     margin-right: auto;
     align: centre;
     position: relative;
-  }  
+  }
   @media (min-width: 600px) {
     display: block;
     position: relative;
@@ -123,30 +151,70 @@ const StyledLink = styled.a`
 `;
 
 const ProfileSchema = Yup.object().shape({
-  websiteName: Yup.string()
-    .max(50, "Too Long!")
-    .required("Required"),
+  websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
-function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any,) {
+function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any) {
+  // const { postSection } = useUser();
   postSection(portfolio_id, page_id, data)
-  .then(function (response: any) {
-    console.log(response)
-  })
-  .catch(function (error: any) {
-    console.log(error)
-  })
+    .then(function (response: any) {
+      console.log(response);
+    })
+    .catch(function (error: any) {
+      console.log(error);
+    });
+}
+
+function UploadImageBit(imageResponse: any, setImageResponse: any) {
+  const { uploadImage } = useUser();
+  const [imageFile, setImageFile] = useState<File>(
+    new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
+  );
+  return (
+    <>
+      <BlankUser src={imageResponse.image} />
+      <BrowseButton
+        id="file"
+        name="file"
+        type="file"
+        onChange={(event) => {
+          if (event.currentTarget.files) {
+            setImageFile(event.currentTarget.files[0]);
+          } else {
+            setImageFile(new File([""], "blank_file"));
+          }
+        }}
+      />
+      <UploadButton
+        type="button"
+        onClick={() => {
+          uploadImage(imageFile, imageFile.name)
+            .then((response) => {
+              console.log(response);
+              setImageResponse(response.data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }}
+      >
+        Upload
+      </UploadButton>
+    </>
+  );
 }
 
 const Edit = () => {
   const [submittionError, setSubmittionError] = useState(false);
-  const [imageFile, setImageFile] 
-    = useState<File>(
-      new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
-    );
-  const [imageResponse, setImageResponse] 
-    = useState({image: FRONT_END_URL + "blank_user.png", id: "0"})
-  const { uploadImage, postPortfolio, postPage, postSection } = useUser();
+  const [bioImageResponse, setBioImageResponse] = useState({
+    image: FRONT_END_URL + "blank_user.png",
+    id: "0",
+  });
+  const [awesomeImageResponse, setAwesomeImageResponse] = useState({
+    image: FRONT_END_URL + "blank_user.png",
+    id: "0",
+  })
+  const { postPortfolio, postPage, postSection } = useUser();
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -167,55 +235,63 @@ const Edit = () => {
           validationSchema={ProfileSchema}
           onSubmit={(values, { setSubmitting }) => {
             const portfolio_data = {
-              name: values.websiteName}
+              name: values.websiteName,
+            };
             const page_data = {
-              name: "home", 
-              number: "0"
-            }
-            const bio_data          = {
-              name: "biography", 
-              number: "0", 
-              image: imageResponse.id, 
-              content: values.biography, 
-              type: "image_text"
-            }
+              name: "home",
+              number: "0",
+            };
+            const bio_data = {
+              name: "biography",
+              number: "0",
+              image: bioImageResponse.id,
+              content: values.biography,
+              type: "image_text",
+            };
             const academic_data = {
-              name: "academic_history", 
-              number: "0", 
-              content: values.academicHistory, 
-              type: "text"
+              name: "academic_history",
+              number: "0",
+              content: values.academicHistory,
+              type: "text",
+            };
+            const awesome_data = {
+              name: "awesome_image",
+              number: "0",
+              image: awesomeImageResponse.id,
+              type: "image"
             }
             const professional_data = {
-              name: "professional_history", 
-              number: "0", 
-              content: values.professionalHistory, 
-              type: "text"
-            }
+              name: "professional_history",
+              number: "0",
+              content: values.professionalHistory,
+              type: "text",
+            };
             setSubmitting(true);
             postPortfolio(portfolio_data)
-            .then(function (portfolio_response: any) {
-              const portfolio_id = portfolio_response.data.id
-              postPage(portfolio_id, page_data)
-              .then(function (page_response: any) {
-                console.log(page_response)
-                const page_id = page_response.data.id
-                PostSection(postSection, portfolio_id, page_id, bio_data)
-                PostSection(postSection, portfolio_id, page_id, academic_data)
-                PostSection(postSection, portfolio_id, page_id, professional_data)
+              .then(function (portfolio_response: any) {
+                const portfolio_id = portfolio_response.data.id;
+                postPage(portfolio_id, page_data)
+                  .then(function (page_response: any) {
+                    console.log(page_response);
+                    const page_id = page_response.data.id;
+                    PostSection(postSection, portfolio_id, page_id, bio_data);
+                    PostSection(postSection, portfolio_id, page_id, academic_data);
+                    PostSection(postSection, portfolio_id, page_id, awesome_data);
+                    PostSection(postSection, portfolio_id, page_id, professional_data);
+                  })
+                  .catch(function (error: any) {
+                    console.log(error);
+                    setSubmitting(false);
+                  });
+                console.log(portfolio_response);
+                setSubmitting(false);
               })
               .catch(function (error: any) {
-                console.log(error)
-                setSubmitting(false)
-              })
-              console.log(portfolio_response);
-              setSubmitting(false);
-            })
-            .catch(function (error: any) {
-              setSubmittionError(true);
-              setSubmitting(false);
-              console.log(error);
-              console.log(submittionError);
-            });
+                setSubmittionError(true);
+                setSubmitting(false);
+                console.log(error);
+                console.log(submittionError);
+              });
           }}
         >
           {({ errors, touched, isSubmitting }) => (
@@ -226,42 +302,20 @@ const Edit = () => {
                 {errors.websiteName && touched.websiteName ? (
                   <ErrorMessage>{errors.websiteName}</ErrorMessage>
                 ) : null}
-                <BlankUser src={imageResponse.image} />
-                <BrowseButton
-                  id="file"
-                  name="file"
-                  type="file"
-                  onChange={(event) => {
-                    if (event.currentTarget.files) {
-                      setImageFile(event.currentTarget.files[0]);
-                    } else {
-                      setImageFile(new File([""], "blank_file"));
-                    }
-                  }}
-                />
-                <UploadButton
-                type="button"
-                onClick={() => {
-                  uploadImage(imageFile, imageFile.name)
-                    .then(response => {
-                      console.log(response);
-                      setImageResponse(response.data)
-                    })
-                    .catch(error =>{
-                      console.log(error)
-                    })
-                  }}
-                >
-                  Upload
-                </UploadButton>
-                <br></br>
                 <FieldTitle>Biography</FieldTitle>
-
-                <TallStyledFormEntry component="textarea" name="biography" />
-                {errors.biography && touched.biography ? (
-                  <ErrorMessage>{errors.biography}</ErrorMessage>
-                ) : null}
-
+                
+                <RowDiv>
+                  <ColDiv>
+                    <HalfStyledFormEntry component="textarea" name="biography" />
+                      {errors.biography && touched.biography ? (
+                        <ErrorMessage>{errors.biography}</ErrorMessage>
+                      ) : null}
+                  </ColDiv>
+                  <ColDiv>
+                    {UploadImageBit(bioImageResponse, setBioImageResponse)}
+                  </ColDiv>
+                </RowDiv>
+                
                 <FieldTitle>Academic History</FieldTitle>
                 <TallStyledFormEntry
                   component="textarea"
@@ -271,6 +325,13 @@ const Edit = () => {
                   <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                 ) : null}
 
+                <FieldTitle>Awesome Image</FieldTitle>
+                <RowDiv>
+                  <ColDiv>
+                    {UploadImageBit(awesomeImageResponse, setAwesomeImageResponse)}
+                  </ColDiv>
+                </RowDiv>
+                
                 <FieldTitle>Professional History</FieldTitle>
                 <TallStyledFormEntry
                   component="textarea"
@@ -280,16 +341,12 @@ const Edit = () => {
                   <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
                 ) : null}
                 <div>
-                  <StyledPublishButton 
-                  type = "submit">
+                  <StyledPublishButton type="submit">
                     Publish
                   </StyledPublishButton>
                 </div>
                 <StyledLink href="/">
-                  <StyledCancelButton
-                  type = "button">
-                    Cancel
-                  </StyledCancelButton>
+                  <StyledCancelButton type="button">Cancel</StyledCancelButton>
                 </StyledLink>
                 {submittionError ? (
                   <ErrorMessage>
@@ -299,7 +356,7 @@ const Edit = () => {
               </MinimalDivStyle>
             </Form>
           )}
-        </Formik>          
+        </Formik>
       </StyledFormDiv>
     </AccountPageDiv>
   );
