@@ -8,7 +8,7 @@ import {
   ErrorMessage,
   FormDiv,
   FormEntry,
-  Button,
+  PrimaryButton,
   SiteHeader,
   HeaderDiv,
   LogoLink,
@@ -36,7 +36,7 @@ const FormText = styled.h4`
   font-weight: 300;
 `
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(PrimaryButton)`
   margin: auto;
   margin-top: 30px;
 `;
@@ -167,15 +167,9 @@ const Signup = () => {
                 ) : null}
                 <StyledButton
                   type="submit"
-                  disabled={isSubmitting}
-                  width={null}
-                  textColour="#00FFC2"
-                  backgroundColour={null}
-                  hoverColour="#00FFC2"
-                  contrastColour="#1C1C1C"
-                  text="Join"
-                  fontSize={null}
-                />
+                  disabled={isSubmitting}>
+                    Join
+                </StyledButton>
                 <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
               </Form>
             )}

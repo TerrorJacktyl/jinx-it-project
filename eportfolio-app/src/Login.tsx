@@ -6,7 +6,8 @@ import {
   ErrorMessage,
   FormDiv,
   FormEntry,
-  Button,
+  PrimaryButton,
+  SecondaryButton,
   SiteHeader,
   HeaderDiv,
   LogoLink,
@@ -20,8 +21,8 @@ import styled from "styled-components";
 // The styling isn't DRY - where are we putting this?
 const StyledFormEntry = styled(FormEntry)`
   font-family: "Heebo", sans-serif;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 40px;
+  margin-bottom: 5px;
 `;
 
 const FormTitle = styled.h2`
@@ -35,7 +36,12 @@ const FormText = styled.h4`
   font-weight: 300;
 `
 
-const StyledButton = styled(Button)`
+const LoginButton = styled(PrimaryButton)`
+  margin: auto;
+  margin-top: 30px;
+`;
+
+const ResetPasswordButton = styled(SecondaryButton)`
   margin: auto;
   margin-top: 30px;
 `;
@@ -47,6 +53,14 @@ const StyledFormDiv = styled(FormDiv)`
 const StyledLink = styled.a`
   text-decoration: none;
   position: relative;
+`;
+
+const SmallText = styled(FormText)`
+  font-size: 14px;
+  margin-top: 0px;
+  margin-right: auto;
+  margin-left: 30px;
+  text-align: left;
 `;
 
 const SignupSchema = Yup.object().shape({
@@ -110,30 +124,23 @@ const Login = () => {
 
                 <StyledFormEntry name="password" type="password" placeholder="Password" />
                 {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+                
+                <SmallText> Forgot your password? </SmallText>
 
-                <StyledButton
+                <LoginButton
                   type="submit"
-                  disabled={isSubmitting}
-                  width={null}
-                  textColour="#00FFC2"
-                  backgroundColour={null}
-                  hoverColour="#00FFC2"
-                  contrastColour="#1C1C1C"
-                  text="Login"
-                  fontSize={null}
-                />
+                  disabled={isSubmitting}>
+                    Login
+                </LoginButton>
 
-                <StyledButton
-                  width={null}
-                  textColour="#EEEEEE"
-                  backgroundColour={null}
-                  hoverColour="#EEEEEE"
-                  contrastColour="#1C1C1C"
-                  text="Reset Password"
-                  fontSize={"20px"}
-                />
+                <ResetPasswordButton
+                  type = "button">
+                    Reset Password
+                </ResetPasswordButton>
 
-                <StyledLink href="/signup" ><FormText>Sign up for an account</FormText></StyledLink>
+                <StyledLink href="/signup" >
+                  <FormText>Sign up for an account</FormText>
+                </StyledLink>
 
               </Form>
 

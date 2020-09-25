@@ -10,9 +10,8 @@ export { default as FormAlert} from "./components/form/FormAlert";
 export { default as SiteLayout } from "./components/site/SiteLayout";
 
 /* Button */
-export { Button } from './components/button/Button';
-export { Button2 } from "./components/button/Button";
-export { Button3 } from "./components/button/Button";
+export { PrimaryButton } from "./components/button/Button";
+export { SecondaryButton } from "./components/button/Button";
 
 
 /* Header */

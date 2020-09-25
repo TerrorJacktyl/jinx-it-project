@@ -89,13 +89,13 @@ export const useUser = () => {
             first_name: first_name,
             last_name: last_name,
         }, konfig)
-            .then(response => response)
-            .catch(error => { throw error });
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
     }
 
     async function getAccountDetails() {
         API.get(ACCOUNT_PATH, state.config)
-            .then(response => {
+            .then((response: { data: { first_name: string; }; }) => {
                 setState((state: IUserContext) => {
                     return {
                         ...state,
@@ -103,7 +103,7 @@ export const useUser = () => {
                     };
                 });
             })
-            .catch(error => { throw error });
+            .catch((error: any) => { throw error });
     }
 
     // Declaring a function as async means the return gets wrapped in a promise
@@ -112,8 +112,8 @@ export const useUser = () => {
         form_data.append("image", file, file.name);
         form_data.append("name", name);
         const result = API.post(IMAGE_PATH, form_data, state.config)
-            .then(response => response)
-            .catch(error => { throw error });
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
         return result
     }
 
@@ -121,8 +121,8 @@ export const useUser = () => {
         const result = API.post(PORTFOLIOS_PATH, {
             name: data.name
         }, state.config)
-            .then(response => response)
-            .catch(error => { throw error });
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
         return result
     }
 
@@ -132,16 +132,16 @@ export const useUser = () => {
             name: data.name,
             number: data.number
         }, state.config)
-            .then(response => response)
-            .catch(error => { throw error });
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
         return result
     }
 
     async function postSection(portfolio_id: string, page_id: string, data: any) {
         const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections"
         const result = API.post(path, data, state.config)
-            .then(response => response)
-            .catch(error => { throw error });
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
     }
 
     return {

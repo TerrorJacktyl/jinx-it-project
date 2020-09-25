@@ -7,8 +7,8 @@ import {
   ErrorMessage,
   FormDiv,
   FormEntry,
-  Button2,
-  Button3,
+  PrimaryButton,
+  SecondaryButton,
   SiteHeader,
   HeaderDiv,
   LogoLink,
@@ -42,7 +42,7 @@ const TallStyledFormEntry = styled(StyledFormEntry)`
   rows: 6;
 `;
 
-const UploadButton = styled(Button3)`
+const UploadButton = styled(PrimaryButton)`
   max-width: 362px;
 `;
 
@@ -84,7 +84,7 @@ const FieldTitle = styled.h3`
 `;
 
 
-const StyledPublishButton = styled(Button3)`
+const StyledPublishButton = styled(SecondaryButton)`
   @media (max-width: 600px) {
     margin-left: auto;
     margin-right: auto;  
@@ -96,7 +96,7 @@ const StyledPublishButton = styled(Button3)`
   }
 `;
 
-const StyledCancelButton = styled(Button2)`
+const StyledCancelButton = styled(PrimaryButton)`
   @media (max-width: 600px) {
     margin-left: auto;
     margin-right: auto;
@@ -166,11 +166,31 @@ const Edit = () => {
           }}
           validationSchema={ProfileSchema}
           onSubmit={(values, { setSubmitting }) => {
-            const portfolio_data    = {name: values.websiteName}
-            const page_data         = {name: "home", number: "0"}
-            const bio_data          = {name: "biography", number: "0", image: imageResponse.id, content: values.biography, type: "image_text"}
-            const academic_data     = {name: "academic_history", number: "0", content: values.academicHistory, type: "text"}
-            const professional_data = {name: "professional_history", number: "0", content: values.professionalHistory, type: "text"}
+            const portfolio_data = {
+              name: values.websiteName}
+            const page_data = {
+              name: "home", 
+              number: "0"
+            }
+            const bio_data          = {
+              name: "biography", 
+              number: "0", 
+              image: imageResponse.id, 
+              content: values.biography, 
+              type: "image_text"
+            }
+            const academic_data = {
+              name: "academic_history", 
+              number: "0", 
+              content: values.academicHistory, 
+              type: "text"
+            }
+            const professional_data = {
+              name: "professional_history", 
+              number: "0", 
+              content: values.professionalHistory, 
+              type: "text"
+            }
             setSubmitting(true);
             postPortfolio(portfolio_data)
             .then(function (portfolio_response: any) {
