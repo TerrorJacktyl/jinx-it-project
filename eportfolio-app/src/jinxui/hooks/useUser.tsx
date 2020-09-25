@@ -3,6 +3,7 @@ import { UserContext } from 'jinxui';
 import { IUserContext, defaultUserContext } from 'jinxui';
 import API from '../../API';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { TPortfolio, TPage, TSection } from '../../Types';
 
 export const useUser = () => {
     const [state, setState] = useContext(UserContext);
@@ -11,7 +12,8 @@ export const useUser = () => {
     const LOGOUT_PATH = 'auth/token/logout';
     const ACCOUNT_PATH = 'api/accounts/me';
     const SIGNUP_PATH = 'auth/users';
-    const IMAGE_PATH = 'api/images/';
+    const IMAGE_PATH = 'api/images';
+    const PORTFOLIOS_PATH = 'api/portfolios'
 
     /**
      * Abstract the login procedure. Returns the auth_token if login succeeded, 
@@ -88,13 +90,13 @@ export const useUser = () => {
             first_name: first_name,
             last_name: last_name,
         }, konfig)
-            .then(response => response)
-            .catch(error => { throw error });
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
     }
 
     async function getAccountDetails() {
         API.get(ACCOUNT_PATH, state.config)
-            .then(response => {
+            .then((response: { data: { first_name: string; }; }) => {
                 setState((state: IUserContext) => {
                     return {
                         ...state,
@@ -102,7 +104,7 @@ export const useUser = () => {
                     };
                 });
             })
-            .catch(error => { throw error });
+            .catch((error: any) => { throw error });
     }
 
     // Declaring a function as async means the return gets wrapped in a promise
@@ -110,11 +112,105 @@ export const useUser = () => {
         const form_data = new FormData();
         form_data.append("image", file, file.name);
         form_data.append("name", name);
-        console.log(state.config)
-        API.post(IMAGE_PATH, form_data, state.config)
-            .then(response => response)
-            .catch(error => { throw error });
+        const result = API.post(IMAGE_PATH, form_data, state.config)
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
+        return result
     }
+
+    async function postPortfolio(data: any) {
+        const result = API.post(PORTFOLIOS_PATH, {
+            name: data.name
+        }, state.config)
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
+        return result
+    }
+
+    async function postPage(portfolio_id: string, data: any) {
+        const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages"
+        const result = API.post(path, {
+            name: data.name,
+            number: data.number
+        }, state.config)
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
+        return result
+    }
+
+    async function postSection(portfolio_id: string, page_id: string, data: any) {
+        const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections"
+        const result = API.post(path, data, state.config)
+            .then((response: any) => response)
+            .catch((error: any) => { throw error });
+    }
+
+    // Note the $s in the function name. Use this if you want to get all of a user's portfolios
+    async function getPortfolios() {
+      const path = PORTFOLIOS_PATH
+      const result = API.get(path, state.config)
+        .then((response: any) =>
+          response.data
+        );
+        return result
+    }
+
+    // Use this if you want to get a specific portfolio
+    async function getPortfolio(portfolio_id: number) {
+      const path = PORTFOLIOS_PATH + "/" + portfolio_id
+      const result = API.get(path, state.config)
+        .then((response: any) =>
+          response.data
+        )
+        .catch((error: any) => {
+          console.log(error)
+          throw error
+        });
+        return result
+    }
+
+    async function getPages(portfolio_id: number) {
+      const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages"
+      const result = API.get(path, state.config)
+        .then((response: any) =>
+          response.form_data
+        )
+        .catch((error: any) => {
+          console.log(error)
+          throw error
+        });
+        return result
+    }
+
+    async function getSections(portfolio_id: number, page_id: number) {
+      const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections"
+      const result = API.get(path, state.config)
+        .then ((response: any) =>
+          response.data
+        ).catch((error: any) => {
+          console.log(error)
+          throw error
+        });
+        return result
+    }
+
+    // Will retrieve a portoflio, all of its pages, and corresponding sections
+    async function getFullPortfolio(portfolio_id: number) {
+      try {
+        // Portfolio
+        const portfolio: TPortfolio = await getPortfolio(portfolio_id);
+        // Page[]
+        const pages: TPage[] = await getPages(portfolio_id);
+        // Section[][]
+        var sections: TSection[][] = []
+        pages.forEach(async (page: any) => {
+          sections.push(await getSections(portfolio_id, page.id))
+        })
+        return { portfolio, pages, sections }
+      } catch (e) {
+        throw e
+      }
+   }
 
     return {
         userData: state,
@@ -123,6 +219,14 @@ export const useUser = () => {
         signup,
         setAccountDetails,
         uploadImage,
+        postPortfolio,
+        postPage,
+        postSection,
+        getPortfolios,
+        getPortfolio,
+        getPages,
+        getSections,
+        getFullPortfolio
         // Expose the axios config so you can edit headers yourself
         // Preferably don't do this - abstract your call into this hook
         // so the hook is the only one that manages its state (easier to debug)

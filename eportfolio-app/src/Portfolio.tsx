@@ -16,35 +16,12 @@ import {
   UserContext,
   useUser
 } from "jinxui";
+import { TPortfolio, TPage, TSection } from './Types'
 
 const TextSectionContainer = styled.div`
   padding-left: 12px;
   padding-right: 12px;
 `;
-
-
-type Portfolio = {
-  id: number,
-  owner: number
-  name: string,
-  pages: number[]
-};
-
-type Page = {
-  id: number,
-  name: string,
-  number: number,
-  sections: number[]
-};
-
-type Section = {
-  id: number,
-  name: string,
-  type: string,
-  number: number,
-  content: string
-  media: string
-};
 
 type TextSectionProps = {
   name: string,
@@ -56,64 +33,27 @@ type MediaSectionProps = {
   path: string
 };
 
+/* At the moment displays portfolio with the hardcoded id, and only the first page
+   of said portfolio. Consider either passing the portfolio id as props, or having
+   the current portfolio provided by context. Regardless, we'll probably have to 
+   define a user's default portfolio that they'll be redirected to upon login and
+   initial portfolio creation */
 const Portfolio = () => {
-  const axios = require("axios").default;
-  const account = {
-    username: 'yeahnah',
-    password: 'yeupyeup'
-  }
-  const [token, setToken] = useState(null);
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [pages, setPages] = useState<Page[]>([]);
-  const [sections, setSections] = useState<Section[]>([]);
+  // Testing purposes only
+  const tempPortfolioId = 1;
+  const { getFullPortfolio } = useUser();
+  const [portfolio, setPortfolio] = useState<TPortfolio>(null);
+  const [pages, setPages] = useState<TPage[]>([]);
+  const [currPage, setCurrPage] = useState<number>(0);
+  const [sections, setSections] = useState<TSection[][]>([]);
   useEffect(() => {
-    // Pretty hacky with the returns, but couldn't find a better way to do it :(
-    // the token POST shouldn't be needed later, will get from React context
-    axios
-      .post(
-        `http://127.0.0.1:8080/auth/token/login`, account
-      )
-      .then((tokenResp: any) => {
-        console.log(tokenResp.data);
-        return (axios
-          .get(`http://127.0.0.1:8080/api/portfolios`, { 
-            headers: { 
-              'Authorization': `Token ${tokenResp.data.auth_token}`
-            } 
-          })
-          .then((portfolioResp: any) => ({
-            token: tokenResp.data.auth_token,
-            portfolios: portfolioResp.data
-          }))
-        );
-      })
-      .then((prevResps: any) => {
-        const { token, portfolios } = prevResps
-        console.log(token);
-        console.log(portfolios);
-        setToken(token);
-        setPortfolios(portfolios);
-        return axios
-          .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages`, {
-            headers: { 
-              'Authorization': `Token ${token}`
-            } 
-          })
-          .then((pageResp: any) => {
-            console.log(pageResp.data);
-            setPages(pageResp.data);
-            return axios
-              .get(`http://127.0.0.1:8080/api/portfolios/${portfolios[0].id}/pages/${portfolios[0].pages[0]}/sections`, {
-                headers: { 
-                  'Authorization': `Token ${token}`
-                } 
-              })
-          })
-      })
-      .then((sectionResp: any) => {
-        console.log(sectionResp.data);
-        setSections(sectionResp.data);
-      })
+    const fetchPortfolio = async () => {
+      const {portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
+      setPortfolio(portfolio);
+      setPages(pages);
+      setSections(sections); 
+    }
+    fetchPortfolio();
   }, []);
 
 
@@ -123,14 +63,14 @@ const Portfolio = () => {
         <HeaderDiv>
           <LogoLink />
           <HeaderTitle>
-            {portfolios.length !== 0 ? portfolios[0].name : null}
+            {portfolio !== null ? portfolio.name : null}
           </HeaderTitle>
         </HeaderDiv>
       </SiteHeader>
       <PageDiv>
-        <PageName>{pages.length !== 0 ? pages[0].name : null}</PageName>
+        <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
         {sections.length !== 0 ? (
-          sections.map((section: Section) => {
+          sections[currPage].map((section: TSection) => {
             if (section.type === "text") {
               return <TextSection name={section.name} content={section.content} />
             } else {

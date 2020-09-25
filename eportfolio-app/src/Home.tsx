@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { SiteLayout, Button } from "jinxui";
+import { SiteLayout, PrimaryButton, SecondaryButton } from "jinxui";
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -24,13 +24,14 @@ const TopBlockDiv = styled.div`
   overflow: auto;
 `;
 
-const StyledLogin = styled(Button)`
+const StyledLogin = styled(SecondaryButton)`
   margin-top: 20px;
-  position: relative;
+  // position: relative;
+  margin-right: 30px;
   margin-left: auto;
 `;
 
-const StyledSignup = styled(Button)`
+const StyledSignup = styled(PrimaryButton)`
   position: relative;
   margin-top: 10px;
   margin-bottom: 50px;
@@ -97,15 +98,9 @@ const Home = () => {
           <SiteHeader>
             <HeaderDiv>
               <StyledLink href="/login">
-                <StyledLogin
-                  width={null}
-                  textColour="#EEEEEE"
-                  backgroundColour={null}
-                  hoverColour="#EEEEEE"
-                  contrastColour="#1C1C1C"
-                  text="Login"
-                  fontSize={null}
-                />
+                <StyledLogin type = "button">
+                  Login
+                </StyledLogin>
               </StyledLink>
             </HeaderDiv>
           </SiteHeader>
@@ -115,15 +110,9 @@ const Home = () => {
           <JinxName>Jinx</JinxName>
           <CatchPhrase>Your portfolio, made simple</CatchPhrase>
           <StyledLink href="/signup">
-            <StyledSignup
-              width={null}
-              textColour="#00FFC2"
-              backgroundColour={null}
-              hoverColour="#00FFC2"
-              contrastColour="#1C1C1C"
-              text="Join Today"
-              fontSize={null}
-            />
+            <StyledSignup>
+              Join Today
+            </StyledSignup>
           </StyledLink>
         </TopBlockDiv>
 
