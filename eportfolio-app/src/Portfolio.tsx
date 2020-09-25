@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import {
   SiteHeader,
   HeaderDiv,
-  LogoLink,
   HeaderTitle,
+  LogoLink,
   AccountPageDiv,
   PageName,
   SectionName,
@@ -43,11 +43,17 @@ type Section = {
   type: string,
   number: number,
   content: string
+  media: string
 };
 
 type TextSectionProps = {
-  title: string,
+  name: string,
   content: string
+};
+
+type MediaSectionProps = {
+  name: string,
+  path: string
 };
 
 const Portfolio = () => {
@@ -124,7 +130,13 @@ const Portfolio = () => {
       <PageDiv>
         <PageName>{pages.length !== 0 ? pages[0].name : null}</PageName>
         {sections.length !== 0 ? (
-          sections.map((section: Section) => <TextSection title={section.name} content={section.content} />
+          sections.map((section: Section) => {
+            if (section.type === "text") {
+              return <TextSection name={section.name} content={section.content} />
+            } else {
+              return <MediaSection name={section.name} path={section.media} />
+            }
+          }
         )) : null}
       </PageDiv>
     </AccountPageDiv>
@@ -132,10 +144,17 @@ const Portfolio = () => {
   );
 }
 
-const TextSection: React.FC<TextSectionProps> = ({ title, content }) => (
+const TextSection: React.FC<TextSectionProps> = ({ name, content }) => (
   <TextSectionContainer>
-    <SectionName>{title}</SectionName>
+    <SectionName>{name}</SectionName>
     <TextSectionDiv>{content}</TextSectionDiv>
+  </TextSectionContainer>
+);
+
+const MediaSection: React.FC<MediaSectionProps> = ({ name, path }) => (
+  <TextSectionContainer>
+    <SectionName>{name}</SectionName>
+    <img src={path} alt="" />
   </TextSectionContainer>
 );
 
