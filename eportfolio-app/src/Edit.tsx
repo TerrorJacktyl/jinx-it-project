@@ -4,6 +4,19 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import {
+  ThemeProvider
+} from '@material-ui/styles'
+
+import { 
+  createStyles, 
+  makeStyles, 
+  Theme, 
+  createMuiTheme, 
+} from '@material-ui/core/styles'
+
+import TextField from '@material-ui/core/TextField'
+
+import {
   ErrorMessage,
   FormDiv,
   FormEntry,
@@ -19,11 +32,32 @@ import {
 
 const FRONT_END_URL = "http://localhost:3000/";
 
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#0081CA'
+    },
+    secondary: {
+      main: '#00FFC2'
+    },
+  },
+  typography: {
+    fontFamily: "Heebo, sans-serif",
+  },
+  overrides: {
+    MuiInputLabel: {
+      root: {
+        fontSize: 25,
+      }
+    }
+  }
+})
+
 const MinimalDivStyle = styled.div`
   margin-left: 30px;
   margin-right: 30px;
   width: auto;
-
 `;
 
 const StyledTable = styled.table`
@@ -68,10 +102,9 @@ const HalfStyledFormEntry = styled(TallStyledFormEntry)`
   max-width: 500px;
   margin-left: 0px;
   align: right;
-
 `;
 
-const UploadButton = styled(PrimaryButton)`
+const UploadButton = styled(SecondaryButton)`
   max-width: 362px;
   margin-left: 30px;
   float: right;
@@ -215,6 +248,7 @@ const Edit = () => {
     id: "0",
   })
   const { postPortfolio, postPage, postSection } = useUser();
+
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -324,7 +358,20 @@ const Edit = () => {
                 {errors.academicHistory && touched.academicHistory ? (
                   <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                 ) : null}
-
+                <ThemeProvider theme = {theme}>
+                  <TextField
+                    id="standard-full-width"
+                    label="Multiline"
+                    style={{ margin: 0 }}
+                    fullWidth
+                    multiline
+                    rows = {10}
+                    rowsMax={30}
+                    defaultValue="Default Value"
+                    variant="outlined"
+                    color="secondary"
+                  />
+                </ThemeProvider>
                 <FieldTitle>Awesome Image</FieldTitle>
                 <RowDiv>
                   <ColDiv>
