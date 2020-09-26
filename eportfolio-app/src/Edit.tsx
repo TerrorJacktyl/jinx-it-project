@@ -3,18 +3,20 @@ import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider, makeStyles } from "@material-ui/styles";
+import { Grid } from "@material-ui/core";
+import { Fab, Button } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
+import { createMuiTheme, createStyles } from "@material-ui/core/styles";
 
-import { createMuiTheme } from "@material-ui/core/styles";
-
-// import TextField from '@material-ui/core/TextField'
+import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
 
 import { TextField } from "formik-material-ui";
 
 import {
   ErrorMessage,
   FormDiv,
-  FormEntry,
   PrimaryButton,
   SecondaryButton,
   SiteHeader,
@@ -49,18 +51,22 @@ const theme = createMuiTheme({
   },
 });
 
+const useStyles = makeStyles((theme: any) =>
+  createStyles({
+    margin: {
+      position: "absolute",
+      bottom: 20,
+      left: 43,
+      // transform: "translate(-30px, -50%)",
+      // msTransform: translate(-50%, -50%);
+    },
+  })
+);
+
 const MinimalDivStyle = styled.div`
   margin-left: 30px;
   margin-right: 30px;
   width: auto;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  padding: 10px;
-  vertical-align: top;
-  table-layout: fixed;
-  border-spacing: 30px;
 `;
 
 const RowDiv = styled.div`
@@ -79,55 +85,28 @@ const WideFormDiv = styled(FormDiv)`
   width: 920px;
 `;
 
-const StyledFormEntry = styled(FormEntry)`
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: 10px;
-`;
-const TallStyledFormEntry = styled(StyledFormEntry)`
-  height: 360px;
-  width: 100%;
-  align: left;
-  control: textarea;
-  rows: 6;
-`;
-
-const HalfStyledFormEntry = styled(TallStyledFormEntry)`
-  height: 480px;
-  max-width: 500px;
-  margin-left: 0px;
-  align: right;
-`;
-
-const UploadButton = styled(SecondaryButton)`
-  max-width: 362px;
-  margin-left: 30px;
-  float: right;
-`;
-
 const BlankUser = styled.img`
-  display: block;
+  // display: float;
   max-width: 362px;
   width: 95%;
   margin-right: 0px;
   margin-left: 0px;
   height: auto;
-  float: right;
+  // float: right;
   margin-top: 30px;
-  border: 2px solid #ffffff;
-  border-radius: 10px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+`;
+
+const BlankUser2 = styled.img`
+  width: 100%;
+  height: auto;
 `;
 
 const FormTitle = styled.h2`
   font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
-`;
-
-const BrowseButton = styled.input`
-  color: #eeeeee;
-  margin-top: 10px;
-  margin-left: 0px;
 `;
 
 const FieldTitle = styled.h3`
@@ -177,6 +156,42 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
+const StyledInput = styled.input`
+  display: none;
+`;
+
+const Div1 = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const Div1a = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+`;
+
+const Div1b = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+`;
+
+const ContainerButton = styled.button`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+`;
+
 const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
@@ -197,41 +212,58 @@ function PostSection(
     });
 }
 
-function UploadImageBit(imageResponse: any, setImageResponse: any) {
+function UploadImageBit(
+  imageResponse: any,
+  setImageResponse: any,
+  imageFile: any,
+  setImageFile: any,
+  uploadButtonLabel: string,
+) {
   const { uploadImage } = useUser();
-  const [imageFile, setImageFile] = useState<File>(
-    new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
-  );
+  // const [imageFile, setImageFile] = useState<File>(
+  //   new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
+  // );
+  const classes = useStyles();
   return (
     <>
-      <BlankUser src={imageResponse.image} />
-      <BrowseButton
-        id="file"
-        name="file"
-        type="file"
-        onChange={(event) => {
-          if (event.currentTarget.files) {
-            setImageFile(event.currentTarget.files[0]);
-          } else {
-            setImageFile(new File([""], "blank_file"));
-          }
-        }}
-      />
-      <UploadButton
-        type="button"
-        onClick={() => {
-          uploadImage(imageFile, imageFile.name)
-            .then((response) => {
-              console.log(response);
-              setImageResponse(response.data);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }}
-      >
-        Upload
-      </UploadButton>
+      <ThemeProvider theme={theme}>
+        <Div1>
+          <BlankUser src={imageResponse.image} />
+          <label htmlFor={uploadButtonLabel}>
+            <StyledInput
+              accept="image/*"
+              id={uploadButtonLabel}
+              multiple
+              type="file"
+              onChange={(event) => {
+                if (event.currentTarget.files) {
+                  setImageFile(event.currentTarget.files[0]);
+                  uploadImage(
+                    event.currentTarget.files[0],
+                    event.currentTarget.files[0].name
+                  )
+                    .then((response) => {
+                      console.log(response);
+                      setImageResponse(response.data);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                } else {
+                  setImageFile(new File([""], "blank_file"));
+                }
+              }}
+            />
+            <IconButton
+              component="span"
+              size="small"
+              className={classes.margin}
+            >
+              <AddPhotoAlternateOutlinedIcon />
+            </IconButton>
+          </label>
+        </Div1>
+      </ThemeProvider>
     </>
   );
 }
@@ -274,6 +306,12 @@ const Edit = () => {
     image: FRONT_END_URL + "blank_user.png",
     id: "0",
   });
+  const [bioImageFile, setBioImageFile] = useState<File>(
+    new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
+  );
+  const [awesomeImageFile, setAwesomeImageFile] = useState<File>(
+    new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
+  );
   const { postPortfolio, postPage, postSection } = useUser();
 
   return (
@@ -383,10 +421,10 @@ const Edit = () => {
                     fullWidth
                     variant="outlined"
                     color="secondary"
-                    errorStyle={{
+                    errorstyle={{
                       float: "right",
                       margin: "30px",
-                      color: "white"
+                      color: "white",
                     }}
                   />
                 </ThemeProvider>
@@ -400,10 +438,15 @@ const Edit = () => {
                     )}
                   </ColDiv>
                   <ColDiv>
-                    {UploadImageBit(bioImageResponse, setBioImageResponse)}
+                    {UploadImageBit(
+                      bioImageResponse, 
+                      setBioImageResponse,
+                      bioImageResponse,
+                      setBioImageResponse,
+                      "bio-image-file"
+                    )}
                   </ColDiv>
                 </RowDiv>
-
                 {errors.academicHistory && touched.academicHistory ? (
                   <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                 ) : null}
@@ -418,7 +461,10 @@ const Edit = () => {
                   <ColDiv>
                     {UploadImageBit(
                       awesomeImageResponse,
-                      setAwesomeImageResponse
+                      setAwesomeImageResponse,
+                      awesomeImageFile,
+                      setAwesomeImageFile,
+                      "awesome-image-file"
                     )}
                   </ColDiv>
                 </RowDiv>
@@ -427,7 +473,7 @@ const Edit = () => {
                   "Professional History",
                   "professionalHistory",
                   touched.professionalHistory,
-                  errors.academicHistory
+                  errors.academicHistory,
                 )}
                 <div>
                   <StyledPublishButton type="submit">
