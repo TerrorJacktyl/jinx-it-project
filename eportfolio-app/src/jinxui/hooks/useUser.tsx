@@ -173,7 +173,7 @@ export const useUser = () => {
       const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages"
       const result = API.get(path, state.config)
         .then((response: any) =>
-          response.form_data
+          response.data
         )
         .catch((error: any) => {
           console.log(error)
@@ -194,18 +194,20 @@ export const useUser = () => {
         return result
     }
 
-    // Will retrieve a portoflio, all of its pages, and corresponding sections
+    /* Will retrieve a portoflio, all of its pages, and the first page's sections. 
+       Tried to incorporate functionality to fetch all sections corresponding to all pages,
+       but ran into a very lame bug with nested list indexing :'( */
     async function getFullPortfolio(portfolio_id: number) {
       try {
-        // Portfolio
         const portfolio: TPortfolio = await getPortfolio(portfolio_id);
-        // Page[]
         const pages: TPage[] = await getPages(portfolio_id);
-        // Section[][]
-        var sections: TSection[][] = []
-        pages.forEach(async (page: any) => {
-          sections.push(await getSections(portfolio_id, page.id))
-        })
+        // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
+        const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
+        console.log(pages);
+//        pages.forEach(async (page: any) => {
+//          sections.push(await getSections(portfolio_id, page.id))
+//        })
+        console.log(sections);
         return { portfolio, pages, sections }
       } catch (e) {
         throw e

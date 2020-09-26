@@ -12,6 +12,7 @@ const StyledTextSectionDiv = styled.div`
   color: #eeeeee;
   padding-left: 12px;
   control: textarea
+  whitespace: pre-wrap;
 `;
 
 export default StyledTextSectionDiv;

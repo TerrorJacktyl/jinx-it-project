@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import {
   SiteHeader,
   HeaderDiv,
@@ -40,23 +38,39 @@ type MediaSectionProps = {
    initial portfolio creation */
 const Portfolio = () => {
   // Testing purposes only
-  const tempPortfolioId = 1;
+  const tempPortfolioId = 4;
   const { getFullPortfolio } = useUser();
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage, setCurrPage] = useState<number>(0);
-  const [sections, setSections] = useState<TSection[][]>([]);
+  // Define as TSection[][] when incorporating multiple pages
+  const [sections, setSections] = useState<TSection[]>([]);
   useEffect(() => {
     const fetchPortfolio = async () => {
       const {portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
       setPortfolio(portfolio);
       setPages(pages);
-      setSections(sections); 
+      console.log(sections);
+      console.log(sections[0]);
+      console.log(sections.length);
+      setSections(sections);
     }
     fetchPortfolio();
   }, []);
 
+  console.log(sections);
+  console.log(sections[currPage]);
+  console.log(sections.length);
 
+  const compare = (s1: TSection, s2: TSection) => {
+    if (s1.number < s2.number) {
+      return -1;
+    }
+    if (s1.number > s2.number) {
+      return 1;
+    }
+    return 0;
+  }
   return (
     <AccountPageDiv>      
       <SiteHeader>
@@ -70,7 +84,7 @@ const Portfolio = () => {
       <PageDiv>
         <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
         {sections.length !== 0 ? (
-          sections[currPage].map((section: TSection) => {
+          sections.sort(compare).map((section: TSection) => {
             if (section.type === "text") {
               return <TextSection name={section.name} content={section.content} />
             } else {

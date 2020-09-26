@@ -43,7 +43,7 @@ class Page(models.Model):
 class Section(models.Model):
     page = models.ForeignKey(
         Page, on_delete=models.CASCADE, related_name='sections')
-    name = models.CharField(max_length=250)
+    name = models.CharField(blank=True, max_length=250)
     # ordering number to order sections on a page
     number = models.IntegerField(default=0)
 
