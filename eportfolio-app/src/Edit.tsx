@@ -4,12 +4,11 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import { ThemeProvider, makeStyles } from "@material-ui/styles";
-import { Grid } from "@material-ui/core";
-import { Fab, Button } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
 import { createMuiTheme, createStyles } from "@material-ui/core/styles";
-
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
 import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
 
 import { TextField } from "formik-material-ui";
@@ -53,13 +52,17 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme: any) =>
   createStyles({
+    root: {
+    },
     margin: {
       position: "absolute",
       bottom: 20,
       left: 43,
-      // transform: "translate(-30px, -50%)",
-      // msTransform: translate(-50%, -50%);
     },
+    paper: {
+      backgroundColor: 'transparent',
+      padding: 10,
+    }
   })
 );
 
@@ -81,6 +84,12 @@ const ColDiv = styled.div`
   }
 `;
 
+const SectionDiv = styled.div`
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
 `;
@@ -93,14 +102,9 @@ const BlankUser = styled.img`
   margin-left: 0px;
   height: auto;
   // float: right;
-  margin-top: 30px;
+  margin-top: 0px;
   border: 1px solid #808080;
   border-radius: 4px;
-`;
-
-const BlankUser2 = styled.img`
-  width: 100%;
-  height: auto;
 `;
 
 const FormTitle = styled.h2`
@@ -115,6 +119,7 @@ const FieldTitle = styled.h3`
   font-weight: 300;
   margin-bottom: 0px;
   margin-left: 0px;
+  margin-top: 0px;
   text-align: left;
 `;
 
@@ -160,36 +165,9 @@ const StyledInput = styled.input`
   display: none;
 `;
 
-const Div1 = styled.div`
+const ImageDiv = styled.div`
   position: relative;
   width: 100%;
-`;
-
-const Div1a = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-`;
-
-const Div1b = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-`;
-
-const ContainerButton = styled.button`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: #555;
-  color: white;
-  font-size: 16px;
-  padding: 12px 24px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
 `;
 
 const ProfileSchema = Yup.object().shape({
@@ -213,21 +191,16 @@ function PostSection(
 }
 
 function UploadImageBit(
+  uploadButtonLabel: string,
   imageResponse: any,
   setImageResponse: any,
-  imageFile: any,
-  setImageFile: any,
-  uploadButtonLabel: string,
 ) {
   const { uploadImage } = useUser();
-  // const [imageFile, setImageFile] = useState<File>(
-  //   new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
-  // );
   const classes = useStyles();
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Div1>
+        <ImageDiv>
           <BlankUser src={imageResponse.image} />
           <label htmlFor={uploadButtonLabel}>
             <StyledInput
@@ -237,7 +210,6 @@ function UploadImageBit(
               type="file"
               onChange={(event) => {
                 if (event.currentTarget.files) {
-                  setImageFile(event.currentTarget.files[0]);
                   uploadImage(
                     event.currentTarget.files[0],
                     event.currentTarget.files[0].name
@@ -250,7 +222,7 @@ function UploadImageBit(
                       console.log(error);
                     });
                 } else {
-                  setImageFile(new File([""], "blank_file"));
+                  console.log("Image failure")
                 }
               }}
             />
@@ -262,7 +234,79 @@ function UploadImageBit(
               <AddPhotoAlternateOutlinedIcon />
             </IconButton>
           </label>
-        </Div1>
+        </ImageDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function ImageTextSectionBit(
+  title: string,
+  sectionName: string,
+  touched: any,
+  errors: any,
+  imageResponse: any,
+  setImageResponse: any
+) {
+  const classes = useStyles();
+  return (
+    <>        
+      <ThemeProvider theme={theme}>
+        <SectionDiv>        
+          <Paper 
+            elevation = {0} 
+            variant="outlined" 
+            square
+            className = {classes.paper}
+          >
+            <RowDiv>
+              <FieldTitle>{title}</FieldTitle>
+            </RowDiv>
+            <RowDiv>
+              <ColDiv>
+              {TextSectionField(sectionName, 15)}
+              {errors && touched 
+                ? <ErrorMessage>{errors}</ErrorMessage> 
+                : null}
+              </ColDiv>
+              <ColDiv>
+              {UploadImageBit(sectionName, imageResponse, setImageResponse)}
+            </ColDiv>
+          </RowDiv>
+        </Paper>
+      </SectionDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function ImageSectionBit(
+  title: string,
+  sectionName: string,
+  imageResponse: any,
+  setImageResponse: any
+) {
+  const classes = useStyles();
+  return (
+    <>        
+      <ThemeProvider theme={theme}>
+        <SectionDiv>        
+          <Paper 
+            elevation = {0} 
+            variant="outlined" 
+            square
+            className = {classes.paper}
+          >
+            <RowDiv>
+              <FieldTitle>{title}</FieldTitle>
+            </RowDiv>
+            <RowDiv>
+              <ColDiv>
+              {UploadImageBit(sectionName, imageResponse, setImageResponse)}
+            </ColDiv>
+          </RowDiv>
+        </Paper>
+      </SectionDiv>
       </ThemeProvider>
     </>
   );
@@ -274,24 +318,43 @@ function TextSectionBit(
   touched: any,
   errors: any
 ) {
+  const classes = useStyles();
+  return (
+    <>        
+      <ThemeProvider theme={theme}>
+        <SectionDiv>
+          <Paper 
+            elevation = {0} 
+            variant="outlined" 
+            square
+            className = {classes.paper}
+          >
+            <FieldTitle>{title}</FieldTitle>
+              {TextSectionField(sectionName, 10)}
+              {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
+          </Paper>
+        </SectionDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function TextSectionField(sectionName: string, rows: number)
+{
   return (
     <>
-      <FieldTitle>{title}</FieldTitle>
-      <ThemeProvider theme={theme}>
-        <Field
-          component={TextField}
-          name={sectionName}
-          id="standard-full-width"
-          style={{ margin: 0 }}
-          fullWidth
-          multiline
-          rows={10}
-          rowsMax={30}
-          variant="outlined"
-          color="secondary"
-        />
-      </ThemeProvider>
-      {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
+      <Field
+        component={TextField}
+        name={sectionName}
+        id="standard-full-width"
+        style={{ margin: 0, marginBottom: 15 }}
+        fullWidth
+        multiline
+        rows={rows}
+        rowsMax={30}
+        variant="filled"
+        color="secondary"
+      />
     </>
   );
 }
@@ -306,14 +369,8 @@ const Edit = () => {
     image: FRONT_END_URL + "blank_user.png",
     id: "0",
   });
-  const [bioImageFile, setBioImageFile] = useState<File>(
-    new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
-  );
-  const [awesomeImageFile, setAwesomeImageFile] = useState<File>(
-    new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
-  );
   const { postPortfolio, postPage, postSection } = useUser();
-
+  const classes = useStyles();
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -411,42 +468,38 @@ const Edit = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <MinimalDivStyle>
-                <FieldTitle>Website Name *</FieldTitle>
-                <ThemeProvider theme={theme}>
-                  <Field
-                    component={TextField}
-                    name="websiteName"
-                    id="standard-full-width"
-                    style={{ margin: 0 }}
-                    fullWidth
-                    variant="outlined"
-                    color="secondary"
-                    errorstyle={{
-                      float: "right",
-                      margin: "30px",
-                      color: "white",
-                    }}
-                  />
-                </ThemeProvider>
-                <RowDiv>
-                  <ColDiv>
-                    {TextSectionBit(
-                      "Biography",
-                      "biography",
-                      touched.biography,
-                      errors.biography
-                    )}
-                  </ColDiv>
-                  <ColDiv>
-                    {UploadImageBit(
-                      bioImageResponse, 
-                      setBioImageResponse,
-                      bioImageResponse,
-                      setBioImageResponse,
-                      "bio-image-file"
-                    )}
-                  </ColDiv>
-                </RowDiv>
+                <Paper 
+                  elevation = {0} 
+                  variant="outlined" 
+                  square
+                  className = {classes.paper}
+                >
+                    <FieldTitle>Website Name *</FieldTitle>
+                    <ThemeProvider theme={theme}>
+                      <Field
+                        component={TextField}
+                        name="websiteName"
+                        id="standard-full-width"
+                        style={{ margin: 0 }}
+                        fullWidth
+                        variant="filled"
+                        color="secondary"
+                        errorstyle={{
+                          float: "right",
+                          margin: "30px",
+                          color: "white",
+                        }}
+                      />
+                    </ThemeProvider>
+                </Paper>
+                {ImageTextSectionBit(
+                  "Biography", 
+                  "biography", 
+                  touched.biography, 
+                  errors.biography,
+                  bioImageResponse,
+                  setBioImageResponse
+                )}
                 {errors.academicHistory && touched.academicHistory ? (
                   <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                 ) : null}
@@ -456,19 +509,12 @@ const Edit = () => {
                   touched.academicHistory,
                   errors.academicHistory
                 )}
-                <FieldTitle>Awesome Image</FieldTitle>
-                <RowDiv>
-                  <ColDiv>
-                    {UploadImageBit(
-                      awesomeImageResponse,
-                      setAwesomeImageResponse,
-                      awesomeImageFile,
-                      setAwesomeImageFile,
-                      "awesome-image-file"
-                    )}
-                  </ColDiv>
-                </RowDiv>
-
+                {ImageSectionBit(
+                  "Awesome Image",
+                  "awesomeImage",
+                  awesomeImageResponse,
+                  setAwesomeImageResponse,
+                )}
                 {TextSectionBit(
                   "Professional History",
                   "professionalHistory",
