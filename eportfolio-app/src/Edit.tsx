@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
-import {
-  ThemeProvider
-} from '@material-ui/styles'
+import { ThemeProvider } from "@material-ui/styles";
 
-import { 
-  createStyles, 
-  makeStyles, 
-  Theme, 
-  createMuiTheme, 
-} from '@material-ui/core/styles'
+import { createMuiTheme } from "@material-ui/core/styles";
 
-import TextField from '@material-ui/core/TextField'
+// import TextField from '@material-ui/core/TextField'
+
+import { TextField } from "formik-material-ui";
 
 import {
   ErrorMessage,
@@ -34,12 +29,12 @@ const FRONT_END_URL = "http://localhost:3000/";
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark',
+    type: "dark",
     primary: {
-      main: '#0081CA'
+      main: "#0081CA",
     },
     secondary: {
-      main: '#00FFC2'
+      main: "#00FFC2",
     },
   },
   typography: {
@@ -49,10 +44,10 @@ const theme = createMuiTheme({
     MuiInputLabel: {
       root: {
         fontSize: 25,
-      }
-    }
-  }
-})
+      },
+    },
+  },
+});
 
 const MinimalDivStyle = styled.div`
   margin-left: 30px;
@@ -133,7 +128,6 @@ const BrowseButton = styled.input`
   color: #eeeeee;
   margin-top: 10px;
   margin-left: 0px;
-
 `;
 
 const FieldTitle = styled.h3`
@@ -187,7 +181,12 @@ const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
-function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any) {
+function PostSection(
+  postSection: any,
+  portfolio_id: string,
+  page_id: string,
+  data: any
+) {
   // const { postSection } = useUser();
   postSection(portfolio_id, page_id, data)
     .then(function (response: any) {
@@ -237,6 +236,34 @@ function UploadImageBit(imageResponse: any, setImageResponse: any) {
   );
 }
 
+function TextSectionBit(
+  title: string,
+  sectionName: string,
+  touched: any,
+  errors: any
+) {
+  return (
+    <>
+      <FieldTitle>{title}</FieldTitle>
+      <ThemeProvider theme={theme}>
+        <Field
+          component={TextField}
+          name={sectionName}
+          id="standard-full-width"
+          style={{ margin: 0 }}
+          fullWidth
+          multiline
+          rows={10}
+          rowsMax={30}
+          variant="outlined"
+          color="secondary"
+        />
+      </ThemeProvider>
+      {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
+    </>
+  );
+}
+
 const Edit = () => {
   const [submittionError, setSubmittionError] = useState(false);
   const [bioImageResponse, setBioImageResponse] = useState({
@@ -246,7 +273,7 @@ const Edit = () => {
   const [awesomeImageResponse, setAwesomeImageResponse] = useState({
     image: FRONT_END_URL + "blank_user.png",
     id: "0",
-  })
+  });
   const { postPortfolio, postPage, postSection } = useUser();
 
   return (
@@ -292,8 +319,8 @@ const Edit = () => {
               name: "awesome_image",
               number: "0",
               image: awesomeImageResponse.id,
-              type: "image"
-            }
+              type: "image",
+            };
             const professional_data = {
               name: "professional_history",
               number: "0",
@@ -309,9 +336,24 @@ const Edit = () => {
                     console.log(page_response);
                     const page_id = page_response.data.id;
                     PostSection(postSection, portfolio_id, page_id, bio_data);
-                    PostSection(postSection, portfolio_id, page_id, academic_data);
-                    PostSection(postSection, portfolio_id, page_id, awesome_data);
-                    PostSection(postSection, portfolio_id, page_id, professional_data);
+                    PostSection(
+                      postSection,
+                      portfolio_id,
+                      page_id,
+                      academic_data
+                    );
+                    PostSection(
+                      postSection,
+                      portfolio_id,
+                      page_id,
+                      awesome_data
+                    );
+                    PostSection(
+                      postSection,
+                      portfolio_id,
+                      page_id,
+                      professional_data
+                    );
                   })
                   .catch(function (error: any) {
                     console.log(error);
@@ -331,62 +373,62 @@ const Edit = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <MinimalDivStyle>
-                <FieldTitle>Website Name</FieldTitle>
-                <StyledFormEntry name="websiteName" />
-                {errors.websiteName && touched.websiteName ? (
-                  <ErrorMessage>{errors.websiteName}</ErrorMessage>
-                ) : null}
-                <FieldTitle>Biography</FieldTitle>
-                
+                <FieldTitle>Website Name *</FieldTitle>
+                <ThemeProvider theme={theme}>
+                  <Field
+                    component={TextField}
+                    name="websiteName"
+                    id="standard-full-width"
+                    style={{ margin: 0 }}
+                    fullWidth
+                    variant="outlined"
+                    color="secondary"
+                    errorStyle={{
+                      float: "right",
+                      margin: "30px",
+                      color: "white"
+                    }}
+                  />
+                </ThemeProvider>
                 <RowDiv>
                   <ColDiv>
-                    <HalfStyledFormEntry component="textarea" name="biography" />
-                      {errors.biography && touched.biography ? (
-                        <ErrorMessage>{errors.biography}</ErrorMessage>
-                      ) : null}
+                    {TextSectionBit(
+                      "Biography",
+                      "biography",
+                      touched.biography,
+                      errors.biography
+                    )}
                   </ColDiv>
                   <ColDiv>
                     {UploadImageBit(bioImageResponse, setBioImageResponse)}
                   </ColDiv>
                 </RowDiv>
-                
-                <FieldTitle>Academic History</FieldTitle>
-                <TallStyledFormEntry
-                  component="textarea"
-                  name="academicHistory"
-                />
+
                 {errors.academicHistory && touched.academicHistory ? (
                   <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                 ) : null}
-                <ThemeProvider theme = {theme}>
-                  <TextField
-                    id="standard-full-width"
-                    label="Multiline"
-                    style={{ margin: 0 }}
-                    fullWidth
-                    multiline
-                    rows = {10}
-                    rowsMax={30}
-                    defaultValue="Default Value"
-                    variant="outlined"
-                    color="secondary"
-                  />
-                </ThemeProvider>
+                {TextSectionBit(
+                  "Academic History",
+                  "academicHistory",
+                  touched.academicHistory,
+                  errors.academicHistory
+                )}
                 <FieldTitle>Awesome Image</FieldTitle>
                 <RowDiv>
                   <ColDiv>
-                    {UploadImageBit(awesomeImageResponse, setAwesomeImageResponse)}
+                    {UploadImageBit(
+                      awesomeImageResponse,
+                      setAwesomeImageResponse
+                    )}
                   </ColDiv>
                 </RowDiv>
-                
-                <FieldTitle>Professional History</FieldTitle>
-                <TallStyledFormEntry
-                  component="textarea"
-                  name="professionalHistory"
-                />
-                {errors.professionalHistory && touched.professionalHistory ? (
-                  <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
-                ) : null}
+
+                {TextSectionBit(
+                  "Professional History",
+                  "professionalHistory",
+                  touched.professionalHistory,
+                  errors.academicHistory
+                )}
                 <div>
                   <StyledPublishButton type="submit">
                     Publish
