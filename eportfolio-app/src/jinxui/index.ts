@@ -33,3 +33,7 @@ export {
 export type { IUserContext } from "./contexts/index";
 
 export { useUser } from "./hooks/useUser";
+
+/* Theme */
+export { LightTheme } from "./theme/GlobalTheme";
+export { DarkTheme } from "./theme/GlobalTheme";

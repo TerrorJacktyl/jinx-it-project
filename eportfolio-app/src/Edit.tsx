@@ -6,12 +6,13 @@ import * as Yup from "yup";
 import { ThemeProvider, makeStyles } from "@material-ui/styles";
 import IconButton from "@material-ui/core/IconButton";
 import { createMuiTheme, createStyles } from "@material-ui/core/styles";
-import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
 
 import { TextField } from "formik-material-ui";
+import Image from "../images/Logo_Background.svg";
 
 import {
   ErrorMessage,
@@ -25,43 +26,33 @@ import {
   AccountPageDiv,
   useUser,
 } from "jinxui";
+// import classes from "*.module.css";
 
 const FRONT_END_URL = "http://localhost:3000/";
 
-const theme = createMuiTheme({
-  palette: {
-    type: "dark",
-    primary: {
-      main: "#0081CA",
-    },
-    secondary: {
-      main: "#00FFC2",
-    },
-  },
-  typography: {
-    fontFamily: "Heebo, sans-serif",
-  },
-  overrides: {
-    MuiInputLabel: {
-      root: {
-        fontSize: 25,
-      },
-    },
-  },
-});
+const lightMode = false;
+
+
 
 const useStyles = makeStyles((theme: any) =>
   createStyles({
-    root: {
-    },
+    root: {},
     margin: {
       position: "absolute",
       bottom: 20,
       left: 43,
     },
     paper: {
-      backgroundColor: 'transparent',
       padding: 10,
+    },
+    button: {
+      width: "100%",
+      // fontSize: 20,
+      // fontWeight: 600,
+      border: "2px solid",
+      '&:hover': {
+        border: "2px solid",
+      }
     }
   })
 );
@@ -108,14 +99,14 @@ const BlankUser = styled.img`
 `;
 
 const FormTitle = styled.h2`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
+  // font-family: "Heebo", sans-serif;
+  // color: #eeeeee;
   font-weight: 300;
 `;
 
 const FieldTitle = styled.h3`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
+  // font-family: "Heebo", sans-serif;
+  // color: #eeeeee;
   font-weight: 300;
   margin-bottom: 0px;
   margin-left: 0px;
@@ -170,6 +161,12 @@ const ImageDiv = styled.div`
   width: 100%;
 `;
 
+const GridContainerStyle = styled.div`
+  display: grid;
+  // grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: repeat(auto-fill, minMax(250px, 1fr));
+`;
+
 const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
@@ -193,13 +190,13 @@ function PostSection(
 function UploadImageBit(
   uploadButtonLabel: string,
   imageResponse: any,
-  setImageResponse: any,
+  setImageResponse: any
 ) {
   const { uploadImage } = useUser();
   const classes = useStyles();
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={lightTheme}>
         <ImageDiv>
           <BlankUser src={imageResponse.image} />
           <label htmlFor={uploadButtonLabel}>
@@ -222,7 +219,7 @@ function UploadImageBit(
                       console.log(error);
                     });
                 } else {
-                  console.log("Image failure")
+                  console.log("Image failure");
                 }
               }}
             />
@@ -240,6 +237,85 @@ function UploadImageBit(
   );
 }
 
+{
+  /* function PaperSection (props: { title: string, content: any}) {
+  function render () {
+    return (
+      <SectionDiv>
+        <Paper 
+          elevation={3}
+          square
+          className = {classes.paper}
+        >
+          <FieldTitle>{props.title}</FieldTitle>
+          {props.content}
+        </Paper>
+      </SectionDiv>
+    )
+  }
+} */
+}
+
+// const PaperSection = (props: { title: string, content: any}) => {
+//     return (
+//       <SectionDiv>
+//         <Paper
+//           elevation={3}
+//           square
+//           className = {classes.paper}
+//         >
+//           <FieldTitle>{props.title}</FieldTitle>
+//           {props.content}
+//         </Paper>
+//       </SectionDiv>
+//     )
+// }
+
+const PaperSection = (props: any) => {
+  const classes = useStyles();
+  return (
+    <SectionDiv>
+      <Paper 
+        elevation={3}
+        variant="outlined"  
+        square 
+        className={classes.paper}>
+        <RowDiv>
+          <FieldTitle>{props.title}</FieldTitle>
+        </RowDiv>
+        {props.children}
+      </Paper>
+    </SectionDiv>
+  );
+};
+
+
+function PortfolioTitleSection(
+  title: string,
+  sectionName: string,
+) {
+  return (
+    <>
+      <PaperSection title={title}>
+        <Field
+          component={TextField}
+          name={sectionName}
+          id="standard-full-width"
+          style={{ margin: 0 }}
+          fullWidth
+          variant="filled"
+          color="secondary"
+          errorstyle={{
+            float: "right",
+            margin: "30px",
+            color: "white",
+          }}
+        />
+      </PaperSection>
+    </>
+  )
+}
+
 function ImageTextSectionBit(
   title: string,
   sectionName: string,
@@ -248,34 +324,19 @@ function ImageTextSectionBit(
   imageResponse: any,
   setImageResponse: any
 ) {
-  const classes = useStyles();
   return (
-    <>        
-      <ThemeProvider theme={theme}>
-        <SectionDiv>        
-          <Paper 
-            elevation = {0} 
-            variant="outlined" 
-            square
-            className = {classes.paper}
-          >
-            <RowDiv>
-              <FieldTitle>{title}</FieldTitle>
-            </RowDiv>
-            <RowDiv>
-              <ColDiv>
-              {TextSectionField(sectionName, 15)}
-              {errors && touched 
-                ? <ErrorMessage>{errors}</ErrorMessage> 
-                : null}
-              </ColDiv>
-              <ColDiv>
-              {UploadImageBit(sectionName, imageResponse, setImageResponse)}
-            </ColDiv>
-          </RowDiv>
-        </Paper>
-      </SectionDiv>
-      </ThemeProvider>
+    <>
+      <PaperSection title={title}>
+        <RowDiv>
+          <ColDiv>
+            {TextSectionField(sectionName, 15)}
+            {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
+          </ColDiv>
+          <ColDiv>
+            {UploadImageBit(sectionName, imageResponse, setImageResponse)}
+          </ColDiv>
+        </RowDiv>
+      </PaperSection>
     </>
   );
 }
@@ -286,28 +347,15 @@ function ImageSectionBit(
   imageResponse: any,
   setImageResponse: any
 ) {
-  const classes = useStyles();
   return (
-    <>        
-      <ThemeProvider theme={theme}>
-        <SectionDiv>        
-          <Paper 
-            elevation = {0} 
-            variant="outlined" 
-            square
-            className = {classes.paper}
-          >
-            <RowDiv>
-              <FieldTitle>{title}</FieldTitle>
-            </RowDiv>
-            <RowDiv>
-              <ColDiv>
-              {UploadImageBit(sectionName, imageResponse, setImageResponse)}
-            </ColDiv>
-          </RowDiv>
-        </Paper>
-      </SectionDiv>
-      </ThemeProvider>
+    <>
+      <PaperSection title={title}>
+        <RowDiv>
+          <ColDiv>
+            {UploadImageBit(sectionName, imageResponse, setImageResponse)}
+          </ColDiv>
+        </RowDiv>
+      </PaperSection>
     </>
   );
 }
@@ -318,46 +366,32 @@ function TextSectionBit(
   touched: any,
   errors: any
 ) {
-  const classes = useStyles();
   return (
-    <>        
-      <ThemeProvider theme={theme}>
-        <SectionDiv>
-          <Paper 
-            elevation = {0} 
-            variant="outlined" 
-            square
-            className = {classes.paper}
-          >
-            <FieldTitle>{title}</FieldTitle>
-              {TextSectionField(sectionName, 10)}
-              {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
-          </Paper>
-        </SectionDiv>
-      </ThemeProvider>
+    <>
+      <PaperSection title={title}>
+        {TextSectionField(sectionName, 15)}
+        {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
+      </PaperSection>
     </>
   );
 }
 
-function TextSectionField(sectionName: string, rows: number)
-{
+const TextSectionField = (sectionName: string, rows: number) => {
   return (
-    <>
-      <Field
-        component={TextField}
-        name={sectionName}
-        id="standard-full-width"
-        style={{ margin: 0, marginBottom: 15 }}
-        fullWidth
-        multiline
-        rows={rows}
-        rowsMax={30}
-        variant="filled"
-        color="secondary"
-      />
-    </>
+    <Field
+      component={TextField}
+      name={sectionName}
+      id="standard-full-width"
+      style={{ margin: 0, marginBottom: 15 }}
+      fullWidth
+      multiline
+      rows={rows}
+      rowsMax={30}
+      variant="filled"
+      color="secondary"
+    />
   );
-}
+};
 
 const Edit = () => {
   const [submittionError, setSubmittionError] = useState(false);
@@ -372,7 +406,8 @@ const Edit = () => {
   const { postPortfolio, postPage, postSection } = useUser();
   const classes = useStyles();
   return (
-    <AccountPageDiv>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
       <SiteHeader>
         <HeaderDiv>
           <LogoLink />
@@ -468,34 +503,11 @@ const Edit = () => {
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <MinimalDivStyle>
-                <Paper 
-                  elevation = {0} 
-                  variant="outlined" 
-                  square
-                  className = {classes.paper}
-                >
-                    <FieldTitle>Website Name *</FieldTitle>
-                    <ThemeProvider theme={theme}>
-                      <Field
-                        component={TextField}
-                        name="websiteName"
-                        id="standard-full-width"
-                        style={{ margin: 0 }}
-                        fullWidth
-                        variant="filled"
-                        color="secondary"
-                        errorstyle={{
-                          float: "right",
-                          margin: "30px",
-                          color: "white",
-                        }}
-                      />
-                    </ThemeProvider>
-                </Paper>
+                {PortfolioTitleSection("Website Name*", "websiteName")}
                 {ImageTextSectionBit(
-                  "Biography", 
-                  "biography", 
-                  touched.biography, 
+                  "Biography",
+                  "biography",
+                  touched.biography,
                   errors.biography,
                   bioImageResponse,
                   setBioImageResponse
@@ -513,22 +525,45 @@ const Edit = () => {
                   "Awesome Image",
                   "awesomeImage",
                   awesomeImageResponse,
-                  setAwesomeImageResponse,
+                  setAwesomeImageResponse
                 )}
                 {TextSectionBit(
                   "Professional History",
                   "professionalHistory",
                   touched.professionalHistory,
-                  errors.academicHistory,
+                  errors.academicHistory
                 )}
-                <div>
-                  <StyledPublishButton type="submit">
+                  {/* <StyledPublishButton type="submit">
                     Publish
-                  </StyledPublishButton>
-                </div>
-                <StyledLink href="/">
+                  </StyledPublishButton> */}
+                  <GridContainerStyle>
+                    <div>
+                      <Button 
+                        variant="outlined"
+                        className={classes.button}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                    <div>
+
+                    </div>
+                    <div>
+                      <Button 
+                        variant="outlined" 
+                        color="secondary"
+                        className={classes.button}
+                        style = {{ borderRadius: 5 }}
+                      >
+                        Publish
+                      </Button>
+                    </div>
+                  </GridContainerStyle>
+
+
+                {/* <StyledLink href="/">
                   <StyledCancelButton type="button">Cancel</StyledCancelButton>
-                </StyledLink>
+                </StyledLink> */}
                 {submittionError ? (
                   <ErrorMessage>
                     Error signing up. Please try again later.
@@ -539,7 +574,7 @@ const Edit = () => {
           )}
         </Formik>
       </StyledFormDiv>
-    </AccountPageDiv>
+    </ThemeProvider>
   );
 };
 
