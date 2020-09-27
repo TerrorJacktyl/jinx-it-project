@@ -132,3 +132,93 @@ class PortfolioTest(UserMixin, PortfolioMixin, APITestCase):
             len(models.Portfolio.objects.filter(id=self.portfolio.id)),
             0
         )
+
+
+class PageTest(UserMixin, PortfolioMixin, APITestCase):
+    def setUp(self):
+        """Code run before each test. Setup API access simulation."""
+        self.setUpUser()
+        self.setUpPortfolio()
+
+    def test_page_create(self):
+        name = 'deteriorating tubes'
+        data = {
+            'name': name,
+            'number': 0
+        }
+        response = self.client.post(
+            reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
+            data
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('name'), name)
+
+        page = models.Page.objects.get(id=response.data.get('id'))
+        self.assertEqual(page.portfolio, self.portfolio)
+        self.assertEqual(page.name, name)
+        self.assertEqual(page.sections.count(), 0)
+
+    def test_page_validation(self):
+        name = 'a' * 101
+        data = {'name': name}
+        response = self.client.post(
+            reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
+            data
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_page_retrieve(self):
+        response = self.client.get(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id
+                }
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {
+            'id': self.page.id,
+            'name': self.page.name,
+            'number': 0,
+            'sections': list(map(lambda s: s.id, self.page.sections.all())),
+        })
+
+    def test_page_update(self):
+        name = 'soggiest contrivances'
+        response = self.client.patch(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+            {'name': name}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('name'), name)
+
+        # clear out cached data
+        self.page.refresh_from_db()
+
+        self.assertEqual(self.page.portfolio, self.portfolio)
+        self.assertEqual(self.page.name, name)
+        self.assertEqual(self.page.sections.count(), 0)
+
+    def test_page_delete(self):
+        response = self.client.delete(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id
+                }
+            )
+        )
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(
+            len(models.Page.objects.filter(id=self.page.id)),
+            0
+        )
