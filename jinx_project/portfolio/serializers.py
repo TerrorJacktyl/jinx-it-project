@@ -29,7 +29,14 @@ class PageInputSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         siblings = len(models.Page.objects.filter(
             portfolio=attrs['portfolio']))
-        validators.number_in_range(attrs['number'], siblings)
+        # Python is stupid and will try to calculate the value for self.instance.number
+        # if it is used as the default value in dict.get. However, it may sometimes fail!
+        # This is why we need to use a if else statement.
+        if 'number' in attrs:
+            number = attrs.get('number')
+        else:
+            number = self.instance.number
+        validators.number_in_range(number, siblings)
         return attrs
 
     def to_internal_value(self, data: dict):
@@ -40,13 +47,14 @@ class PageInputSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # update the ordering later
-        number = validated_data.pop('number')
+        number = validated_data.pop('number', None)
 
         # update the other fields
         super().update(instance, validated_data)
 
         # move the item
-        models.Page.objects.move(instance, number)
+        if number:
+            models.Page.objects.move(instance, number)
 
         return instance
 
@@ -76,8 +84,16 @@ class SectionSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        siblings = len(models.Section.objects.filter(page=attrs['page']))
-        validators.number_in_range(attrs['number'], siblings)
+        if 'page' in attrs:
+            page = attrs.get('page')
+        else:
+            page = self.instance.page
+        if 'number' in attrs:
+            number = attrs.get('number')
+        else:
+            number = self.instance.number
+        siblings = len(models.Section.objects.filter(page=page))
+        validators.number_in_range(number, siblings)
         return attrs
 
     def to_internal_value(self, data: dict):
@@ -138,13 +154,14 @@ class PolymorphSectionSerializer(SectionSerializer):
     def update(self, instance, validated_data):
         validated_data.pop('type', None)
         # update the ordering later
-        number = validated_data.pop('number')
+        number = validated_data.pop('number', None)
 
         # update the other fields
         super().update(instance, validated_data)
 
         # move the item
-        models.Section.objects.move(instance, number)
+        if number:
+            models.Section.objects.move(instance, number)
 
         return instance
 

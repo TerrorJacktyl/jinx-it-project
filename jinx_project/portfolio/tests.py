@@ -205,7 +205,7 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
 
         self.assertEqual(self.page.portfolio, self.portfolio)
         self.assertEqual(self.page.name, name)
-        self.assertEqual(self.page.sections.count(), 0)
+        self.assertEqual(self.page.sections.count(), 10)
 
     def test_page_delete(self):
         response = self.client.delete(
