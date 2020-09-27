@@ -10,6 +10,19 @@ def main():
     curr_dir = pathlib.Path(__file__).parent.absolute()
     logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
+    lock_file_path = curr_dir / 'deploy.lock'
+
+    # check if the deploy script is already running
+    try:
+        open(lock_file_path, mode='x').close()
+        logging.info('Lock obtained')
+    except FileExistsError:
+        logging.errro(
+            'Deploy script is already running!\n'
+            'If you are certain that no one else is deploying, you may delete the deploy.lock file and try again.'
+        )
+        return
+
     # build and deploy react front end
     logging.info('Building and deploying frontend')
     subprocess.run(
@@ -58,6 +71,11 @@ def main():
         cwd=curr_dir / 'django',
         check=True
         )
+
+    # remove the lock file
+    os.remove(lock_file_path)
+    logging.info('Released lock')
+
 
 
 if __name__ == '__main__':
