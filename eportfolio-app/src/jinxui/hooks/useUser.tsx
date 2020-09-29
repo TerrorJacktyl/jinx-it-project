@@ -64,6 +64,7 @@ export const useUser = () => {
 
   // Declaring a function as async means the return gets wrapped in a promise
   async function signup(
+    username: string,
     email: string,
     password: string,
     first_name?: string,
@@ -71,7 +72,7 @@ export const useUser = () => {
   ) {
     try {
       const response = await API.post(SIGNUP_PATH, {
-        username: email,
+        username: username,
         password: password,
         email: email,
       });
@@ -127,6 +128,7 @@ export const useUser = () => {
     logout,
     signup,
     setAccountDetails,
+    getAccountDetails,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)
