@@ -323,7 +323,7 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
         self.assertEqual(response.data.get('name'), name)
 
         # clear out cached data
-        self.page.refresh_from_db()
+        self.section.refresh_from_db()
 
         self.assertEqual(self.section.name, name)
         self.assertEqual(self.section.page, self.page)
