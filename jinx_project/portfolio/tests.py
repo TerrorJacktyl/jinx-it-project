@@ -63,7 +63,8 @@ class PortfolioTest(UserMixin, PortfolioMixin, APITestCase):
         data = {'name': name}
         response = self.client.post(
             reverse('portfolio_list'),
-            data
+            data,
+            format='json',
         )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data.get('name'), name)
@@ -78,7 +79,8 @@ class PortfolioTest(UserMixin, PortfolioMixin, APITestCase):
         data = {'name': name}
         response = self.client.post(
             reverse('portfolio_list'),
-            data
+            data,
+            format='json',
         )
         self.assertEqual(response.status_code, 400)
 
@@ -108,7 +110,8 @@ class PortfolioTest(UserMixin, PortfolioMixin, APITestCase):
                     'portfolio_id': self.portfolio.id,
                 }
             ),
-            {'name': name}
+            {'name': name},
+            format='json',
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('name'), name)
@@ -150,7 +153,8 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
         }
         response = self.client.post(
             reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
-            data
+            data,
+            format='json',
         )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data.get('name'), name)
@@ -165,7 +169,8 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
         data = {'name': name}
         response = self.client.post(
             reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
-            data
+            data,
+            format='json',
         )
         self.assertEqual(response.status_code, 400)
 
@@ -197,7 +202,8 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
                     'page_id': self.page.id,
                 }
             ),
-            {'name': name}
+            {'name': name},
+            format='json',
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('name'), name)
@@ -247,7 +253,8 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
                     'page_id': self.page.id,
                 }
             ),
-            data
+            data,
+            format='json',
         )
         self.assertEqual(response.status_code, 201)
         for key, val in data.items():
@@ -272,7 +279,8 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
                     'page_id': self.page.id,
                 }
             ),
-            data
+            data,
+            format='json',
         )
         self.assertEqual(response.status_code, 400)
 
@@ -308,7 +316,8 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
                     'section_id': self.section.id,
                 }
             ),
-            {'name': name}
+            {'name': name},
+            format='json',
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get('name'), name)
