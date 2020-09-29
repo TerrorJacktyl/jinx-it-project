@@ -25,6 +25,8 @@ export {
   UserContextProvider,
   UserContext,
   defaultUserContext,
+  storeUserData,
+  retrieveUserData,
 } from "./contexts/index";
 
 export type { IUserContext } from "./contexts/index";

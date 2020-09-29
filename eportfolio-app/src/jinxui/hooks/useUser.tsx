@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "jinxui";
-import { IUserContext, defaultUserContext } from "jinxui";
+import { defaultUserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const useUser = () => {
-  const [state, setState] = useContext(UserContext);
+  const [state, updateState, clearState] = useContext(UserContext);
 
   const LOGIN_PATH = "auth/token/login";
   const LOGOUT_PATH = "auth/token/logout";
@@ -33,15 +33,14 @@ export const useUser = () => {
         };
         // Update internal state about user
         // Do not return until internal state has been updated
-        await setState((state: IUserContext) => {
-          return {
-            ...state,
-            username: username,
-            token: response.data["auth_token"],
-            authenticated: true,
-            config: config,
-          };
-        });
+        const stateChanges = {
+          username: username,
+          token: response.data["auth_token"],
+          authenticated: true,
+          config: config,
+        }
+        // Update context (react) state and local (browser) state
+        await updateState(stateChanges);
         return config;
       }
     } catch (e) {
@@ -55,8 +54,8 @@ export const useUser = () => {
       const response = await API.post(LOGOUT_PATH);
       // make the success more concrete when we've defined a status code on backend
       if (response.status in [200, 201, 202, 203, 204]) {
-        // Update internal user state to reflect sign out
-        setState(defaultUserContext);
+        // Reset context state to default, and clear browser-stored user data
+        clearState();
         return response;
       }
     } catch (e) {
