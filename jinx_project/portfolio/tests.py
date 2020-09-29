@@ -1,5 +1,6 @@
 import string
 import random
+import copy
 
 from hypothesis import given, settings, strategies as st
 from hypothesis.extra.django import TestCase, from_model
@@ -15,6 +16,7 @@ from account.models import Account
 
 from . import models
 from . import views
+from . import serializers
 
 
 class UserMixin():
@@ -220,5 +222,119 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(
             len(models.Page.objects.filter(id=self.page.id)),
+            0
+        )
+
+
+class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
+    def setUp(self):
+        """Code run before each test. Setup API access simulation."""
+        self.setUpUser()
+        self.setUpPortfolio()
+
+    def test_text_section_create(self):
+        data = {
+            'name': 'nervous pillowcase',
+            'number': 0,
+            'type': 'text',
+            'content': 'lorem ipsum'
+        }
+        response = self.client.post(
+            reverse(
+                'section_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+            data
+        )
+        self.assertEqual(response.status_code, 201)
+        for key, val in data.items():
+            self.assertEqual(response.data.get(key), val)
+
+        section = models.TextSection.objects.get(id=response.data.get('id'))
+        for key, val in data.items():
+            self.assertEqual(getattr(section, key), val)
+
+    def test_text_section_validation(self):
+        data = {
+            'name': 'a' * 251,
+            'number': 0,
+            'type': 'text',
+            'content': 'lorem ipsum'
+        }
+        response = self.client.post(
+            reverse(
+                'section_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+            data
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_text_section_retrieve(self):
+        response = self.client.get(
+            reverse(
+                'section_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {
+            'id': self.section.id,
+            'name': self.section.name,
+            'number': self.section.number,
+            'type': self.section.type,
+            'content': self.section.content,
+        })
+
+    def test_text_section_update(self):
+        name = 'spunky horticulturists'
+        initial_data = copy.deepcopy(serializers.TextSectionSerializer(self.section).data)
+        response = self.client.patch(
+            reverse(
+                'section_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id,
+                }
+            ),
+            {'name': name}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data.get('name'), name)
+
+        # clear out cached data
+        self.page.refresh_from_db()
+
+        self.assertEqual(self.section.name, name)
+        self.assertEqual(self.section.page, self.page)
+        self.assertEqual(self.section.type, 'text')
+        self.assertEqual(self.section.number, initial_data.get('number'))
+        self.assertEqual(self.section.content, initial_data.get('content'))
+
+    def test_text_section_delete(self):
+        response = self.client.delete(
+            reverse(
+                'section_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(
+            len(models.Section.objects.filter(id=self.section.id)),
             0
         )
