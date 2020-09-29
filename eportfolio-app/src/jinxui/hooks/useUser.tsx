@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { UserContext } from "jinxui";
 import API from "../../API";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 
 export const useUser = () => {
   const [state, updateState, resetState] = useContext(UserContext);
@@ -50,9 +50,9 @@ export const useUser = () => {
   // Another style: await with try catch
   async function logout() {
     try {
-      const response = await API.post(LOGOUT_PATH);
+      const response = await API.post(LOGOUT_PATH, {}, state.config);
       // make the success more concrete when we've defined a status code on backend
-      if (response.status == 204) {
+      if (response.status === 204) {
         // Reset context state to default, and clear browser-stored user data
         resetState();
         return response;
