@@ -135,7 +135,9 @@ class PolymorphSectionSerializer(SectionSerializer):
         try:
             serializer = self.get_serializer_map()[section_type]
             validated_data = serializer(
-                context=self.context).to_internal_value(data)
+                context=self.context,
+                partial=self.partial,
+            ).to_internal_value(data)
         except KeyError as ex:
             raise serializers.ValidationError(
                 {'type': 'this type does not exist'}
