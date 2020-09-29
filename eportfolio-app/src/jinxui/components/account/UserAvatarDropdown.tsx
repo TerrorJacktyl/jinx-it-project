@@ -106,13 +106,13 @@ const StyledName = styled(Button)`
 
 const NameDiv = styled.div`
     position: absolute;
-    left: 95%;
+    right: 0%;
     top: 0%;
     bottom: 0%;
     display: flex;
     z-index: 1;
     padding-top: 10px;
-    padding-right: 10px;
+
 `;
 
 /* const UserAvatarDropdown = () => {
