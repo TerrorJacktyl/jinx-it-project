@@ -126,12 +126,15 @@ class PolymorphSectionSerializer(SectionSerializer):
             ) from ex
 
     def to_internal_value(self, data):
-        try:
-            section_type = data['type']
-        except KeyError as ex:
-            raise serializers.ValidationError(
-                {'type': 'this field is missing'}
-            ) from ex
+        if self.instance:
+            section_type = self.instance.type
+        else:
+            try:
+                section_type = data['type']
+            except KeyError as ex:
+                raise serializers.ValidationError(
+                    {'type': 'this field is missing'}
+                ) from ex
         try:
             serializer = self.get_serializer_map()[section_type]
             validated_data = serializer(
