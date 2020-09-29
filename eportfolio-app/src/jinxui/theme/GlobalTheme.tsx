@@ -16,6 +16,7 @@ const DarkTheme = createMuiTheme({
   },
   typography: {
     fontFamily: "Heebo, sans-serif",
+    // "fontWeight": 200,
   },
   overrides: {
     MuiInputLabel: {
@@ -42,6 +43,7 @@ const LightTheme = createMuiTheme({
   },
   typography: {
     fontFamily: "Heebo, sans-serif",
+    // fontWeight: "light",
   },
   overrides: {
     MuiInputLabel: {
