@@ -264,23 +264,12 @@ function UploadImageBit(
           <ImageGridMain>
             <UserImage src={imageResponse.image} />{" "}
           </ImageGridMain>
-
-            <StyledImageUploadOverlay elevation={0} square>
-              Upload Image
-              {/* <StyledImageUploadButton /> */}
-            </StyledImageUploadOverlay>
-
-            <ImageGridIcon>          <IconButton
-            component="span"
-            size="small"
-            // className={classes.transparentHoverFocus}
-          >
-              <StyledImageUploadButton /></IconButton>
-            </ImageGridIcon>
-          
-
-          {/* </IconButton> */}
-          {/* </ImageGridIcon> */}
+          <StyledImageUploadOverlay elevation={0} square>
+            Upload Image
+          </StyledImageUploadOverlay>
+          <ImageGridIcon>
+              <StyledImageUploadButton />
+          </ImageGridIcon>
         </ImageGrid>
       </label>
     </>
@@ -615,6 +604,7 @@ const Edit = () => {
                     <div></div>
                     <div>
                       <Button
+                        type="submit"
                         variant="contained"
                         color="secondary"
                         className={classes.publishButton}
