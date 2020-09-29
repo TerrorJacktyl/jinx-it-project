@@ -1,11 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "jinxui";
-import { IUserContext, defaultUserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const useUser = () => {
-  const [state, setState] = useContext(UserContext);
+  const [state, updateState, resetState] = useContext(UserContext);
 
   const LOGIN_PATH = "auth/token/login";
   const LOGOUT_PATH = "auth/token/logout";
@@ -33,15 +32,14 @@ export const useUser = () => {
         };
         // Update internal state about user
         // Do not return until internal state has been updated
-        await setState((state: IUserContext) => {
-          return {
-            ...state,
-            username: username,
-            token: response.data["auth_token"],
-            authenticated: true,
-            config: config,
-          };
-        });
+        const stateChanges = {
+          username: username,
+          token: response.data["auth_token"],
+          authenticated: true,
+          config: config,
+        }
+        // Update context (react) state and local (browser) state
+        await updateState(stateChanges);
         return config;
       }
     } catch (e) {
@@ -54,9 +52,9 @@ export const useUser = () => {
     try {
       const response = await API.post(LOGOUT_PATH);
       // make the success more concrete when we've defined a status code on backend
-      if (response.status in [200, 201, 202, 203, 204]) {
-        // Update internal user state to reflect sign out
-        setState(defaultUserContext);
+      if (response.status == 204) {
+        // Reset context state to default, and clear browser-stored user data
+        resetState();
         return response;
       }
     } catch (e) {
@@ -129,5 +127,10 @@ export const useUser = () => {
     logout,
     signup,
     setAccountDetails,
+    // Context state managing functions - warning, not recommended for use!
+    // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
+    // If you need to use these, please write a wrapper in this User hook instead. :)
+    updateState,
+    resetState,
   };
 };
