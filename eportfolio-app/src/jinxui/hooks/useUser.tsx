@@ -52,7 +52,7 @@ export const useUser = () => {
     try {
       const response = await API.post(LOGOUT_PATH);
       // make the success more concrete when we've defined a status code on backend
-      if (response.status in [200, 201, 202, 203, 204]) {
+      if (response.status == 204) {
         // Reset context state to default, and clear browser-stored user data
         resetState();
         return response;
