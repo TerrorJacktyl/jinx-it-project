@@ -167,11 +167,9 @@ export const useUser = () => {
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
     API.get(ACCOUNT_PATH, konfig)
       .then((response) => {
-        setState((state: IUserContext) => {
-          return {
-            ...state,
-            firstName: JSON.parse(response.data.first_name),
-          };
+        updateState({
+          ...state,
+          firstName: JSON.parse(response.data.first_name),
         });
       })
       .catch((error) => {

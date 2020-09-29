@@ -2,23 +2,46 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
-import { ThemeProvider, makeStyles } from "@material-ui/styles";
+import {
+  makeStyles,
+  ThemeProvider,
+  createMuiTheme,
+  createStyles,
+  withStyles,
+} from "@material-ui/core/styles";
+import {
+  Paper,
+  Button,
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuProps,
+  MenuItem,
+  Slide,
+  useScrollTrigger,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import { createMuiTheme, createStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Card from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
-import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness";
+import {
+  AddPhotoAlternateOutlined,
+  SettingsBrightness,
+  Person,
+  DeleteOutlined,
+  ArrowUpward,
+  ArrowDownward,
+  Add,
+  Inbox,
+  Drafts,
+  Send,
+  InsertPhotoSharp,
+  SubjectSharp,
+  VerticalSplitSharp,
+} from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
-import PersonIcon from "@material-ui/icons/Person";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import AddIcon from "@material-ui/icons/Add";
-// import {Brightness7Icon, Brightness3Icon} from '@material-ui/icons'
+
 import { TextField } from "formik-material-ui";
 
 import Image from "../images/Logo_Background.svg";
@@ -58,8 +81,56 @@ const useStyles = makeStyles((theme: any) =>
       height: "100%",
       fontWeight: 300,
     },
+    menuButton: {
+      marginRight: theme.spacing(0),
+    },
+    title: {
+      flexGrow: 1,
+      textAlign: "left",
+      margin: 10,
+      fontWeight: 400,
+    },
+    toolbar: {
+      height: 50,
+      margin: 0,
+    },
+    textFieldMain: {
+      lineHeight: 4,
+      letterSpacing: "0.03333em",
+    }
   })
 );
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 const StyledPaper = styled(Paper)`
   padding: 10px;
@@ -87,7 +158,7 @@ const StyledImageUploadOverlay = styled(Paper)`
   cursor: pointer;
 `;
 
-const StyledImageUploadButton = styled(AddPhotoAlternateOutlinedIcon)`
+const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
   z-index: 2;
 `;
 
@@ -209,6 +280,94 @@ const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
+function HideOnScroll(props: any) {
+  // const { children, } = props;
+  return (
+    <Slide appear={false} direction="down">
+      {props.children}
+    </Slide>
+  );
+}
+
+const NewSectionMenu = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <IconButton onClick={handleClick}>
+        <Add/>
+      </IconButton>
+      <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <StyledMenuItem>
+          <ListItemIcon>
+            <SubjectSharp fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Text" />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+            <InsertPhotoSharp fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Image" />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+            <VerticalSplitSharp fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Image and text" />
+        </StyledMenuItem>
+      </StyledMenu>
+    </div>
+  );
+}
+
+// function HeaderBar(setTheme: any, theme: any) {
+//   const classes = useStyles();
+//   const trigger = useScrollTrigger();
+//   return (
+//     <ThemeProvider theme={DarkTheme}>
+//       <Slide appear={false} direction="down" in={!trigger}>
+//         <AppBar className={classes.toolbar}>
+//           <Toolbar className={classes.toolbar} variant="dense">
+//             <IconButton
+//               edge="start"
+//               className={classes.menuButton}
+//               color="inherit"
+//               size="small"
+//               aria-lable="menu"
+//             >
+//               <Menu />
+//             </IconButton>
+//             <Typography variant="h6" className={classes.title}>
+//               Awesome Portfolio
+//             </Typography>
+//             <IconButton size="small" onClick={() => setTheme(!theme)}>
+//               <SettingsBrightness />
+//             </IconButton>
+//             <IconButton size="small">
+//               <Person />
+//             </IconButton>
+//           </Toolbar>
+//         </AppBar>
+//       </Slide>
+//     </ThemeProvider>
+//   );
+// }
+
 function PostSection(
   postSection: any,
   portfolio_id: string,
@@ -235,7 +394,6 @@ function UploadImageBit(
   // const classes = useStyles();
   return (
     <>
-      {" "}
       <label htmlFor={uploadButtonLabel}>
         <StyledInput
           accept="image/*"
@@ -268,7 +426,7 @@ function UploadImageBit(
             Upload Image
           </StyledImageUploadOverlay>
           <ImageGridIcon>
-              <StyledImageUploadButton />
+            <StyledImageUploadButton />
           </ImageGridIcon>
         </ImageGrid>
       </label>
@@ -287,13 +445,13 @@ const PaperSection = (props: any) => {
         <HeaderFlexItem></HeaderFlexItem>
         <HeaderFlexItem>
           <IconButton size="small">
-            <ArrowUpwardIcon />
+            <ArrowUpward />
           </IconButton>
           <IconButton size="small">
-            <ArrowDownwardIcon />
+            <ArrowDownward />
           </IconButton>
           <IconButton size="small">
-            <DeleteOutlinedIcon />
+            <DeleteOutlined />
           </IconButton>
         </HeaderFlexItem>
       </HeaderFlexContainer>
@@ -306,19 +464,21 @@ const PaperSection = (props: any) => {
 
 const BetweenSections = () => {
   return (
-    <HeaderFlexContainer>
-      <HeaderFlexItem></HeaderFlexItem>
-      <HeaderFlexItem>
-        <IconButton>
-          <AddIcon />
-        </IconButton>
-      </HeaderFlexItem>
-      <HeaderFlexItem></HeaderFlexItem>
-    </HeaderFlexContainer>
+    <NewSectionMenu/>
+    // <HeaderFlexContainer>
+    //   <HeaderFlexItem></HeaderFlexItem>
+    //   <HeaderFlexItem>
+    //     <IconButton>
+    //       <Add />
+    //     </IconButton>
+    //   </HeaderFlexItem>
+    //   <HeaderFlexItem></HeaderFlexItem>
+    // </HeaderFlexContainer>
   );
 };
 
 function PortfolioTitleSection(title: string, sectionName: string) {
+  const classes = useStyles();
   return (
     <>
       <PaperSection title={title}>
@@ -326,6 +486,7 @@ function PortfolioTitleSection(title: string, sectionName: string) {
           <SingleLineRequiredGrid>
             <Field
               component={TextField}
+              className={classes.textFieldMain}
               name={sectionName}
               id="standard-full-width"
               style={{ margin: 0 }}
@@ -435,30 +596,36 @@ const Edit = () => {
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
   const classes = useStyles();
+  const trigger = useScrollTrigger();
   return (
     <>
       <ThemeProvider theme={appliedTheme}>
+        {/* I can't figure out how to put this into a separate function  */}
         <ThemeProvider theme={DarkTheme}>
-          <SiteHeader>
-            <HeaderFlexContainer>
-              <HeaderFlexItem>
-                <IconButton>
+          <Slide appear={false} direction="down" in={!trigger}>
+            <AppBar className={classes.toolbar}>
+              <Toolbar className={classes.toolbar} variant="dense">
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  size="small"
+                  aria-lable="menu"
+                >
                   <MenuIcon />
                 </IconButton>
-              </HeaderFlexItem>
-              <HeaderFlexItem>
-                <HeaderTitle>Account Profile</HeaderTitle>
-              </HeaderFlexItem>
-              <HeaderFlexItem>
-                <IconButton onClick={() => setTheme(!theme)}>
-                  <SettingsBrightnessIcon />
+                <Typography variant="h6" className={classes.title}>
+                  Awesome Portfolio
+                </Typography>
+                <IconButton size="small" onClick={() => setTheme(!theme)}>
+                  <SettingsBrightness />
                 </IconButton>
-                <IconButton>
-                  <PersonIcon />
+                <IconButton size="small">
+                  <Person />
                 </IconButton>
-              </HeaderFlexItem>
-            </HeaderFlexContainer>
-          </SiteHeader>
+              </Toolbar>
+            </AppBar>
+          </Slide>
         </ThemeProvider>
         <CssBaseline />
         <StyledFormDiv>

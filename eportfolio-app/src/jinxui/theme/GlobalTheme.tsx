@@ -1,4 +1,4 @@
-import { createMuiTheme, createStyles } from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 const DarkTheme = createMuiTheme({
   palette: {
@@ -16,7 +16,10 @@ const DarkTheme = createMuiTheme({
   },
   typography: {
     fontFamily: "Heebo, sans-serif",
-    // "fontWeight": 200,
+    fontWeightLight: 100,
+    fontWeightMedium: 200,
+    fontWeightRegular: 300,
+    fontWeightBold: 400,
   },
   overrides: {
     MuiInputLabel: {
@@ -43,7 +46,10 @@ const LightTheme = createMuiTheme({
   },
   typography: {
     fontFamily: "Heebo, sans-serif",
-    // fontWeight: "light",
+    fontWeightLight: 100,
+    fontWeightMedium: 200,
+    fontWeightRegular: 300,
+    fontWeightBold: 400,
   },
   overrides: {
     MuiInputLabel: {
