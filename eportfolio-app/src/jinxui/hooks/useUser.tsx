@@ -30,10 +30,14 @@ export const useUser = () => {
             Authorization: "Token " + response.data.auth_token,
           },
         };
+
+        const accDetails = await getAccountDetails(config);
+        console.log(accDetails?.data.first_name);
         // Update internal state about user
         // Do not return until internal state has been updated
         const stateChanges = {
           username: username,
+          firstName: accDetails?.data.first_name,
           token: response.data["auth_token"],
           authenticated: true,
           config: config,
@@ -47,10 +51,41 @@ export const useUser = () => {
     }
   }
 
+  const handleError = (error: any) => {
+    var errorVar = null;
+    var submitError = "";
+    if (error.data){
+      if (error.data.non_field_errors){
+        errorVar = error.data.non_field_errors;
+      }
+      else if (error.data.password){
+        errorVar = error.data.password;
+      }
+      else if (error.data.username){
+        errorVar = error.data.username;
+      }
+      else if (error.data.email){
+        errorVar = error.data.email;
+      }
+    }
+    if (errorVar){
+      let i = 0;
+      for (i = 0; i < errorVar.length; i++){
+        submitError = submitError.concat(errorVar[i]);
+      }
+    }                  
+    else{
+      submitError = "service is currently unavailable, please try again later";
+      console.error("Unable to connect to API for login (or unknown error)");
+    }
+
+    return submitError;
+  }
+
   // Another style: await with try catch
-  async function logout() {
+  async function logout(konfig: AxiosRequestConfig = state.config) {
     try {
-      const response = await API.post(LOGOUT_PATH);
+      const response = await API.post(LOGOUT_PATH, konfig);
       // make the success more concrete when we've defined a status code on backend
       if (response.status == 204) {
         // Reset context state to default, and clear browser-stored user data
@@ -108,18 +143,14 @@ export const useUser = () => {
   }
 
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
-    console.log(konfig);
-    API.get(ACCOUNT_PATH, konfig)
-      .then((response) => {
-        const stateChanges = {
-          firstName: response.data.first_name,
-        }
-        // Update context (react) state and local (browser) state
-        updateState(stateChanges);
-      })
-      .catch((error) => {
-        throw error;
-      });
+    try{
+      const response = await API.get(ACCOUNT_PATH, konfig)
+      if ("first_name" in response.data){
+        return response;
+      }
+    } catch (error) {
+      throw error;
+    };
   }
 
   return {
@@ -129,6 +160,7 @@ export const useUser = () => {
     signup,
     setAccountDetails,
     getAccountDetails,
+    handleError,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)

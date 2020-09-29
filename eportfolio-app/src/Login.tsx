@@ -58,7 +58,7 @@ const Login = () => {
   const [submittionError, setSubmittionError] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  const { login, getAccountDetails, userData } = useUser();
+  const { login, getAccountDetails, userData, handleError } = useUser();
 
   const onLogin = () => {
     return <Redirect to="/profile" />
@@ -86,22 +86,11 @@ const Login = () => {
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
               login(values.username, values.password)
-                .then(data => {
-                  getAccountDetails(userData.config).then(() => {
-                    setRedirect(true);
-                  });
-                  console.log(data);
+                .then((config: any) => {
+                  setRedirect(true);
                 })
                 .catch(error => {
-                  // Manually unpack error here
-                  if (error.response !== undefined){
-                    setSubmittionError(error.response.data.non_field_errors[0]);
-                    console.log(error.response.data.non_field_errors[0]);
-                  }
-                  else{
-                    setSubmittionError("service is currently unavailable, please try again later");
-                    console.error("Unable to connect to API for login");
-                  }                  
+                  setSubmittionError(handleError(error.response));
                 });
             }}
           >

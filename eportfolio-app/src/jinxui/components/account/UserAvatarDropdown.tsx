@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { StylesProvider } from "@material-ui/core/styles";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +27,7 @@ const UserAvatarDropdown = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const { userData } = useUser();
+  const { userData, logout, resetState } = useUser();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -57,6 +58,16 @@ const UserAvatarDropdown = () => {
     prevOpen.current = open;
   }, [open]);
 
+  const handleLogout = () => {
+    logout().then(() => {
+        setOpen(false);
+        return <Redirect to="/login" />
+    })
+    .catch(error => {
+        console.log(error);
+    });
+  };
+
   return (
     <StylesProvider injectFirst>
     <NameDiv>
@@ -81,9 +92,9 @@ const UserAvatarDropdown = () => {
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
                   <StyledMenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={handleClose}>Account</MenuItem>
+                    <MenuItem onClick={handleClose}>Preferences</MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </StyledMenuList>
                 </ClickAwayListener>
               </Paper>
