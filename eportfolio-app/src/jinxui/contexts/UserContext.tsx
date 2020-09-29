@@ -58,13 +58,13 @@ export const UserContextProvider = (props: any) => {
   /**
    * Reset context state to defaultUserContext, and clear browser stored user data.
    */
-  const clearState = () => {
+  const resetState = () => {
     setState(defaultUserContext);
     localStorage.clear();
   }
 
   return (
-    <UserContext.Provider value={[state, updateState, clearState]}>
+    <UserContext.Provider value={[state, updateState, resetState]}>
       {props.children}
     </UserContext.Provider>
   );

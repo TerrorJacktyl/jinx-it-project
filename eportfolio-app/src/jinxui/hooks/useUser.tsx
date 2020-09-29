@@ -4,7 +4,7 @@ import API from "../../API";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const useUser = () => {
-  const [state, updateState, clearState] = useContext(UserContext);
+  const [state, updateState, resetState] = useContext(UserContext);
 
   const LOGIN_PATH = "auth/token/login";
   const LOGOUT_PATH = "auth/token/logout";
@@ -54,7 +54,7 @@ export const useUser = () => {
       // make the success more concrete when we've defined a status code on backend
       if (response.status in [200, 201, 202, 203, 204]) {
         // Reset context state to default, and clear browser-stored user data
-        clearState();
+        resetState();
         return response;
       }
     } catch (e) {
@@ -112,5 +112,10 @@ export const useUser = () => {
     logout,
     signup,
     setAccountDetails,
+    // Context state managing functions - warning, not recommended for use!
+    // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
+    // If you need to use these, please write a wrapper in this User hook instead. :)
+    updateState,
+    resetState,
   };
 };
