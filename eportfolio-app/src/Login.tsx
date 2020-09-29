@@ -58,7 +58,7 @@ const Login = () => {
   const [submittionError, setSubmittionError] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  const { login } = useUser();
+  const { login, getAccountDetails, userData } = useUser();
 
   const onLogin = () => {
     return <Redirect to="/profile" />
@@ -87,7 +87,9 @@ const Login = () => {
               setSubmitting(true);
               login(values.username, values.password)
                 .then(data => {
-                  setRedirect(true);
+                  getAccountDetails(userData.config).then(() => {
+                    setRedirect(true);
+                  });
                   console.log(data);
                 })
                 .catch(error => {

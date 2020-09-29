@@ -108,6 +108,7 @@ export const useUser = () => {
   }
 
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
+    console.log(konfig);
     API.get(ACCOUNT_PATH, konfig)
       .then((response) => {
         const stateChanges = {
