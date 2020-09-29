@@ -38,7 +38,7 @@ type MediaSectionProps = {
    initial portfolio creation */
 const Portfolio = () => {
   // Testing purposes only
-  const tempPortfolioId = 4;
+  const tempPortfolioId = 1;
   const { getFullPortfolio } = useUser();
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
@@ -47,7 +47,7 @@ const Portfolio = () => {
   const [sections, setSections] = useState<TSection[]>([]);
   useEffect(() => {
     const fetchPortfolio = async () => {
-      const {portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
+      const { portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
       setPortfolio(portfolio);
       setPages(pages);
       console.log(sections);
@@ -72,7 +72,7 @@ const Portfolio = () => {
     return 0;
   }
   return (
-    <AccountPageDiv>      
+    <AccountPageDiv>
       <SiteHeader>
         <HeaderDiv>
           <LogoLink />
@@ -91,7 +91,7 @@ const Portfolio = () => {
               return <MediaSection name={section.name} path={section.media} />
             }
           }
-        )) : null}
+          )) : null}
       </PageDiv>
     </AccountPageDiv>
 
