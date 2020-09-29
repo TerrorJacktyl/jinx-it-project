@@ -58,10 +58,11 @@ const UserAvatarDropdown = () => {
   }, [open]);
 
   return (
+    <StylesProvider injectFirst>
     <NameDiv>
     <div className={classes.root}>
       <div>
-        <StylesProvider injectFirst>
+        
         <StyledName
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
@@ -70,7 +71,7 @@ const UserAvatarDropdown = () => {
         >
           {userData.firstName}
         </StyledName>
-        </StylesProvider>
+        
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
             <Grow
@@ -79,11 +80,11 @@ const UserAvatarDropdown = () => {
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                  <StyledMenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>My account</MenuItem>
                     <MenuItem onClick={handleClose}>Logout</MenuItem>
-                  </MenuList>
+                  </StyledMenuList>
                 </ClickAwayListener>
               </Paper>
             </Grow>
@@ -92,6 +93,7 @@ const UserAvatarDropdown = () => {
       </div>
     </div>
     </NameDiv>
+    </StylesProvider>
   );
 }
 
@@ -100,8 +102,6 @@ const StyledName = styled(Button)`
     color: white;
     font-size: 20px;
     text-transform: none;
-
-
 `;
 
 const NameDiv = styled.div`
@@ -115,15 +115,10 @@ const NameDiv = styled.div`
 
 `;
 
-/* const UserAvatarDropdown = () => {
-
-    const { userData } = useUser();
-
-    return(
-        <NameDiv>
-            <StyledName>{userData.firstName}</StyledName>
-        </NameDiv>
-    );
-}; */
+const StyledMenuList = styled(MenuList)`
+    color: white;
+    background-color: black;
+    z-index: 2;
+`
 
 export default UserAvatarDropdown;
