@@ -615,10 +615,6 @@ const Edit = () => {
                     </div>
                     <div></div>
                   </BottomButtonsDiv>
-
-                  {/* <StyledLink href="/">
-                  <StyledCancelButton type="button">Cancel</StyledCancelButton>
-                </StyledLink> */}
                   {submittionError ? (
                     <ErrorMessage>
                       Error signing up. Please try again later.
