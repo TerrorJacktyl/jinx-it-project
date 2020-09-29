@@ -15,7 +15,11 @@ export const defaultUserContext: IUserContext = {
 // Type safety is enforced by the UserProvider wrapper
 // Contexts demand a default value, which would mean putting a default both
 // here *and* in the wrapper.
+<<<<<<< HEAD
 export const UserContext = React.createContext<[IUserContext, any, any]>([defaultUserContext, () => { }, () => { }]);
+=======
+export const UserContext = React.createContext<[IUserContext, any]>([defaultUserContext, () => { }]);
+>>>>>>> e997dd2af9f8861969a214fa146ca6709b0756da
 
 /**
  * Save a copy of the user data in the browser's storage.

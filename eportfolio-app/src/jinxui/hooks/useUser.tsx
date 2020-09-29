@@ -1,6 +1,5 @@
 import { useContext, useState, useEffect } from "react";
 import { UserContext } from "jinxui";
-import { defaultUserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
