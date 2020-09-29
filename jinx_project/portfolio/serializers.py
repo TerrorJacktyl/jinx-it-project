@@ -122,7 +122,7 @@ class PolymorphSectionSerializer(SectionSerializer):
             return serializer(instance, context=self.context).to_representation(instance)
         except KeyError as ex:
             raise serializers.ValidationError(
-                'Invalid type of section'
+                {'type': 'this type does not exist'}
             ) from ex
 
     def to_internal_value(self, data):
@@ -130,7 +130,7 @@ class PolymorphSectionSerializer(SectionSerializer):
             section_type = data['type']
         except KeyError as ex:
             raise serializers.ValidationError(
-                'Type is missing from section'
+                {'type': 'this field is missing'}
             ) from ex
         try:
             serializer = self.get_serializer_map()[section_type]
@@ -138,7 +138,7 @@ class PolymorphSectionSerializer(SectionSerializer):
                 context=self.context).to_internal_value(data)
         except KeyError as ex:
             raise serializers.ValidationError(
-                'Invalid type of section'
+                {'type': 'this type does not exist'}
             ) from ex
 
         # validators strip keys that are not in the model, so add the type key back
