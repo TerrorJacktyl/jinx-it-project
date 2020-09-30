@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const UserAvatarDropdown = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [logoutRedirect, setLogoutRedirect] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const { userData, logout, resetState } = useUser();
 
@@ -51,29 +52,42 @@ const UserAvatarDropdown = () => {
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
-    }
+    try{
+        if (prevOpen.current === true && open === false) {
+        anchorRef.current!.focus();
+        }
 
-    prevOpen.current = open;
+        prevOpen.current = open;
+        }
+    catch{
+
+    }
   }, [open]);
 
   const handleLogout = () => {
     logout().then(() => {
         setOpen(false);
-        return <Redirect to="/login" />
+        setLogoutRedirect(true)
     })
     .catch(error => {
         console.log(error);
     });
   };
 
+  const onLogout = () => {
+    return <Redirect to="/login" />
+  }
+
+  if (logoutRedirect)
+    return onLogout();
+    else
   return (
     <StylesProvider injectFirst>
     <NameDiv>
     <div className={classes.root}>
       <div>
         
+        {userData.firstName ? 
         <StyledName
           ref={anchorRef}
           aria-controls={open ? 'menu-list-grow' : undefined}
@@ -81,7 +95,7 @@ const UserAvatarDropdown = () => {
           onClick={handleToggle}
         >
           {userData.firstName}
-        </StyledName>
+        </StyledName> : null}
         
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (

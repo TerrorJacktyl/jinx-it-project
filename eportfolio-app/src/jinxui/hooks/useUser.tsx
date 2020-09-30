@@ -85,7 +85,7 @@ export const useUser = () => {
   // Another style: await with try catch
   async function logout(konfig: AxiosRequestConfig = state.config) {
     try {
-      const response = await API.post(LOGOUT_PATH, konfig);
+      const response = await API.post(LOGOUT_PATH, {}, konfig);
       // make the success more concrete when we've defined a status code on backend
       if (response.status == 204) {
         // Reset context state to default, and clear browser-stored user data
