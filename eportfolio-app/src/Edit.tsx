@@ -161,7 +161,9 @@ const Edit = () => {
   }
 
   // TEST
+  console.log(published);
   if (published) {
+    console.log(portfolioId);
     if (portfolioId > 0) {
       setCurrentPortfolio(portfolioId);
     }
@@ -187,47 +189,48 @@ const Edit = () => {
           }}
           validationSchema={ProfileSchema}
           onSubmit={(values, { setSubmitting }) => {
-            const portfolio_data = {
-              name: values.websiteName}
-            const page_data = {
-              name: "home", 
-              number: "0"
-            }
-            const bio_data          = {
-              name: "biography", 
-              number: "0", 
-              image: imageResponse.id, 
-              content: values.biography, 
-              type: "image_text"
-            }
-            const academic_data = {
-              name: "academic_history", 
-              number: "0", 
-              content: values.academicHistory, 
-              type: "text"
-            }
-            const professional_data = {
-              name: "professional_history", 
-
-              number: "0", 
-              content: values.professionalHistory, 
-              type: "text"
-            }
             setSubmitting(true);
-            // TEST
-            setPublished(true);
+            const portfolio_data = {
+              name: "Account Profile"
+            }
             postPortfolio(portfolio_data)
             .then(function (portfolio_response: any) {
               const portfolio_id = portfolio_response.data.id
+              const page_data = {
+                name: values.websiteName, 
+                number: "0"
+              }
               // TEST
-              setPortfolioId(portfolio_id);
+              console.log(portfolio_id);
+              setPortfolioId(portfolio_response.data.id);
+              // TEST
               postPage(portfolio_id, page_data)
               .then(function (page_response: any) {
                 console.log(page_response)
                 const page_id = page_response.data.id
+                const bio_data = {
+                  name: "biography", 
+                  number: "0", 
+                  image: imageResponse.id, 
+                  content: values.biography, 
+                  type: "image_text"
+                }
+                const academic_data = {
+                  name: "academic_history", 
+                  number: "1", 
+                  content: values.academicHistory, 
+                  type: "text"
+                }
+                const professional_data = {
+                  name: "professional_history", 
+                  number: "2", 
+                  content: values.professionalHistory, 
+                  type: "text"
+                }
                 PostSection(postSection, portfolio_id, page_id, bio_data)
                 PostSection(postSection, portfolio_id, page_id, academic_data)
                 PostSection(postSection, portfolio_id, page_id, professional_data)
+                setPublished(true);
               })
               .catch(function (error: any) {
                 console.log(error)

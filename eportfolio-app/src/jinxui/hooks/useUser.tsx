@@ -92,6 +92,7 @@ export const useUser = () => {
     const stateChanges = {
       homePortfolio: portfolio_id
     }
+    console.log(stateChanges);
     await updateState(stateChanges);
   }
 

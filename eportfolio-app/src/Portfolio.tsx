@@ -16,7 +16,7 @@ import {
 } from "jinxui";
 import { TPortfolio, TPage, TSection } from './Types'
 
-const TextSectionContainer = styled.div`
+const SectionContainer = styled.div`
   padding-left: 12px;
   padding-right: 12px;
 `;
@@ -40,7 +40,7 @@ const Portfolio = () => {
   const { getFullPortfolio, getCurrentPortfolio } = useUser();
   // Testing purposes only
   // const tempPortfolioId = 1;
-  // const tempPortfolioId = getCurrentPortfolio();
+  const tempPortfolioId = getCurrentPortfolio();
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage, setCurrPage] = useState<number>(0);
@@ -55,17 +55,16 @@ const Portfolio = () => {
       const { portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
       setPortfolio(portfolio);
       setPages(pages);
-      console.log(sections);
-      console.log(sections[0]);
-      console.log(sections.length);
+//      console.log(sections);
+//      console.log(sections[0]);
+//      console.log(sections.length);
       setSections(sections);
     }
     fetchPortfolio();
   }, []);
 
-  console.log(sections);
-  console.log(sections[currPage]);
-  console.log(sections.length);
+//  console.log(sections[currPage]);
+//  console.log(sections.length);
 
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {
@@ -104,17 +103,17 @@ const Portfolio = () => {
 }
 
 const TextSection: React.FC<TextSectionProps> = ({ name, content }) => (
-  <TextSectionContainer>
+  <SectionContainer>
     <SectionName>{name}</SectionName>
     <TextSectionDiv>{content}</TextSectionDiv>
-  </TextSectionContainer>
+  </SectionContainer>
 );
 
 const MediaSection: React.FC<MediaSectionProps> = ({ name, path }) => (
-  <TextSectionContainer>
+  <SectionContainer>
     <SectionName>{name}</SectionName>
     <img src={path} alt="" />
-  </TextSectionContainer>
+  </SectionContainer>
 );
 
 export default Portfolio;
