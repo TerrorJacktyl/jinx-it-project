@@ -6,16 +6,6 @@ import { AxiosRequestConfig } from "axios";
 import { TPortfolio, TPage, TSection } from '../../Types';
 
 export const useUser = () => {
-<<<<<<< HEAD
-
-  const [state, updateState, resetState] = useContext(UserContext);
-  const LOGIN_PATH = "auth/token/login";
-  const LOGOUT_PATH = "auth/token/logout";
-  const ACCOUNT_PATH = "api/accounts/me";
-  const SIGNUP_PATH = "auth/users";
-  const IMAGE_PATH = "api/images";
-  const PORTFOLIOS_PATH = "api/portfolios";
-=======
   const [state, updateState, resetState] = useContext(UserContext);
 
   const LOGIN_PATH = 'auth/token/login';
@@ -24,7 +14,6 @@ export const useUser = () => {
   const SIGNUP_PATH = 'auth/users';
   const IMAGE_PATH = 'api/images';
   const PORTFOLIOS_PATH = 'api/portfolios';
->>>>>>> jiles/portfolio_display
 
   /**
    * Abstract the login procedure. Returns the auth_token if login succeeded,
@@ -62,10 +51,6 @@ export const useUser = () => {
     }
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> jiles/portfolio_display
   // Another style: await with try catch
   async function logout() {
     try {
@@ -97,40 +82,10 @@ export const useUser = () => {
       });
       return response;
     } catch (e) {
-<<<<<<< HEAD
-      throw e;
-    }
-  }
-
-=======
       throw e.response.data.username[0];
     }
   }
 
-  /**
-   * Update the logged in user's account details.
-   * @param first_name 
-   * @param last_name 
-   * @param konfig ignore this, you don't need this argument - only used for sign up trickery
-   */
-  async function setAccountDetails(first_name?: string, last_name?: string, konfig: AxiosRequestConfig = state.config) {
-    API.put(ACCOUNT_PATH, {
-      first_name: first_name,
-      last_name: last_name,
-    }, konfig)
-      .then((response: any) => response)
-      .catch((error: any) => { throw error });
-  }
-
-  async function getAccountDetails() {
-    API.get(ACCOUNT_PATH, state.config)
-      .then((response: { data: { first_name: string; }; }) =>
-        updateState({ first_name: response.data.first_name })
-      )
-      .catch((error: any) => { throw error });
-  }
-
->>>>>>> jiles/portfolio_display
   // Declaring a function as async means the return gets wrapped in a promise
   async function uploadImage(file: File, name: string) {
     const form_data = new FormData();
@@ -138,7 +93,6 @@ export const useUser = () => {
     form_data.append("name", name);
     const result = API.post(IMAGE_PATH, form_data, state.config)
       .then((response: any) => response)
-<<<<<<< HEAD
       .catch((error: any) => {
         throw error;
       });
@@ -188,6 +142,19 @@ export const useUser = () => {
       });
   }
 
+  async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
+    API.get(ACCOUNT_PATH, konfig)
+      .then((response) => {
+        updateState({
+          ...state,
+          firstName: JSON.parse(response.data.first_name),
+        });
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   /**
    * Update the logged in user's account details.
    * @param first_name
@@ -199,7 +166,7 @@ export const useUser = () => {
     last_name?: string,
     konfig: AxiosRequestConfig = state.config
   ) {
-    API.put(
+    const result = API.put(
       ACCOUNT_PATH,
       {
         first_name: first_name,
@@ -208,38 +175,8 @@ export const useUser = () => {
       konfig
     )
       .then((response) => response)
-      .catch((error) => {
-        throw error;
-=======
       .catch((error: any) => { throw error });
     return result
-  }
-
-  async function postPortfolio(data: any) {
-    const result = API.post(PORTFOLIOS_PATH, {
-      name: data.name
-    }, state.config)
-      .then((response: any) => response)
-      .catch((error: any) => { throw error });
-    return result
-  }
-
-  async function postPage(portfolio_id: string, data: any) {
-    const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages"
-    const result = API.post(path, {
-      name: data.name,
-      number: data.number
-    }, state.config)
-      .then((response: any) => response)
-      .catch((error: any) => { throw error });
-    return result
-  }
-
-  async function postSection(portfolio_id: string, page_id: string, data: any) {
-    const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections"
-    const result = API.post(path, data, state.config)
-      .then((response: any) => response)
-      .catch((error: any) => { throw error });
   }
 
   // Note the $s in the function name. Use this if you want to get all of a user's portfolios
@@ -287,7 +224,6 @@ export const useUser = () => {
       ).catch((error: any) => {
         console.log(error)
         throw error
->>>>>>> jiles/portfolio_display
       });
     return result
   }
@@ -312,18 +248,6 @@ export const useUser = () => {
     }
   }
 
-  async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
-    API.get(ACCOUNT_PATH, konfig)
-      .then((response) => {
-        updateState({
-          ...state,
-          firstName: JSON.parse(response.data.first_name),
-        });
-      })
-      .catch((error) => {
-        throw error;
-      });
-  }
 
   return {
     userData: state,
@@ -335,23 +259,15 @@ export const useUser = () => {
     postPortfolio,
     postPage,
     postSection,
-<<<<<<< HEAD
-=======
     getPortfolios,
     getPortfolio,
     getPages,
     getSections,
     getFullPortfolio,
->>>>>>> jiles/portfolio_display
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)
     updateState,
     resetState,
-<<<<<<< HEAD
   };
 };
-=======
-  }
-}
->>>>>>> jiles/portfolio_display
