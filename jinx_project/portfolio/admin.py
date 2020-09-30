@@ -18,17 +18,17 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(models.Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ['name', 'owner']
+    list_display = ['name', 'owner', 'id']
     inlines = [PageInline]
 
 @admin.register(models.Page)
 class PageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'portfolio', 'number', 'owner']
+    list_display = ['name', 'portfolio', 'number', 'owner', 'id']
     inlines = [SectionInline]
 
 @admin.register(models.TextSection)
 class TextSectionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'page', 'number', 'content']
+    list_display = ['name', 'page', 'number', 'content', 'id']
 
 
 @admin.register(models.ImageTextSection)

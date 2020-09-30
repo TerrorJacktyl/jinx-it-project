@@ -37,9 +37,10 @@ type MediaSectionProps = {
    define a user's default portfolio that they'll be redirected to upon login and
    initial portfolio creation */
 const Portfolio = () => {
-  // Testing purposes only
-  const tempPortfolioId = 1;
-  const { getFullPortfolio } = useUser();
+  const { getFullPortfolio, getSavedPortfolioId } = useUser();
+  const portfolioId = getSavedPortfolioId();
+  // const tempPortfolioId = 26;
+  
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage, setCurrPage] = useState<number>(0);
@@ -47,21 +48,17 @@ const Portfolio = () => {
   const [sections, setSections] = useState<TSection[]>([]);
   useEffect(() => {
     const fetchPortfolio = async () => {
-      const { portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
+      const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
       setPortfolio(portfolio);
+
       setPages(pages);
-      console.log(sections);
-      console.log(sections[0]);
-      console.log(sections.length);
       setSections(sections);
     }
     fetchPortfolio();
   }, []);
 
-  console.log(sections);
-  console.log(sections[currPage]);
-  console.log(sections.length);
-
+  const tempId = getSavedPortfolioId()
+  console.log("RETRIEVED ID HERE: " + tempId)
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {
       return -1;
@@ -76,7 +73,9 @@ const Portfolio = () => {
       <SiteHeader>
         <HeaderDiv>
           <LogoLink />
-          <HeaderTitle>
+          <HeaderTitle>      
+            {console.log("PORTFOLIO")}
+            {console.log(portfolio)}
             {portfolio !== null ? portfolio.name : null}
           </HeaderTitle>
         </HeaderDiv>

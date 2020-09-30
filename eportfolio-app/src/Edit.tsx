@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -33,9 +34,6 @@ import {
   ArrowUpward,
   ArrowDownward,
   Add,
-  Inbox,
-  Drafts,
-  Send,
   InsertPhotoSharp,
   SubjectSharp,
   VerticalSplitSharp,
@@ -54,7 +52,16 @@ import {
   LightTheme,
   DarkTheme,
   useUser,
+  AccountPageDiv,
+  HeaderDiv,
+  LogoLink,
+  PageDiv,
+  PageName,
+  SectionName,
+  TextSectionDiv,
 } from "jinxui";
+
+import { TPortfolio, TPage, TSection } from "./Types";
 
 const FRONT_END_URL = "http://localhost:3000/";
 
@@ -97,25 +104,25 @@ const useStyles = makeStyles((theme: any) =>
     textFieldMain: {
       lineHeight: 4,
       letterSpacing: "0.03333em",
-    }
+    },
   })
 );
 
 const StyledMenu = withStyles({
   paper: {
-    border: '1px solid #d3d4d5',
+    border: "1px solid #d3d4d5",
   },
 })((props: MenuProps) => (
   <Menu
     elevation={0}
     getContentAnchorEl={null}
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
+      vertical: "bottom",
+      horizontal: "center",
     }}
     transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
+      vertical: "top",
+      horizontal: "center",
     }}
     {...props}
   />
@@ -123,14 +130,15 @@ const StyledMenu = withStyles({
 
 const StyledMenuItem = withStyles((theme) => ({
   root: {
-    '&:focus': {
+    "&:focus": {
       backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: theme.palette.common.white,
       },
     },
   },
 }))(MenuItem);
+
 
 const StyledPaper = styled(Paper)`
   padding: 10px;
@@ -280,15 +288,6 @@ const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
-function HideOnScroll(props: any) {
-  // const { children, } = props;
-  return (
-    <Slide appear={false} direction="down">
-      {props.children}
-    </Slide>
-  );
-}
-
 const NewSectionMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -303,7 +302,7 @@ const NewSectionMenu = () => {
   return (
     <div>
       <IconButton onClick={handleClick}>
-        <Add/>
+        <Add />
       </IconButton>
       <StyledMenu
         id="customized-menu"
@@ -333,40 +332,16 @@ const NewSectionMenu = () => {
       </StyledMenu>
     </div>
   );
-}
+};
 
-// function HeaderBar(setTheme: any, theme: any) {
-//   const classes = useStyles();
-//   const trigger = useScrollTrigger();
-//   return (
-//     <ThemeProvider theme={DarkTheme}>
-//       <Slide appear={false} direction="down" in={!trigger}>
-//         <AppBar className={classes.toolbar}>
-//           <Toolbar className={classes.toolbar} variant="dense">
-//             <IconButton
-//               edge="start"
-//               className={classes.menuButton}
-//               color="inherit"
-//               size="small"
-//               aria-lable="menu"
-//             >
-//               <Menu />
-//             </IconButton>
-//             <Typography variant="h6" className={classes.title}>
-//               Awesome Portfolio
-//             </Typography>
-//             <IconButton size="small" onClick={() => setTheme(!theme)}>
-//               <SettingsBrightness />
-//             </IconButton>
-//             <IconButton size="small">
-//               <Person />
-//             </IconButton>
-//           </Toolbar>
-//         </AppBar>
-//       </Slide>
-//     </ThemeProvider>
-//   );
-// }
+function sectionDataIsEmpty(data: any)
+{
+  return (
+    (data.type == "text" && data.content == "") ||
+    (data.type == "image" && data.image == 0) ||
+    (data.type == "image_text" && data.image == 0 && data.content == "")
+  )
+}
 
 function PostSection(
   postSection: any,
@@ -374,14 +349,16 @@ function PostSection(
   page_id: string,
   data: any
 ) {
-  // const { postSection } = useUser();
-  postSection(portfolio_id, page_id, data)
-    .then(function (response: any) {
-      console.log(response);
-    })
-    .catch(function (error: any) {
-      console.log(error);
-    });
+  if (!sectionDataIsEmpty(data))
+  {
+    postSection(portfolio_id, page_id, data)
+      .then(function (response: any) {
+        console.log(response);
+      })
+      .catch(function (error: any) {
+        console.log(error);
+      });
+    }
 }
 
 function UploadImageBit(
@@ -464,7 +441,7 @@ const PaperSection = (props: any) => {
 
 const BetweenSections = () => {
   return (
-    <NewSectionMenu/>
+    <NewSectionMenu />
     // <HeaderFlexContainer>
     //   <HeaderFlexItem></HeaderFlexItem>
     //   <HeaderFlexItem>
@@ -477,8 +454,12 @@ const BetweenSections = () => {
   );
 };
 
-function PortfolioTitleSection(title: string, sectionName: string) {
+function PortfolioTitleSection(
+  title: string,
+  sectionName: string
+) {
   const classes = useStyles();
+  // console.log("THE NAME IS " + defaultText);
   return (
     <>
       <PaperSection title={title}>
@@ -492,6 +473,7 @@ function PortfolioTitleSection(title: string, sectionName: string) {
               style={{ margin: 0 }}
               fullWidth
               color="secondary"
+              // value={defaultText}
               errorstyle={{
                 float: "right",
                 margin: "30px",
@@ -581,221 +563,244 @@ const TextSectionField = (sectionName: string, rows: number) => {
     />
   );
 };
-
 const Edit = () => {
+  // Define redirect
+  const [redirect, setRedirect] = useState(false);
+
+  // Get Portfolio Bit
+  // const tempPortfolioId = 24;
+  // const [portfolio, setPortfolio] = useState<TPortfolio>(null);
+
+
+  // End Get Portfolio Bit
+  
   const [submittionError, setSubmittionError] = useState(false);
   const [bioImageResponse, setBioImageResponse] = useState({
     image: FRONT_END_URL + "blank_user.png",
-    id: "0",
+    id: null,
   });
   const [awesomeImageResponse, setAwesomeImageResponse] = useState({
     image: FRONT_END_URL + "blank_user.png",
-    id: "0",
+    id: null,
   });
-  const { postPortfolio, postPage, postSection } = useUser();
+  const { postPortfolio, postPage, postSection, savePortfolioId } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
   const classes = useStyles();
   const trigger = useScrollTrigger();
-  return (
-    <>
-      <ThemeProvider theme={appliedTheme}>
-        {/* I can't figure out how to put this into a separate function  */}
-        <ThemeProvider theme={DarkTheme}>
-          <Slide appear={false} direction="down" in={!trigger}>
-            <AppBar className={classes.toolbar}>
-              <Toolbar className={classes.toolbar} variant="dense">
-                <IconButton
-                  edge="start"
-                  className={classes.menuButton}
-                  color="inherit"
-                  size="small"
-                  aria-lable="menu"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" className={classes.title}>
-                  Awesome Portfolio
-                </Typography>
-                <IconButton size="small" onClick={() => setTheme(!theme)}>
-                  <SettingsBrightness />
-                </IconButton>
-                <IconButton size="small">
-                  <Person />
-                </IconButton>
-              </Toolbar>
-            </AppBar>
-          </Slide>
-        </ThemeProvider>
-        <CssBaseline />
-        <StyledFormDiv>
-          <div></div>
-          <div>
-            <FormTitle>Enter your information</FormTitle>
-            <Formik
-              initialValues={{
-                websiteName: "",
-                biography: "",
-                academicHistory: "",
-                professionalHistory: "",
-              }}
-              validationSchema={ProfileSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                const portfolio_data = {
-                  name: values.websiteName,
-                };
-                const page_data = {
-                  name: "home",
-                  number: "0",
-                };
-                const bio_data = {
-                  name: "biography",
-                  number: "0",
-                  image: bioImageResponse.id,
-                  content: values.biography,
-                  type: "image_text",
-                };
-                const academic_data = {
-                  name: "academic_history",
-                  number: "0",
-                  content: values.academicHistory,
-                  type: "text",
-                };
-                const awesome_data = {
-                  name: "awesome_image",
-                  number: "0",
-                  image: awesomeImageResponse.id,
-                  type: "image",
-                };
-                const professional_data = {
-                  name: "professional_history",
-                  number: "0",
-                  content: values.professionalHistory,
-                  type: "text",
-                };
-                setSubmitting(true);
-                postPortfolio(portfolio_data)
-                  .then(function (portfolio_response: any) {
-                    const portfolio_id = portfolio_response.data.id;
-                    postPage(portfolio_id, page_data)
-                      .then(function (page_response: any) {
-                        console.log(page_response);
-                        const page_id = page_response.data.id;
-                        PostSection(
-                          postSection,
-                          portfolio_id,
-                          page_id,
-                          bio_data
-                        );
-                        PostSection(
-                          postSection,
-                          portfolio_id,
-                          page_id,
-                          academic_data
-                        );
-                        PostSection(
-                          postSection,
-                          portfolio_id,
-                          page_id,
-                          awesome_data
-                        );
-                        PostSection(
-                          postSection,
-                          portfolio_id,
-                          page_id,
-                          professional_data
-                        );
-                      })
-                      .catch(function (error: any) {
-                        console.log(error);
-                        setSubmitting(false);
-                      });
-                    console.log(portfolio_response);
-                    setSubmitting(false);
-                  })
-                  .catch(function (error: any) {
-                    setSubmittionError(true);
-                    setSubmitting(false);
-                    console.log(error);
-                    console.log(submittionError);
-                  });
-              }}
-            >
-              {({ errors, touched, isSubmitting }) => (
-                <Form>
-                  {PortfolioTitleSection("Website Name*", "websiteName")}
-                  <BetweenSections />
-                  {ImageTextSectionBit(
-                    "Biography",
-                    "biography",
-                    touched.biography,
-                    errors.biography,
-                    bioImageResponse,
-                    setBioImageResponse
-                  )}
-                  <BetweenSections />
-                  {errors.academicHistory && touched.academicHistory ? (
-                    <ErrorMessage>{errors.academicHistory}</ErrorMessage>
-                  ) : null}
-                  {TextSectionBit(
-                    "Academic History",
-                    "academicHistory",
-                    touched.academicHistory,
-                    errors.academicHistory
-                  )}
-                  <BetweenSections />
-                  {ImageSectionBit(
-                    "Awesome Image",
-                    "awesomeImage",
-                    awesomeImageResponse,
-                    setAwesomeImageResponse
-                  )}
-                  <BetweenSections />
-                  {TextSectionBit(
-                    "Professional History",
-                    "professionalHistory",
-                    touched.professionalHistory,
-                    errors.academicHistory
-                  )}
-                  <BetweenSections />
-                  <BottomButtonsDiv>
-                    <div></div>
-                    <div>
-                      <Button
-                        variant="outlined"
-                        className={classes.cancelButton}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                    <div></div>
-                    <div>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        color="secondary"
-                        className={classes.publishButton}
-                        style={{ borderRadius: 5 }}
-                      >
-                        Publish
-                      </Button>
-                    </div>
-                    <div></div>
-                  </BottomButtonsDiv>
-                  {submittionError ? (
-                    <ErrorMessage>
-                      Error signing up. Please try again later.
-                    </ErrorMessage>
-                  ) : null}
-                </Form>
-              )}
-            </Formik>
-          </div>
-          <div></div>
-        </StyledFormDiv>
-      </ThemeProvider>
-    </>
-  );
-};
+  const onLogin = () => {
+    return <Redirect to="/portfolio"/>
+  }
 
+  if (redirect) {
+    return onLogin();
+  } else {
+    return (
+      <>
+        <ThemeProvider theme={appliedTheme}>
+          {/* I can't figure out how to put this into a separate function  */}
+          <ThemeProvider theme={DarkTheme}>
+            <Slide appear={false} direction="down" in={!trigger}>
+              <AppBar className={classes.toolbar}>
+                <Toolbar className={classes.toolbar} variant="dense">
+                  <IconButton
+                    edge="start"
+                    className={classes.menuButton}
+                    color="inherit"
+                    size="small"
+                    aria-label="menu"
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Typography variant="h6" className={classes.title}>
+                    Awesome Portfolio
+                  </Typography>
+                  <IconButton size="small" onClick={() => setTheme(!theme)}>
+                    <SettingsBrightness />
+                  </IconButton>
+                  <IconButton size="small">
+                    <Person />
+                  </IconButton>
+                </Toolbar>
+              </AppBar>
+            </Slide>
+          </ThemeProvider>
+          <CssBaseline />
+          <StyledFormDiv>
+            <div></div>
+            <div>
+              <FormTitle>Enter your information</FormTitle>
+              <Formik
+                initialValues={{
+                  websiteName: "",
+                  biography: "",
+                  academicHistory: "",
+                  professionalHistory: "",
+                }}
+                validationSchema={ProfileSchema}
+                onSubmit={(values, { setSubmitting }) => {
+                  const portfolio_data = {
+                    name: values.websiteName,
+                  };
+                  const page_data = {
+                    name: "home",
+                    number: "0",
+                  };
+                  const bio_data = {
+                    name: "biography",
+                    number: "0",
+                    image: bioImageResponse.id,
+                    content: values.biography,
+                    type: "image_text",
+                  };
+                  const academic_data = {
+                    name: "academic_history",
+                    number: "0",
+                    content: values.academicHistory,
+                    type: "text",
+                  };
+                  const awesome_data = {
+                    name: "awesome_image",
+                    number: "0",
+                    image: awesomeImageResponse.id,
+                    type: "image",
+                  };
+                  const professional_data = {
+                    name: "professional_history",
+                    number: "0",
+                    content: values.professionalHistory,
+                    type: "text",
+                  };
+                  setSubmitting(true);
+                  postPortfolio(portfolio_data)
+                    .then(function (portfolio_response: any) {
+                      const portfolio_id = portfolio_response.data.id;
+                      
+                      postPage(portfolio_id, page_data)
+                        .then(function (page_response: any) {
+                          console.log(page_response);
+                          const page_id = page_response.data.id;
+                          PostSection(
+                            postSection,
+                            portfolio_id,
+                            page_id,
+                            bio_data
+                          );
+                          PostSection(
+                            postSection,
+                            portfolio_id,
+                            page_id,
+                            academic_data
+                          );
+                          PostSection(
+                            postSection,
+                            portfolio_id,
+                            page_id,
+                            awesome_data
+                          );
+                          PostSection(
+                            postSection,
+                            portfolio_id,
+                            page_id,
+                            professional_data
+                          );
+                          
+                        })
+                        .catch(function (error: any) {
+                          console.log(error);
+                          setSubmitting(false);
+                        });
+                      savePortfolioId(parseInt(portfolio_id))
+                      setSubmitting(false);
+                      setRedirect(true);
+                    })
+                    .catch(function (error: any) {
+                      setSubmittionError(true);
+                      setSubmitting(false);
+                      console.log(error);
+                      console.log(submittionError);
+                    });
+                }}
+              >
+                {({ errors, touched, isSubmitting }) => (
+                  <Form>
+                    {PortfolioTitleSection(
+                      "Website Name*",
+                      "websiteName",
+                    )}
+                    <BetweenSections />
+                    {ImageTextSectionBit(
+                      "Biography",
+                      "biography",
+                      touched.biography,
+                      errors.biography,
+                      bioImageResponse,
+                      setBioImageResponse
+                    )}
+                    <BetweenSections />
+                    {errors.academicHistory && touched.academicHistory ? (
+                      <ErrorMessage>{errors.academicHistory}</ErrorMessage>
+                    ) : null}
+                    {TextSectionBit(
+                      "Academic History",
+                      "academicHistory",
+                      touched.academicHistory,
+                      errors.academicHistory
+                    )}
+                    <BetweenSections />
+                    {ImageSectionBit(
+                      "Awesome Image",
+                      "awesomeImage",
+                      awesomeImageResponse,
+                      setAwesomeImageResponse
+                    )}
+                    <BetweenSections />
+                    {TextSectionBit(
+                      "Professional History",
+                      "professionalHistory",
+                      touched.professionalHistory,
+                      errors.academicHistory
+                    )}
+                    <BetweenSections />
+                    <BottomButtonsDiv>
+                      <div></div>
+                      <div>
+                        <Button
+                          variant="outlined"
+                          className={classes.cancelButton}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                      <div></div>
+                      <div>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="secondary"
+                          className={classes.publishButton}
+                          style={{ borderRadius: 5 }}
+                        >
+                          Publish
+                        </Button>
+                      </div>
+                      <div></div>
+                    </BottomButtonsDiv>
+                    {submittionError ? (
+                      <ErrorMessage>
+                        Error signing up. Please try again later.
+                      </ErrorMessage>
+                    ) : null}
+                  </Form>
+                )}
+              </Formik>
+            </div>
+            <div></div>
+          </StyledFormDiv>
+        </ThemeProvider>
+      </>
+    );
+  }
+};
 export default Edit;
+

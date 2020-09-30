@@ -51,6 +51,19 @@ export const useUser = () => {
     }
   }
 
+  async function savePortfolioId(id: number) {
+    try {
+      await updateState({
+        ...state,
+        portfolioId: id
+      })
+      console.log("SETTED PORTFOLIO WITH " + id)
+    } catch(e) {
+      throw e;
+    }
+
+}
+
   // Another style: await with try catch
   async function logout() {
     try {
@@ -155,6 +168,7 @@ export const useUser = () => {
       });
   }
 
+
   /**
    * Update the logged in user's account details.
    * @param first_name
@@ -177,6 +191,10 @@ export const useUser = () => {
       .then((response) => response)
       .catch((error: any) => { throw error });
     return result
+  }
+
+  function getSavedPortfolioId() {
+    return state.portfolioId
   }
 
   // Note the $s in the function name. Use this if you want to get all of a user's portfolios
@@ -252,6 +270,7 @@ export const useUser = () => {
   return {
     userData: state,
     login,
+    savePortfolioId,
     logout,
     signup,
     setAccountDetails,
@@ -264,6 +283,7 @@ export const useUser = () => {
     getPages,
     getSections,
     getFullPortfolio,
+    getSavedPortfolioId,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)

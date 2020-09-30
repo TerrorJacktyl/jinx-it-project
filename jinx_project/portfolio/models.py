@@ -108,7 +108,7 @@ class Image(models.Model):
 
 class ImageTextSection(Section):
     image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
 class ImageSection(Section):
     image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
