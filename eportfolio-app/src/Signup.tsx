@@ -69,7 +69,7 @@ const Signup = () => {
   // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
   const [redirect, setRedirect] = useState(false);
 
-  const { signup, login, setAccountDetails, handleError } = useUser();
+  const { signup, login, setAccountDetails } = useUser();
 
   const onRegister = () => {
     return <Redirect to="/login" />
@@ -113,8 +113,8 @@ const Signup = () => {
                   setRedirect(true);
                 })
                 .catch(function (error) {
-                  setSubmitting(false);                  
-                  setSubmittionError(handleError(error.response));
+                  setSubmitting(false);
+                  setSubmittionError(error);
                 });
             }}
           >

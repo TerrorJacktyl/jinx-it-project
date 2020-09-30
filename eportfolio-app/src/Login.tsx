@@ -58,7 +58,7 @@ const Login = () => {
   const [submittionError, setSubmittionError] = useState('');
   const [redirect, setRedirect] = useState(false);
 
-  const { login, getAccountDetails, userData, handleError } = useUser();
+  const { login } = useUser();
 
   const onLogin = () => {
     return <Redirect to="/profile" />
@@ -90,7 +90,7 @@ const Login = () => {
                   setRedirect(true);
                 })
                 .catch(error => {
-                  setSubmittionError(handleError(error.response));
+                  setSubmittionError(error);
                 });
             }}
           >

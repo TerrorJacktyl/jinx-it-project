@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useUser } from "jinxui";
 import Button from '@material-ui/core/Button';
@@ -28,7 +28,7 @@ const UserAvatarDropdown = () => {
   const [open, setOpen] = React.useState(false);
   const [logoutRedirect, setLogoutRedirect] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const { userData, logout, resetState } = useUser();
+  const { userData, logout } = useUser();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -52,26 +52,26 @@ const UserAvatarDropdown = () => {
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    try{
-        if (prevOpen.current === true && open === false) {
+    try {
+      if (prevOpen.current === true && open === false) {
         anchorRef.current!.focus();
-        }
+      }
 
-        prevOpen.current = open;
-        }
-    catch{
+      prevOpen.current = open;
+    }
+    catch {
 
     }
   }, [open]);
 
   const handleLogout = () => {
     logout().then(() => {
-        setOpen(false);
-        setLogoutRedirect(true)
+      setOpen(false);
+      setLogoutRedirect(true)
     })
-    .catch(error => {
+      .catch(error => {
         console.log(error);
-    });
+      });
   };
 
   const onLogout = () => {
@@ -80,46 +80,46 @@ const UserAvatarDropdown = () => {
 
   if (logoutRedirect)
     return onLogout();
-    else
-  return (
-    <StylesProvider injectFirst>
-    <NameDiv>
-    <div className={classes.root}>
-      <div>
-        
-        {userData.firstName ? 
-        <StyledName
-          ref={anchorRef}
-          aria-controls={open ? 'menu-list-grow' : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}
-        >
-          {userData.firstName}
-        </StyledName> : null}
-        
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <StyledMenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>Account</MenuItem>
-                    <MenuItem onClick={handleClose}>Preferences</MenuItem>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                  </StyledMenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </div>
-    </div>
-    </NameDiv>
-    </StylesProvider>
-  );
+  else
+    return (
+      <StylesProvider injectFirst>
+        <NameDiv>
+          <div className={classes.root}>
+            <div>
+
+              {userData.firstName ?
+                <StyledName
+                  ref={anchorRef}
+                  aria-controls={open ? 'menu-list-grow' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleToggle}
+                >
+                  {userData.firstName}
+                </StyledName> : null}
+
+              <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <StyledMenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                          <MenuItem onClick={handleClose}>Account</MenuItem>
+                          <MenuItem onClick={handleClose}>Preferences</MenuItem>
+                          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                        </StyledMenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </div>
+          </div>
+        </NameDiv>
+      </StylesProvider>
+    );
 }
 
 
