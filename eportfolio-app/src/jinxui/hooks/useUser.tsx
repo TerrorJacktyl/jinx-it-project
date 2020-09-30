@@ -3,6 +3,18 @@ import { UserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig } from "axios";
 
+/**
+ * The 'user' hook
+ * 
+ * Abstracts all API calls and management of user data (both in React components
+ * and the browser's local storage) away from other components.
+ * 
+ * When writing a function for the user hook, please keep in mind:
+ * 1. The success (return) of your function shouldn't include anything axios or HTTP related
+ * 2. The failure (throw) of your function should be an error message, probably extracted from 
+ *    the HTTP response. Please do not leave it to other components to extract the error message.
+ */
+
 export const useUser = () => {
   const [state, updateState, resetState] = useContext(UserContext);
 
