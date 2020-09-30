@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect } from 'react-router-dom';
 import styled from "styled-components";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -128,7 +129,7 @@ const ProfileSchema = Yup.object().shape({
     .required("Required"),
 });
 
-function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any,) {
+function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any) {
   postSection(portfolio_id, page_id, data)
   .then(function (response: any) {
     console.log(response)
@@ -138,7 +139,12 @@ function PostSection(postSection: any, portfolio_id: string, page_id: string, da
   })
 }
 
+
 const Edit = () => {
+  // TEST
+  const [published, setPublished] = useState(false);
+  // TEST
+  const [portfolioId, setPortfolioId] = useState(-1);
   const [submittionError, setSubmittionError] = useState(false);
   const [imageFile, setImageFile] 
     = useState<File>(
@@ -147,6 +153,21 @@ const Edit = () => {
   const [imageResponse, setImageResponse] 
     = useState({image: FRONT_END_URL + "blank_user.png", id: "0"})
   const { uploadImage, postPortfolio, postPage, postSection } = useUser();
+  const { setCurrentPortfolio } = useUser();
+
+  // TEST
+  const onPublish = () => {
+    return <Redirect to="/portfolio" />
+  }
+
+  // TEST
+  if (published) {
+    if (portfolioId > 0) {
+      setCurrentPortfolio(portfolioId);
+    }
+    return onPublish();
+  }
+
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -187,14 +208,19 @@ const Edit = () => {
             }
             const professional_data = {
               name: "professional_history", 
+
               number: "0", 
               content: values.professionalHistory, 
               type: "text"
             }
             setSubmitting(true);
+            // TEST
+            setPublished(true);
             postPortfolio(portfolio_data)
             .then(function (portfolio_response: any) {
               const portfolio_id = portfolio_response.data.id
+              // TEST
+              setPortfolioId(portfolio_id);
               postPage(portfolio_id, page_data)
               .then(function (page_response: any) {
                 console.log(page_response)

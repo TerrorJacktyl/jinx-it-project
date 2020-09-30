@@ -34,12 +34,13 @@ type MediaSectionProps = {
 /* At the moment displays portfolio with the hardcoded id, and only the first page
    of said portfolio. Consider either passing the portfolio id as props, or having
    the current portfolio provided by context. Regardless, we'll probably have to 
-   define a user's default portfolio that they'll be redirected to upon login and
+   define a user's home portfolio that they'll be redirected to upon login and
    initial portfolio creation */
 const Portfolio = () => {
+  const { getFullPortfolio, getCurrentPortfolio } = useUser();
   // Testing purposes only
-  const tempPortfolioId = 1;
-  const { getFullPortfolio } = useUser();
+  // const tempPortfolioId = 1;
+  // const tempPortfolioId = getCurrentPortfolio();
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage, setCurrPage] = useState<number>(0);
@@ -47,6 +48,10 @@ const Portfolio = () => {
   const [sections, setSections] = useState<TSection[]>([]);
   useEffect(() => {
     const fetchPortfolio = async () => {
+      var tempPortfolioId = await getCurrentPortfolio();
+      if (tempPortfolioId < 0) {
+        tempPortfolioId = 1;
+      }
       const { portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
       setPortfolio(portfolio);
       setPages(pages);

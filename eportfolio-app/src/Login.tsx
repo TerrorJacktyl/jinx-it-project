@@ -75,7 +75,7 @@ const Login = () => {
   const { login } = useUser();
 
   const onLogin = () => {
-    return <Redirect to="/portfolio" />
+    return <Redirect to="/edit" />
   }
 
   if (redirect) {

@@ -87,6 +87,19 @@ export const useUser = () => {
     }
   }
 
+  // TEST
+  async function setCurrentPortfolio(portfolio_id: number) {
+    const stateChanges = {
+      homePortfolio: portfolio_id
+    }
+    await updateState(stateChanges);
+  }
+
+  // TEST
+  async function getCurrentPortfolio() {
+    return state.homePortfolio;
+  }
+
   /**
    * Update the logged in user's account details.
    * @param first_name 
@@ -232,6 +245,10 @@ export const useUser = () => {
     getPages,
     getSections,
     getFullPortfolio,
+    // TEST
+    setCurrentPortfolio,
+    // TEST
+    getCurrentPortfolio,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)
