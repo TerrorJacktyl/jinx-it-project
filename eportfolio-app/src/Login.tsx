@@ -75,7 +75,7 @@ const Login = () => {
   const { login } = useUser();
 
   const onLogin = () => {
-    return <Redirect to="/edit" />
+    return <Redirect to="/portfolio" />
   }
 
   if (redirect) {
@@ -150,4 +150,5 @@ const Login = () => {
       </AccountPageDiv >)
   }
 }
+
 export default Login;

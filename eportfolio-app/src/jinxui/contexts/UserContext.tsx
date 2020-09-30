@@ -4,14 +4,24 @@ import { IUserContext } from "jinxui";
 const USER_DATA_KEY = "userData";
 
 export const defaultUserContext: IUserContext = {
+<<<<<<< HEAD
   username: "",
   firstName: "",
   token: "",
+=======
+  username: '',
+  firstName: '',
+  token: '',
+>>>>>>> jiles/portfolio_display
   authenticated: false,
-  theme: "light",
+  theme: 'light',
   config: {},
+<<<<<<< HEAD
 };
 
+=======
+}
+>>>>>>> jiles/portfolio_display
 
 // Define the context to hold a state object and its setState function.
 // Type safety is enforced by the UserProvider wrapper

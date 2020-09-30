@@ -13,7 +13,6 @@ export { default as SiteLayout } from "./components/site/SiteLayout";
 export { PrimaryButton } from "./components/button/Button";
 export { SecondaryButton } from "./components/button/Button";
 
-
 /* Header */
 export { default as HeaderDiv } from "./components/header/HeaderDiv";
 export { default as SiteHeader } from "./components/header/SiteHeader";
@@ -22,6 +21,12 @@ export { default as HeaderTitle } from "./components/header/HeaderTitle";
 
 /* Account */
 export { default as AccountPageDiv } from "./components/account/AccountPageDiv";
+
+/* Display */
+export { default as PageName } from "./components/display/PageName";
+export { default as SectionName } from "./components/display/SectionName";
+export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
+export { default as PageDiv } from "./components/display/PageDiv";
 
 /* Context */
 export {
