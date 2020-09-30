@@ -10,6 +10,7 @@ export const defaultUserContext: IUserContext = {
   portfolioId: 0,
   authenticated: false,
   theme: 'light',
+  lightThemeMode: true,
   config: {},
 };
 

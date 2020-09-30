@@ -337,9 +337,9 @@ const NewSectionMenu = () => {
 function sectionDataIsEmpty(data: any)
 {
   return (
-    (data.type == "text" && data.content == "") ||
-    (data.type == "image" && data.image == 0) ||
-    (data.type == "image_text" && data.image == 0 && data.content == "")
+    (data.type === "text" && data.content === "") ||
+    (data.type === "image" && data.image === 0) ||
+    (data.type === "image_text" && data.image === 0 && data.content === "")
   )
 }
 
@@ -564,16 +564,7 @@ const TextSectionField = (sectionName: string, rows: number) => {
   );
 };
 const Edit = () => {
-  // Define redirect
   const [redirect, setRedirect] = useState(false);
-
-  // Get Portfolio Bit
-  // const tempPortfolioId = 24;
-  // const [portfolio, setPortfolio] = useState<TPortfolio>(null);
-
-
-  // End Get Portfolio Bit
-  
   const [submittionError, setSubmittionError] = useState(false);
   const [bioImageResponse, setBioImageResponse] = useState({
     image: FRONT_END_URL + "blank_user.png",
@@ -583,7 +574,7 @@ const Edit = () => {
     image: FRONT_END_URL + "blank_user.png",
     id: null,
   });
-  const { postPortfolio, postPage, postSection, savePortfolioId } = useUser();
+  const { postPortfolio, postPage, postSection, savePortfolioId, getSavedLightThemeMode, switchLightThemeMode} = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
   const classes = useStyles();
@@ -591,6 +582,8 @@ const Edit = () => {
   const onLogin = () => {
     return <Redirect to="/portfolio"/>
   }
+  const savedLightThemeMode = getSavedLightThemeMode();
+  // setTheme(savedLightThemeMode)
 
   if (redirect) {
     return onLogin();
@@ -615,7 +608,13 @@ const Edit = () => {
                   <Typography variant="h6" className={classes.title}>
                     Awesome Portfolio
                   </Typography>
-                  <IconButton size="small" onClick={() => setTheme(!theme)}>
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      switchLightThemeMode()
+                      setTheme(!theme)
+                    }}
+                  >
                     <SettingsBrightness />
                   </IconButton>
                   <IconButton size="small">
@@ -675,7 +674,7 @@ const Edit = () => {
                   postPortfolio(portfolio_data)
                     .then(function (portfolio_response: any) {
                       const portfolio_id = portfolio_response.data.id;
-                      
+
                       postPage(portfolio_id, page_data)
                         .then(function (page_response: any) {
                           console.log(page_response);
@@ -704,13 +703,12 @@ const Edit = () => {
                             page_id,
                             professional_data
                           );
-                          
                         })
                         .catch(function (error: any) {
                           console.log(error);
                           setSubmitting(false);
                         });
-                      savePortfolioId(parseInt(portfolio_id))
+                      savePortfolioId(parseInt(portfolio_id));
                       setSubmitting(false);
                       setRedirect(true);
                     })
@@ -724,10 +722,7 @@ const Edit = () => {
               >
                 {({ errors, touched, isSubmitting }) => (
                   <Form>
-                    {PortfolioTitleSection(
-                      "Website Name*",
-                      "websiteName",
-                    )}
+                    {PortfolioTitleSection("Website Name*", "websiteName")}
                     <BetweenSections />
                     {ImageTextSectionBit(
                       "Biography",

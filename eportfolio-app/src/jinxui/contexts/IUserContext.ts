@@ -8,6 +8,7 @@ export interface IUserContext {
   // Set true when user logged in; set false when token is invalid
   authenticated: boolean;
   theme: string;
+  lightThemeMode: true;
   portfolioId: number;
   config: AxiosRequestConfig;
 }

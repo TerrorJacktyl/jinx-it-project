@@ -57,12 +57,22 @@ export const useUser = () => {
         ...state,
         portfolioId: id
       })
-      console.log("SETTED PORTFOLIO WITH " + id)
     } catch(e) {
       throw e;
     }
+  }
 
-}
+  async function switchLightThemeMode() {
+    try {
+      await updateState({
+        ...state,
+        lightThemeMode: !state.lightThemeMode
+      })
+    } catch(e) {
+      throw e;
+    }
+    return state.lightThemeMode
+  }
 
   // Another style: await with try catch
   async function logout() {
@@ -197,6 +207,10 @@ export const useUser = () => {
     return state.portfolioId
   }
 
+  function getSavedLightThemeMode() {
+    return state.lightThemeMode
+  }
+
   // Note the $s in the function name. Use this if you want to get all of a user's portfolios
   async function getPortfolios() {
     const path = PORTFOLIOS_PATH
@@ -271,6 +285,7 @@ export const useUser = () => {
     userData: state,
     login,
     savePortfolioId,
+    switchLightThemeMode,
     logout,
     signup,
     setAccountDetails,
@@ -284,6 +299,7 @@ export const useUser = () => {
     getSections,
     getFullPortfolio,
     getSavedPortfolioId,
+    getSavedLightThemeMode,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)
