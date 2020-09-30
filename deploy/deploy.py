@@ -4,6 +4,7 @@ import logging
 import pathlib
 import subprocess
 import re
+import os
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
         open(lock_file_path, mode='x').close()
         logging.info('Lock obtained')
     except FileExistsError:
-        logging.errro(
+        logging.error(
             'Deploy script is already running!\n'
             'If you are certain that no one else is deploying, you may delete the deploy.lock file and try again.'
         )
