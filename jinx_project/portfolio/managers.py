@@ -28,7 +28,7 @@ class OrderManager(models.Manager):
             if start > end:
                 delta = -1
                 # keep start < end
-                start, end = end, start
+                start, end = end + 1, start + 1
 
             filter_args = {
                 self.parent_field: getattr(obj, self.parent_field),
@@ -80,6 +80,7 @@ class OrderManager(models.Manager):
             siblings = self.filter(**{self.parent_field: parent_id})
             for i, sib in enumerate(siblings):
                 sib.number = i
+                sib.save()
 
 
 class PageManager(OrderManager):

@@ -53,7 +53,7 @@ class PageInputSerializer(serializers.ModelSerializer):
         super().update(instance, validated_data)
 
         # move the item
-        if number:
+        if number is not None:
             models.Page.objects.move(instance, number)
 
         return instance
@@ -165,7 +165,7 @@ class PolymorphSectionSerializer(SectionSerializer):
         super().update(instance, validated_data)
 
         # move the item
-        if number:
+        if number is not None:
             models.Section.objects.move(instance, number)
 
         return instance
