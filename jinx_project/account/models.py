@@ -4,6 +4,8 @@ from django.dispatch import receiver
 
 from djoser.signals import user_registered
 
+from portfolio.models import Portfolio
+
 
 class Account(models.Model):
     """Account is a proxy to Django's built-in User model. Account contains all the
@@ -15,8 +17,13 @@ class Account(models.Model):
     # Link the account model to Django's default User model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # TODO: additional fields
-    # default user defines username, firstname, lastname, email
+    # additional fields
+    primary_portfolio = models.OneToOneField(
+        Portfolio,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
 
     def _str_(self):
         return self.user.first_name
