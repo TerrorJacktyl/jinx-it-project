@@ -2,8 +2,9 @@ import string
 import random
 import copy
 
-from hypothesis import given, settings, strategies as st
+from hypothesis import given, settings, strategies as st, Verbosity
 from hypothesis.extra.django import TestCase, from_model
+from hypothesis import stateful
 
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -347,3 +348,122 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
             len(models.Section.objects.filter(id=self.section.id)),
             0
         )
+
+
+class PageOrderingMachine(stateful.RuleBasedStateMachine, UserMixin):
+    def __init__(self):
+        super().__init__()
+        self.model = []
+
+        self.client = APIClient()
+        self.setUpUser()
+        self.portfolio = models.Portfolio.objects.create(
+            owner=self.user, name='cuttlefish')
+        # self.page = models.Page.objects.create(
+        #    portfolio=self.portfolio,
+        #    name='page number {}'.format(i),
+        #    number=i
+        # )
+        # self.section = models.TextSection.objects.create(
+        #    page=self.page,
+        #    name='section number {}'.format(i),
+        #    number=i,
+        #    content='lorem ipsum'
+        # )
+
+    @stateful.rule(data=st.data())
+    def add(self, data):
+        pos = data.draw(st.integers(min_value=0, max_value=len(self.model)))
+
+        # add a new page to database
+        data = {
+            'name': 'test page',
+            'number': pos
+        }
+        response = self.client.post(
+            reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
+            data,
+            format='json',
+        )
+
+        # also add the id to a array to compare with later
+        self.model.insert(pos, response.data.get('id'))
+
+    @stateful.rule(data=st.data())
+    @stateful.precondition(lambda self: len(self.model) > 0)
+    def remove(self, data):
+        pos = data.draw(
+            st.integers(min_value=0, max_value=len(self.model) - 1)
+        )
+
+        page_id = self.model[pos]
+
+        # database
+        response = self.client.delete(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': page_id,
+                }
+            )
+        )
+
+        # model
+        self.model.remove(page_id)
+
+    @stateful.rule(data=st.data())
+    @stateful.precondition(lambda self: len(self.model) > 0)
+    def move(self, data):
+        pos_strat = st.integers(min_value=0, max_value=len(self.model) - 1)
+
+        pos = data.draw(pos_strat)
+        new_pos = data.draw(pos_strat)
+
+        page_id = self.model[pos]
+
+        # database
+        response = self.client.patch(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': page_id,
+                }
+            ),
+            {'number': new_pos},
+            format='json',
+        )
+
+        # model
+        self.model.insert(new_pos, self.model.pop(pos))
+
+    @stateful.invariant()
+    def invariant(self):
+        response = self.client.get(
+            reverse('page_list', kwargs={'portfolio_id': self.portfolio.id})
+        )
+        response_ids = list(map(lambda p: p.get('id'), response.data))
+        response_numbers = list(map(lambda p: p.get('number'), response.data))
+        assert(self.model == response_ids)
+        assert(response_numbers == list(range(len(response_numbers))))
+
+    def teardown(self):
+        for page in self.portfolio.pages.all():
+            page.delete()
+        self.portfolio.delete()
+        self.user.delete()
+
+
+class PageOrderingTest(TestCase):
+    def runTest(self):
+        stateful.run_state_machine_as_test(
+            PageOrderingMachine,
+            settings=settings(
+                max_examples=10,
+                stateful_step_count=50,
+                deadline=2000,
+            ),
+        )
+
+    runTest.is_hypothesis_test = True
