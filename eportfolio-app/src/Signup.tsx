@@ -34,7 +34,7 @@ const FormText = styled.h4`
   font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
-`
+`;
 
 const StyledButton = styled(PrimaryButton)`
   margin: auto;
@@ -53,11 +53,27 @@ const StyledLink = styled.a`
 
 // We'll need to ensure that this schema is more strict than Django's user sign up
 const SignupSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, "Too Short!").max(150, "Too Long!").required("Required"),
-  lastName: Yup.string().min(2, "Too Short!").max(150, "Too Long!").required("Required"),
-  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").matches(/^[a-zA-Z0-9_@+.-]+$/, "Can only contain letters, numbers, and some special characters").required("Required"),
+  firstName: Yup.string()
+    .min(2, "Too Short!")
+    .max(150, "Too Long!")
+    .required("Required"),
+  lastName: Yup.string()
+    .min(2, "Too Short!")
+    .max(150, "Too Long!")
+    .required("Required"),
+  username: Yup.string()
+    .min(2, "Too Short!")
+    .max(150, "Too Long!")
+    .matches(
+      /^[a-zA-Z0-9_@+.-]+$/,
+      "Can only contain letters, numbers, and some special characters"
+    )
+    .required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().min(8, "Too Short!").matches(/(?!^\d+$)^.+$/, "Password cannot consist of only numbers").required("Required"),
+  password: Yup.string()
+    .min(8, "Too Short!")
+    .matches(/(?!^\d+$)^.+$/, "Password cannot consist of only numbers")
+    .required("Required"),
   passwordConfirm: Yup.string()
     .oneOf([Yup.ref("password"), undefined], "Passwords don't match")
     .required("Required"),
@@ -71,13 +87,12 @@ const Signup = () => {
   const { signup, login, setAccountDetails } = useUser();
 
   const onRegister = () => {
-    return <Redirect to="/login" />
-  }
+    return <Redirect to="/login" />;
+  };
 
-  const [submittionError, setSubmittionError] = useState('');
+  const [submittionError, setSubmittionError] = useState("");
 
-  if (redirect)
-    return onRegister();
+  if (redirect) return onRegister();
   else
     return (
       <AccountPageDiv>
@@ -89,15 +104,32 @@ const Signup = () => {
         </SiteHeader>
         <StyledFormDiv>
           <FormTitle>Sign up for free!</FormTitle>
-          {submittionError ? <FormAlert severity="error">Error logging in: {submittionError}.</FormAlert> : null}
+          {submittionError ? (
+            <FormAlert severity="error">
+              Error logging in: {submittionError}.
+            </FormAlert>
+          ) : null}
           <Formik
-            initialValues={{ firstName: "", lastName: "", username: "", email: "", password: "", passwordConfirm: "" }}
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              username: "",
+              email: "",
+              password: "",
+              passwordConfirm: "",
+            }}
             validationSchema={SignupSchema}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
 
               // This promise chain is gross, but it handles PUTing the user details
-              signup(values.email, values.password, values.firstName, values.lastName)
+              signup(
+                values.username,
+                values.email,
+                values.password,
+                values.firstName,
+                values.lastName
+              )
                 .then(function (response: any) {
                   console.log(response);
                   return response;
@@ -113,69 +145,64 @@ const Signup = () => {
                 })
                 .catch(function (error) {
                   setSubmitting(false);
-
-                  console.log(error);
-
-                  var errorVar = null;
-                  if (error.response) {
-                    if (error.response.data.non_field_errors) {
-                      errorVar = error.response.data.non_field_errors;
-                    }
-                    else if (error.response.data.password) {
-                      errorVar = error.response.data.password;
-                    }
-                    else if (error.response.data.username) {
-                      errorVar = error.response.data.username;
-                    }
-                    else if (error.response.data.email) {
-                      errorVar = error.response.data.email;
-                    }
-                  }
-                  if (errorVar) {
-                    let i = 0;
-                    for (i = 0; i < errorVar.length; i++) {
-                      setSubmittionError(submittionError.concat(errorVar[i]));
-                    }
-                  }
-                  else {
-                    setSubmittionError("service is currently unavailable, please try again later");
-                    console.error("Unable to connect to API for login (or unknown error)");
-                  }
+                  setSubmittionError(error);
                 });
             }}
           >
             {({ errors, touched, isSubmitting }) => (
               <Form>
                 <StyledFormEntry name="firstName" placeholder="First Name" />
-                {errors.firstName && touched.firstName ? <ErrorMessage>{errors.firstName}</ErrorMessage> : null}
+                {errors.firstName && touched.firstName ? (
+                  <ErrorMessage>{errors.firstName}</ErrorMessage>
+                ) : null}
 
                 <StyledFormEntry name="lastName" placeholder="Last Name" />
-                {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
+                {errors.lastName && touched.lastName ? (
+                  <ErrorMessage>{errors.lastName}</ErrorMessage>
+                ) : null}
 
                 <StyledFormEntry name="username" placeholder="Username" />
-                {errors.username && touched.username ? <ErrorMessage>{errors.username}</ErrorMessage> : null}
+                {errors.username && touched.username ? (
+                  <ErrorMessage>{errors.username}</ErrorMessage>
+                ) : null}
 
-                <StyledFormEntry name="email" type="email" placeholder="Email" />
-                {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+                <StyledFormEntry
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                />
+                {errors.email && touched.email ? (
+                  <ErrorMessage>{errors.email}</ErrorMessage>
+                ) : null}
 
-                <StyledFormEntry name="password" type="password" placeholder="Password" />
-                {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+                <StyledFormEntry
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                />
+                {errors.password && touched.password ? (
+                  <ErrorMessage>{errors.password}</ErrorMessage>
+                ) : null}
 
-                <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password" />
+                <StyledFormEntry
+                  name="passwordConfirm"
+                  type="password"
+                  placeholder="Confirm Password"
+                />
                 {errors.passwordConfirm && touched.passwordConfirm ? (
                   <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
                 ) : null}
-                <StyledButton
-                  type="submit"
-                  disabled={isSubmitting}>
+                <StyledButton type="submit" disabled={isSubmitting}>
                   Join
                 </StyledButton>
-                <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
+                <StyledLink href="/login">
+                  <FormText>Already have an account? Log In</FormText>
+                </StyledLink>
               </Form>
             )}
           </Formik>
         </StyledFormDiv>
-      </AccountPageDiv >
+      </AccountPageDiv>
     );
 };
 

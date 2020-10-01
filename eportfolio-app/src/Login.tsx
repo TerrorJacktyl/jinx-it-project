@@ -75,7 +75,7 @@ const Login = () => {
   const { login } = useUser();
 
   const onLogin = () => {
-    return <Redirect to="/portfolio" />
+    return <Redirect to="/edit" />
   }
 
   if (redirect) {
@@ -100,20 +100,11 @@ const Login = () => {
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
               login(values.username, values.password)
-                .then(data => {
+                .then((config: any) => {
                   setRedirect(true);
-                  console.log(data);
                 })
                 .catch(error => {
-                  // Manually unpack error here
-                  if (error.response !== undefined){
-                    setSubmittionError(error.response.data.non_field_errors[0]);
-                    console.log(error.response.data.non_field_errors[0]);
-                  }
-                  else{
-                    setSubmittionError("service is currently unavailable, please try again later");
-                    console.error("Unable to connect to API for login");
-                  }                  
+                  setSubmittionError(error);
                 });
             }}
           >
