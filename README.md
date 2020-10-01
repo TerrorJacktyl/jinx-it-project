@@ -184,6 +184,8 @@ First, make sure to delete any old images of the project using `docker rmi <imag
 
 If the build is complaining about psycopg2, don't worry! First, check jinx_project/requirements.txt and see if `psycopg2-binary>=2.8` is on a line. If not, add it. Now follow the build instructions as specified directly above.
 
+If you are getting problems loading material ui icons, you might need to do a full system rubuild.
+
 ## Superuser
 
 User: `jinx`\

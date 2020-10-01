@@ -27,6 +27,7 @@ export { default as PageName } from "./components/display/PageName";
 export { default as SectionName } from "./components/display/SectionName";
 export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
+export { default as UserImage } from "./components/display/UserImage";
 
 /* Context */
 export {

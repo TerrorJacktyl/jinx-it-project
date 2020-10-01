@@ -87,7 +87,7 @@ class PolymorphSectionSerializer(SectionSerializer):
             'text': TextSectionSerializer,
             'media': MediaSectionSerializer,
             'image': ImageSectionSerializer,
-            'image_text' : ImageTextSectionSerializer
+            'image_text' : ImageTextSectionSerializer,
         }
 
     def to_representation(self, instance):

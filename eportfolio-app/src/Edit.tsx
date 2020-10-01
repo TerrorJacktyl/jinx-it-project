@@ -59,6 +59,7 @@ import {
   PageName,
   SectionName,
   TextSectionDiv,
+  UserImage,
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection } from "./Types";
@@ -181,14 +182,7 @@ const WideFormDiv = styled(FormDiv)`
   width: 920px;
 `;
 
-const UserImage = styled.img`
-  margin-right: 0px;
-  margin-left: 0px;
-  height: auto;
-  margin-top: 0px;
-  border: 1px solid gray;
-  width: 100%;
-`;
+
 
 const FormTitle = styled.h2`
   font-weight: 300;

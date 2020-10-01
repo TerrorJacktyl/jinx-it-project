@@ -60,7 +60,7 @@ class Section(models.Model):
             'TextSection': 'text', 
             'MediaSection': 'media',
             'ImageSection': 'image',
-            'ImageTextSection': 'text',
+            'ImageTextSection': 'image_text',
             }
         return mapping[self.__class__.__name__]
 

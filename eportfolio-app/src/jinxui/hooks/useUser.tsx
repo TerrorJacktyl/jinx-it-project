@@ -12,7 +12,7 @@ export const useUser = () => {
   const LOGOUT_PATH = 'auth/token/logout';
   const ACCOUNT_PATH = 'api/accounts/me';
   const SIGNUP_PATH = 'auth/users';
-  const IMAGE_PATH = 'api/images';
+  const IMAGES_PATH = 'api/images';
   const PORTFOLIOS_PATH = 'api/portfolios';
 
   /**
@@ -114,7 +114,7 @@ export const useUser = () => {
     const form_data = new FormData();
     form_data.append("image", file, file.name);
     form_data.append("name", name);
-    const result = API.post(IMAGE_PATH, form_data, state.config)
+    const result = API.post(IMAGES_PATH, form_data, state.config)
       .then((response: any) => response)
       .catch((error: any) => {
         throw error;
@@ -280,6 +280,17 @@ export const useUser = () => {
     }
   }
 
+  async function getImage(image_id: number) {
+    const path = IMAGES_PATH + "/" + image_id
+    const result = API.get(path, state.config)
+      .then((response: any) =>
+        response.data
+      ).catch((error: any) => {
+        console.log(error)
+        throw error
+      });
+      return result
+    }
 
   return {
     userData: state,
@@ -300,6 +311,7 @@ export const useUser = () => {
     getFullPortfolio,
     getSavedPortfolioId,
     getSavedLightThemeMode,
+    getImage,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)
