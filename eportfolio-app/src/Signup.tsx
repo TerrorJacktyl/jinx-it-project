@@ -114,34 +114,7 @@ const Signup = () => {
                 })
                 .catch(function (error) {
                   setSubmitting(false);
-
-                  console.log(error);
-                  
-                  var errorVar = null;
-                  if (error.response){
-                    if (error.response.data.non_field_errors){
-                      errorVar = error.response.data.non_field_errors;
-                    }
-                    else if (error.response.data.password){
-                      errorVar = error.response.data.password;
-                    }
-                    else if (error.response.data.username){
-                      errorVar = error.response.data.username;
-                    }
-                    else if (error.response.data.email){
-                      errorVar = error.response.data.email;
-                    }
-                  }
-                  if (errorVar){
-                    let i = 0;
-                    for (i = 0; i < errorVar.length; i++){
-                      setSubmittionError(submittionError.concat(errorVar[i]));
-                    }
-                  }
-                  else{
-                    setSubmittionError("service is currently unavailable, please try again later");
-                    console.error("Unable to connect to API for login (or unknown error)");
-                  }
+                  setSubmittionError(error);
                 });
             }}
           >

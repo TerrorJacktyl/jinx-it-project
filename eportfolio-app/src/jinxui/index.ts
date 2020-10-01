@@ -20,12 +20,15 @@ export { default as HeaderTitle } from "./components/header/HeaderTitle";
 
 /* Account */
 export { default as AccountPageDiv } from "./components/account/AccountPageDiv";
+export { default as UserAvatarDropdown } from "./components/account/UserAvatarDropdown";
 
 /* Context */
 export {
   UserContextProvider,
   UserContext,
   defaultUserContext,
+  storeUserData,
+  retrieveUserData,
 } from "./contexts/index";
 
 export type { IUserContext } from "./contexts/index";

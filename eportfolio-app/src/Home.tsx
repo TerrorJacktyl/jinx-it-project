@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { SiteLayout, Button } from "jinxui";
+import { SiteLayout, Button, useUser } from "jinxui";
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -90,13 +90,15 @@ const SampleBody = styled.p`
 `;
 
 const Home = () => {
+  const { userData } = useUser();
+
   return (
     <div>
       <BodyDiv>
         <TopBlockDiv>
           <SiteHeader>
             <HeaderDiv>
-              <StyledLink href="/login">
+              <StyledLink href={userData.authenticated ? "/profile" : "/login"}>
                 <StyledLogin
                   width={null}
                   textColour="#EEEEEE"

@@ -13,6 +13,7 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  UserAvatarDropdown
 } from "jinxui";
 
 const WideFormDiv = styled(FormDiv)`
@@ -90,6 +91,7 @@ const Profile = () => {
         <HeaderDiv>
           <LogoLink />
           <HeaderTitle>Account Profile</HeaderTitle>
+          <UserAvatarDropdown />
         </HeaderDiv>
       </SiteHeader>
       <StyledFormDiv>
