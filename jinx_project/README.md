@@ -39,3 +39,9 @@ For now, it only exists when `type` is `text`.
   1. `GET ​/api​/portfolios` to get a list of portfolios.
   2. `GET ​/api​/portfolios​/{portfolio_id}/pages` to get a list of pages.
   3. `GET /api​/portfolios​/{portfolio_id}​/pages​/{page_id}​/sections` to get a list of sections.
+
+### How to edit the default portfolio
+
+The default portfolio will be added as a new user's primary portfolio.
+
+To change the default portfolio, edit the `create_default_portfolio` function in the portfolio's  [models](portfolio/models.py) file.
