@@ -40,7 +40,7 @@ type MediaSectionProps = {
    define a user's default portfolio that they'll be redirected to upon login and
    initial portfolio creation */
 const Portfolio = () => {
-  const { getFullPortfolio, getSavedPortfolioId, getImage } = useUser();
+  const { getFullPortfolio, getSavedPortfolioId } = useUser();
   const portfolioId = getSavedPortfolioId();
   // const tempPortfolioId = 26;
 
@@ -70,14 +70,6 @@ const Portfolio = () => {
     }
     return 0;
   };
-  const [awesomeImageResponse, setAwesomeImageResponse] = useState({
-    image: FRONT_END_URL + "blank_user.png",
-    id: null,
-  });
-  const [bioImageResponse, setBioImageResponse] = useState({
-    image: FRONT_END_URL + "blank_user.png",
-    id: null,
-  });
   return (
     <AccountPageDiv>
       <SiteHeader>
@@ -90,8 +82,6 @@ const Portfolio = () => {
       </SiteHeader>
       <PageDiv>
         <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
-        {console.log("SECTIONSSSSS:")}
-        {console.log(sections)}
         {sections.length !== 0
           ? sections.sort(compare).map((section: TSection) => {
               if (section.type === "text") {
@@ -99,29 +89,11 @@ const Portfolio = () => {
                   <TextSection name={section.name} content={section.content} />
                 );
               } else if (section.type === "image") {
-                getImage(section.image)
-                  .then(function (image_response: any) {
-                    console.log("IMAGE RESPONSE:");
-                    console.log(image_response.image);
-                    setAwesomeImageResponse(image_response);
-                  })
-                  .catch(function (error: any) {
-                    console.log(error);
-                  });
-                return <UserImage src={awesomeImageResponse.image} />;
+                return <UserImage src={section.path} />;
               } else if (section.type === "image_text") {
-                getImage(section.image)
-                  .then(function (image_response: any) {
-                    console.log("IMAGE RESPONSE:");
-                    console.log(image_response.image);
-                    setBioImageResponse(image_response);
-                  })
-                  .catch(function (error: any) {
-                    console.log(error);
-                  });
                 return (
                   <>
-                    <UserImage src={bioImageResponse.image} />
+                    <UserImage src={section.path} />
                     <TextSection
                       name={section.name}
                       content={section.content}

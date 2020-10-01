@@ -14,7 +14,7 @@ class SectionInline(admin.TabularInline):
 
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'image', 'owner', 'id']
+    list_display = ['name', 'path', 'owner', 'id']
 
 @admin.register(models.Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
@@ -37,11 +37,11 @@ class ImageTextSectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.ImageSection)
 class ImageTextSectionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'page', 'number', 'image']
+    list_display = ['name', 'page', 'number', 'image', 'id']
 
 @admin.register(models.MediaSection)
 class MediaSectionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'page', 'number', 'media']
+    list_display = ['name', 'page', 'number', 'media', 'id']
 
 @admin.register(models.Section)
 class SectionAdmin(admin.ModelAdmin):

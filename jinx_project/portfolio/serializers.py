@@ -134,10 +134,10 @@ class ImageTextSectionSerializer(SectionSerializer):
         model = models.ImageTextSection
         fields = SectionSerializer.Meta.fields + ['image', 'content']
 
-class ImageSectionSerializer(SectionSerializer):
-    class Meta(SectionSerializer.Meta):
-        model = models.ImageSection
-        fields = SectionSerializer.Meta.fields + ['image']
+# class ImageSectionSerializer(SectionSerializer):
+#     class Meta(SectionSerializer.Meta):
+#         model = models.ImageSection
+#         fields = SectionSerializer.Meta.fields + ['image']
 
 class MediaSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
@@ -147,9 +147,15 @@ class MediaSectionSerializer(SectionSerializer):
 class ImageInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
-        fields = ['id', 'name', 'image']
+        fields = ['id', 'name', 'path']
 
 class ImageOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
-        fields = ['id', 'owner', 'name', 'image']
+        fields = ['id', 'owner', 'name', 'path']
+
+class ImageSectionSerializer(SectionSerializer):
+    path = serializers.ImageField(source='image.path', read_only = False)
+    class Meta(SectionSerializer.Meta):
+        model = models.ImageSection
+        fields = SectionSerializer.Meta.fields + ['image', 'path']

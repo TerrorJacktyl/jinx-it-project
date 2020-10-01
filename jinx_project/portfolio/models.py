@@ -96,7 +96,7 @@ class Image(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='images')
     name = models.CharField(max_length = 100)
-    image = models.ImageField(upload_to = image_path, null = True)
+    path = models.ImageField(upload_to = image_path, null = True)
 
 
     # @property

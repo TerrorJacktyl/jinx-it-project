@@ -54,3 +54,7 @@ For now, it only exists when `type` is `text`.
   11. Here you need to update the `get_queryset` for `SectionList` in two places, on the line just above the return line and in the return line
   12. Repeat above step in `SectionDetail`
   13. You should now be good to go
+### What to do with the front end
+  1. Update Types.tsx if you need new properties.
+  2. Update Portfolio.tsx with a new `else if` statement to handle the new section
+  3. Update Edit.tsx
