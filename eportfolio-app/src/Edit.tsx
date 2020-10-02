@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import { Redirect } from 'react-router-dom';
 import styled from "styled-components";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+
+import { ThemeProvider, makeStyles } from "@material-ui/styles";
+import IconButton from "@material-ui/core/IconButton";
+import { createMuiTheme, createStyles } from "@material-ui/core/styles";
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
+
+import { TextField } from "formik-material-ui";
 
 import {
   ErrorMessage,
   FormDiv,
-  FormEntry,
   PrimaryButton,
   SecondaryButton,
   SiteHeader,
@@ -15,10 +24,48 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
-  useUser
+  useUser,
 } from "jinxui";
 
-const FRONT_END_URL = 'http://localhost:3000/'
+const FRONT_END_URL = "http://localhost:3000/";
+
+const theme = createMuiTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#0081CA",
+    },
+    secondary: {
+      main: "#00FFC2",
+    },
+  },
+  typography: {
+    fontFamily: "Heebo, sans-serif",
+  },
+  overrides: {
+    MuiInputLabel: {
+      root: {
+        fontSize: 25,
+      },
+    },
+  },
+});
+
+const useStyles = makeStyles((theme: any) =>
+  createStyles({
+    root: {
+    },
+    margin: {
+      position: "absolute",
+      bottom: 20,
+      left: 43,
+    },
+    paper: {
+      backgroundColor: 'transparent',
+      padding: 10,
+    }
+  })
+);
 
 const MinimalDivStyle = styled.div`
   margin-left: 30px;
@@ -26,37 +73,39 @@ const MinimalDivStyle = styled.div`
   width: auto;
 `;
 
+const RowDiv = styled.div`
+  overflow: auto;
+`;
+
+const ColDiv = styled.div`
+  float: left;
+  width: 50%;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+`;
+
+const SectionDiv = styled.div`
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
 `;
 
-const StyledFormEntry = styled(FormEntry)`
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: 10px;
-`;
-const TallStyledFormEntry = styled(StyledFormEntry)`
-  height: 360px;
-  width: 100%;
-  align: left;
-  control: textarea;
-  rows: 6;
-`;
-
-const UploadButton = styled(PrimaryButton)`
-  max-width: 362px;
-`;
-
 const BlankUser = styled.img`
-  display: block;
+  // display: float;
   max-width: 362px;
-  width: 100%;
-  margin-right: 30px;
+  width: 95%;
+  margin-right: 0px;
+  margin-left: 0px;
   height: auto;
-  align: left;
-  margin-top: 30px;
-  border: 2px solid #FFFFFF;
-  border-radius: 10px;
+  // float: right;
+  margin-top: 0px;
+  border: 1px solid #808080;
+  border-radius: 4px;
 `;
 
 const FormTitle = styled.h2`
@@ -65,30 +114,20 @@ const FormTitle = styled.h2`
   font-weight: 300;
 `;
 
-const BrowseButton = styled.input`
-  color: #eeeeee;
-  align: left;
-  margin-top: 10px;
-  margin-left: 0px;
-  display: block;
-  align: left;
-  text-align: left;
-`;
-
 const FieldTitle = styled.h3`
   font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
   margin-bottom: 0px;
   margin-left: 0px;
+  margin-top: 0px;
   text-align: left;
 `;
 
-
-const StyledPublishButton = styled(SecondaryButton)`
+const StyledPublishButton = styled(PrimaryButton)`
   @media (max-width: 600px) {
     margin-left: auto;
-    margin-right: auto;  
+    margin-right: auto;
     align: centre;
     position: relative;
   }
@@ -97,13 +136,13 @@ const StyledPublishButton = styled(SecondaryButton)`
   }
 `;
 
-const StyledCancelButton = styled(PrimaryButton)`
+const StyledCancelButton = styled(SecondaryButton)`
   @media (max-width: 600px) {
     margin-left: auto;
     margin-right: auto;
     align: centre;
     position: relative;
-  }  
+  }
   @media (min-width: 600px) {
     display: block;
     position: relative;
@@ -123,20 +162,202 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
+const StyledInput = styled.input`
+  display: none;
+`;
+
+const ImageDiv = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 const ProfileSchema = Yup.object().shape({
-  websiteName: Yup.string()
-    .max(50, "Too Long!")
-    .required("Required"),
+  websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
-function PostSection(postSection: any, portfolio_id: string, page_id: string, data: any) {
+function PostSection(
+  postSection: any,
+  portfolio_id: string,
+  page_id: string,
+  data: any
+) {
+  // const { postSection } = useUser();
   postSection(portfolio_id, page_id, data)
-  .then(function (response: any) {
-    console.log(response)
-  })
-  .catch(function (error: any) {
-    console.log(error)
-  })
+    .then(function (response: any) {
+      console.log(response);
+    })
+    .catch(function (error: any) {
+      console.log(error);
+    });
+}
+
+function UploadImageBit(
+  uploadButtonLabel: string,
+  imageResponse: any,
+  setImageResponse: any,
+) {
+  const { uploadImage } = useUser();
+  const classes = useStyles();
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <ImageDiv>
+          <BlankUser src={imageResponse.image} />
+          <label htmlFor={uploadButtonLabel}>
+            <StyledInput
+              accept="image/*"
+              id={uploadButtonLabel}
+              multiple
+              type="file"
+              onChange={(event) => {
+                if (event.currentTarget.files) {
+                  uploadImage(
+                    event.currentTarget.files[0],
+                    event.currentTarget.files[0].name
+                  )
+                    .then((response) => {
+                      console.log(response);
+                      setImageResponse(response.data);
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                    });
+                } else {
+                  console.log("Image failure")
+                }
+              }}
+            />
+            <IconButton
+              component="span"
+              size="small"
+              className={classes.margin}
+            >
+              <AddPhotoAlternateOutlinedIcon />
+            </IconButton>
+          </label>
+        </ImageDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function ImageTextSectionBit(
+  title: string,
+  sectionName: string,
+  touched: any,
+  errors: any,
+  imageResponse: any,
+  setImageResponse: any
+) {
+  const classes = useStyles();
+  return (
+    <>        
+      <ThemeProvider theme={theme}>
+        <SectionDiv>        
+          <Paper 
+            elevation = {0} 
+            variant="outlined" 
+            square
+            className = {classes.paper}
+          >
+            <RowDiv>
+              <FieldTitle>{title}</FieldTitle>
+            </RowDiv>
+            <RowDiv>
+              <ColDiv>
+              {TextSectionField(sectionName, 15)}
+              {errors && touched 
+                ? <ErrorMessage>{errors}</ErrorMessage> 
+                : null}
+              </ColDiv>
+              <ColDiv>
+              {UploadImageBit(sectionName, imageResponse, setImageResponse)}
+            </ColDiv>
+          </RowDiv>
+        </Paper>
+      </SectionDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function ImageSectionBit(
+  title: string,
+  sectionName: string,
+  imageResponse: any,
+  setImageResponse: any
+) {
+  const classes = useStyles();
+  return (
+    <>        
+      <ThemeProvider theme={theme}>
+        <SectionDiv>        
+          <Paper 
+            elevation = {0} 
+            variant="outlined" 
+            square
+            className = {classes.paper}
+          >
+            <RowDiv>
+              <FieldTitle>{title}</FieldTitle>
+            </RowDiv>
+            <RowDiv>
+              <ColDiv>
+              {UploadImageBit(sectionName, imageResponse, setImageResponse)}
+            </ColDiv>
+          </RowDiv>
+        </Paper>
+      </SectionDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function TextSectionBit(
+  title: string,
+  sectionName: string,
+  touched: any,
+  errors: any
+) {
+  const classes = useStyles();
+  return (
+    <>        
+      <ThemeProvider theme={theme}>
+        <SectionDiv>
+          <Paper 
+            elevation = {0} 
+            variant="outlined" 
+            square
+            className = {classes.paper}
+          >
+            <FieldTitle>{title}</FieldTitle>
+              {TextSectionField(sectionName, 10)}
+              {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
+          </Paper>
+        </SectionDiv>
+      </ThemeProvider>
+    </>
+  );
+}
+
+function TextSectionField(sectionName: string, rows: number)
+{
+  return (
+    <>
+      <Field
+        component={TextField}
+        name={sectionName}
+        id="standard-full-width"
+        style={{ margin: 0, marginBottom: 15 }}
+        fullWidth
+        multiline
+        rows={rows}
+        rowsMax={30}
+        variant="filled"
+        color="secondary"
+      />
+    </>
+  );
 }
 
 
@@ -146,14 +367,17 @@ const Edit = () => {
   // TEST
   const [portfolioId, setPortfolioId] = useState(-1);
   const [submittionError, setSubmittionError] = useState(false);
-  const [imageFile, setImageFile] 
-    = useState<File>(
-      new File([FRONT_END_URL + "blank_user.png"], "blank_user.png")
-    );
-  const [imageResponse, setImageResponse] 
-    = useState({image: FRONT_END_URL + "blank_user.png", id: "0"})
-  const { uploadImage, postPortfolio, postPage, postSection } = useUser();
-  const { setCurrentPortfolio } = useUser();
+  const [bioImageResponse, setBioImageResponse] = useState({
+    image: FRONT_END_URL + "blank_user.png",
+    id: "0",
+  });
+  const [awesomeImageResponse, setAwesomeImageResponse] = useState({
+    image: FRONT_END_URL + "blank_user.png",
+    id: "0",
+  });
+  // TEST
+  const { postPortfolio, postPage, postSection, setCurrentPortfolio } = useUser();
+  const classes = useStyles();
 
   // TEST
   const onPublish = () => {
@@ -191,134 +415,146 @@ const Edit = () => {
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
             const portfolio_data = {
-              name: "Account Profile"
-            }
+              name: values.websiteName,
+            };
+            const page_data = {
+              name: "home",
+              number: "0",
+            };
+            const bio_data = {
+              name: "biography",
+              number: "0",
+              image: bioImageResponse.id,
+              content: values.biography,
+              type: "image_text",
+            };
+            const academic_data = {
+              name: "academic_history",
+              number: "0",
+              content: values.academicHistory,
+              type: "text",
+            };
+            const awesome_data = {
+              name: "awesome_image",
+              number: "0",
+              image: awesomeImageResponse.id,
+              type: "image",
+            };
+            const professional_data = {
+              name: "professional_history",
+              number: "0",
+              content: values.professionalHistory,
+              type: "text",
+            };
+            setSubmitting(true);
             postPortfolio(portfolio_data)
-            .then(function (portfolio_response: any) {
-              const portfolio_id = portfolio_response.data.id
-              const page_data = {
-                name: values.websiteName, 
-                number: "0"
-              }
-              // TEST
-              console.log(portfolio_id);
-              setPortfolioId(portfolio_response.data.id);
-              // TEST
-              postPage(portfolio_id, page_data)
-              .then(function (page_response: any) {
-                console.log(page_response)
-                const page_id = page_response.data.id
-                const bio_data = {
-                  name: "biography", 
-                  number: "0", 
-                  image: imageResponse.id, 
-                  content: values.biography, 
-                  type: "image_text"
-                }
-                const academic_data = {
-                  name: "academic_history", 
-                  number: "1", 
-                  content: values.academicHistory, 
-                  type: "text"
-                }
-                const professional_data = {
-                  name: "professional_history", 
-                  number: "2", 
-                  content: values.professionalHistory, 
-                  type: "text"
-                }
-                PostSection(postSection, portfolio_id, page_id, bio_data)
-                PostSection(postSection, portfolio_id, page_id, academic_data)
-                PostSection(postSection, portfolio_id, page_id, professional_data)
+              .then(function (portfolio_response: any) {
+                const portfolio_id = portfolio_response.data.id;
+                // TEST
+                setPortfolioId(portfolio_id);
+                postPage(portfolio_id, page_data)
+                  .then(function (page_response: any) {
+                    console.log(page_response);
+                    const page_id = page_response.data.id;
+                    PostSection(postSection, portfolio_id, page_id, bio_data);
+                    PostSection(
+                      postSection,
+                      portfolio_id,
+                      page_id,
+                      academic_data
+                    );
+                    PostSection(
+                      postSection,
+                      portfolio_id,
+                      page_id,
+                      awesome_data
+                    );
+                    PostSection(
+                      postSection,
+                      portfolio_id,
+                      page_id,
+                      professional_data
+                    );
+                  })
+                  .catch(function (error: any) {
+                    console.log(error);
+                    setSubmitting(false);
+                  });
+                console.log(portfolio_response);
                 setPublished(true);
+                setSubmitting(false);
               })
               .catch(function (error: any) {
-                console.log(error)
-                setSubmitting(false)
-              })
-              console.log(portfolio_response);
-              setSubmitting(false);
-            })
-            .catch(function (error: any) {
-              setSubmittionError(true);
-              setSubmitting(false);
-              console.log(error);
-              console.log(submittionError);
-            });
+                setSubmittionError(true);
+                setSubmitting(false);
+                console.log(error);
+                console.log(submittionError);
+              });
           }}
         >
           {({ errors, touched, isSubmitting }) => (
             <Form>
               <MinimalDivStyle>
-                <FieldTitle>Website Name</FieldTitle>
-                <StyledFormEntry name="websiteName" />
-                {errors.websiteName && touched.websiteName ? (
-                  <ErrorMessage>{errors.websiteName}</ErrorMessage>
-                ) : null}
-                <BlankUser src={imageResponse.image} />
-                <BrowseButton
-                  id="file"
-                  name="file"
-                  type="file"
-                  onChange={(event) => {
-                    if (event.currentTarget.files) {
-                      setImageFile(event.currentTarget.files[0]);
-                    } else {
-                      setImageFile(new File([""], "blank_file"));
-                    }
-                  }}
-                />
-                <UploadButton
-                type="button"
-                onClick={() => {
-                  uploadImage(imageFile, imageFile.name)
-                    .then(response => {
-                      console.log(response);
-                      setImageResponse(response.data)
-                    })
-                    .catch(error =>{
-                      console.log(error)
-                    })
-                  }}
+                <Paper 
+                  elevation = {0} 
+                  variant="outlined" 
+                  square
+                  className = {classes.paper}
                 >
-                  Upload
-                </UploadButton>
-                <br></br>
-                <FieldTitle>Biography</FieldTitle>
-
-                <TallStyledFormEntry component="textarea" name="biography" />
-                {errors.biography && touched.biography ? (
-                  <ErrorMessage>{errors.biography}</ErrorMessage>
-                ) : null}
-
-                <FieldTitle>Academic History</FieldTitle>
-                <TallStyledFormEntry
-                  component="textarea"
-                  name="academicHistory"
-                />
+                    <FieldTitle>Website Name *</FieldTitle>
+                    <ThemeProvider theme={theme}>
+                      <Field
+                        component={TextField}
+                        name="websiteName"
+                        id="standard-full-width"
+                        style={{ margin: 0 }}
+                        fullWidth
+                        variant="filled"
+                        color="secondary"
+                        errorstyle={{
+                          float: "right",
+                          margin: "30px",
+                          color: "white",
+                        }}
+                      />
+                    </ThemeProvider>
+                </Paper>
+                {ImageTextSectionBit(
+                  "Biography", 
+                  "biography", 
+                  touched.biography, 
+                  errors.biography,
+                  bioImageResponse,
+                  setBioImageResponse
+                )}
                 {errors.academicHistory && touched.academicHistory ? (
                   <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                 ) : null}
-
-                <FieldTitle>Professional History</FieldTitle>
-                <TallStyledFormEntry
-                  component="textarea"
-                  name="professionalHistory"
-                />
-                {errors.professionalHistory && touched.professionalHistory ? (
-                  <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
-                ) : null}
+                {TextSectionBit(
+                  "Academic History",
+                  "academicHistory",
+                  touched.academicHistory,
+                  errors.academicHistory
+                )}
+                {ImageSectionBit(
+                  "Awesome Image",
+                  "awesomeImage",
+                  awesomeImageResponse,
+                  setAwesomeImageResponse,
+                )}
+                {TextSectionBit(
+                  "Professional History",
+                  "professionalHistory",
+                  touched.professionalHistory,
+                  errors.academicHistory,
+                )}
                 <div>
-                  <StyledPublishButton 
-                  type = "submit">
+                  <StyledPublishButton type="submit">
                     Publish
                   </StyledPublishButton>
                 </div>
                 <StyledLink href="/">
-                  <StyledCancelButton
-                  type = "button">
-                    Cancel
-                  </StyledCancelButton>
+                  <StyledCancelButton type="button">Cancel</StyledCancelButton>
                 </StyledLink>
                 {submittionError ? (
                   <ErrorMessage>
@@ -328,7 +564,7 @@ const Edit = () => {
               </MinimalDivStyle>
             </Form>
           )}
-        </Formik>          
+        </Formik>
       </StyledFormDiv>
     </AccountPageDiv>
   );

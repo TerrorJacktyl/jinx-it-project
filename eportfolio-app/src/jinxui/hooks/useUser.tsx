@@ -7,13 +7,12 @@ import { TPortfolio, TPage, TSection } from '../../Types';
 
 export const useUser = () => {
   const [state, updateState, resetState] = useContext(UserContext);
-
-  const LOGIN_PATH = 'auth/token/login';
-  const LOGOUT_PATH = 'auth/token/logout';
-  const ACCOUNT_PATH = 'api/accounts/me';
-  const SIGNUP_PATH = 'auth/users';
-  const IMAGE_PATH = 'api/images';
-  const PORTFOLIOS_PATH = 'api/portfolios';
+  const LOGIN_PATH = "auth/token/login";
+  const LOGOUT_PATH = "auth/token/logout";
+  const ACCOUNT_PATH = "api/accounts/me";
+  const SIGNUP_PATH = "auth/users";
+  const IMAGE_PATH = "api/images";
+  const PORTFOLIOS_PATH = "api/portfolios";
 
   /**
    * Abstract the login procedure. Returns the auth_token if login succeeded,
@@ -50,7 +49,6 @@ export const useUser = () => {
       throw e;
     }
   }
-
 
   // Another style: await with try catch
   async function logout() {
@@ -116,12 +114,15 @@ export const useUser = () => {
       .catch((error: any) => { throw error });
   }
 
-  async function getAccountDetails() {
-    API.get(ACCOUNT_PATH, state.config)
-      .then((response: { data: { first_name: string; }; }) =>
-        updateState({ first_name: response.data.first_name })
-      )
-      .catch((error: any) => { throw error });
+  async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
+    try {
+      const response = await API.get(ACCOUNT_PATH, konfig);
+      if ("first_name" in response.data) {
+        return response;
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   // Declaring a function as async means the return gets wrapped in a promise
@@ -237,6 +238,7 @@ export const useUser = () => {
     logout,
     signup,
     setAccountDetails,
+    getAccountDetails,
     uploadImage,
     postPortfolio,
     postPage,

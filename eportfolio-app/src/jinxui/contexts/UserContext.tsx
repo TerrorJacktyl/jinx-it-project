@@ -12,7 +12,8 @@ export const defaultUserContext: IUserContext = {
   authenticated: false,
   theme: 'light',
   config: {},
-}
+};
+
 
 // Define the context to hold a state object and its setState function.
 // Type safety is enforced by the UserProvider wrapper

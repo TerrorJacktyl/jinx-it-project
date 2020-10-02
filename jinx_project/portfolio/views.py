@@ -107,9 +107,10 @@ class SectionList(generics.ListCreateAPIView):
             'page': self.kwargs['page_id'],
         }
         text_sections = models.TextSection.objects.filter(**filter_param)
+        image_sections = models.ImageSection.objects.filter(**filter_param)
         image_text_sections = models.ImageTextSection.objects.filter(**filter_param)
         media_sections = models.MediaSection.objects.filter(**filter_param)
-        return list(text_sections) + list(media_sections) + list(image_text_sections)
+        return list(text_sections) + list(text_sections) + list(media_sections) + list(image_text_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -128,10 +129,10 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         text_sections = models.TextSection.objects.all()
+        image_sections = models.ImageSection.objects.all()
         image_text_sections = models.ImageTextSection.objects.all()
-
         media_sections = models.MediaSection.objects.all()
-        return list(text_sections) + list(media_sections) + list(image_text_sections)
+        return list(text_sections) + list(image_sections) + list(media_sections) + list(image_text_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

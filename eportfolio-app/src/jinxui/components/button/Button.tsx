@@ -4,7 +4,7 @@ const SecondaryButton = styled.button`
   font-family: "Heebo", sans-serif;
   font-style: normal;
   font-weight: normal;
-  color: #EEEEEE;
+  color: #eeeeee;
   font-size: 24px;
   line-height: 35px;
   text-align: center;
@@ -15,13 +15,14 @@ const SecondaryButton = styled.button`
   display: block;
   background-color: transparent;
   border-radius: 5px;
-  border: 2px solid #EEEEEE;
+  border: 2px solid #eeeeee;
   border-radius: 5px;
   max-width: 255px;
   width: 100%;
   height: 43px;
   :hover {
-    color: #00FFC2; 
+    background-color: #EEEEEE;
+    color: black;
   }
   cursor: pointer;
 `;

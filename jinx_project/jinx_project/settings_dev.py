@@ -24,6 +24,10 @@ SESSION_COOKIE_SECURE = False
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(__file__).resolve(strict=True).parent.parent / 'media'
 
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # enable the browsable api in dev
 DRF_DEFAULT_RENDERER_CLASSES = (
     'rest_framework.renderers.JSONRenderer',

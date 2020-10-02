@@ -86,6 +86,7 @@ class PolymorphSectionSerializer(SectionSerializer):
         return {
             'text': TextSectionSerializer,
             'media': MediaSectionSerializer,
+            'image': ImageSectionSerializer,
             'image_text' : ImageTextSectionSerializer
         }
 
@@ -133,12 +134,10 @@ class ImageTextSectionSerializer(SectionSerializer):
         model = models.ImageTextSection
         fields = SectionSerializer.Meta.fields + ['image', 'content']
 
-# class ImageTextSectionSerializer(SectionSerializer):
-#     class Meta(SectionSerializer.Meta):
-#         model = models.ImageTextSection
-#         fields = SectionSerializer.Meta.fields + ['content']
-
-        # fields = SectionSerializer.Meta.fields + ['content', 'image']
+class ImageSectionSerializer(SectionSerializer):
+    class Meta(SectionSerializer.Meta):
+        model = models.ImageSection
+        fields = SectionSerializer.Meta.fields + ['image']
 
 class MediaSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
