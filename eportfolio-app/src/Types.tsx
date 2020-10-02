@@ -21,6 +21,8 @@ export type TSection = {
   name: string,
   type: string,
   number: number,
-  content: string
-  media: string
+  content: string,
+  media: string,
+  image: number,
+  path: string,
 };

@@ -88,7 +88,7 @@ class Section(models.Model):
             'TextSection': 'text', 
             'MediaSection': 'media',
             'ImageSection': 'image',
-            'ImageTextSection': 'text',
+            'ImageTextSection': 'image_text',
             }
         return mapping[self.__class__.__name__]
 
@@ -124,7 +124,7 @@ class Image(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='images')
     name = models.CharField(max_length = 100)
-    image = models.ImageField(upload_to = image_path, null = True)
+    path = models.ImageField(upload_to = image_path, null = True)
 
 
     # @property
@@ -136,7 +136,7 @@ class Image(models.Model):
 
 class ImageTextSection(Section):
     image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
 class ImageSection(Section):
     image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)

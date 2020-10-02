@@ -14,6 +14,7 @@ from . import swagger
 
 from .permissions import IsOwner
 
+
 class PortfolioList(generics.ListCreateAPIView):
     def get_serializer_class(self):
         # Allows this url to handle GET and POST with different serializers
@@ -110,7 +111,7 @@ class SectionList(generics.ListCreateAPIView):
         image_sections = models.ImageSection.objects.filter(**filter_param)
         image_text_sections = models.ImageTextSection.objects.filter(**filter_param)
         media_sections = models.MediaSection.objects.filter(**filter_param)
-        return list(text_sections) + list(text_sections) + list(media_sections) + list(image_text_sections)
+        return list(text_sections) + list(image_sections) + list(image_text_sections) + list(media_sections)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

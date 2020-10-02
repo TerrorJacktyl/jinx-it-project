@@ -5,10 +5,10 @@ export interface IUserContext {
   username: string;
   firstName: string;
   token: string;
-  // TEST
-  homePortfolio: number
   // Set true when user logged in; set false when token is invalid
   authenticated: boolean;
   theme: string;
+  lightThemeMode: true;
+  portfolioId: number;
   config: AxiosRequestConfig;
 }

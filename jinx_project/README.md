@@ -60,3 +60,8 @@ For now, it only exists when `type` is `text`.
 The default portfolio will be added as a new user's primary portfolio.
 
 To change the default portfolio, edit the `create_default_portfolio` function in the portfolio's  [models](portfolio/models.py) file.
+
+### What to do with the front end
+  1. Update Types.tsx if you need new properties.
+  2. Update Portfolio.tsx with a new `else if` statement to handle the new section
+  3. Update Edit.tsx
