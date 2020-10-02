@@ -17,7 +17,6 @@ import {
 } from "jinxui";
 import { TPortfolio, TPage, TSection } from "./Types";
 
-const FRONT_END_URL = "http://localhost:3000/";
 
 const TextSectionContainer = styled.div`
   padding-left: 12px;

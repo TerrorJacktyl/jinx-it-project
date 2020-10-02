@@ -9,19 +9,15 @@ import {
   createMuiTheme,
   createStyles,
   withStyles,
+  useTheme,
 } from "@material-ui/core/styles";
 import {
   Paper,
   Button,
   CssBaseline,
-  AppBar,
-  Toolbar,
-  Typography,
   Menu,
   MenuProps,
   MenuItem,
-  Slide,
-  useScrollTrigger,
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
@@ -29,7 +25,6 @@ import IconButton from "@material-ui/core/IconButton";
 import {
   AddPhotoAlternateOutlined,
   SettingsBrightness,
-  Person,
   DeleteOutlined,
   ArrowUpward,
   ArrowDownward,
@@ -38,7 +33,6 @@ import {
   SubjectSharp,
   VerticalSplitSharp,
 } from "@material-ui/icons";
-import MenuIcon from "@material-ui/icons/Menu";
 
 import { TextField } from "formik-material-ui";
 
@@ -47,22 +41,12 @@ import Image from "../images/Logo_Background.svg";
 import {
   ErrorMessage,
   FormDiv,
-  SiteHeader,
-  HeaderTitle,
   LightTheme,
   DarkTheme,
   useUser,
-  AccountPageDiv,
-  HeaderDiv,
-  LogoLink,
-  PageDiv,
-  PageName,
-  SectionName,
-  TextSectionDiv,
   UserImage,
+  HeaderBar,
 } from "jinxui";
-
-import { TPortfolio, TPage, TSection } from "./Types";
 
 const FRONT_END_URL = "http://localhost:3000/";
 
@@ -140,7 +124,6 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-
 const StyledPaper = styled(Paper)`
   padding: 10px;
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
@@ -181,8 +164,6 @@ const SectionDiv = styled.div`
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
 `;
-
-
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -328,13 +309,12 @@ const NewSectionMenu = () => {
   );
 };
 
-function sectionDataIsEmpty(data: any)
-{
+function sectionDataIsEmpty(data: any) {
   return (
     (data.type === "text" && data.content === "") ||
     (data.type === "image" && data.image === 0) ||
     (data.type === "image_text" && data.image === 0 && data.content === "")
-  )
+  );
 }
 
 function PostSection(
@@ -343,8 +323,7 @@ function PostSection(
   page_id: string,
   data: any
 ) {
-  if (!sectionDataIsEmpty(data))
-  {
+  if (!sectionDataIsEmpty(data)) {
     postSection(portfolio_id, page_id, data)
       .then(function (response: any) {
         console.log(response);
@@ -352,7 +331,7 @@ function PostSection(
       .catch(function (error: any) {
         console.log(error);
       });
-    }
+  }
 }
 
 function UploadImageBit(
@@ -391,7 +370,7 @@ function UploadImageBit(
         />
         <ImageGrid>
           <ImageGridMain>
-            <UserImage src={imageResponse.image} />{" "}
+            <UserImage src={imageResponse.path} />{" "}
           </ImageGridMain>
           <StyledImageUploadOverlay elevation={0} square>
             Upload Image
@@ -434,24 +413,10 @@ const PaperSection = (props: any) => {
 };
 
 const BetweenSections = () => {
-  return (
-    <NewSectionMenu />
-    // <HeaderFlexContainer>
-    //   <HeaderFlexItem></HeaderFlexItem>
-    //   <HeaderFlexItem>
-    //     <IconButton>
-    //       <Add />
-    //     </IconButton>
-    //   </HeaderFlexItem>
-    //   <HeaderFlexItem></HeaderFlexItem>
-    // </HeaderFlexContainer>
-  );
+  return <NewSectionMenu />;
 };
 
-function PortfolioTitleSection(
-  title: string,
-  sectionName: string
-) {
+function PortfolioTitleSection(title: string, sectionName: string) {
   const classes = useStyles();
   // console.log("THE NAME IS " + defaultText);
   return (
@@ -561,23 +526,29 @@ const Edit = () => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
   const [bioImageResponse, setBioImageResponse] = useState({
-    image: FRONT_END_URL + "blank_user.png",
+    path: FRONT_END_URL + "blank_user.png",
     id: null,
   });
   const [awesomeImageResponse, setAwesomeImageResponse] = useState({
-    image: FRONT_END_URL + "blank_user.png",
+    path: FRONT_END_URL + "blank_user.png",
     id: null,
   });
-  const { postPortfolio, postPage, postSection, savePortfolioId, getSavedLightThemeMode, switchLightThemeMode} = useUser();
+  const {
+    postPortfolio,
+    postPage,
+    postSection,
+    savePortfolioId,
+    getSavedLightThemeMode,
+    switchLightThemeMode,
+  } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
   const classes = useStyles();
-  const trigger = useScrollTrigger();
+
   const onLogin = () => {
-    return <Redirect to="/portfolio"/>
-  }
+    return <Redirect to="/portfolio" />;
+  };
   const savedLightThemeMode = getSavedLightThemeMode();
-  // setTheme(savedLightThemeMode)
 
   if (redirect) {
     return onLogin();
@@ -585,39 +556,16 @@ const Edit = () => {
     return (
       <>
         <ThemeProvider theme={appliedTheme}>
-          {/* I can't figure out how to put this into a separate function  */}
-          <ThemeProvider theme={DarkTheme}>
-            <Slide appear={false} direction="down" in={!trigger}>
-              <AppBar className={classes.toolbar}>
-                <Toolbar className={classes.toolbar} variant="dense">
-                  <IconButton
-                    edge="start"
-                    className={classes.menuButton}
-                    color="inherit"
-                    size="small"
-                    aria-label="menu"
-                  >
-                    <MenuIcon />
-                  </IconButton>
-                  <Typography variant="h6" className={classes.title}>
-                    Awesome Portfolio
-                  </Typography>
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      switchLightThemeMode()
-                      setTheme(!theme)
-                    }}
-                  >
-                    <SettingsBrightness />
-                  </IconButton>
-                  <IconButton size="small">
-                    <Person />
-                  </IconButton>
-                </Toolbar>
-              </AppBar>
-            </Slide>
-          </ThemeProvider>
+          <HeaderBar>
+            <IconButton
+              onClick={() => {
+                switchLightThemeMode();
+                setTheme(!theme);
+              }}
+            >
+              <SettingsBrightness />
+            </IconButton>
+          </HeaderBar>
           <CssBaseline />
           <StyledFormDiv>
             <div></div>
@@ -792,4 +740,3 @@ const Edit = () => {
   }
 };
 export default Edit;
-

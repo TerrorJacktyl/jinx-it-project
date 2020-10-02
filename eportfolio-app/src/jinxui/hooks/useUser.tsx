@@ -160,7 +160,7 @@ export const useUser = () => {
   // Declaring a function as async means the return gets wrapped in a promise
   async function uploadImage(file: File, name: string) {
     const form_data = new FormData();
-    form_data.append("image", file, file.name);
+    form_data.append("path", file, file.name);
     form_data.append("name", name);
     const result = API.post(IMAGES_PATH, form_data, state.config)
       .then((response: any) => response)
