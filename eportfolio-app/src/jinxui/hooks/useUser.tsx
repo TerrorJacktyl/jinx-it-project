@@ -102,15 +102,21 @@ export const useUser = () => {
 
   // Another style: await with try catch
   async function logout() {
+
+    /**
+     * Reset context state to default, and clear browser-stored user data.
+     * Do this before the POST in case already logged out (failing POST would prevent
+     * reseting browser state).
+     */
+    resetState();
     try {
       const response = await API.post(LOGOUT_PATH, {}, state.config);
 
-      // make the success more concrete when we've defined a status code on backend
+      // Logout succeeded on backend
       if (response.status === 204) {
-        // Reset context state to default, and clear browser-stored user data
-        resetState();
         return response;
       }
+      // Logout failed on backend - the browser's token might have already expired
     } catch (e) {
       throw e.message;
     }

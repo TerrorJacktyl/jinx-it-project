@@ -13,6 +13,7 @@ import {
   HeaderTitle,
   AccountPageDiv,
   FormAlert,
+  Routes,
   useUser,
 } from "jinxui";
 import styled from "styled-components";
@@ -56,12 +57,19 @@ const SignupSchema = Yup.object().shape({
 
 const Login = () => {
   const [submittionError, setSubmittionError] = useState('');
-  const [redirect, setRedirect] = useState(false);
 
-  const { login } = useUser();
+  const { userData, login } = useUser();
+  /** Due to how the router protection works, this is a bit hackey.
+   * The Routes.LOGIN route is not protected, because doing so causes
+   * the redirect from LOGIN to PORTFOLIO_EDIT (a protected route) to
+   * be overridden by the route protection's redirect (i.e. to home).
+   */
+  const [redirect, setRedirect] = useState(
+    userData.authenticated ? true : false
+  );
 
   const onLogin = () => {
-    return <Redirect to="/profile" />
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />
   }
 
   if (redirect) {
@@ -124,7 +132,7 @@ const Login = () => {
                   fontSize={"20px"}
                 />
 
-                <StyledLink href="/signup" ><FormText>Sign up for an account</FormText></StyledLink>
+                <StyledLink href={Routes.SIGNUP} ><FormText>Sign up for an account</FormText></StyledLink>
 
               </Form>
 

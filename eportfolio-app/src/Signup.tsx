@@ -15,6 +15,7 @@ import {
   HeaderTitle,
   AccountPageDiv,
   FormAlert,
+  Routes,
   useUser,
 } from "jinxui";
 
@@ -66,13 +67,13 @@ const SignupSchema = Yup.object().shape({
 const Signup = () => {
 
   // This could be parametrized to accept multiple different redirects
-  // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
+  // e.g. hold a component to redirect to rather than a boolean for a redirect to login page
   const [redirect, setRedirect] = useState(false);
 
   const { signup, login, setAccountDetails } = useUser();
 
   const onRegister = () => {
-    return <Redirect to="/login" />
+    return <Redirect to={Routes.LOGIN} />
   }
 
   const [submittionError, setSubmittionError] = useState('');
@@ -152,7 +153,7 @@ const Signup = () => {
                   fontSize={null}
                 />
 
-                <StyledLink href="/login" ><FormText>Already have an account? Log In</FormText></StyledLink>
+                <StyledLink href={Routes.LOGIN} ><FormText>Already have an account? Log In</FormText></StyledLink>
               </Form>
             )}
           </Formik>

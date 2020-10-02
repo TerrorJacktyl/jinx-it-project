@@ -1,6 +1,8 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { useUser } from "jinxui";
+import { Routes, useUser } from "jinxui";
+
+// .js has been used because configuring the ...rest type and the Component type is frustrating.
 
 /** Wrapper for routes only accessible by logged in users.
  * Redirects users to login if they try to access this route without being
@@ -16,7 +18,7 @@ export function LoggedInRoute({ component: Component, ...rest }) {
         userData.authenticated ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect to={Routes.LOGIN} />
         )
       }
     />
@@ -37,7 +39,7 @@ export function LoggedOutRoute({ component: Component, ...rest }) {
         !userData.authenticated ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/profile" />
+          <Redirect to={Routes.HOME} />
         )
       }
     />

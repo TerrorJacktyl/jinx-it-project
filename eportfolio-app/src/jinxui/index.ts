@@ -24,6 +24,7 @@ export { default as UserAvatarDropdown } from "./components/account/UserAvatarDr
 
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
+export { Routes } from "./routes/Routes";
 
 /* Context */
 export {

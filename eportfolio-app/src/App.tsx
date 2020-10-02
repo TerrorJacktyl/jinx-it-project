@@ -5,7 +5,7 @@ import Signup from "./Signup";
 import Home from "./Home";
 import Profile from "./Profile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { UserContextProvider, LoggedInRoute, LoggedOutRoute } from "jinxui";
+import { UserContextProvider, LoggedInRoute, LoggedOutRoute, Routes } from "jinxui";
 
 function App() {
   return (
@@ -15,10 +15,10 @@ function App() {
       <Router>
         <div className="App">
           <Switch>
-            <Route path="/" exact component={Home} />
-            <LoggedOutRoute path="/login" exact component={Login} />
-            <LoggedOutRoute path="/signup" exact component={Signup} />
-            <LoggedInRoute path="/profile" exact component={Profile} />
+            <Route path={Routes.HOME} exact component={Home} />
+            <Route path={Routes.LOGIN} exact component={Login} />
+            <LoggedOutRoute path={Routes.SIGNUP} exact component={Signup} />
+            <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Profile} />
           </Switch>
         </div>
       </Router>

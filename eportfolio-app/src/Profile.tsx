@@ -13,6 +13,7 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  Routes,
   UserAvatarDropdown,
   useUser,
 } from "jinxui";
@@ -151,7 +152,7 @@ const Profile = () => {
                 <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
               ) : null}
               <div>
-                <StyledLink href="/">
+                <StyledLink href={Routes.HOME}>
                   <StyledCancelButton
                     width={null}
                     textColour="#EEEEEE"

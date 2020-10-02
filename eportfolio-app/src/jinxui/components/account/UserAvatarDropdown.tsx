@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useUser } from "jinxui";
+import { Routes, useUser } from "jinxui";
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -75,7 +75,7 @@ const UserAvatarDropdown = () => {
   };
 
   const onLogout = () => {
-    return <Redirect to="/login" />
+    return <Redirect to={Routes.LOGIN} />
   }
 
   if (logoutRedirect)
@@ -86,15 +86,14 @@ const UserAvatarDropdown = () => {
         <NameDiv>
           <div className={classes.root}>
             <div>
-
-              {userData.firstName ?
+              {userData.authenticated ?
                 <StyledName
                   ref={anchorRef}
                   aria-controls={open ? 'menu-list-grow' : undefined}
                   aria-haspopup="true"
                   onClick={handleToggle}
                 >
-                  {userData.firstName}
+                  {userData.firstName ? userData.firstName : "User"}
                 </StyledName> : null}
 
               <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
