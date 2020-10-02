@@ -5,6 +5,7 @@ const USER_DATA_KEY = "userData";
 
 export const defaultUserContext: IUserContext = {
   username: "",
+  firstName: "",
   token: "",
   authenticated: false,
   theme: "light",

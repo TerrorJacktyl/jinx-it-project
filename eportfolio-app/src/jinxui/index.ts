@@ -4,6 +4,7 @@ export { default as EntryTitle } from "./components/form/EntryTitle";
 export { default as FormDiv } from "./components/form/FormDiv";
 export { default as FormEntry } from "./components/form/FormEntry";
 export { default as SubmitButton } from "./components/form/SubmitButton";
+export { default as FormAlert} from "./components/form/FormAlert";
 
 /* Site */
 export { default as SiteLayout } from "./components/site/SiteLayout";
@@ -19,6 +20,7 @@ export { default as HeaderTitle } from "./components/header/HeaderTitle";
 
 /* Account */
 export { default as AccountPageDiv } from "./components/account/AccountPageDiv";
+export { default as UserAvatarDropdown } from "./components/account/UserAvatarDropdown";
 
 /* Context */
 export {

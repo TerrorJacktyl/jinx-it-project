@@ -12,6 +12,7 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  FormAlert,
   useUser,
 } from "jinxui";
 import styled from "styled-components";
@@ -48,9 +49,8 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
-
 const SignupSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").matches(/^[a-zA-Z0-9_@+.-]+$/, "Can only contain letters, numbers, and some special characters").required("Required"),
   password: Yup.string().required("Required"),
 });
 
@@ -79,27 +79,25 @@ const Login = () => {
 
         <StyledFormDiv>
           <FormTitle>Enter Details</FormTitle>
+          {submittionError ? <FormAlert severity="error">Error logging in: {submittionError}.</FormAlert> : null}
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ username: "", password: "" }}
             validationSchema={SignupSchema}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
-              login(values.email, values.password)
-                .then(data => {
+              login(values.username, values.password)
+                .then((config: any) => {
                   setRedirect(true);
-                  console.log(data);
                 })
                 .catch(error => {
-                  // Manually unpack error here
-                  setSubmittionError(error.response.data.non_field_errors[0]);
-                  console.log(error.response.data.non_field_errors[0]);
+                  setSubmittionError(error);
                 });
             }}
           >
             {({ errors, touched, isSubmitting }) => (
               <Form>
-                <StyledFormEntry name="email" type="email" placeholder="Email address" />
-                {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
+                <StyledFormEntry name="username" type="username" placeholder="Username" />
+                {errors.username && touched.username ? <ErrorMessage>{errors.username}</ErrorMessage> : null}
 
                 <StyledFormEntry name="password" type="password" placeholder="Password" />
                 {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
@@ -115,7 +113,6 @@ const Login = () => {
                   text="Login"
                   fontSize={null}
                 />
-                {submittionError ? <ErrorMessage>Error logging in: {submittionError}.</ErrorMessage> : null}
 
                 <StyledButton
                   width={null}
