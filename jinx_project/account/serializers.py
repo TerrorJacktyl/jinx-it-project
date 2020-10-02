@@ -27,6 +27,9 @@ class AccountSerializer(serializers.ModelSerializer):
             .get('last_name', instance.user.last_name)
         )
         instance.user.save()
+        # remove user key as we have already updated the user
+        validated_data.pop('user')
+        # update the rest of the fields
         super().update(instance, validated_data)
         return instance
 
