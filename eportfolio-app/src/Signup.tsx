@@ -70,7 +70,7 @@ const Signup = () => {
   // e.g. hold a component to redirect to rather than a boolean for a redirect to login page
   const [redirect, setRedirect] = useState(false);
 
-  const { signup, login, setAccountDetails } = useUser();
+  const { signup } = useUser();
 
   const onRegister = () => {
     return <Redirect to={Routes.LOGIN} />
@@ -98,18 +98,9 @@ const Signup = () => {
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
 
-              // This promise chain is gross, but it handles PUTing the user details
+              // Sign up *and* login the user
               signup(values.username, values.email, values.password, values.firstName, values.lastName)
-                .then(function (response: any) {
-                  console.log(response);
-                  return response;
-                })
-                .then((response: any) => {
-                  return login(values.username, values.password);
-                })
-                .then((config: any) => {
-                  // Making this work involved sacrificing a small lamb
-                  setAccountDetails(values.firstName, values.lastName, config);
+                .then(() => {
                   setSubmitting(false);
                   setRedirect(true);
                 })

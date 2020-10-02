@@ -14,7 +14,6 @@ import { AxiosRequestConfig } from "axios";
  * 2. The failure (throw) of your function should be an error message, probably extracted from 
  *    the HTTP response. Please do not leave it to other components to extract the error message.
  */
-
 export const useUser = () => {
   const [state, updateState, resetState] = useContext(UserContext);
 
@@ -63,6 +62,89 @@ export const useUser = () => {
     }
   }
 
+  // Another style: await with try catch
+  async function logout() {
+    /**
+     * Reset context state to default, and clear browser-stored user data.
+     * Do this before the POST in case already logged out (failing POST would prevent
+     * reseting browser state).
+     */
+    resetState();
+    try {
+      const response = await API.post(LOGOUT_PATH, {}, state.config);
+
+      // Logout succeeded on backend
+      if (response.status === 204) {
+        return response;
+      }
+      // Logout failed on backend - the browser's token might have already expired
+    } catch (e) {
+      throw e.message;
+    }
+  }
+
+  // Declaring a function as async means the return gets wrapped in a promise
+  /** Complete these tasks:
+   * 1. Sign up the user in the backend.
+   * 2. Log the user in automatically.
+   */
+  async function signup(
+    username: string,
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) {
+    try {
+      const response = await API.post(SIGNUP_PATH, {
+        username: username,
+        password: password,
+        email: email,
+      });
+      const config = await login(username, password);
+      await setAccountDetails(firstName, lastName, config);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
+    try {
+      const response = await API.get(ACCOUNT_PATH, konfig)
+      if ("first_name" in response.data) {
+        return response;
+      }
+    } catch (error) {
+      throw error;
+    };
+  }
+
+  /**
+   * Update the logged in user's account details.
+   * @param first_name
+   * @param last_name
+   * @param konfig ignore this, you don't need this argument - only used for sign up trickery
+   */
+  async function setAccountDetails(
+    first_name?: string,
+    last_name?: string,
+    konfig: AxiosRequestConfig = state.config
+  ) {
+    API.put(
+      ACCOUNT_PATH,
+      {
+        first_name: first_name,
+        last_name: last_name,
+      },
+      konfig
+    )
+      .then((response) => response)
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   /**
    * Extract the error message from various hook functions.
    * If we come up with a standard error response format, this function will become much smaller.
@@ -98,84 +180,6 @@ export const useUser = () => {
     }
 
     return submitError;
-  }
-
-  // Another style: await with try catch
-  async function logout() {
-
-    /**
-     * Reset context state to default, and clear browser-stored user data.
-     * Do this before the POST in case already logged out (failing POST would prevent
-     * reseting browser state).
-     */
-    resetState();
-    try {
-      const response = await API.post(LOGOUT_PATH, {}, state.config);
-
-      // Logout succeeded on backend
-      if (response.status === 204) {
-        return response;
-      }
-      // Logout failed on backend - the browser's token might have already expired
-    } catch (e) {
-      throw e.message;
-    }
-  }
-
-  // Declaring a function as async means the return gets wrapped in a promise
-  async function signup(
-    username: string,
-    email: string,
-    password: string,
-    first_name?: string,
-    last_name?: string
-  ) {
-    try {
-      const response = await API.post(SIGNUP_PATH, {
-        username: username,
-        password: password,
-        email: email,
-      });
-      return response;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  /**
-   * Update the logged in user's account details.
-   * @param first_name
-   * @param last_name
-   * @param konfig ignore this, you don't need this argument - only used for sign up trickery
-   */
-  async function setAccountDetails(
-    first_name?: string,
-    last_name?: string,
-    konfig: AxiosRequestConfig = state.config
-  ) {
-    API.put(
-      ACCOUNT_PATH,
-      {
-        first_name: first_name,
-        last_name: last_name,
-      },
-      konfig
-    )
-      .then((response) => response)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
-  async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
-    try {
-      const response = await API.get(ACCOUNT_PATH, konfig)
-      if ("first_name" in response.data) {
-        return response;
-      }
-    } catch (error) {
-      throw error;
-    };
   }
 
   return {
