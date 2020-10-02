@@ -1,8 +1,36 @@
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+
+
+from account.signals import account_created
 
 from . import managers
+
+
+@receiver(account_created)
+def create_default_portfolio(sender, **kwargs):
+    account = kwargs.get('account')
+    portfolio = Portfolio.objects.create(
+        owner=account.user,
+        name='My Portfolio',
+    )
+    page = Page.objects.create(
+        portfolio=portfolio,
+        name='First Page',
+        number=0,
+    )
+    TextSection.objects.create(
+        page=page,
+        name='Hello There!',
+        number='0',
+        content=
+            'Welcome to Jinx\'s portfolio creation software! '
+            'This is a default portfolio, feel free to modify or delete.'
+    )
+    account.primary_portfolio = portfolio
+    account.save()
 
 
 class Portfolio(models.Model):
