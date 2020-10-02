@@ -5,8 +5,7 @@ import Signup from "./Signup";
 import Home from "./Home";
 import Profile from "./Profile";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { UserContextProvider } from "jinxui";
-import PrivateRoute from "./PrivateRoute"
+import { UserContextProvider, LoggedInRoute, LoggedOutRoute } from "jinxui";
 
 function App() {
   return (
@@ -17,9 +16,9 @@ function App() {
         <div className="App">
           <Switch>
             <Route path="/" exact component={Home} />
-            <Route path="/login" exact component={Login} />
-            <Route path="/signup" exact component={Signup} />
-            <PrivateRoute path="/profile" exact component={Profile} />
+            <LoggedOutRoute path="/login" exact component={Login} />
+            <LoggedOutRoute path="/signup" exact component={Signup} />
+            <LoggedInRoute path="/profile" exact component={Profile} />
           </Switch>
         </div>
       </Router>

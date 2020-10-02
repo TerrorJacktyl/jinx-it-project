@@ -13,7 +13,8 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
-  UserAvatarDropdown
+  UserAvatarDropdown,
+  useUser,
 } from "jinxui";
 
 const WideFormDiv = styled(FormDiv)`
@@ -83,7 +84,6 @@ const ProfileSchema = Yup.object().shape({
 });
 
 const Profile = () => {
-  const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
 
   const { logout } = useUser();
