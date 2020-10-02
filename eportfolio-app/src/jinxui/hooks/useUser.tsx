@@ -89,6 +89,10 @@ export const useUser = () => {
     return state.lightThemeMode;
   }
 
+  async function themeChanger() {
+    
+  }
+
   /**
    * Extract the error message from various hook functions.
    * If we come up with a standard error response format, this function will become much smaller.

@@ -1,17 +1,34 @@
 import React from "react";
 import styled from "styled-components";
-import { useUser } from "jinxui";
+import { 
+  useUser, 
+  PrimaryMenuItem, 
+  PrimaryMenu, 
+  HeaderButton
+} from "jinxui";
 import Button from "@material-ui/core/Button";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import Popper from "@material-ui/core/Popper";
-import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
-import { StylesProvider } from "@material-ui/core/styles";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {MenuProps} from "@material-ui/core";
+import Menu from "@material-ui/core/Menu";
+import ListItemText from "@material-ui/core/ListItemText";
+import {
+  StylesProvider,
+  makeStyles,
+  createStyles,
+  Theme,
+  withStyles,
+} from "@material-ui/core/styles";
 import { Person } from "@material-ui/icons";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SettingsIcon from '@material-ui/icons/Settings';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import { Redirect } from "react-router-dom";
 
@@ -86,69 +103,48 @@ const UserAvatarDropdown = () => {
   else
     return (
       <StylesProvider injectFirst>
-        <NameDiv>
-              {userData.firstName ? (
-                <StyledName
-                  ref={anchorRef}
-                  aria-controls={open ? "menu-list-grow" : undefined}
-                  aria-haspopup="true"
-                  onClick={handleToggle}
+        {userData.firstName ? (
+          <StyledName
+            ref={anchorRef}
+            aria-controls={open ? "menu-list-grow" : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+          >
+            <Person />
+            <StyledInnerName>{userData.firstName}</StyledInnerName>
+            <ExpandMoreIcon fontSize="small" />
+          </StyledName>
+        ) : null}
+              <ClickAwayListener onClickAway={handleClose}>
+                <PrimaryMenu
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  disablePortal
+                  open={open}
+                  onClose={handleClose}
+                  id="menu-list-grow"
+                  onKeyDown={handleListKeyDown}
                 >
-                  <Person/>
-                  <StyledInnerName>
-                    {userData.firstName}
-                  </StyledInnerName>
-                </StyledName>
-              ) : null}
-
-              <Popper
-                open={open}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                transition
-                disablePortal
-              >
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    style={{
-                      transformOrigin:
-                        placement === "bottom" ? "center top" : "center bottom",
-                    }}
-                  >
-                    <StyledPaper>
-                      <ClickAwayListener onClickAway={handleClose}>
-                        <StyledMenuList
-                          autoFocusItem={open}
-                          id="menu-list-grow"
-                          onKeyDown={handleListKeyDown}
-                        >
-                          <Grid
-                            container
-                            direction="column"
-                            justify="flex-start"
-                            alignItems="flex-end"
-                            spacing={1}
-                          >
-                            <Grid item xs>
-                              <MenuItem onClick={handleClose}>Account</MenuItem>
-                            </Grid>
-                            <Grid item xs>
-                              <MenuItem onClick={handleClose}>
-                                Preferences
-                              </MenuItem>
-                            </Grid>
-                            <Grid item xs>
-                              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                            </Grid>
-                          </Grid>
-                        </StyledMenuList>
-                      </ClickAwayListener>
-                    </StyledPaper>
-                  </Grow>
-                )}
-              </Popper>
-        </NameDiv>
+                  <PrimaryMenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <AccountBoxIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="Account" />
+                  </PrimaryMenuItem>
+                  <PrimaryMenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <SettingsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Preferences" />
+                  </PrimaryMenuItem>
+                  <PrimaryMenuItem onClick={handleLogout}>
+                    <ListItemIcon>
+                      <ExitToAppIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Logout" />
+                  </PrimaryMenuItem>
+                </PrimaryMenu>
+              </ClickAwayListener>
       </StylesProvider>
     );
 };
@@ -157,21 +153,10 @@ const StyledPaper = styled(Paper)`
   padding: 20px;
 `;
 
-const StyledName = styled(Button)`
-  // color: white;
+const StyledName = styled(HeaderButton)`
   font-size: 20px;
   text-transform: none;
-  // text-transform: none;
-`;
-
-const NameDiv = styled.div`
-  // position: absolute;
-  // right: 0%;
-  // top: 0%;
-  // bottom: 0%;
-  // display: flex;
-  // z-index: 1;
-  // padding-top: 10px;
+  padding: 0px;
 `;
 
 const StyledMenuList = styled(MenuList)`
@@ -181,9 +166,30 @@ const StyledMenuList = styled(MenuList)`
 `;
 
 const StyledInnerName = styled.div`
-  @media (max-width: 500px){
+  @media (max-width: 500px) {
     display: none;
   }
 `;
+
+
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props: MenuProps) => (
+  <Menu
+    elevation={3}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
 
 export default UserAvatarDropdown;

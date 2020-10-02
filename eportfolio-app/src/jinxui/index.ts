@@ -19,6 +19,7 @@ export { default as SiteHeader } from "./components/header/SiteHeader";
 export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
 export { default as HeaderBar } from "./components/header/HeaderBar";
+export { default as HeaderButton } from "./components/header/HeaderButton";
 
 /* Account */
 export { default as AccountPageDiv } from "./components/account/AccountPageDiv";
@@ -30,6 +31,16 @@ export { default as SectionName } from "./components/display/SectionName";
 export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
 export { default as UserImage } from "./components/display/UserImage";
+export { default as PrimaryMenuItem } from "./components/display/MenuItem";
+export { default as PrimaryMenu } from "./components/display/PrimaryMenu";
+
+/* Edit */
+export { default as PaperSection } from "./components/edit/PaperSection"
+export { default as NewSectionMenu } from "./components/edit/NewSectionMenu"
+export { default as UploadImageSubSection } from "./components/edit/UploadImageSubSection"
+export { default as PortfolioNameSection } from "./components/edit/PortfolioNameSection"
+export { default as TextSectionInput } from "./components/edit/TextSectionInput"
+
 
 /* Context */
 export {
@@ -41,6 +52,7 @@ export {
 } from "./contexts/index";
 
 export type { IUserContext } from "./contexts/index";
+export type { IThemeContext } from "./contexts/index"
 
 export { useUser } from "./hooks/useUser";
 

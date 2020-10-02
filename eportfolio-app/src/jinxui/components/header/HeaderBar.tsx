@@ -7,7 +7,7 @@ import {
   useScrollTrigger,
   ListItemIcon,
   ListItemText,
-  IconButton,
+  Button,
   StylesProvider,
   Grid,
 } from "@material-ui/core";
@@ -15,7 +15,9 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import {
   DarkTheme,
+  LightTheme,
   UserAvatarDropdown,
+  HeaderButton,
 } from "jinxui";
 
 import {
@@ -29,18 +31,17 @@ import {
 import styled from "styled-components";
 
 const StyledAppBar = styled(AppBar)`
-  // height: 46px;
   margin: 0px;
-  // background-color: 'black';
 `;
 
 const StyledDivOuter = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
+  grid-template-rows: 46px;
   // grid-gap: 20px;
 `;
 const StyledDivLeft = styled.div`
-  padding-left: 20px;
+  padding-left: 0px;
   display: flex;
   align-items: center;
 `;
@@ -52,7 +53,7 @@ const StyledDivCenter = styled.div`
 `;
 
 const StyledDivRight = styled.div`
-  padding-right: 20px;
+  padding-right: 0px;
   display: flex;
   justify-content: right;
   align-items: center;
@@ -62,19 +63,20 @@ const HeaderBar = (props: any) => {
   const trigger = useScrollTrigger();
   return (
     <StylesProvider injectFirst>
-      <ThemeProvider theme={DarkTheme}>
+      {/* <ThemeProvider theme={LightTheme}> */}
         <Slide appear={false} direction="down" in={!trigger}>
-          <StyledAppBar style={{ backgroundColor: "#373a3e" }}>
+          <StyledAppBar 
+            color="inherit"
+            elevation={2}
+          >
             <StyledDivOuter>
               <StyledDivLeft>
-                <IconButton
-                  edge="start"
+                <HeaderButton
                   color="inherit"
-                  // size="small"
                   aria-label="menu"
                 >
                   <MenuIcon />
-                </IconButton>
+                </HeaderButton>
                 <Typography variant="h6">Awesome Portfolio</Typography>
               </StyledDivLeft>
               <div></div>
@@ -85,9 +87,10 @@ const HeaderBar = (props: any) => {
             </StyledDivOuter>
           </StyledAppBar>
         </Slide>
-      </ThemeProvider>
     </StylesProvider>
   );
 };
+
+
 
 export default HeaderBar;
