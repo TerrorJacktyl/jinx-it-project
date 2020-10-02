@@ -1,36 +1,34 @@
 import React from "react";
 import styled from "styled-components";
-import { 
-  useUser, 
-  PrimaryMenuItem, 
-  PrimaryMenu, 
-  HeaderButton
-} from "jinxui";
-import Button from "@material-ui/core/Button";
+import { useUser, PrimaryMenuItem, PrimaryMenu, HeaderButton } from "jinxui";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Grow from "@material-ui/core/Grow";
-import Paper from "@material-ui/core/Paper";
-import Popper from "@material-ui/core/Popper";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import {MenuProps} from "@material-ui/core";
-import Menu from "@material-ui/core/Menu";
 import ListItemText from "@material-ui/core/ListItemText";
 import {
   StylesProvider,
   makeStyles,
   createStyles,
   Theme,
-  withStyles,
 } from "@material-ui/core/styles";
 import { Person } from "@material-ui/icons";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SettingsIcon from '@material-ui/icons/Settings';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import SettingsIcon from "@material-ui/icons/Settings";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
 
 import { Redirect } from "react-router-dom";
+
+const StyledName = styled(HeaderButton)`
+  font-size: 20px;
+  text-transform: none;
+  padding: 0px;
+`;
+
+const StyledInnerName = styled.div`
+  @media (max-width: 500px) {
+    display: none;
+  }
+`;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -115,81 +113,38 @@ const UserAvatarDropdown = () => {
             <ExpandMoreIcon fontSize="small" />
           </StyledName>
         ) : null}
-              <ClickAwayListener onClickAway={handleClose}>
-                <PrimaryMenu
-                  anchorEl={anchorRef.current}
-                  role={undefined}
-                  disablePortal
-                  open={open}
-                  onClose={handleClose}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
-                  <PrimaryMenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <AccountBoxIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Account" />
-                  </PrimaryMenuItem>
-                  <PrimaryMenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <SettingsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Preferences" />
-                  </PrimaryMenuItem>
-                  <PrimaryMenuItem onClick={handleLogout}>
-                    <ListItemIcon>
-                      <ExitToAppIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Logout" />
-                  </PrimaryMenuItem>
-                </PrimaryMenu>
-              </ClickAwayListener>
+        <ClickAwayListener onClickAway={handleClose}>
+          <PrimaryMenu
+            id="menu-list-grow"
+            anchorEl={anchorRef.current}
+            role={undefined}
+            disablePortal
+            open={open}
+            onClose={handleClose}
+            onKeyDown={handleListKeyDown}
+          >
+            <PrimaryMenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <AccountBoxIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Account" />
+            </PrimaryMenuItem>
+            <PrimaryMenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Preferences" />
+            </PrimaryMenuItem>
+            <PrimaryMenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </PrimaryMenuItem>
+          </PrimaryMenu>
+        </ClickAwayListener>
       </StylesProvider>
     );
 };
-
-const StyledPaper = styled(Paper)`
-  padding: 20px;
-`;
-
-const StyledName = styled(HeaderButton)`
-  font-size: 20px;
-  text-transform: none;
-  padding: 0px;
-`;
-
-const StyledMenuList = styled(MenuList)`
-  // color: white;
-  // background-color: black;
-  // z-index: 2;
-`;
-
-const StyledInnerName = styled.div`
-  @media (max-width: 500px) {
-    display: none;
-  }
-`;
-
-
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={3}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
 
 export default UserAvatarDropdown;

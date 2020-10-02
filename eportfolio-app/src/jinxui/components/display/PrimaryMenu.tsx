@@ -7,11 +7,13 @@ import withStyles from "@material-ui/core/styles/withStyles"
 const StyledPrimaryMenu = withStyles({
   paper: {
     border: "1px solid #d3d4d5",
+    borderRadius: 0,
   },
 })((props: MenuProps) => (
   <Menu
     elevation={3}
     getContentAnchorEl={null}
+
     anchorOrigin={{
       vertical: "bottom",
       horizontal: "center",

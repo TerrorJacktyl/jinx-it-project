@@ -5,11 +5,7 @@ import {
   Typography,
   Slide,
   useScrollTrigger,
-  ListItemIcon,
-  ListItemText,
-  Button,
   StylesProvider,
-  Grid,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -20,14 +16,6 @@ import {
   HeaderButton,
 } from "jinxui";
 
-import {
-  makeStyles,
-  ThemeProvider,
-  createMuiTheme,
-  createStyles,
-  withStyles,
-} from "@material-ui/core/styles";
-
 import styled from "styled-components";
 
 const StyledAppBar = styled(AppBar)`
@@ -37,7 +25,7 @@ const StyledAppBar = styled(AppBar)`
 const StyledDivOuter = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
-  grid-template-rows: 46px;
+  grid-template-rows: minMax(46px, max-content);
   // grid-gap: 20px;
 `;
 const StyledDivLeft = styled.div`
@@ -67,7 +55,7 @@ const HeaderBar = (props: any) => {
         <Slide appear={false} direction="down" in={!trigger}>
           <StyledAppBar 
             color="inherit"
-            elevation={2}
+            elevation={4}
           >
             <StyledDivOuter>
               <StyledDivLeft>
@@ -79,7 +67,7 @@ const HeaderBar = (props: any) => {
                 </HeaderButton>
                 <Typography variant="h6">Awesome Portfolio</Typography>
               </StyledDivLeft>
-              <div></div>
+              <StyledDivCenter></StyledDivCenter>
               <StyledDivRight>
                 <UserAvatarDropdown />
                 {props.children}

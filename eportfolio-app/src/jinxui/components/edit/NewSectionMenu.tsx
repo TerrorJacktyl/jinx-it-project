@@ -29,7 +29,7 @@ const NewSectionMenu = () => {
         <AddIcon />
       </IconButton>
       <PrimaryMenu
-        id="customized-menu"
+        id="new-section-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}

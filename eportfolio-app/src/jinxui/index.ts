@@ -33,14 +33,18 @@ export { default as PageDiv } from "./components/display/PageDiv";
 export { default as UserImage } from "./components/display/UserImage";
 export { default as PrimaryMenuItem } from "./components/display/MenuItem";
 export { default as PrimaryMenu } from "./components/display/PrimaryMenu";
+export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
+export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
 
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection"
 export { default as NewSectionMenu } from "./components/edit/NewSectionMenu"
 export { default as UploadImageSubSection } from "./components/edit/UploadImageSubSection"
-export { default as PortfolioNameSection } from "./components/edit/PortfolioNameSection"
+export { default as TextFieldSubSection } from "./components/edit/TextFieldSubSection"
+export { default as PortfolioNameSectionInput } from "./components/edit/PortfolioNameSectionInput"
 export { default as TextSectionInput } from "./components/edit/TextSectionInput"
-
+export { default as ImageSectionInput } from "./components/edit/ImageSectionInput"
+export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
 
 /* Context */
 export {

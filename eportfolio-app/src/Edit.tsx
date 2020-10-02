@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
@@ -10,23 +10,12 @@ import {
   createStyles,
 } from "@material-ui/core/styles";
 import {
-  Paper,
   Button,
   CssBaseline,
-  Menu,
-  MenuProps,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
+  Paper,
 } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
 import {
-  AddPhotoAlternateOutlined,
   SettingsBrightness,
-  Add,
-  InsertPhotoSharp,
-  SubjectSharp,
-  VerticalSplitSharp,
 } from "@material-ui/icons";
 
 import { TextField } from "formik-material-ui";
@@ -39,19 +28,16 @@ import {
   LightTheme,
   DarkTheme,
   useUser,
-  UserImage,
   HeaderBar,
-  PrimaryMenuItem,
-  PrimaryMenu,
-  PaperSection,
   NewSectionMenu,
-  UploadImageSubSection,
   TextSectionInput,
-  // PortfolioNameSection
+  ImageSectionInput,
+  ImageTextSectionInput,
+  PortfolioNameSectionInput,
 } from "jinxui";
 
 
-import PortfolioNameSection from "jinxui/components/edit/PortfolioNameSection"
+// import PortfolioNameSection from "jinxui/components/edit/PortfolioNameSection"
 const FRONT_END_URL = "http://localhost:3000/";
 
 const useStyles = makeStyles((theme: any) =>
@@ -97,12 +83,9 @@ const useStyles = makeStyles((theme: any) =>
   })
 );
 
-const SectionDiv = styled.div`
-  margin-top: 0px;
-  margin-bottom: 30px;
-  display: grid;
-  grid-template-rows: 100px, 1fr;
-`;
+// const StyledBackgroundImage = styled.Paper`
+//   background-image: `url(${Image})`
+// `;
 
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
@@ -129,25 +112,6 @@ const BottomButtonsDiv = styled.div`
   grid-template-rows: 40px;
   margin-top: 30px;
 `;
-
-const OneColumnSectionGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 30px;
-  margin-bottom: 15px;
-  direction: column;
-`;
-
-
-const TwoColumnSectionGrid = styled(OneColumnSectionGrid)`
-  grid-template-columns: 1fr 1fr;
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-  grid-gap: 60px;
-`;
-
-
 
 const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
@@ -183,118 +147,6 @@ const BetweenSections = () => {
   return <NewSectionMenu />;
 };
 
-// const OneColumnThinSectionGrid = styled.div`
-//   display: grid;
-//   grid-template-columns: 1fr;
-//   margin: 30px;
-//   margin-bottom: 10px;
-// `;
-
-// const SingleLineRequiredGrid = styled.div`
-//   display: grid;
-//   grid-template-rows: 50px;
-//   margin-bottom: -10px;
-// `;
-
-// function PortfolioTitleSection(title: string, sectionName: string) {
-//   const classes = useStyles();
-//   return (
-//     <>
-//       <PaperSection title={title}>
-//         <OneColumnThinSectionGrid>
-//           <SingleLineRequiredGrid>
-//             <Field
-//               component={TextField}
-//               className={classes.textFieldMain}
-//               name={sectionName}
-//               id="standard-full-width"
-//               style={{ margin: 0 }}
-//               fullWidth
-//               color="secondary"
-//               errorstyle={{
-//                 float: "right",
-//                 margin: "30px",
-//                 color: "white",
-//               }}
-//             />
-//           </SingleLineRequiredGrid>
-//         </OneColumnThinSectionGrid>
-//       </PaperSection>
-//     </>
-//   );
-// }
-
-function ImageTextSectionBit(
-  title: string,
-  sectionName: string,
-  touched: any,
-  errors: any,
-  imageResponse: any,
-  setImageResponse: any
-) {
-  return (
-    <>
-      <PaperSection title={title}>
-        <TwoColumnSectionGrid>
-          <div>
-            {TextSectionField(sectionName, 18)}
-            {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
-          </div>
-          <div>
-            {UploadImageSubSection(sectionName, imageResponse, setImageResponse)}
-          </div>
-        </TwoColumnSectionGrid>
-      </PaperSection>
-    </>
-  );
-}
-
-function ImageSectionBit(
-  title: string,
-  sectionName: string,
-  imageResponse: any,
-  setImageResponse: any
-) {
-  return (
-    <>
-      <PaperSection title={title}>
-        <OneColumnSectionGrid>
-          {UploadImageSubSection(sectionName, imageResponse, setImageResponse)}
-        </OneColumnSectionGrid>
-      </PaperSection>
-    </>
-  );
-}
-
-// const TextSectionInput = (props: any) => {
-//   return (
-//     <>
-//       <PaperSection title={props.title}>
-//         <OneColumnSectionGrid>
-//           {TextSectionField(props.sectionName, 15)}
-//           {props.errors && props.touched ? <ErrorMessage>{props.errors}</ErrorMessage> : null}
-//         </OneColumnSectionGrid>
-//       </PaperSection>
-//     </>
-//   );
-// }
-
-const TextSectionField = (sectionName: string, rows: number) => {
-  return (
-    <Field
-      component={TextField}
-      name={sectionName}
-      id="standard-full-width"
-      style={{ margin: 0, marginBottom: 15 }}
-      fullWidth
-      multiline
-      rows={rows}
-      rowsMax={30}
-      // variant="filled"
-      color="secondary"
-    />
-  );
-};
 const Edit = () => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
@@ -439,7 +291,7 @@ const Edit = () => {
               >
                 {({ errors, touched, isSubmitting }) => (
                   <Form>
-                    <PortfolioNameSection
+                    <PortfolioNameSectionInput
                       title={"Website Name*"}
                       sectionName={"websiteName"}
                     >
@@ -452,9 +304,9 @@ const Edit = () => {
                         fullWidth
                         color="secondary"
                       />
-                    </PortfolioNameSection>
+                    </PortfolioNameSectionInput>
                     <BetweenSections />
-                    {ImageTextSectionBit(
+                    {ImageTextSectionInput(
                       "Biography",
                       "biography",
                       touched.biography,
@@ -473,19 +325,12 @@ const Edit = () => {
                       errors = {errors.academicHistory}
                     />
                     <BetweenSections />
-                    {/* {ImageSectionInput(
+                    {ImageSectionInput(
                       "Awesome Image",
                       "awesomeImage",
                       awesomeImageResponse,
                       setAwesomeImageResponse
                     )}
-                    <BetweenSections />
-                    {TextSectionInput(
-                      "Professional History",
-                      "professionalHistory",
-                      touched.professionalHistory,
-                      errors.academicHistory
-                    )} */}
                     <BetweenSections />
                     <BottomButtonsDiv>
                       <div></div>
