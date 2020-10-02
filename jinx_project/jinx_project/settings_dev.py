@@ -1,5 +1,8 @@
-
+import os
 from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -10,9 +13,9 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '.localhost']
 # Sets which sites are allowed to contact the api
 # This should be set to where the front end will be served.
 CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ALLOWED_ORIGINS = (
+# CORS_ALLOWED_ORIGINS = (
 #    'http://localhost:3000', # do not finish with a /
-#)
+# )
 
 # Prevent browsers from sending cookies if on http
 # Disabled in dev environment as dev server will not be behind https

@@ -161,7 +161,6 @@ MEDIA_URL = 'https://cdn.jinx.systems/'
 MEDIA_ROOT = '/srv/media/'
 
 
-
 DRF_DEFAULT_RENDERER_CLASSES = (
     'rest_framework.renderers.JSONRenderer',
 )
