@@ -79,7 +79,7 @@ export const useUser = () => {
       }
       // Logout failed on backend - the browser's token might have already expired
     } catch (e) {
-      throw e.message;
+      throw handleError(e);
     }
   }
 
@@ -105,7 +105,7 @@ export const useUser = () => {
       await setAccountDetails(firstName, lastName, config);
       return response;
     } catch (e) {
-      throw e;
+      throw handleError(e);
     }
   }
 
@@ -116,7 +116,7 @@ export const useUser = () => {
         return response;
       }
     } catch (error) {
-      throw error;
+      throw handleError(error);
     };
   }
 
@@ -141,7 +141,7 @@ export const useUser = () => {
     )
       .then((response) => response)
       .catch((error) => {
-        throw error;
+        throw handleError(error);
       });
   }
 
@@ -154,7 +154,16 @@ export const useUser = () => {
     const error = e.response;
     var errorVar = null;
     var submitError = "";
-    if (error.data) {
+
+    // If an authenticated API request failed, the user is likely unauthenticated.
+    // Log them in.
+    if (state.authenticated)
+      logout();
+
+    if (error.message) {
+      errorVar = error.message;
+    }
+    else if (error.data) {
       if (error.data.non_field_errors) {
         errorVar = error.data.non_field_errors;
       }
