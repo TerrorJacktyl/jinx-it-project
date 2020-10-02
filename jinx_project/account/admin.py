@@ -23,3 +23,8 @@ class AccountInLine(admin.StackedInline):
 # # Re-register user admin
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)
+
+
+@admin.register(Account)
+class PageAdmin(admin.ModelAdmin):
+    list_display = ['user', 'primary_portfolio']
