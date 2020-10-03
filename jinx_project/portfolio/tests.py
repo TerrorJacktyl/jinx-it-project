@@ -307,30 +307,51 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
 
     def test_text_section_update(self):
         name = 'spunky horticulturists'
-        initial_data = copy.deepcopy(serializers.TextSectionSerializer(self.section).data)
-        response = self.client.patch(
-            reverse(
-                'section_detail',
-                kwargs={
-                    'portfolio_id': self.portfolio.id,
-                    'page_id': self.page.id,
-                    'section_id': self.section.id,
-                }
-            ),
-            {'name': name},
-            format='json',
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.get('name'), name)
+        content = 'directionless equipages'
 
-        # clear out cached data
-        self.section.refresh_from_db()
+        def update_field(field, val):
+            response = self.client.patch(
+                reverse(
+                    'section_detail',
+                    kwargs={
+                        'portfolio_id': self.portfolio.id,
+                        'page_id': self.page.id,
+                        'section_id': self.section.id,
+                    }
+                ),
+                {field: val},
+                format='json',
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.data.get(field), val)
 
-        self.assertEqual(self.section.name, name)
-        self.assertEqual(self.section.page, self.page)
-        self.assertEqual(self.section.type, 'text')
-        self.assertEqual(self.section.number, initial_data.get('number'))
-        self.assertEqual(self.section.content, initial_data.get('content'))
+        with self.subTest(field='name'):
+            initial_data = copy.deepcopy(serializers.TextSectionSerializer(self.section).data)
+
+            update_field('name', name)
+
+            # clear out cached data
+            self.section.refresh_from_db()
+
+            self.assertEqual(self.section.name, name)
+            self.assertEqual(self.section.page, self.page)
+            self.assertEqual(self.section.type, 'text')
+            self.assertEqual(self.section.number, initial_data.get('number'))
+            self.assertEqual(self.section.content, initial_data.get('content'))
+
+        with self.subTest(field='content'):
+            initial_data = copy.deepcopy(serializers.TextSectionSerializer(self.section).data)
+
+            update_field('content', content)
+
+            # clear out cached data
+            self.section.refresh_from_db()
+
+            self.assertEqual(self.section.name, initial_data.get('name'))
+            self.assertEqual(self.section.page, self.page)
+            self.assertEqual(self.section.type, 'text')
+            self.assertEqual(self.section.number, initial_data.get('number'))
+            self.assertEqual(self.section.content, content)
 
     def test_text_section_delete(self):
         response = self.client.delete(
