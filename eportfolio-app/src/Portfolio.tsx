@@ -33,6 +33,12 @@ type MediaSectionProps = {
   path: string;
 };
 
+type ImageTextSectionProps = {
+  name: string;
+  path: string;
+  content: string;
+}
+
 /* At the moment displays portfolio with the hardcoded id, and only the first page
    of said portfolio. Consider either passing the portfolio id as props, or having
    the current portfolio provided by context. Regardless, we'll probably have to 
@@ -53,10 +59,6 @@ const Portfolio = () => {
     const fetchPortfolio = async () => {
       var tempPortfolioId = await getSavedPortfolioId();
       console.log(tempPortfolioId);
-      // TEST
-      if (tempPortfolioId < 0) {
-        tempPortfolioId = 1;
-      }
       const { portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
       setPortfolio(portfolio);
 
@@ -97,15 +99,7 @@ const Portfolio = () => {
               } else if (section.type === "image") {
                 return <UserImage src={section.path} />;
               } else if (section.type === "image_text") {
-                return (
-                  <>
-                    <UserImage src={section.path} />
-                    <TextSection
-                      name={section.name}
-                      content={section.content}
-                    />
-                  </>
-                );
+                return <ImageTextSection name={section.name} path={section.path} content={section.content}  />
               } else {
                 return (
                   <MediaSection name={section.name} path={section.media} />
@@ -131,5 +125,16 @@ const MediaSection: React.FC<MediaSectionProps> = ({ name, path }) => (
     <img src={path} alt="" />
   </SectionContainer>
 );
+
+const ImageTextSection: React.FC<ImageTextSectionProps> = ({ name, path, content }) => (
+  <>
+    <UserImage src={path} />
+    <TextSection
+      name={name}
+      content={content}
+    />
+  </>
+
+)
 
 export default Portfolio;
