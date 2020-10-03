@@ -25,6 +25,8 @@ import {
   HeaderTitle,
   AccountPageDiv,
   useUser,
+  LightTheme,
+  DarkTheme,
 } from "jinxui";
 // import classes from "*.module.css";
 
@@ -196,7 +198,7 @@ function UploadImageBit(
   const classes = useStyles();
   return (
     <>
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={LightTheme}>
         <ImageDiv>
           <BlankUser src={imageResponse.image} />
           <label htmlFor={uploadButtonLabel}>
@@ -406,7 +408,7 @@ const Edit = () => {
   const { postPortfolio, postPage, postSection } = useUser();
   const classes = useStyles();
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={DarkTheme}>
       <CssBaseline />
       <SiteHeader>
         <HeaderDiv>
