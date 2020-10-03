@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 
 from djoser.signals import user_registered
+from .signals import account_created
+
+from portfolio.models import Portfolio
 
 
 class Account(models.Model):
@@ -15,8 +18,13 @@ class Account(models.Model):
     # Link the account model to Django's default User model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # TODO: additional fields
-    # default user defines username, firstname, lastname, email
+    # additional fields
+    primary_portfolio = models.OneToOneField(
+        Portfolio,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
 
     def _str_(self):
         return self.user.first_name
@@ -25,4 +33,5 @@ class Account(models.Model):
 # autocreate account on user registration
 @receiver(user_registered)
 def create_account(sender, **kwargs):
-    Account.objects.create(user=kwargs['user'])
+    account = Account.objects.create(user=kwargs['user'])
+    account_created.send(sender='create_account', account=account)
