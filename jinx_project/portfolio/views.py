@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import Http404
+from django.db import transaction
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import status
+from rest_framework.response import Response
 
 from . import models
 from . import serializers
@@ -115,6 +118,22 @@ class SectionList(generics.ListCreateAPIView):
 
     swagger_schema = swagger.PortfolioAutoSchema
 
+    # bulk section creation/update
+    def put(self, request, *args, **kwargs):
+        for i, section in enumerate(request.data):
+            section['number'] = i
+        serializer = serializers.SectionListSerializer(
+            self.get_queryset(),
+            data=request.data,
+            child=serializers.PolymorphSectionSerializer(
+                context=self.get_serializer_context()
+            ),
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
 
 class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PolymorphSectionSerializer

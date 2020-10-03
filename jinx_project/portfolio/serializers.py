@@ -1,3 +1,5 @@
+import copy
+
 from rest_framework import serializers
 
 from . import models
@@ -47,6 +49,8 @@ class PageOutputSerializer(serializers.ModelSerializer):
 
 class SectionSerializer(serializers.ModelSerializer):
     type = serializers.ReadOnlyField()
+    # add id explicitly for it to be avaliable in the list serialiser
+    id = serializers.IntegerField(required=False)
 
     class Meta:
         model = models.Section
@@ -72,6 +76,43 @@ class SectionSerializer(serializers.ModelSerializer):
         if 'page' not in data:
             data['page'] = self.context['page_id']
         return super().to_internal_value(data)
+
+
+class SectionListSerializer(serializers.ListSerializer):
+
+    def __init__(self, *args, **kwargs):
+        self.child = kwargs.pop('child', copy.deepcopy(self.child))
+        self.allow_empty = kwargs.pop('allow_empty', True)
+        super(serializers.ListSerializer, self).__init__(*args, **kwargs)
+
+    def create(self, validated_data):
+        ret = []
+        for i, attrs in enumerate(validated_data):
+            ret.append(self.child.create(attrs))
+        return ret
+
+    # based on example from docs
+    # https://www.django-rest-framework.org/api-guide/serializers/#listserializer
+    def update(self, instance, validated_data):
+        # Maps for id->instance and id->data item.
+        section_mapping = {section.id: section for section in instance}
+
+        # Perform creations and updates.
+        ret = []
+        for data in validated_data:
+            section = section_mapping.get(data.pop('id', None), None)
+            if section is None:
+                ret.append(self.child.create(data))
+            else:
+                data.pop('type', None)
+                ret.append(self.child.update(section, data))
+
+        # Perform deletions.
+        for section_id, section in section_mapping.items():
+            if section_id not in map(lambda s: s.id, ret):
+                section.delete()
+
+        return ret
 
 
 class PolymorphSectionSerializer(SectionSerializer):
@@ -106,12 +147,12 @@ class PolymorphSectionSerializer(SectionSerializer):
             ) from ex
         try:
             serializer = self.get_serializer_map()[section_type]
-            validated_data = serializer(
-                context=self.context).to_internal_value(data)
         except KeyError as ex:
             raise serializers.ValidationError(
                 'Invalid type of section'
             ) from ex
+        validated_data = serializer(
+            context=self.context).to_internal_value(data)
 
         # validators strip keys that are not in the model, so add the type key back
         validated_data['type'] = section_type
