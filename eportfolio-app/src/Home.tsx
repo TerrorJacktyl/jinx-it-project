@@ -8,6 +8,7 @@ import {
   useUser,
   DarkTheme,
   HeaderBar,
+  Routes,
 } from "jinxui";
 
 const SiteHeader = styled.header`
@@ -103,7 +104,7 @@ const Home = () => {
               <HeaderDiv>
                 <HeaderBar title="">
                   <StyledLink
-                    href={userData.authenticated ? "/edit" : "/login"}
+                      href={userData.authenticated ? Routes.PORTFOLIO_DISPLAY : Routes.LOGIN}
                   >
                     <StyledLogin>Login</StyledLogin>
                   </StyledLink>

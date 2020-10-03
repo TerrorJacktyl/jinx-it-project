@@ -12,6 +12,7 @@ import {
   SecondaryButton,
   AccountPageDiv,
   FormAlert,
+  Routes,
   useUser,
   DarkTheme,
   HeaderBar,
@@ -78,12 +79,19 @@ const SignupSchema = Yup.object().shape({
 
 const Login = () => {
   const [submittionError, setSubmittionError] = useState("");
-  const [redirect, setRedirect] = useState(false);
 
-  const { login } = useUser();
+  const { userData, login } = useUser();
+  /** Due to how the router protection works, this is a bit hackey.
+   * The Routes.LOGIN route is not protected, because doing so causes
+   * the redirect from LOGIN to PORTFOLIO_EDIT (a protected route) to
+   * be overridden by the route protection's redirect (i.e. to home).
+   */
+  const [redirect, setRedirect] = useState(
+    userData.authenticated ? true : false
+  );
 
   const onLogin = () => {
-    return <Redirect to="/edit" />;
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
   };
 
   if (redirect) {
@@ -93,7 +101,7 @@ const Login = () => {
       <ThemeProvider theme={DarkTheme}>
         <CssBaseline />
         <AccountPageDiv>
-          <HeaderBar />
+          <HeaderBar title="Login" />
           <StyledFormDiv>
             <FormTitle>Enter Details</FormTitle>
             {submittionError ? (
@@ -135,17 +143,12 @@ const Login = () => {
                     <ErrorMessage>{errors.password}</ErrorMessage>
                   ) : null}
 
-                  <SmallText> Forgot your password? </SmallText>
+                  <PrimaryButton type="submit" disabled={isSubmitting}>
+                    LOGIN
+                  </PrimaryButton>
+                  <SecondaryButton>"Reset Password"</SecondaryButton>
 
-                  <LoginButton type="submit" disabled={isSubmitting}>
-                    Login
-                  </LoginButton>
-
-                  <ResetPasswordButton type="button">
-                    Reset Password
-                  </ResetPasswordButton>
-
-                  <StyledLink href="/signup">
+                  <StyledLink href={Routes.SIGNUP}>
                     <FormText>Sign up for an account</FormText>
                   </StyledLink>
                 </Form>

@@ -4,7 +4,7 @@ export { default as EntryTitle } from "./components/form/EntryTitle";
 export { default as FormDiv } from "./components/form/FormDiv";
 export { default as FormEntry } from "./components/form/FormEntry";
 export { default as SubmitButton } from "./components/form/SubmitButton";
-export { default as FormAlert} from "./components/form/FormAlert";
+export { default as FormAlert } from "./components/form/FormAlert";
 
 /* Site */
 export { default as SiteLayout } from "./components/site/SiteLayout";
@@ -44,6 +44,9 @@ export { default as PortfolioNameSectionInput } from "./components/edit/Portfoli
 export { default as TextSectionInput } from "./components/edit/TextSectionInput"
 export { default as ImageSectionInput } from "./components/edit/ImageSectionInput"
 export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
+/* Routes */
+export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
+export { Routes } from "./routes/Routes";
 
 /* Context */
 export {
@@ -57,6 +60,7 @@ export {
 export type { IUserContext } from "./contexts/index";
 export type { IThemeContext } from "./contexts/index"
 
+/* Hook */
 export { useUser } from "./hooks/useUser";
 
 /* Theme */

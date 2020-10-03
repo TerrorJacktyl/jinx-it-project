@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useUser, PrimaryMenu, HeaderButton } from "jinxui";
+import { useUser, PrimaryMenu, HeaderButton, Routes } from "jinxui";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -76,13 +76,12 @@ const UserAvatarDropdown = () => {
   };
 
   const onLogout = () => {
-    return <Redirect to="/login" />;
-  };
+    return <Redirect to={Routes.LOGIN} />
+  }
 
   if (logoutRedirect) return onLogout();
   else
     return (
-      // <StylesProvider injectFirst>
       <>
         {userData.firstName ? (
           <StyledName
@@ -127,7 +126,6 @@ const UserAvatarDropdown = () => {
           </PrimaryMenu>
         </ClickAwayListener>
       </>
-      //  </StylesProvider>
     );
 };
 

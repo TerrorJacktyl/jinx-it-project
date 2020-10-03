@@ -26,6 +26,7 @@ import {
   ImageSectionInput,
   ImageTextSectionInput,
   PortfolioNameSectionInput,
+  Routes,
 } from "jinxui";
 
 const FRONT_END_URL = "http://localhost:3000/";
@@ -57,7 +58,7 @@ const BottomButtonsDiv = styled.div`
   padding: 5px;
 `;
 
-const ProfileSchema = Yup.object().shape({
+const EditSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
@@ -112,12 +113,12 @@ const Edit = () => {
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
   // const classes = useStyles();
 
-  const onLogin = () => {
-    return <Redirect to="/portfolio" />;
+  const onPublish = () => {
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
   };
 
   if (redirect) {
-    return onLogin();
+    return onPublish();
   } else {
     return (
       <>
@@ -146,7 +147,7 @@ const Edit = () => {
                   academicHistory: "",
                   professionalHistory: "",
                 }}
-                validationSchema={ProfileSchema}
+                validationSchema={EditSchema}
                 onSubmit={(values, { setSubmitting }) => {
                   const portfolio_data = {
                     name: values.websiteName,
@@ -275,7 +276,9 @@ const Edit = () => {
                     <BetweenSections />
                     <BottomButtonsDiv>
                       <PrimaryButton type="submit">PUBLISH</PrimaryButton>
-                      <SecondaryButton>Cancel</SecondaryButton>
+                      <a href={Routes.HOME}>
+                        <SecondaryButton>Cancel</SecondaryButton>
+                      </a>
                     </BottomButtonsDiv>
                     {submittionError ? (
                       <ErrorMessage>
