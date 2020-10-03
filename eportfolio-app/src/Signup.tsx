@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-
+import { ThemeProvider } from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
 import styled from "styled-components";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -9,17 +10,16 @@ import {
   FormDiv,
   FormEntry,
   PrimaryButton,
-  SiteHeader,
-  HeaderDiv,
-  LogoLink,
-  HeaderTitle,
   AccountPageDiv,
   FormAlert,
   useUser,
+  DarkTheme,
+  HeaderBar,
 } from "jinxui";
 
 const StyledFormEntry = styled(FormEntry)`
-  font-family: "Heebo", sans-serif;
+  // font-family: "Heebo", sans-serif;
+  width: 300px;
   margin-top: 15px;
   margin-bottom: 15px;
 `;
@@ -95,13 +95,16 @@ const Signup = () => {
   if (redirect) return onRegister();
   else
     return (
+      <ThemeProvider theme={DarkTheme}>
+        <CssBaseline />
       <AccountPageDiv>
-        <SiteHeader>
+        {/* <SiteHeader>
           <HeaderDiv>
             <LogoLink />
             <HeaderTitle>Sign Up</HeaderTitle>
           </HeaderDiv>
-        </SiteHeader>
+        </SiteHeader> */}
+        <HeaderBar></HeaderBar>
         <StyledFormDiv>
           <FormTitle>Sign up for free!</FormTitle>
           {submittionError ? (
@@ -203,6 +206,7 @@ const Signup = () => {
           </Formik>
         </StyledFormDiv>
       </AccountPageDiv>
+      </ThemeProvider>
     );
 };
 

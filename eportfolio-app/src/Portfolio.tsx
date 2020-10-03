@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
 
 import styled from "styled-components";
 import {
@@ -13,6 +15,8 @@ import {
   PageDiv,
   useUser,
   UserImage,
+  DarkTheme,
+  HeaderBar,
 } from "jinxui";
 import { TPortfolio, TPage, TSection } from "./Types";
 
@@ -69,15 +73,18 @@ const Portfolio = () => {
     return 0;
   };
   return (
+    <ThemeProvider theme={DarkTheme}>
+      <CssBaseline />
     <AccountPageDiv>
-      <SiteHeader>
-        <HeaderDiv>
+      {/* <SiteHeader> */}
+        {/* <HeaderDiv>
           <LogoLink />
           <HeaderTitle>
-            {portfolio !== null ? portfolio.name : null}
+            {}
           </HeaderTitle>
-        </HeaderDiv>
-      </SiteHeader>
+        </HeaderDiv> */}
+        <HeaderBar title={portfolio !== null ? portfolio.name : null}></HeaderBar>
+      {/* </SiteHeader> */}
       <PageDiv>
         <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
         {sections.length !== 0
@@ -107,6 +114,7 @@ const Portfolio = () => {
           : null}
       </PageDiv>
     </AccountPageDiv>
+    </ThemeProvider>
   );
 };
 

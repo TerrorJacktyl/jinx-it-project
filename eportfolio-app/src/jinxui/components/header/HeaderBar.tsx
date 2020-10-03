@@ -63,7 +63,7 @@ const HeaderBar = (props: any) => {
                 >
                   <MenuIcon />
                 </HeaderButton>
-                <Typography variant="h6">Awesome Portfolio</Typography>
+                <Typography variant="h6">{props.title}</Typography>
               </StyledDivLeft>
               <StyledDivCenter></StyledDivCenter>
               <StyledDivRight>

@@ -2,6 +2,7 @@ import React from "react"
 import ListItemText from "@material-ui/core/ListItemText"
 import IconButton from "@material-ui/core/IconButton"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
+import MenuItem from "@material-ui/core/MenuItem"
 import AddIcon from "@material-ui/icons/Add"
 import SubjectSharp from "@material-ui/icons/SubjectSharp"
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp"
@@ -9,7 +10,6 @@ import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp"
 
 import { 
   PrimaryMenu,
-  PrimaryMenuItem,
 } from "jinxui"
 
 const NewSectionMenu = () => {
@@ -35,24 +35,24 @@ const NewSectionMenu = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <PrimaryMenuItem>
+        <MenuItem>
           <ListItemIcon>
             <SubjectSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Text" />
-        </PrimaryMenuItem>
-        <PrimaryMenuItem>
+        </MenuItem>
+        <MenuItem>
           <ListItemIcon>
             <InsertPhotoSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Image" />
-        </PrimaryMenuItem>
-        <PrimaryMenuItem>
+        </MenuItem>
+        <MenuItem>
           <ListItemIcon>
             <VerticalSplitSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Image and text" />
-        </PrimaryMenuItem>
+        </MenuItem>
       </PrimaryMenu>
     </div>
   );

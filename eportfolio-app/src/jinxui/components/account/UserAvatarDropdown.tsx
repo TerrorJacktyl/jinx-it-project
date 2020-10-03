@@ -1,18 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { useUser, PrimaryMenuItem, PrimaryMenu, HeaderButton } from "jinxui";
+import { useUser, PrimaryMenu, HeaderButton } from "jinxui";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import {
-  StylesProvider,
-} from "@material-ui/core/styles";
+import MenuItem from "@material-ui/core/MenuItem";
 import { Person } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
-
 import { Redirect } from "react-router-dom";
 
 const StyledName = styled(HeaderButton)`
@@ -85,7 +82,8 @@ const UserAvatarDropdown = () => {
   if (logoutRedirect) return onLogout();
   else
     return (
-      <StylesProvider injectFirst>
+      // <StylesProvider injectFirst>
+      <>
         {userData.firstName ? (
           <StyledName
             ref={anchorRef}
@@ -108,27 +106,28 @@ const UserAvatarDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
-            <PrimaryMenuItem onClick={handleClose}>
+            <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <AccountBoxIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText primary="Account" />
-            </PrimaryMenuItem>
-            <PrimaryMenuItem onClick={handleClose}>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Preferences" />
-            </PrimaryMenuItem>
-            <PrimaryMenuItem onClick={handleLogout}>
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText primary="Logout" />
-            </PrimaryMenuItem>
+            </MenuItem>
           </PrimaryMenu>
         </ClickAwayListener>
-      </StylesProvider>
+      </>
+      //  </StylesProvider>
     );
 };
 

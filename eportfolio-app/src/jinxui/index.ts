@@ -31,7 +31,6 @@ export { default as SectionName } from "./components/display/SectionName";
 export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
 export { default as UserImage } from "./components/display/UserImage";
-export { default as PrimaryMenuItem } from "./components/display/MenuItem";
 export { default as PrimaryMenu } from "./components/display/PrimaryMenu";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";

@@ -1,19 +1,18 @@
 import React from "react";
-import Menu from "@material-ui/core/Menu"
-import { MenuProps } from "@material-ui/core"
-import withStyles from "@material-ui/core/styles/withStyles"
+import Menu from "@material-ui/core/Menu";
+import { MenuProps } from "@material-ui/core";
 
-
-const StyledPrimaryMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-    borderRadius: 0,
-  },
-})((props: MenuProps) => (
+const StyledPrimaryMenu = React.forwardRef((props: MenuProps, ref: any) => (
   <Menu
-    elevation={3}
+    ref={ref}
+    elevation={0}
+    PaperProps={{ 
+      style: { 
+        border: "1px solid #d3d4d5",
+        borderRadius: 0,
+      } 
+    }}
     getContentAnchorEl={null}
-
     anchorOrigin={{
       vertical: "bottom",
       horizontal: "center",
@@ -26,4 +25,4 @@ const StyledPrimaryMenu = withStyles({
   />
 ));
 
-export default StyledPrimaryMenu
+export default StyledPrimaryMenu;
