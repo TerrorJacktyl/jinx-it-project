@@ -52,6 +52,7 @@ export const useUser = () => {
           username: username,
           firstName: accDetails?.data.first_name,
           token: response.data["auth_token"],
+          portfolioId: accDetails.data.primary_portfolio,
           authenticated: true,
           config: config,
         };
@@ -215,6 +216,21 @@ export const useUser = () => {
       });
     return result;
   }
+
+  async function setPrimaryPortfolio(portfolio_id: number) {
+    result = API.patch(
+      ACCOUNT_PATH, 
+      {
+        primary_portfolio: portfolio_id
+      },
+      state.config
+    )
+    .then((response: any) => response)
+    .catch((error: any) => {
+      throw error;
+    });
+  }
+
   function getSavedPortfolioId() {
     return state.portfolioId;
   }

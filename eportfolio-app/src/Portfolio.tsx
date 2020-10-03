@@ -45,10 +45,6 @@ type ImageTextSectionProps = {
    initial portfolio creation */
 const Portfolio = () => {
   const { getFullPortfolio, getSavedPortfolioId } = useUser();
-  // Testing purposes only
-  // const tempPortfolioId = 1;
-  // const tempPortfolioId = getCurrentPortfolio();
-
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage, setCurrPage] = useState<number>(0);
@@ -56,9 +52,9 @@ const Portfolio = () => {
   const [sections, setSections] = useState<TSection[]>([]);
   useEffect(() => {
     const fetchPortfolio = async () => {
-      var tempPortfolioId = await getSavedPortfolioId();
-      console.log(tempPortfolioId);
-      const { portfolio, pages, sections } = await getFullPortfolio(tempPortfolioId);
+      var portfolioId = await getSavedPortfolioId();
+      console.log(portfolioId);
+      const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
       setPortfolio(portfolio);
 
       setPages(pages);
