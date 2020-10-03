@@ -1,42 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
-  makeStyles,
   ThemeProvider,
   createMuiTheme,
-  createStyles,
-  withStyles,
-  useTheme,
 } from "@material-ui/core/styles";
-import {
-  Paper,
-  Button,
-  CssBaseline,
-  Menu,
-  MenuProps,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import {
-  AddPhotoAlternateOutlined,
-  SettingsBrightness,
-  DeleteOutlined,
-  ArrowUpward,
-  ArrowDownward,
-  Add,
-  InsertPhotoSharp,
-  SubjectSharp,
-  VerticalSplitSharp,
-} from "@material-ui/icons";
+import { Button, CssBaseline } from "@material-ui/core";
+import { SettingsBrightness } from "@material-ui/icons";
 
 import { TextField } from "formik-material-ui";
-
-import Image from "../images/Logo_Background.svg";
 
 import {
   ErrorMessage,
@@ -44,122 +18,18 @@ import {
   LightTheme,
   DarkTheme,
   useUser,
-  UserImage,
   HeaderBar,
+  PrimaryButton,
+  SecondaryButton,
+  NewSectionMenu,
+  TextSectionInput,
+  ImageSectionInput,
+  ImageTextSectionInput,
+  PortfolioNameSectionInput,
+  Routes,
 } from "jinxui";
 
 const FRONT_END_URL = "http://localhost:3000/";
-
-const useStyles = makeStyles((theme: any) =>
-  createStyles({
-    root: {},
-    transparentHoverFocus: {
-      "&:hover, &.Mui-focusVisible": {
-        backgroundColor: "transparent",
-      },
-    },
-    publishButton: {
-      width: "100%",
-      height: "100%",
-      fontSize: 16,
-      fontWeight: 400,
-      border: "1px solid",
-      "&:hover": {
-        border: "1px solid",
-      },
-    },
-    cancelButton: {
-      width: "100%",
-      height: "100%",
-      fontWeight: 300,
-    },
-    menuButton: {
-      marginRight: theme.spacing(0),
-    },
-    title: {
-      flexGrow: 1,
-      textAlign: "left",
-      margin: 10,
-      fontWeight: 400,
-    },
-    toolbar: {
-      height: 50,
-      margin: 0,
-    },
-    textFieldMain: {
-      lineHeight: 4,
-      letterSpacing: "0.03333em",
-    },
-  })
-);
-
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5",
-  },
-})((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center",
-    }}
-    {...props}
-  />
-));
-
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-const StyledPaper = styled(Paper)`
-  padding: 10px;
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  :hover {
-    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.3);
-  }
-`;
-
-const StyledImageUploadOverlay = styled(Paper)`
-  grid-column: 1/4;
-  grid-row: 1/4;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  align-content: center;
-  text-align: center;
-  font-size: 20px;
-  opacity: 0%;
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-  :hover {
-    opacity: 65%;
-  }
-  cursor: pointer;
-`;
-
-const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
-  z-index: 2;
-`;
-
-const SectionDiv = styled.div`
-  margin-top: 0px;
-  margin-bottom: 30px;
-  display: grid;
-  grid-template-rows: 100px, 1fr;
-`;
 
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
@@ -167,15 +37,6 @@ const WideFormDiv = styled(FormDiv)`
 
 const FormTitle = styled.h2`
   font-weight: 300;
-`;
-
-const FieldTitle = styled.h3`
-  font-weight: 300;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  margin-top: 0px;
-  text-align: left;
-  font-size: 20px;
 `;
 
 const StyledFormDiv = styled(WideFormDiv)`
@@ -187,127 +48,19 @@ const StyledFormDiv = styled(WideFormDiv)`
   grid-template-columns: 1fr minMax(200px, 900px) 1fr;
 `;
 
-const StyledInput = styled.input`
-  display: none;
-`;
-
 const BottomButtonsDiv = styled.div`
-  display: grid;
-  grid-template-columns:
-    5% minMax(40px, 200px) minMax(10%, auto)
-    minMax(40px, 200px) 5%;
-  grid-template-rows: 40px;
-  margin-top: 30px;
-`;
-
-const ImageGrid = styled.div`
-  display: grid;
-  grid-template-columns: 20px 30px 1fr;
-  grid-template-rows: 1fr 30px 20px;
-`;
-
-const ImageGridMain = styled.div`
-  grid-column: 1/4;
-  grid-row: 1/4;
-  object-fit: cover;
-`;
-
-const ImageGridIcon = styled.div`
-  grid-column: 2/3;
-  grid-row: 2/3;
-  object-fit: cover;
-`;
-
-const OneColumnSectionGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 30px;
-  margin-bottom: 15px;
-  direction: column;
-`;
-
-const OneColumnThinSectionGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 30px;
-  margin-bottom: 10px;
-`;
-
-const TwoColumnSectionGrid = styled(OneColumnSectionGrid)`
-  grid-template-columns: 1fr 1fr;
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-  grid-gap: 60px;
-`;
-
-const SingleLineRequiredGrid = styled.div`
-  display: grid;
-  grid-template-rows: 50px;
-  margin-bottom: -10px;
-`;
-
-const HeaderFlexContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-`;
-
-const HeaderFlexItem = styled.div`
-  display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
   align-items: center;
+  justify-content: space-around;
+  margin: 5px;
+  padding: 5px;
 `;
 
-const ProfileSchema = Yup.object().shape({
+const EditSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
-
-const NewSectionMenu = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <div>
-      <IconButton onClick={handleClick}>
-        <Add />
-      </IconButton>
-      <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <StyledMenuItem>
-          <ListItemIcon>
-            <SubjectSharp fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Text" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <InsertPhotoSharp fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Image" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <VerticalSplitSharp fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Image and text" />
-        </StyledMenuItem>
-      </StyledMenu>
-    </div>
-  );
-};
 
 function sectionDataIsEmpty(data: any) {
   return (
@@ -334,88 +87,11 @@ function PostSection(
   }
 }
 
-function UploadImageBit(
-  uploadButtonLabel: string,
-  imageResponse: any,
-  setImageResponse: any
-) {
-  const classes = useStyles();
-  const { uploadImage } = useUser();
-  // const classes = useStyles();
-  return (
-    <>
-      <label htmlFor={uploadButtonLabel}>
-        <StyledInput
-          accept="image/*"
-          id={uploadButtonLabel}
-          multiple
-          type="file"
-          onChange={(event) => {
-            if (event.currentTarget.files) {
-              uploadImage(
-                event.currentTarget.files[0],
-                event.currentTarget.files[0].name
-              )
-                .then((response) => {
-                  console.log(response);
-                  setImageResponse(response.data);
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            } else {
-              console.log("Image failure");
-            }
-          }}
-        />
-        <ImageGrid>
-          <ImageGridMain>
-            <UserImage src={imageResponse.path} />{" "}
-          </ImageGridMain>
-          <StyledImageUploadOverlay elevation={0} square>
-            Upload Image
-          </StyledImageUploadOverlay>
-          <ImageGridIcon>
-            <StyledImageUploadButton />
-          </ImageGridIcon>
-        </ImageGrid>
-      </label>
-    </>
-  );
-}
-
-const PaperSection = (props: any) => {
-  // const classes = useStyles();
-  return (
-    <SectionDiv>
-      <HeaderFlexContainer>
-        <HeaderFlexItem>
-          <FieldTitle>{props.title}</FieldTitle>
-        </HeaderFlexItem>
-        <HeaderFlexItem></HeaderFlexItem>
-        <HeaderFlexItem>
-          <IconButton size="small">
-            <ArrowUpward />
-          </IconButton>
-          <IconButton size="small">
-            <ArrowDownward />
-          </IconButton>
-          <IconButton size="small">
-            <DeleteOutlined />
-          </IconButton>
-        </HeaderFlexItem>
-      </HeaderFlexContainer>
-      <StyledPaper elevation={3} variant="outlined" square>
-        {props.children}
-      </StyledPaper>
-    </SectionDiv>
-  );
-};
-
 const BetweenSections = () => {
   return <NewSectionMenu />;
 };
 
+<<<<<<< HEAD
 function PortfolioTitleSection(title: string, sectionName: string) {
   const classes = useStyles();
   // console.log("THE NAME IS " + defaultText);
@@ -524,6 +200,8 @@ const TextSectionField = (sectionName: string, rows: number) => {
 };
 
 
+=======
+>>>>>>> origin/kevin/edit_page
 const Edit = () => {
   // TEST
   const [published, setPublished] = useState(false);
@@ -542,34 +220,33 @@ const Edit = () => {
     postPage,
     postSection,
     savePortfolioId,
-    getSavedLightThemeMode,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const onPublish = () => {
-    return <Redirect to="/portfolio" />;
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
   };
-  const savedLightThemeMode = getSavedLightThemeMode();
 
   if (redirect) {
     return onPublish();
-
   } else {
     return (
       <>
         <ThemeProvider theme={appliedTheme}>
           <HeaderBar>
-            <IconButton
+            <Button
+              style={{ height: "100%", borderRadius: 0 }}
               onClick={() => {
                 switchLightThemeMode();
                 setTheme(!theme);
               }}
+              color="inherit"
             >
               <SettingsBrightness />
-            </IconButton>
+            </Button>
           </HeaderBar>
           <CssBaseline />
           <StyledFormDiv>
@@ -583,7 +260,7 @@ const Edit = () => {
                   academicHistory: "",
                   professionalHistory: "",
                 }}
-                validationSchema={ProfileSchema}
+                validationSchema={EditSchema}
                 onSubmit={(values, { setSubmitting }) => {
                   const portfolio_data = {
                     name: values.websiteName,
@@ -668,9 +345,22 @@ const Edit = () => {
               >
                 {({ errors, touched, isSubmitting }) => (
                   <Form>
-                    {PortfolioTitleSection("Website Name*", "websiteName")}
+                    <PortfolioNameSectionInput
+                      title={"Website Name*"}
+                      sectionName={"websiteName"}
+                    >
+                      <Field
+                        component={TextField}
+                        className={"websiteName"}
+                        name={"websiteName"}
+                        id="standard-full-width"
+                        style={{ margin: 0 }}
+                        fullWidth
+                        color="secondary"
+                      />
+                    </PortfolioNameSectionInput>
                     <BetweenSections />
-                    {ImageTextSectionBit(
+                    {ImageTextSectionInput(
                       "Biography",
                       "biography",
                       touched.biography,
@@ -682,50 +372,25 @@ const Edit = () => {
                     {errors.academicHistory && touched.academicHistory ? (
                       <ErrorMessage>{errors.academicHistory}</ErrorMessage>
                     ) : null}
-                    {TextSectionBit(
-                      "Academic History",
-                      "academicHistory",
-                      touched.academicHistory,
-                      errors.academicHistory
-                    )}
+                    <TextSectionInput
+                      title="Academic History"
+                      sectionName="academicHistory"
+                      touched={touched.academicHistory}
+                      errors={errors.academicHistory}
+                    />
                     <BetweenSections />
-                    {ImageSectionBit(
+                    {ImageSectionInput(
                       "Awesome Image",
                       "awesomeImage",
                       awesomeImageResponse,
                       setAwesomeImageResponse
                     )}
                     <BetweenSections />
-                    {TextSectionBit(
-                      "Professional History",
-                      "professionalHistory",
-                      touched.professionalHistory,
-                      errors.academicHistory
-                    )}
-                    <BetweenSections />
                     <BottomButtonsDiv>
-                      <div></div>
-                      <div>
-                        <Button
-                          variant="outlined"
-                          className={classes.cancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                      <div></div>
-                      <div>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          color="secondary"
-                          className={classes.publishButton}
-                          style={{ borderRadius: 5 }}
-                        >
-                          Publish
-                        </Button>
-                      </div>
-                      <div></div>
+                      <PrimaryButton type="submit">PUBLISH</PrimaryButton>
+                      <a href={Routes.HOME}>
+                        <SecondaryButton>Cancel</SecondaryButton>
+                      </a>
                     </BottomButtonsDiv>
                     {submittionError ? (
                       <ErrorMessage>

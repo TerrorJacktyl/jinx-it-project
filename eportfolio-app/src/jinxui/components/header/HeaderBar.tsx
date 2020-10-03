@@ -1,46 +1,32 @@
-import React, { Children } from "react";
+import React from "react";
 
 import {
   AppBar,
   Typography,
   Slide,
   useScrollTrigger,
-  ListItemIcon,
-  ListItemText,
-  IconButton,
   StylesProvider,
-  Grid,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import {
-  DarkTheme,
   UserAvatarDropdown,
+  HeaderButton,
 } from "jinxui";
-
-import {
-  makeStyles,
-  ThemeProvider,
-  createMuiTheme,
-  createStyles,
-  withStyles,
-} from "@material-ui/core/styles";
 
 import styled from "styled-components";
 
 const StyledAppBar = styled(AppBar)`
-  // height: 46px;
   margin: 0px;
-  // background-color: 'black';
 `;
 
 const StyledDivOuter = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
-  // grid-gap: 20px;
+  grid-template-rows: minMax(46px, max-content);
 `;
 const StyledDivLeft = styled.div`
-  padding-left: 20px;
+  padding-left: 0px;
   display: flex;
   align-items: center;
 `;
@@ -52,7 +38,7 @@ const StyledDivCenter = styled.div`
 `;
 
 const StyledDivRight = styled.div`
-  padding-right: 20px;
+  padding-right: 0px;
   display: flex;
   justify-content: right;
   align-items: center;
@@ -62,22 +48,22 @@ const HeaderBar = (props: any) => {
   const trigger = useScrollTrigger();
   return (
     <StylesProvider injectFirst>
-      <ThemeProvider theme={DarkTheme}>
         <Slide appear={false} direction="down" in={!trigger}>
-          <StyledAppBar style={{ backgroundColor: "#373a3e" }}>
+          <StyledAppBar 
+            color="inherit"
+            elevation={4}
+          >
             <StyledDivOuter>
               <StyledDivLeft>
-                <IconButton
-                  edge="start"
+                <HeaderButton
                   color="inherit"
-                  // size="small"
                   aria-label="menu"
                 >
                   <MenuIcon />
-                </IconButton>
-                <Typography variant="h6">Awesome Portfolio</Typography>
+                </HeaderButton>
+                <Typography variant="h6">{props.title}</Typography>
               </StyledDivLeft>
-              <div></div>
+              <StyledDivCenter></StyledDivCenter>
               <StyledDivRight>
                 <UserAvatarDropdown />
                 {props.children}
@@ -85,9 +71,10 @@ const HeaderBar = (props: any) => {
             </StyledDivOuter>
           </StyledAppBar>
         </Slide>
-      </ThemeProvider>
     </StylesProvider>
   );
 };
+
+
 
 export default HeaderBar;

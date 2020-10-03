@@ -1,6 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { SiteLayout, PrimaryButton, SecondaryButton, useUser } from "jinxui";
+import { ThemeProvider } from "@material-ui/core/styles";
+import {
+  SiteLayout,
+  PrimaryButton,
+  SecondaryButton,
+  useUser,
+  DarkTheme,
+  HeaderBar,
+  Routes,
+} from "jinxui";
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -25,17 +34,11 @@ const TopBlockDiv = styled.div`
 `;
 
 const StyledLogin = styled(SecondaryButton)`
-  margin-top: 20px;
+  margin-top: 0px;
   margin-right: 30px;
-  margin-left: auto;
-`;
-
-const StyledSignup = styled(PrimaryButton)`
-  position: relative;
-  margin-top: 10px;
-  margin-bottom: 50px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 20px;
+  margin-bottom: 0px;
+  height: 30px;
 `;
 
 const LogoDiv = styled.div`
@@ -94,53 +97,57 @@ const Home = () => {
 
   return (
     <div>
-      <BodyDiv>
-        <TopBlockDiv>
-          <SiteHeader>
-            <HeaderDiv>
-              <StyledLink href={userData.authenticated ? "/profile" : "/login"}>
-                <StyledLogin
-                  // width={null}
-                  // textColour="#EEEEEE"
-                  // backgroundColour={null}
-                  // hoverColour="#EEEEEE"
-                  // contrastColour="#1C1C1C"
-                  // text="Login"
-                  // fontSize={null}
-                > Login </StyledLogin>
-              </StyledLink>
-            </HeaderDiv>
-          </SiteHeader>
-          <LogoDiv>
-            <JinxLogo src={require("images/Logo_Main.png")} />
-          </LogoDiv>
-          <JinxName>Jinx</JinxName>
-          <CatchPhrase>Your portfolio, made simple</CatchPhrase>
-          <StyledLink href="/signup">
-            <StyledSignup>
-              Join Today
-            </StyledSignup>
-          </StyledLink>
-        </TopBlockDiv>
+      <ThemeProvider theme={DarkTheme}>
+        <BodyDiv>
+          <TopBlockDiv>
+            <SiteHeader>
+              <HeaderDiv>
+                <HeaderBar title="">
+                  <StyledLink
+                      href={userData.authenticated ? Routes.PORTFOLIO_DISPLAY : Routes.LOGIN}
+                  >
+                    <StyledLogin>Login</StyledLogin>
+                  </StyledLink>
+                </HeaderBar>
+              </HeaderDiv>
+            </SiteHeader>
+            <LogoDiv>
+              <JinxLogo src={require("images/Logo_Main.png")} />
+            </LogoDiv>
+            <JinxName>Jinx</JinxName>
+            <CatchPhrase>Your portfolio, made simple</CatchPhrase>
+            <StyledLink href="/signup">
+              <PrimaryButton>JOIN TODAY</PrimaryButton>
+            </StyledLink>
+          </TopBlockDiv>
 
-        <SiteLayout>
-          <SampleBody>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-            qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-            in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </SampleBody>
-        </SiteLayout>
-      </BodyDiv>
+          <SiteLayout>
+            <SampleBody>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat
+              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </SampleBody>
+          </SiteLayout>
+        </BodyDiv>
+      </ThemeProvider>
     </div>
   );
 };

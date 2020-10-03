@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-
+import { ThemeProvider } from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
 import styled from "styled-components";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -9,17 +10,17 @@ import {
   FormDiv,
   FormEntry,
   PrimaryButton,
-  SiteHeader,
-  HeaderDiv,
-  LogoLink,
-  HeaderTitle,
   AccountPageDiv,
   FormAlert,
+  Routes,
   useUser,
+  DarkTheme,
+  HeaderBar,
 } from "jinxui";
 
 const StyledFormEntry = styled(FormEntry)`
-  font-family: "Heebo", sans-serif;
+  // font-family: "Heebo", sans-serif;
+  width: 300px;
   margin-top: 15px;
   margin-bottom: 15px;
 `;
@@ -81,27 +82,24 @@ const SignupSchema = Yup.object().shape({
 
 const Signup = () => {
   // This could be parametrized to accept multiple different redirects
-  // e.g. hold a component to redirect to rather than a boolean for a "/login" redirect
+  // e.g. hold a component to redirect to rather than a boolean for a redirect to login page
   const [redirect, setRedirect] = useState(false);
 
-  const { signup, login, setAccountDetails } = useUser();
+  const { signup } = useUser();
 
   const onRegister = () => {
-    return <Redirect to="/login" />;
-  };
+    return <Redirect to={Routes.LOGIN} />
+  }
 
   const [submittionError, setSubmittionError] = useState("");
 
   if (redirect) return onRegister();
   else
     return (
+      <ThemeProvider theme={DarkTheme}>
+        <CssBaseline />
       <AccountPageDiv>
-        <SiteHeader>
-          <HeaderDiv>
-            <LogoLink />
-            <HeaderTitle>Sign Up</HeaderTitle>
-          </HeaderDiv>
-        </SiteHeader>
+        <HeaderBar></HeaderBar>
         <StyledFormDiv>
           <FormTitle>Sign up for free!</FormTitle>
           {submittionError ? (
@@ -122,24 +120,9 @@ const Signup = () => {
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
 
-              // This promise chain is gross, but it handles PUTing the user details
-              signup(
-                values.username,
-                values.email,
-                values.password,
-                values.firstName,
-                values.lastName
-              )
-                .then(function (response: any) {
-                  console.log(response);
-                  return response;
-                })
-                .then((response: any) => {
-                  return login(values.username, values.password);
-                })
-                .then((config: any) => {
-                  // Making this work involved sacrificing a small lamb
-                  setAccountDetails(values.firstName, values.lastName, config);
+              // Sign up *and* login the user
+              signup(values.username, values.email, values.password, values.firstName, values.lastName)
+                .then(() => {
                   setSubmitting(false);
                   setRedirect(true);
                 })
@@ -192,17 +175,19 @@ const Signup = () => {
                 {errors.passwordConfirm && touched.passwordConfirm ? (
                   <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
                 ) : null}
-                <StyledButton type="submit" disabled={isSubmitting}>
+                <StyledButton 
+                  type="submit" 
+                  disabled={isSubmitting}>
                   Join
                 </StyledButton>
-                <StyledLink href="/login">
-                  <FormText>Already have an account? Log In</FormText>
-                </StyledLink>
+
+                <StyledLink href={Routes.LOGIN}><FormText>Already have an account? Log In</FormText></StyledLink>
               </Form>
             )}
           </Formik>
         </StyledFormDiv>
       </AccountPageDiv>
+      </ThemeProvider>
     );
 };
 
