@@ -24,7 +24,6 @@ const StyledDivOuter = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: minMax(46px, max-content);
-  // grid-gap: 20px;
 `;
 const StyledDivLeft = styled.div`
   padding-left: 0px;
@@ -49,7 +48,6 @@ const HeaderBar = (props: any) => {
   const trigger = useScrollTrigger();
   return (
     <StylesProvider injectFirst>
-      {/* <ThemeProvider theme={LightTheme}> */}
         <Slide appear={false} direction="down" in={!trigger}>
           <StyledAppBar 
             color="inherit"

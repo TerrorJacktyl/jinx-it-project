@@ -4,11 +4,8 @@ import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
-  makeStyles,
   ThemeProvider,
   createMuiTheme,
-  createStyles,
-  StylesProvider,
 } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
@@ -31,70 +28,7 @@ import {
   PortfolioNameSectionInput,
 } from "jinxui";
 
-// import PortfolioNameSection from "jinxui/components/edit/PortfolioNameSection"
 const FRONT_END_URL = "http://localhost:3000/";
-
-// const useStyles = makeStyles((theme: any) =>
-//   createStyles({
-//     root: {},
-//     transparentHoverFocus: {
-//       "&:hover, &.Mui-focusVisible": {
-//         backgroundColor: "transparent",
-//       },
-//     },
-//     publishButton: {
-//       width: "100%",
-//       height: "100%",
-//       fontSize: 16,
-//       fontWeight: 400,
-//       border: "1px solid",
-//       "&:hover": {
-//         border: "1px solid",
-//       },
-//     },
-//     cancelButton: {
-//       width: "100%",
-//       height: "100%",
-//       fontWeight: 300,
-//     },
-//     menuButton: {
-//       marginRight: theme.spacing(0),
-//     },
-//     title: {
-//       flexGrow: 1,
-//       textAlign: "left",
-//       margin: 10,
-//       fontWeight: 400,
-//     },
-//     toolbar: {
-//       height: 50,
-//       margin: 0,
-//     },
-//     textFieldMain: {
-//       lineHeight: 4,
-//       letterSpacing: "0.03333em",
-//     },
-//   })
-// );
-
-
-// const StyledCancelButton = styled(Button)`
-//   font-weight: 300;
-//   width: 200px;
-//   height: 40px;
-//   font-size: 16px;
-//   text-transform: none;
-//   border-radius: 5px;
-//   margin: 5px;
-//   margin-top: 10px;
-//   margin-bottom: 10px;
-// `;
-
-const StyledPublishButton = styled(PrimaryButton)`
-  font-weight: 300;
-  border: 1px solid;
-  width: 100;
-`;
 
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
@@ -121,13 +55,6 @@ const BottomButtonsDiv = styled.div`
   justify-content: space-around;
   margin: 5px;
   padding: 5px;
-
-  // display: grid;
-  // grid-template-columns:
-  //   5% minMax(40px, 200px) minMax(10%, auto)
-  //   minMax(40px, 200px) 5%;
-  // grid-template-rows: 40px;
-  // margin-top: 30px;
 `;
 
 const ProfileSchema = Yup.object().shape({
@@ -347,23 +274,8 @@ const Edit = () => {
                     )}
                     <BetweenSections />
                     <BottomButtonsDiv>
-                      {/* <StylesProvider injectFirst> */}
-                          <PrimaryButton
-                            type="submit"
-                            // variant="contained"
-                            // color="primary"
-                            // className={classes.publishButton}
-                            // style={{ borderRadius: 5 }}
-                          >
-                            PUBLISH
-                          </PrimaryButton>
-                          <SecondaryButton
-                            // variant="outlined"
-                            // className={classes.cancelButton}
-                          >
-                            Cancel
-                          </SecondaryButton>
-                      {/* </StylesProvider> */}
+                      <PrimaryButton type="submit">PUBLISH</PrimaryButton>
+                      <SecondaryButton>Cancel</SecondaryButton>
                     </BottomButtonsDiv>
                     {submittionError ? (
                       <ErrorMessage>

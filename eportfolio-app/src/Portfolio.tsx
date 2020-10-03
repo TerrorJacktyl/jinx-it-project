@@ -4,10 +4,6 @@ import { CssBaseline } from "@material-ui/core";
 
 import styled from "styled-components";
 import {
-  SiteHeader,
-  HeaderDiv,
-  HeaderTitle,
-  LogoLink,
   AccountPageDiv,
   PageName,
   SectionName,
@@ -76,15 +72,7 @@ const Portfolio = () => {
     <ThemeProvider theme={DarkTheme}>
       <CssBaseline />
     <AccountPageDiv>
-      {/* <SiteHeader> */}
-        {/* <HeaderDiv>
-          <LogoLink />
-          <HeaderTitle>
-            {}
-          </HeaderTitle>
-        </HeaderDiv> */}
         <HeaderBar title={portfolio !== null ? portfolio.name : null}></HeaderBar>
-      {/* </SiteHeader> */}
       <PageDiv>
         <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
         {sections.length !== 0

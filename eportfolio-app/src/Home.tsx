@@ -40,16 +40,6 @@ const StyledLogin = styled(SecondaryButton)`
   height: 30px;
 `;
 
-const StyledSignup = styled(PrimaryButton)`
-  // position: relative;
-  // margin-top: 10px;
-  // margin-bottom: 50px;
-  // margin-left: auto;
-  // margin-right: auto;
-  height: 300px;
-  margin: 100px;
-`;
-
 const LogoDiv = styled.div`
   text-align: center;
 `;

@@ -10,10 +10,6 @@ import {
   FormEntry,
   PrimaryButton,
   SecondaryButton,
-  SiteHeader,
-  HeaderDiv,
-  LogoLink,
-  HeaderTitle,
   AccountPageDiv,
   FormAlert,
   useUser,
@@ -97,12 +93,6 @@ const Login = () => {
       <ThemeProvider theme={DarkTheme}>
         <CssBaseline />
         <AccountPageDiv>
-          {/* <SiteHeader>
-            <HeaderDiv>
-              <LogoLink />
-              <HeaderTitle>Login</HeaderTitle>
-            </HeaderDiv>
-          </SiteHeader> */}
           <HeaderBar />
           <StyledFormDiv>
             <FormTitle>Enter Details</FormTitle>
