@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React from "react";
 
 import {
   AppBar,
@@ -10,8 +10,6 @@ import {
 
 import MenuIcon from "@material-ui/icons/Menu";
 import {
-  DarkTheme,
-  LightTheme,
   UserAvatarDropdown,
   HeaderButton,
 } from "jinxui";

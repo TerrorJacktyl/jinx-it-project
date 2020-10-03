@@ -6,9 +6,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import {
   StylesProvider,
-  makeStyles,
-  createStyles,
-  Theme,
 } from "@material-ui/core/styles";
 import { Person } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -30,19 +27,7 @@ const StyledInnerName = styled.div`
   }
 `;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-    },
-    paper: {
-      marginRight: theme.spacing(2),
-    },
-  })
-);
-
 const UserAvatarDropdown = () => {
-  const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [logoutRedirect, setLogoutRedirect] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);

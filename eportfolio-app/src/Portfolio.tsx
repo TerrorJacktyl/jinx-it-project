@@ -11,7 +11,6 @@ import {
   SectionName,
   TextSectionDiv,
   PageDiv,
-  UserContext,
   useUser,
   UserImage,
 } from "jinxui";

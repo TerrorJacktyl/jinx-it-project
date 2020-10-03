@@ -9,18 +9,10 @@ import {
   createMuiTheme,
   createStyles,
 } from "@material-ui/core/styles";
-import {
-  Button,
-  CssBaseline,
-  Paper,
-} from "@material-ui/core";
-import {
-  SettingsBrightness,
-} from "@material-ui/icons";
+import { Button, CssBaseline } from "@material-ui/core";
+import { SettingsBrightness } from "@material-ui/icons";
 
 import { TextField } from "formik-material-ui";
-
-import Image from "../images/Logo_Background.svg";
 
 import {
   ErrorMessage,
@@ -35,7 +27,6 @@ import {
   ImageTextSectionInput,
   PortfolioNameSectionInput,
 } from "jinxui";
-
 
 // import PortfolioNameSection from "jinxui/components/edit/PortfolioNameSection"
 const FRONT_END_URL = "http://localhost:3000/";
@@ -83,10 +74,6 @@ const useStyles = makeStyles((theme: any) =>
   })
 );
 
-// const StyledBackgroundImage = styled.Paper`
-//   background-image: `url(${Image})`
-// `;
-
 const WideFormDiv = styled(FormDiv)`
   width: 920px;
 `;
@@ -116,7 +103,6 @@ const BottomButtonsDiv = styled.div`
 const ProfileSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
-
 
 function sectionDataIsEmpty(data: any) {
   return (
@@ -163,7 +149,6 @@ const Edit = () => {
     postPage,
     postSection,
     savePortfolioId,
-    getSavedLightThemeMode,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
@@ -173,7 +158,6 @@ const Edit = () => {
   const onLogin = () => {
     return <Redirect to="/portfolio" />;
   };
-  const savedLightThemeMode = getSavedLightThemeMode();
 
   if (redirect) {
     return onLogin();
@@ -194,179 +178,179 @@ const Edit = () => {
             </Button>
           </HeaderBar>
           <CssBaseline />
-          <StyledFormDiv>
-            <div></div>
-            <div>
-              <FormTitle>Enter your information</FormTitle>
-              <Formik
-                initialValues={{
-                  websiteName: "",
-                  biography: "",
-                  academicHistory: "",
-                  professionalHistory: "",
-                }}
-                validationSchema={ProfileSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                  const portfolio_data = {
-                    name: values.websiteName,
-                  };
-                  const page_data = {
-                    name: "home",
-                    number: "0",
-                  };
-                  const bio_data = {
-                    name: "biography",
-                    number: "0",
-                    image: bioImageResponse.id,
-                    content: values.biography,
-                    type: "image_text",
-                  };
-                  const academic_data = {
-                    name: "academic_history",
-                    number: "0",
-                    content: values.academicHistory,
-                    type: "text",
-                  };
-                  const awesome_data = {
-                    name: "awesome_image",
-                    number: "0",
-                    image: awesomeImageResponse.id,
-                    type: "image",
-                  };
-                  const professional_data = {
-                    name: "professional_history",
-                    number: "0",
-                    content: values.professionalHistory,
-                    type: "text",
-                  };
-                  setSubmitting(true);
-                  postPortfolio(portfolio_data)
-                    .then(function (portfolio_response: any) {
-                      const portfolio_id = portfolio_response.data.id;
+            <StyledFormDiv>
+              <div></div>
+              <div>
+                <FormTitle>Enter your information</FormTitle>
+                <Formik
+                  initialValues={{
+                    websiteName: "",
+                    biography: "",
+                    academicHistory: "",
+                    professionalHistory: "",
+                  }}
+                  validationSchema={ProfileSchema}
+                  onSubmit={(values, { setSubmitting }) => {
+                    const portfolio_data = {
+                      name: values.websiteName,
+                    };
+                    const page_data = {
+                      name: "home",
+                      number: "0",
+                    };
+                    const bio_data = {
+                      name: "biography",
+                      number: "0",
+                      image: bioImageResponse.id,
+                      content: values.biography,
+                      type: "image_text",
+                    };
+                    const academic_data = {
+                      name: "academic_history",
+                      number: "0",
+                      content: values.academicHistory,
+                      type: "text",
+                    };
+                    const awesome_data = {
+                      name: "awesome_image",
+                      number: "0",
+                      image: awesomeImageResponse.id,
+                      type: "image",
+                    };
+                    const professional_data = {
+                      name: "professional_history",
+                      number: "0",
+                      content: values.professionalHistory,
+                      type: "text",
+                    };
+                    setSubmitting(true);
+                    postPortfolio(portfolio_data)
+                      .then(function (portfolio_response: any) {
+                        const portfolio_id = portfolio_response.data.id;
 
-                      postPage(portfolio_id, page_data)
-                        .then(function (page_response: any) {
-                          console.log(page_response);
-                          const page_id = page_response.data.id;
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            bio_data
-                          );
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            academic_data
-                          );
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            awesome_data
-                          );
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            professional_data
-                          );
-                        })
-                        .catch(function (error: any) {
-                          console.log(error);
-                          setSubmitting(false);
-                        });
-                      savePortfolioId(parseInt(portfolio_id));
-                      setSubmitting(false);
-                      setRedirect(true);
-                    })
-                    .catch(function (error: any) {
-                      setSubmittionError(true);
-                      setSubmitting(false);
-                      console.log(error);
-                      console.log(submittionError);
-                    });
-                }}
-              >
-                {({ errors, touched, isSubmitting }) => (
-                  <Form>
-                    <PortfolioNameSectionInput
-                      title={"Website Name*"}
-                      sectionName={"websiteName"}
-                    >
-                      <Field
-                        component={TextField}
-                        className={"websiteName"}
-                        name={"websiteName"}
-                        id="standard-full-width"
-                        style={{ margin: 0 }}
-                        fullWidth
-                        color="secondary"
-                      />
-                    </PortfolioNameSectionInput>
-                    <BetweenSections />
-                    {ImageTextSectionInput(
-                      "Biography",
-                      "biography",
-                      touched.biography,
-                      errors.biography,
-                      bioImageResponse,
-                      setBioImageResponse
-                    )}
-                    <BetweenSections />
-                    {errors.academicHistory && touched.academicHistory ? (
-                      <ErrorMessage>{errors.academicHistory}</ErrorMessage>
-                    ) : null}
-                    <TextSectionInput
-                      title="Academic History"
-                      sectionName="academicHistory"
-                      touched = {touched.academicHistory}
-                      errors = {errors.academicHistory}
-                    />
-                    <BetweenSections />
-                    {ImageSectionInput(
-                      "Awesome Image",
-                      "awesomeImage",
-                      awesomeImageResponse,
-                      setAwesomeImageResponse
-                    )}
-                    <BetweenSections />
-                    <BottomButtonsDiv>
-                      <div></div>
-                      <div>
-                        <Button
-                          variant="outlined"
-                          className={classes.cancelButton}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                      <div></div>
-                      <div>
-                        <Button
-                          type="submit"
-                          variant="contained"
+                        postPage(portfolio_id, page_data)
+                          .then(function (page_response: any) {
+                            console.log(page_response);
+                            const page_id = page_response.data.id;
+                            PostSection(
+                              postSection,
+                              portfolio_id,
+                              page_id,
+                              bio_data
+                            );
+                            PostSection(
+                              postSection,
+                              portfolio_id,
+                              page_id,
+                              academic_data
+                            );
+                            PostSection(
+                              postSection,
+                              portfolio_id,
+                              page_id,
+                              awesome_data
+                            );
+                            PostSection(
+                              postSection,
+                              portfolio_id,
+                              page_id,
+                              professional_data
+                            );
+                          })
+                          .catch(function (error: any) {
+                            console.log(error);
+                            setSubmitting(false);
+                          });
+                        savePortfolioId(parseInt(portfolio_id));
+                        setSubmitting(false);
+                        setRedirect(true);
+                      })
+                      .catch(function (error: any) {
+                        setSubmittionError(true);
+                        setSubmitting(false);
+                        console.log(error);
+                        console.log(submittionError);
+                      });
+                  }}
+                >
+                  {({ errors, touched, isSubmitting }) => (
+                    <Form>
+                      <PortfolioNameSectionInput
+                        title={"Website Name*"}
+                        sectionName={"websiteName"}
+                      >
+                        <Field
+                          component={TextField}
+                          className={"websiteName"}
+                          name={"websiteName"}
+                          id="standard-full-width"
+                          style={{ margin: 0 }}
+                          fullWidth
                           color="secondary"
-                          className={classes.publishButton}
-                          style={{ borderRadius: 5 }}
-                        >
-                          Publish
-                        </Button>
-                      </div>
-                      <div></div>
-                    </BottomButtonsDiv>
-                    {submittionError ? (
-                      <ErrorMessage>
-                        Error signing up. Please try again later.
-                      </ErrorMessage>
-                    ) : null}
-                  </Form>
-                )}
-              </Formik>
-            </div>
-            <div></div>
-          </StyledFormDiv>
+                        />
+                      </PortfolioNameSectionInput>
+                      <BetweenSections />
+                      {ImageTextSectionInput(
+                        "Biography",
+                        "biography",
+                        touched.biography,
+                        errors.biography,
+                        bioImageResponse,
+                        setBioImageResponse
+                      )}
+                      <BetweenSections />
+                      {errors.academicHistory && touched.academicHistory ? (
+                        <ErrorMessage>{errors.academicHistory}</ErrorMessage>
+                      ) : null}
+                      <TextSectionInput
+                        title="Academic History"
+                        sectionName="academicHistory"
+                        touched={touched.academicHistory}
+                        errors={errors.academicHistory}
+                      />
+                      <BetweenSections />
+                      {ImageSectionInput(
+                        "Awesome Image",
+                        "awesomeImage",
+                        awesomeImageResponse,
+                        setAwesomeImageResponse
+                      )}
+                      <BetweenSections />
+                      <BottomButtonsDiv>
+                        <div></div>
+                        <div>
+                          <Button
+                            variant="outlined"
+                            className={classes.cancelButton}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                        <div></div>
+                        <div>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="secondary"
+                            className={classes.publishButton}
+                            style={{ borderRadius: 5 }}
+                          >
+                            Publish
+                          </Button>
+                        </div>
+                        <div></div>
+                      </BottomButtonsDiv>
+                      {submittionError ? (
+                        <ErrorMessage>
+                          Error signing up. Please try again later.
+                        </ErrorMessage>
+                      ) : null}
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+              <div></div>
+            </StyledFormDiv>
         </ThemeProvider>
       </>
     );

@@ -7,7 +7,6 @@ import Portfolio from "./Portfolio";
 import Edit from "./Edit";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { UserContextProvider } from "jinxui";
-import PrivateRoute from "./PrivateRoute"
 
 function App() {
   return (

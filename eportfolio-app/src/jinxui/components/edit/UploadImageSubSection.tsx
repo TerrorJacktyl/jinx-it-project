@@ -1,56 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-import makeStyles from "@material-ui/core/styles/makeStyles"
-import createStyles from "@material-ui/core/styles/createStyles"
 import Paper from "@material-ui/core/Paper"
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined"
 import { 
   useUser,
   UserImage,
  } from "jinxui"
-
-const useStyles = makeStyles((theme: any) =>
-  createStyles({
-    root: {},
-    transparentHoverFocus: {
-      "&:hover, &.Mui-focusVisible": {
-        backgroundColor: "transparent",
-      },
-    },
-    publishButton: {
-      width: "100%",
-      height: "100%",
-      fontSize: 16,
-      fontWeight: 400,
-      border: "1px solid",
-      "&:hover": {
-        border: "1px solid",
-      },
-    },
-    cancelButton: {
-      width: "100%",
-      height: "100%",
-      fontWeight: 300,
-    },
-    menuButton: {
-      marginRight: theme.spacing(0),
-    },
-    title: {
-      flexGrow: 1,
-      textAlign: "left",
-      margin: 10,
-      fontWeight: 400,
-    },
-    toolbar: {
-      height: 50,
-      margin: 0,
-    },
-    textFieldMain: {
-      lineHeight: 4,
-      letterSpacing: "0.03333em",
-    },
-  })
-);
 
 const StyledInput = styled.input`
   display: none;
@@ -100,7 +55,6 @@ function UploadImageSubSection(
   imageResponse: any,
   setImageResponse: any
 ) {
-  const classes = useStyles();
   const { uploadImage } = useUser();
   // const classes = useStyles();
   return (
