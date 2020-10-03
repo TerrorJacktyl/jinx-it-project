@@ -16,7 +16,6 @@ import {
 } from "jinxui";
 import { TPortfolio, TPage, TSection } from "./Types";
 
-
 const TextSectionContainer = styled.div`
   padding-left: 12px;
   padding-right: 12px;
@@ -71,37 +70,44 @@ const Portfolio = () => {
   return (
     <ThemeProvider theme={DarkTheme}>
       <CssBaseline />
-    <AccountPageDiv>
-        <HeaderBar title={portfolio !== null ? portfolio.name : null}></HeaderBar>
-      <PageDiv>
-        <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
-        {sections.length !== 0
-          ? sections.sort(compare).map((section: TSection) => {
-              if (section.type === "text") {
-                return (
-                  <TextSection name={section.name} content={section.content} />
-                );
-              } else if (section.type === "image") {
-                return <UserImage src={section.path} />;
-              } else if (section.type === "image_text") {
-                return (
-                  <>
-                    <UserImage src={section.path} />
+      <AccountPageDiv>
+        <HeaderBar
+          title={portfolio !== null ? portfolio.name : null}
+        ></HeaderBar>
+        <PageDiv>
+          <PageName>
+            {pages.length !== 0 ? pages[currPage].name : null}
+          </PageName>
+          {sections.length !== 0
+            ? sections.sort(compare).map((section: TSection) => {
+                if (section.type === "text") {
+                  return (
                     <TextSection
                       name={section.name}
                       content={section.content}
                     />
-                  </>
-                );
-              } else {
-                return (
-                  <MediaSection name={section.name} path={section.media} />
-                );
-              }
-            })
-          : null}
-      </PageDiv>
-    </AccountPageDiv>
+                  );
+                } else if (section.type === "image") {
+                  return <UserImage src={section.path} />;
+                } else if (section.type === "image_text") {
+                  return (
+                    <>
+                      <UserImage src={section.path} />
+                      <TextSection
+                        name={section.name}
+                        content={section.content}
+                      />
+                    </>
+                  );
+                } else {
+                  return (
+                    <MediaSection name={section.name} path={section.media} />
+                  );
+                }
+              })
+            : null}
+        </PageDiv>
+      </AccountPageDiv>
     </ThemeProvider>
   );
 };

@@ -88,7 +88,7 @@ const Signup = () => {
   const { signup } = useUser();
 
   const onRegister = () => {
-    return <Redirect to={Routes.LOGIN} />
+    return <Redirect to={Routes.PORTFOLIO_EDIT} />
   }
 
   const [submittionError, setSubmittionError] = useState("");
@@ -178,7 +178,7 @@ const Signup = () => {
                 <StyledButton 
                   type="submit" 
                   disabled={isSubmitting}>
-                  Join
+                  JOIN
                 </StyledButton>
 
                 <StyledLink href={Routes.LOGIN}><FormText>Already have an account? Log In</FormText></StyledLink>
