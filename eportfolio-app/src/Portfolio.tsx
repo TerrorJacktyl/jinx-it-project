@@ -43,9 +43,10 @@ const Portfolio = () => {
 
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
-  const [currPage, setCurrPage] = useState<number>(0);
+  const [currPage] = useState<number>(0);
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
+
   useEffect(() => {
     const fetchPortfolio = async () => {
       const { portfolio, pages, sections } = await getFullPortfolio(
@@ -57,7 +58,8 @@ const Portfolio = () => {
       setSections(sections);
     };
     fetchPortfolio();
-  }, []);
+  }, [getFullPortfolio, portfolioId]);
+
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {
       return -1;
@@ -80,31 +82,31 @@ const Portfolio = () => {
           </PageName>
           {sections.length !== 0
             ? sections.sort(compare).map((section: TSection) => {
-                if (section.type === "text") {
-                  return (
+              if (section.type === "text") {
+                return (
+                  <TextSection
+                    name={section.name}
+                    content={section.content}
+                  />
+                );
+              } else if (section.type === "image") {
+                return <UserImage src={section.path} />;
+              } else if (section.type === "image_text") {
+                return (
+                  <>
+                    <UserImage src={section.path} />
                     <TextSection
                       name={section.name}
                       content={section.content}
                     />
-                  );
-                } else if (section.type === "image") {
-                  return <UserImage src={section.path} />;
-                } else if (section.type === "image_text") {
-                  return (
-                    <>
-                      <UserImage src={section.path} />
-                      <TextSection
-                        name={section.name}
-                        content={section.content}
-                      />
-                    </>
-                  );
-                } else {
-                  return (
-                    <MediaSection name={section.name} path={section.media} />
-                  );
-                }
-              })
+                  </>
+                );
+              } else {
+                return (
+                  <MediaSection name={section.name} path={section.media} />
+                );
+              }
+            })
             : null}
         </PageDiv>
       </AccountPageDiv>

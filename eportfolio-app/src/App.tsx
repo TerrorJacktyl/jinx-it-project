@@ -6,7 +6,7 @@ import Home from "./Home";
 import Edit from "./Edit";
 import Portfolio from "./Portfolio"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { UserContextProvider, LoggedInRoute, LoggedOutRoute, Routes } from "jinxui";
+import { UserContextProvider, LoggedInRoute, Routes } from "jinxui";
 
 function App() {
   return (
