@@ -32,7 +32,6 @@ class ClientTest(TestCase):
         # Put some extra client details
         self.client.put('/api/accounts/me',
                         {'first_name': 'Gavin', 'last_name': 'The Great'})
-        print(self.client.get('/api/accounts/me').json())
 
     def test_portfolio_creation(self):
         # Create a portfolio for an authenticated user, and add some content
