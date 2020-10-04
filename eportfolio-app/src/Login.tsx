@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect } from 'react-router-dom';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -11,9 +12,13 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  FormAlert,
+  Routes,
+  useUser,
 } from "jinxui";
 import styled from "styled-components";
 
+// The styling isn't DRY - where are we putting this?
 const StyledFormEntry = styled(FormEntry)`
   font-family: "Heebo", sans-serif;
   margin-top: 15px;
@@ -25,6 +30,12 @@ const FormTitle = styled.h2`
   font-weight: 300;
 `;
 
+const FormText = styled.h4`
+  font-family: "Heebo", sans-serif;
+  color: #eeeeee;
+  font-weight: 300;
+`
+
 const StyledButton = styled(Button)`
   margin: auto;
   margin-top: 30px;
@@ -34,85 +45,102 @@ const StyledFormDiv = styled(FormDiv)`
   margin-top: 100px;
 `;
 
+const StyledLink = styled.a`
+  text-decoration: none;
+  position: relative;
+`;
+
 const SignupSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Required"),
+  username: Yup.string().min(2, "Too Short!").max(150, "Too Long!").matches(/^[a-zA-Z0-9_@+.-]+$/, "Can only contain letters, numbers, and some special characters").required("Required"),
   password: Yup.string().required("Required"),
 });
 
 const Login = () => {
-  const axios = require("axios").default;
-  const [submittionError, setSubmittionError] = useState(false);
+  const [submittionError, setSubmittionError] = useState('');
 
-  return (
-    <AccountPageDiv>
-      <SiteHeader>
-        <HeaderDiv>
-          <LogoLink />
-          <HeaderTitle>Login</HeaderTitle>
-        </HeaderDiv>
-      </SiteHeader>
-
-      <StyledFormDiv>
-        <FormTitle>Enter Details</FormTitle>
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={SignupSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-
-            axios
-              .post(`localhost:8080/api/login`, {
-                email: values.email,
-                password: values.password,
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
-              })
-              .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
-          }}
-        >
-          {({ errors, touched, isSubmitting }) => (
-            <Form>
-              <StyledFormEntry name="email" type="email" placeholder="Email address" />
-              {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
-              
-              <StyledFormEntry name="password" type="password" placeholder="Password" />
-              {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
-              
-              <StyledButton
-                type="submit"
-                disabled={isSubmitting}
-                width={null}
-                textColour="#00FFC2"
-                backgroundColour={null}
-                hoverColour="#00FFC2"
-                contrastColour="#1C1C1C"
-                text="Login"
-                fontSize={null}
-              />
-              {submittionError ? <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
-              
-              <StyledButton
-                width={null}
-                textColour="#EEEEEE"
-                backgroundColour={null}
-                hoverColour="#EEEEEE"
-                contrastColour="#1C1C1C"
-                text="Reset Password"
-                fontSize={"20px"}
-              />
-            </Form>
-          )}
-        </Formik>
-      </StyledFormDiv>
-    </AccountPageDiv>
+  const { userData, login } = useUser();
+  /** Due to how the router protection works, this is a bit hackey.
+   * The Routes.LOGIN route is not protected, because doing so causes
+   * the redirect from LOGIN to PORTFOLIO_EDIT (a protected route) to
+   * be overridden by the route protection's redirect (i.e. to home).
+   */
+  const [redirect, setRedirect] = useState(
+    userData.authenticated ? true : false
   );
-};
+
+  const onLogin = () => {
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />
+  }
+
+  if (redirect) {
+    return onLogin();
+  }
+  else {
+    return (
+      <AccountPageDiv>
+        <SiteHeader>
+          <HeaderDiv>
+            <LogoLink />
+            <HeaderTitle>Login</HeaderTitle>
+          </HeaderDiv>
+        </SiteHeader>
+
+        <StyledFormDiv>
+          <FormTitle>Enter Details</FormTitle>
+          {submittionError ? <FormAlert severity="error">Error logging in: {submittionError}.</FormAlert> : null}
+          <Formik
+            initialValues={{ username: "", password: "" }}
+            validationSchema={SignupSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              login(values.username, values.password)
+                .then((config: any) => {
+                  setRedirect(true);
+                })
+                .catch(error => {
+                  setSubmittionError(error);
+                });
+            }}
+          >
+            {({ errors, touched, isSubmitting }) => (
+              <Form>
+                <StyledFormEntry name="username" type="username" placeholder="Username" />
+                {errors.username && touched.username ? <ErrorMessage>{errors.username}</ErrorMessage> : null}
+
+                <StyledFormEntry name="password" type="password" placeholder="Password" />
+                {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
+
+                <StyledButton
+                  type="submit"
+                  disabled={isSubmitting}
+                  width={null}
+                  textColour="#00FFC2"
+                  backgroundColour={null}
+                  hoverColour="#00FFC2"
+                  contrastColour="#1C1C1C"
+                  text="Login"
+                  fontSize={null}
+                />
+
+                <StyledButton
+                  width={null}
+                  textColour="#EEEEEE"
+                  backgroundColour={null}
+                  hoverColour="#EEEEEE"
+                  contrastColour="#1C1C1C"
+                  text="Reset Password"
+                  fontSize={"20px"}
+                />
+
+                <StyledLink href={Routes.SIGNUP} ><FormText>Sign up for an account</FormText></StyledLink>
+
+              </Form>
+
+            )}
+          </Formik>
+        </StyledFormDiv>
+      </AccountPageDiv >)
+  }
+}
 
 export default Login;

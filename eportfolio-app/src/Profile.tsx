@@ -13,6 +13,9 @@ import {
   LogoLink,
   HeaderTitle,
   AccountPageDiv,
+  Routes,
+  UserAvatarDropdown,
+  useUser,
 } from "jinxui";
 
 const WideFormDiv = styled(FormDiv)`
@@ -82,14 +85,17 @@ const ProfileSchema = Yup.object().shape({
 });
 
 const Profile = () => {
-  const axios = require("axios").default;
   const [submittionError, setSubmittionError] = useState(false);
+
+  const { logout } = useUser();
+
   return (
     <AccountPageDiv>
       <SiteHeader>
         <HeaderDiv>
           <LogoLink />
           <HeaderTitle>Account Profile</HeaderTitle>
+          <UserAvatarDropdown />
         </HeaderDiv>
       </SiteHeader>
       <StyledFormDiv>
@@ -104,24 +110,24 @@ const Profile = () => {
           validationSchema={ProfileSchema}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
-
-            axios
-              .post(`http://127.0.0.1:8080/api/create_profile`, {
-                websiteName: values.websiteName,
-                biography: values.biography,
-                academicHistory: values.academicHistory,
-                professionalHistory: values.professionalHistory,
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
-              })
-              .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
+            logout();
+            // axios
+            //   .post(`http://127.0.0.1:8080/api/create_profile`, {
+            //     websiteName: values.websiteName,
+            //     biography: values.biography,
+            //     academicHistory: values.academicHistory,
+            //     professionalHistory: values.professionalHistory,
+            //   })
+            //   .then(function (response: any) {
+            //     console.log(response);
+            //     setSubmitting(false);
+            //   })
+            //   .catch(function (error: any) {
+            //     setSubmittionError(true);
+            //     setSubmitting(false);
+            //     console.log(error);
+            //     console.log(submittionError);
+            //   });
           }}
         >
           {({ errors, touched, isSubmitting }) => (
@@ -146,7 +152,7 @@ const Profile = () => {
                 <ErrorMessage>{errors.professionalHistory}</ErrorMessage>
               ) : null}
               <div>
-                <StyledLink href="/">
+                <StyledLink href={Routes.HOME}>
                   <StyledCancelButton
                     width={null}
                     textColour="#EEEEEE"

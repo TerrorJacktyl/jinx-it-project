@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { SiteLayout, Button } from "jinxui";
+import { SiteLayout, Button, useUser, Routes } from "jinxui";
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -90,13 +90,15 @@ const SampleBody = styled.p`
 `;
 
 const Home = () => {
+  const { userData } = useUser();
+
   return (
     <div>
       <BodyDiv>
         <TopBlockDiv>
           <SiteHeader>
             <HeaderDiv>
-              <StyledLink href="/login">
+              <StyledLink href={userData.authenticated ? Routes.PORTFOLIO_DISPLAY : Routes.LOGIN}>
                 <StyledLogin
                   width={null}
                   textColour="#EEEEEE"
@@ -114,7 +116,7 @@ const Home = () => {
           </LogoDiv>
           <JinxName>Jinx</JinxName>
           <CatchPhrase>Your portfolio, made simple</CatchPhrase>
-          <StyledLink href="/signup">
+          <StyledLink href={Routes.SIGNUP}>
             <StyledSignup
               width={null}
               textColour="#00FFC2"
