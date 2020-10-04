@@ -1,8 +1,9 @@
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth.models import User
-from django.dispatch import receiver
 
+from datetime import datetime
+from django.dispatch import receiver
 
 from account.signals import account_created
 
@@ -70,7 +71,7 @@ class Page(models.Model):
 class Section(models.Model):
     page = models.ForeignKey(
         Page, on_delete=models.CASCADE, related_name='sections')
-    name = models.CharField(max_length=250)
+    name = models.CharField(blank=True, max_length=250)
     # ordering number to order sections on a page
     number = models.IntegerField(default=0)
 
@@ -83,7 +84,12 @@ class Section(models.Model):
 
     @property
     def type(self):
-        mapping = {'TextSection': 'text', 'MediaSection': 'media'}
+        mapping = {
+            'TextSection': 'text', 
+            'MediaSection': 'media',
+            'ImageSection': 'image',
+            'ImageTextSection': 'image_text',
+            }
         return mapping[self.__class__.__name__]
 
     class Meta:
@@ -97,7 +103,40 @@ class TextSection(Section):
     content = models.TextField()
 
 
+
 class MediaSection(Section):
     # TODO: password protect files
     # https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
+
+class Image(models.Model):
+    #   Image upload tutorial
+    #   https://medium.com/@emeruchecole9/uploading-images-to-rest-api-backend-in-react-js-b931376b5833
+    def image_path(self, filename):
+        _now = datetime.now()
+        return 'images/{user}/{year}/{month}/{day}/{file}'.format(
+            user =  self.owner, 
+            file =  filename,
+            year =  _now.strftime('%Y'),
+            month = _now.strftime('%m'),
+            day =   _now.strftime('%d') )
+
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='images')
+    name = models.CharField(max_length = 100)
+    path = models.ImageField(upload_to = image_path, null = True)
+
+
+    # @property
+    # def owner(self):
+    #     return self.portfolio.owner
+
+    def __str__(self):
+        return self.name
+
+class ImageTextSection(Section):
+    image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
+    content = models.TextField(blank=True)
+
+class ImageSection(Section):
+    image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-
+import { Redirect } from "react-router-dom";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
 import styled from "styled-components";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -7,38 +9,42 @@ import {
   ErrorMessage,
   FormDiv,
   FormEntry,
-  Button,
-  SiteHeader,
-  HeaderDiv,
-  LogoLink,
-  HeaderTitle,
+  PrimaryButton,
   AccountPageDiv,
+  FormAlert,
+  Routes,
+  useUser,
+  DarkTheme,
+  HeaderBar,
 } from "jinxui";
 
-// import { Redirect } from "react-router-dom"; still not working
-
-// Idea on how to submit properly:
-// https://stackoverflow.com/questions/43230194/how-to-use-redirect-in-the-new-react-router-dom-of-reactjs
-
 const StyledFormEntry = styled(FormEntry)`
-  font-family: "Heebo", sans-serif;
+  // font-family: "Heebo", sans-serif;
+  width: 300px;
   margin-top: 15px;
   margin-bottom: 15px;
 `;
+
 const FormTitle = styled.h2`
   font-family: "Heebo", sans-serif;
   color: #eeeeee;
   font-weight: 300;
 `;
 
-const StyledButton = styled(Button)`
+const FormText = styled.h4`
+  font-family: "Heebo", sans-serif;
+  color: #eeeeee;
+  font-weight: 300;
+`;
+
+const StyledButton = styled(PrimaryButton)`
   margin: auto;
   margin-top: 30px;
-
 `;
 
 const StyledFormDiv = styled(FormDiv)`
   margin-top: 100px;
+  height: 700px;
 `;
 
 const StyledLink = styled.a`
@@ -46,93 +52,151 @@ const StyledLink = styled.a`
   position: relative;
 `;
 
+// We'll need to ensure that this schema is more strict than Django's user sign up
 const SignupSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-  lastName: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
+  firstName: Yup.string()
+    .min(2, "Too Short!")
+    .max(150, "Too Long!")
+    .required("Required"),
+  lastName: Yup.string()
+    .min(2, "Too Short!")
+    .max(150, "Too Long!")
+    .required("Required"),
+  username: Yup.string()
+    .min(2, "Too Short!")
+    .max(150, "Too Long!")
+    .matches(
+      /^[a-zA-Z0-9_@+.-]+$/,
+      "Can only contain letters, numbers, and some special characters"
+    )
+    .required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().required("Required"),
+  password: Yup.string()
+    .min(8, "Too Short!")
+    .matches(/(?!^\d+$)^.+$/, "Password cannot consist of only numbers")
+    .required("Required"),
   passwordConfirm: Yup.string()
     .oneOf([Yup.ref("password"), undefined], "Passwords don't match")
     .required("Required"),
 });
 
 const Signup = () => {
-  const axios = require("axios").default;
-  const [submittionError, setSubmittionError] = useState(false);
-  return (
-    <AccountPageDiv>
-      <SiteHeader>
-        <HeaderDiv>
-          <LogoLink />
-          <HeaderTitle>Sign Up</HeaderTitle>
-        </HeaderDiv>
-      </SiteHeader>
-      <StyledFormDiv>
-        <FormTitle>Sign up for free!</FormTitle>
-        <Formik
-          initialValues={{ firstName: "", lastName: "", email: "", password: "", passwordConfirm: "" }}
-          validationSchema={SignupSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
 
-            axios
-              .post(`http://127.0.0.1:8080/api/user`, {
-                first_name: values.firstName,
-                last_name: values.lastName,
-                email: values.email,
-                password: values.password,
-              })
-              .then(function (response: any) {
-                console.log(response);
-                setSubmitting(false);
-              })
-              .catch(function (error: any) {
-                setSubmittionError(true);
-                setSubmitting(false);
-                console.log(error);
-                console.log(submittionError);
-              });
-          }}
-        >
-          {({ errors, touched, isSubmitting }) => (
-            <Form>
-              <StyledFormEntry name="firstName" placeholder="First Name" />
-              {errors.firstName && touched.firstName ? <ErrorMessage>{errors.firstName}</ErrorMessage> : null}
+  const { userData } = useUser();
 
-              <StyledFormEntry name="lastName" placeholder="Last Name" />
-              {errors.lastName && touched.lastName ? <ErrorMessage>{errors.lastName}</ErrorMessage> : null}
-
-              <StyledFormEntry name="email" type="email" placeholder="Email" />
-              {errors.email && touched.email ? <ErrorMessage>{errors.email}</ErrorMessage> : null}
-
-              <StyledFormEntry name="password" type="password" placeholder="Password" />
-              {errors.password && touched.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
-
-              <StyledFormEntry name="passwordConfirm" type="password" placeholder="Confirm Password" />
-              {errors.passwordConfirm && touched.passwordConfirm ? (
-                <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
-              ) : null}
-              <StyledLink href="/profile">
-                <StyledButton
-                  type="submit"
-                  disabled={isSubmitting}
-                  width={null}
-                  textColour="#00FFC2"
-                  backgroundColour={null}
-                  hoverColour="#00FFC2"
-                  contrastColour="#1C1C1C"
-                  text="Join"
-                  fontSize={null}
-                />
-              </StyledLink>
-              {submittionError ? 
-                <ErrorMessage>Error signing up. Please try again later.</ErrorMessage> : null}
-            </Form>
-          )}
-        </Formik>
-      </StyledFormDiv>
-    </AccountPageDiv>
+  /** Due to how the router protection works, this is a bit hackey.
+   * The Routes.LOGIN route is not protected, because doing so causes
+   * the redirect from LOGIN to PORTFOLIO_EDIT (a protected route) to
+   * be overridden by the route protection's redirect (i.e. to home).
+   */
+  const [redirect, setRedirect] = useState(
+    userData.authenticated ? true : false
   );
+
+  const { signup } = useUser();
+
+  const onRegister = () => {
+    return <Redirect to={Routes.PORTFOLIO_EDIT} />
+  }
+
+  const [submittionError, setSubmittionError] = useState("");
+
+  if (redirect) return onRegister();
+  else
+    return (
+      <ThemeProvider theme={DarkTheme}>
+        <CssBaseline />
+        <AccountPageDiv>
+          <HeaderBar></HeaderBar>
+          <StyledFormDiv>
+            <FormTitle>Sign up for free!</FormTitle>
+            {submittionError ? (
+              <FormAlert severity="error">
+                Error logging in: {submittionError}.
+              </FormAlert>
+            ) : null}
+            <Formik
+              initialValues={{
+                firstName: "",
+                lastName: "",
+                username: "",
+                email: "",
+                password: "",
+                passwordConfirm: "",
+              }}
+              validationSchema={SignupSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true);
+
+                // Sign up *and* login the user
+                signup(values.username, values.email, values.password, values.firstName, values.lastName)
+                  .then(() => {
+                    setSubmitting(false);
+                    setRedirect(true);
+                  })
+                  .catch(function (error) {
+                    setSubmitting(false);
+                    setSubmittionError(error);
+                  });
+              }}
+            >
+              {({ errors, touched, isSubmitting }) => (
+                <Form>
+                  <StyledFormEntry name="firstName" placeholder="First Name" />
+                  {errors.firstName && touched.firstName ? (
+                    <ErrorMessage>{errors.firstName}</ErrorMessage>
+                  ) : null}
+
+                  <StyledFormEntry name="lastName" placeholder="Last Name" />
+                  {errors.lastName && touched.lastName ? (
+                    <ErrorMessage>{errors.lastName}</ErrorMessage>
+                  ) : null}
+
+                  <StyledFormEntry name="username" placeholder="Username" />
+                  {errors.username && touched.username ? (
+                    <ErrorMessage>{errors.username}</ErrorMessage>
+                  ) : null}
+
+                  <StyledFormEntry
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                  />
+                  {errors.email && touched.email ? (
+                    <ErrorMessage>{errors.email}</ErrorMessage>
+                  ) : null}
+
+                  <StyledFormEntry
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                  />
+                  {errors.password && touched.password ? (
+                    <ErrorMessage>{errors.password}</ErrorMessage>
+                  ) : null}
+
+                  <StyledFormEntry
+                    name="passwordConfirm"
+                    type="password"
+                    placeholder="Confirm Password"
+                  />
+                  {errors.passwordConfirm && touched.passwordConfirm ? (
+                    <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
+                  ) : null}
+                  <StyledButton
+                    type="submit"
+                    disabled={isSubmitting}>
+                    JOIN
+                </StyledButton>
+
+                  <StyledLink href={Routes.LOGIN}><FormText>Already have an account? Log In</FormText></StyledLink>
+                </Form>
+              )}
+            </Formik>
+          </StyledFormDiv>
+        </AccountPageDiv>
+      </ThemeProvider>
+    );
 };
 
 export default Signup;

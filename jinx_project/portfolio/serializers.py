@@ -31,7 +31,14 @@ class PageInputSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         siblings = len(models.Page.objects.filter(
             portfolio=attrs['portfolio']))
-        validators.number_in_range(attrs['number'], siblings)
+        # Python is stupid and will try to calculate the value for self.instance.number
+        # if it is used as the default value in dict.get. However, it may sometimes fail!
+        # This is why we need to use a if else statement.
+        if 'number' in attrs:
+            number = attrs.get('number')
+        else:
+            number = self.instance.number
+        validators.number_in_range(number, siblings)
         return attrs
 
     def to_internal_value(self, data: dict):
@@ -39,6 +46,19 @@ class PageInputSerializer(serializers.ModelSerializer):
         val['portfolio'] = models.Portfolio.objects.get(
             pk=self.context['portfolio_id'])
         return val
+
+    def update(self, instance, validated_data):
+        # update the ordering later
+        number = validated_data.pop('number', None)
+
+        # update the other fields
+        super().update(instance, validated_data)
+
+        # move the item
+        if number is not None:
+            models.Page.objects.move(instance, number)
+
+        return instance
 
 
 class PageOutputSerializer(serializers.ModelSerializer):
@@ -68,8 +88,16 @@ class SectionSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        siblings = len(models.Section.objects.filter(page=attrs['page']))
-        validators.number_in_range(attrs['number'], siblings)
+        if 'page' in attrs:
+            page = attrs.get('page')
+        else:
+            page = self.instance.page
+        if 'number' in attrs:
+            number = attrs.get('number')
+        else:
+            number = self.instance.number
+        siblings = len(models.Section.objects.filter(page=page))
+        validators.number_in_range(number, siblings)
         return attrs
 
     def to_internal_value(self, data: dict):
@@ -127,6 +155,8 @@ class PolymorphSectionSerializer(SectionSerializer):
         return {
             'text': TextSectionSerializer,
             'media': MediaSectionSerializer,
+            'image': ImageSectionSerializer,
+            'image_text' : ImageTextSectionSerializer,
         }
 
     def to_representation(self, instance):
@@ -135,32 +165,53 @@ class PolymorphSectionSerializer(SectionSerializer):
             return serializer(instance, context=self.context).to_representation(instance)
         except KeyError as ex:
             raise serializers.ValidationError(
-                'Invalid type of section'
+                {'type': 'this type does not exist'}
             ) from ex
 
     def to_internal_value(self, data):
-        try:
-            section_type = data['type']
-        except KeyError as ex:
-            raise serializers.ValidationError(
-                'Type is missing from section'
-            ) from ex
+        if self.instance:
+            section_type = self.instance.type
+        else:
+            try:
+                section_type = data['type']
+            except KeyError as ex:
+                raise serializers.ValidationError(
+                    {'type': 'this field is missing'}
+                ) from ex
         try:
             serializer = self.get_serializer_map()[section_type]
         except KeyError as ex:
             raise serializers.ValidationError(
-                'Invalid type of section'
+                {'type': 'this type does not exist'}
             ) from ex
         validated_data = serializer(
-            context=self.context).to_internal_value(data)
+            context=self.context,
+            partial=self.partial,
+        ).to_internal_value(data)
 
         # validators strip keys that are not in the model, so add the type key back
         validated_data['type'] = section_type
         return validated_data
 
     def create(self, validated_data):
+        # remove type as it is not a real fields on the model
+        # trying to set the type will cause an error
         serializer = self.get_serializer_map()[validated_data.pop('type')]
         return serializer(context=self.context).create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('type', None)
+        # update the ordering later
+        number = validated_data.pop('number', None)
+
+        # update the other fields
+        super().update(instance, validated_data)
+
+        # move the item
+        if number is not None:
+            models.Section.objects.move(instance, number)
+
+        return instance
 
 
 class TextSectionSerializer(SectionSerializer):
@@ -169,7 +220,30 @@ class TextSectionSerializer(SectionSerializer):
         fields = SectionSerializer.Meta.fields + ['content']
 
 
+
 class MediaSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
         model = models.MediaSection
         fields = SectionSerializer.Meta.fields + ['media']
+
+class ImageInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Image
+        fields = ['id', 'name', 'path']
+
+class ImageOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Image
+        fields = ['id', 'owner', 'name', 'path']
+
+class ImageSectionSerializer(SectionSerializer):
+    path = serializers.ImageField(source='image.path', read_only = True)
+    class Meta(SectionSerializer.Meta):
+        model = models.ImageSection
+        fields = SectionSerializer.Meta.fields + ['image', 'path']
+        
+class ImageTextSectionSerializer(SectionSerializer):
+    path = serializers.ImageField(source='image.path', read_only = True)
+    class Meta(SectionSerializer.Meta):
+        model = models.ImageTextSection
+        fields = SectionSerializer.Meta.fields + ['image', 'content', 'path']
