@@ -7,10 +7,13 @@ export const defaultUserContext: IUserContext = {
   username: "",
   firstName: "",
   token: "",
+  portfolioId: 0,
   authenticated: false,
-  theme: "lightTheme",
+  theme: 'lightTheme',
+  lightThemeMode: true,
   config: {},
 };
+
 
 // Define the context to hold a state object and its setState function.
 // Type safety is enforced by the UserProvider wrapper
@@ -52,7 +55,7 @@ export const UserContextProvider = (props: any) => {
   const updateState = (fieldsToUpdate: Partial<IUserContext>) => {
     const newState = { ...state, ...fieldsToUpdate };
     storeUserData(newState);
-    setState(newState);
+    setState((state) => { return { ...state, ...fieldsToUpdate } });
     return;
   }
 

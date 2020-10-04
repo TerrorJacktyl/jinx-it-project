@@ -8,3 +8,5 @@ export {
   storeUserData,
   retrieveUserData,
 } from "./UserContext";
+
+export type { IThemeContext } from "./IThemeContext"

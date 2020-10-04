@@ -6,6 +6,6 @@ export const Routes = {
   HOME: "/",
   LOGIN: "/login",
   SIGNUP: "/signup",
-  PORTFOLIO_EDIT: "/profile",
-  PORTFOLIO_DISPLAY: "/profile",
+  PORTFOLIO_EDIT: "/edit",
+  PORTFOLIO_DISPLAY: "/portfolio",
 }

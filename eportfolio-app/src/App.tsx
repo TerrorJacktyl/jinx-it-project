@@ -3,7 +3,8 @@ import "./App.css";
 import Login from "./Login";
 import Signup from "./Signup";
 import Home from "./Home";
-import Profile from "./Profile";
+import Edit from "./Edit";
+import Portfolio from "./Portfolio"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, LoggedOutRoute, Routes } from "jinxui";
 
@@ -17,8 +18,9 @@ function App() {
           <Switch>
             <Route path={Routes.HOME} exact component={Home} />
             <Route path={Routes.LOGIN} exact component={Login} />
-            <LoggedOutRoute path={Routes.SIGNUP} exact component={Signup} />
-            <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Profile} />
+            <Route path={Routes.SIGNUP} exact component={Signup} />
+            <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
+            <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Portfolio} />
           </Switch>
         </div>
       </Router>

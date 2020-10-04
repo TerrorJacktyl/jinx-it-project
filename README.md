@@ -1,3 +1,6 @@
+
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/) 
+
 # Jinx backend
 
 This branch uses Docker to configure:
@@ -180,6 +183,8 @@ $ docker image prune -a
 First, make sure to delete any old images of the project using `docker rmi <imagename>` as specified above. Then try building all the required images from scratch using `docker-compose build`. Since the database is built from scratch, django models must be migrated using `docker-compose run django python manage.py migrate`. Everything should now be ready to go, run the containers with `docker-compose up`. Happy hacking!
 
 If the build is complaining about psycopg2, don't worry! First, check jinx_project/requirements.txt and see if `psycopg2-binary>=2.8` is on a line. If not, add it. Now follow the build instructions as specified directly above.
+
+If you are getting problems loading material ui icons, you might need to do a full system rubuild.
 
 ## Superuser
 
