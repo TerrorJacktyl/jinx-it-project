@@ -55,7 +55,7 @@ export const UserContextProvider = (props: any) => {
   const updateState = (fieldsToUpdate: Partial<IUserContext>) => {
     const newState = { ...state, ...fieldsToUpdate };
     storeUserData(newState);
-    setState(newState);
+    setState((state) => { return { ...state, ...fieldsToUpdate } });
     return;
   }
 
