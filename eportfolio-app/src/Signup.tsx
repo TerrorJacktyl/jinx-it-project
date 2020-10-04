@@ -81,9 +81,17 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Signup = () => {
-  // This could be parametrized to accept multiple different redirects
-  // e.g. hold a component to redirect to rather than a boolean for a redirect to login page
-  const [redirect, setRedirect] = useState(false);
+
+  const { userData } = useUser();
+
+  /** Due to how the router protection works, this is a bit hackey.
+   * The Routes.LOGIN route is not protected, because doing so causes
+   * the redirect from LOGIN to PORTFOLIO_EDIT (a protected route) to
+   * be overridden by the route protection's redirect (i.e. to home).
+   */
+  const [redirect, setRedirect] = useState(
+    userData.authenticated ? true : false
+  );
 
   const { signup } = useUser();
 
@@ -98,95 +106,95 @@ const Signup = () => {
     return (
       <ThemeProvider theme={DarkTheme}>
         <CssBaseline />
-      <AccountPageDiv>
-        <HeaderBar></HeaderBar>
-        <StyledFormDiv>
-          <FormTitle>Sign up for free!</FormTitle>
-          {submittionError ? (
-            <FormAlert severity="error">
-              Error logging in: {submittionError}.
-            </FormAlert>
-          ) : null}
-          <Formik
-            initialValues={{
-              firstName: "",
-              lastName: "",
-              username: "",
-              email: "",
-              password: "",
-              passwordConfirm: "",
-            }}
-            validationSchema={SignupSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(true);
+        <AccountPageDiv>
+          <HeaderBar></HeaderBar>
+          <StyledFormDiv>
+            <FormTitle>Sign up for free!</FormTitle>
+            {submittionError ? (
+              <FormAlert severity="error">
+                Error logging in: {submittionError}.
+              </FormAlert>
+            ) : null}
+            <Formik
+              initialValues={{
+                firstName: "",
+                lastName: "",
+                username: "",
+                email: "",
+                password: "",
+                passwordConfirm: "",
+              }}
+              validationSchema={SignupSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true);
 
-              // Sign up *and* login the user
-              signup(values.username, values.email, values.password, values.firstName, values.lastName)
-                .then(() => {
-                  setSubmitting(false);
-                  setRedirect(true);
-                })
-                .catch(function (error) {
-                  setSubmitting(false);
-                  setSubmittionError(error);
-                });
-            }}
-          >
-            {({ errors, touched, isSubmitting }) => (
-              <Form>
-                <StyledFormEntry name="firstName" placeholder="First Name" />
-                {errors.firstName && touched.firstName ? (
-                  <ErrorMessage>{errors.firstName}</ErrorMessage>
-                ) : null}
+                // Sign up *and* login the user
+                signup(values.username, values.email, values.password, values.firstName, values.lastName)
+                  .then(() => {
+                    setSubmitting(false);
+                    setRedirect(true);
+                  })
+                  .catch(function (error) {
+                    setSubmitting(false);
+                    setSubmittionError(error);
+                  });
+              }}
+            >
+              {({ errors, touched, isSubmitting }) => (
+                <Form>
+                  <StyledFormEntry name="firstName" placeholder="First Name" />
+                  {errors.firstName && touched.firstName ? (
+                    <ErrorMessage>{errors.firstName}</ErrorMessage>
+                  ) : null}
 
-                <StyledFormEntry name="lastName" placeholder="Last Name" />
-                {errors.lastName && touched.lastName ? (
-                  <ErrorMessage>{errors.lastName}</ErrorMessage>
-                ) : null}
+                  <StyledFormEntry name="lastName" placeholder="Last Name" />
+                  {errors.lastName && touched.lastName ? (
+                    <ErrorMessage>{errors.lastName}</ErrorMessage>
+                  ) : null}
 
-                <StyledFormEntry name="username" placeholder="Username" />
-                {errors.username && touched.username ? (
-                  <ErrorMessage>{errors.username}</ErrorMessage>
-                ) : null}
+                  <StyledFormEntry name="username" placeholder="Username" />
+                  {errors.username && touched.username ? (
+                    <ErrorMessage>{errors.username}</ErrorMessage>
+                  ) : null}
 
-                <StyledFormEntry
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                />
-                {errors.email && touched.email ? (
-                  <ErrorMessage>{errors.email}</ErrorMessage>
-                ) : null}
+                  <StyledFormEntry
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                  />
+                  {errors.email && touched.email ? (
+                    <ErrorMessage>{errors.email}</ErrorMessage>
+                  ) : null}
 
-                <StyledFormEntry
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                />
-                {errors.password && touched.password ? (
-                  <ErrorMessage>{errors.password}</ErrorMessage>
-                ) : null}
+                  <StyledFormEntry
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                  />
+                  {errors.password && touched.password ? (
+                    <ErrorMessage>{errors.password}</ErrorMessage>
+                  ) : null}
 
-                <StyledFormEntry
-                  name="passwordConfirm"
-                  type="password"
-                  placeholder="Confirm Password"
-                />
-                {errors.passwordConfirm && touched.passwordConfirm ? (
-                  <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
-                ) : null}
-                <StyledButton 
-                  type="submit" 
-                  disabled={isSubmitting}>
-                  JOIN
+                  <StyledFormEntry
+                    name="passwordConfirm"
+                    type="password"
+                    placeholder="Confirm Password"
+                  />
+                  {errors.passwordConfirm && touched.passwordConfirm ? (
+                    <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
+                  ) : null}
+                  <StyledButton
+                    type="submit"
+                    disabled={isSubmitting}>
+                    JOIN
                 </StyledButton>
 
-                <StyledLink href={Routes.LOGIN}><FormText>Already have an account? Log In</FormText></StyledLink>
-              </Form>
-            )}
-          </Formik>
-        </StyledFormDiv>
-      </AccountPageDiv>
+                  <StyledLink href={Routes.LOGIN}><FormText>Already have an account? Log In</FormText></StyledLink>
+                </Form>
+              )}
+            </Formik>
+          </StyledFormDiv>
+        </AccountPageDiv>
       </ThemeProvider>
     );
 };

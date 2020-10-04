@@ -18,7 +18,7 @@ function App() {
           <Switch>
             <Route path={Routes.HOME} exact component={Home} />
             <Route path={Routes.LOGIN} exact component={Login} />
-            <LoggedOutRoute path={Routes.SIGNUP} exact component={Signup} />
+            <Route path={Routes.SIGNUP} exact component={Signup} />
             <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
             <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Portfolio} />
           </Switch>
