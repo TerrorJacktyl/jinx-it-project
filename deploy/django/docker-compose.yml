@@ -31,7 +31,7 @@ services:
     depends_on:
       - db
     volumes:
-      - jinx_user_files:/srv/media
+      - /srv/media:/srv/media
     networks:
       - br_internal
       - br_django
