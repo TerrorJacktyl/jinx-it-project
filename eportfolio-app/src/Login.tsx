@@ -103,6 +103,7 @@ const Login = () => {
                   })
                   .catch((error) => {
                     setSubmittionError(error);
+                    setSubmitting(false)
                   });
               }}
             >

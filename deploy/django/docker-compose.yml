@@ -47,4 +47,3 @@ networks:
       name: br_django
 volumes:
   jinx_database: {}
-  jinx_user_files: {}
