@@ -52,11 +52,10 @@ const Portfolio = () => {
   const [sections, setSections] = useState<TSection[]>([]);
   useEffect(() => {
     const fetchPortfolio = async () => {
-      var portfolioId = await getSavedPortfolioId();
+      const portfolioId = await getSavedPortfolioId();
       console.log(portfolioId);
       const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
       setPortfolio(portfolio);
-
       setPages(pages);
       setSections(sections);
     };

@@ -52,7 +52,7 @@ export const useUser = () => {
           username: username,
           firstName: accDetails?.data.first_name,
           token: response.data["auth_token"],
-          portfolioId: accDetails.data.primary_portfolio,
+          portfolioId: accDetails?.data.primary_portfolio,
           authenticated: true,
           config: config,
         };
@@ -156,7 +156,7 @@ export const useUser = () => {
       },
       state.config
     )
-      .then((response: any) => response)
+      .then((response: any) => response.data)
       .catch((error: any) => {
         throw error;
       });
@@ -173,7 +173,7 @@ export const useUser = () => {
       },
       state.config
     )
-      .then((response: any) => response)
+      .then((response: any) => response.data)
       .catch((error: any) => {
         throw error;
       });
@@ -184,11 +184,24 @@ export const useUser = () => {
     const path =
       PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections";
     const result = API.post(path, data, state.config)
-      .then((response: any) => response)
+      .then((response: any) => response.data)
       .catch((error: any) => {
         throw error;
       });
     return result;
+  }
+
+  /* Only handles the posting of a new portfolio with a single page at the moment. Change 
+     sections type to TSections[][] when multpile pages are accounted for */
+  // TODO: Fix the types
+  async function postFullPortfolio(portfolio: any, pages: any[], sections: any[]) {
+    const portfolioResp = await postPortfolio(portfolio);
+    const pageResp = await postPage(portfolioResp.id, pages[0]);
+    sections.forEach(async (section: any) => {
+      const result = await postSection(portfolioResp.id, pageResp.id, section);
+    });
+    // Assures redirection to the newly created portfolio
+    await savePortfolioId(parseInt(portfolioResp.id));
   }
 
   /**
@@ -218,7 +231,7 @@ export const useUser = () => {
   }
 
   async function setPrimaryPortfolio(portfolio_id: number) {
-    result = API.patch(
+    const result = API.patch(
       ACCOUNT_PATH, 
       {
         primary_portfolio: portfolio_id
@@ -377,6 +390,7 @@ export const useUser = () => {
     postPortfolio,
     postPage,
     postSection,
+    postFullPortfolio,
     getPortfolios,
     getPortfolio,
     getPages,

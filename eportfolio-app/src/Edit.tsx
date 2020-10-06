@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { TPortfolio, TPage, TSection } from "./Types";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -91,6 +92,8 @@ const BetweenSections = () => {
   return <NewSectionMenu />;
 };
 
+/* Consider passing as props a bool that signals whether this is an edit of an existing
+   portfolio, or a new one entirely */
 const Edit = () => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
@@ -103,17 +106,28 @@ const Edit = () => {
     id: null,
   });
   const {
+    postFullPortfolio,
     postPortfolio,
     postPage,
     postSection,
     savePortfolioId,
+    getSavedPortfolioId,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
+  const [pages, setPages] = useState<TPage[]>([]);
+  const [sections, setSections] = useState<TSection[]>([]);
   // const classes = useStyles();
+  // Call useEffect to fetch an existing portfolio's data
+//  useEffect (async () => {
+//    const portfolioId = await getSavedPortfolioId();
+//    const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
+//    setPages(pages);
+//    setSections(sections); 
+//  }, []);
 
-  const onPublish = () => {
+  const onPublish = async () => {
     return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
   };
 
@@ -154,80 +168,88 @@ const Edit = () => {
                   };
                   const page_data = {
                     name: "home",
-                    number: "0",
+                    number: 0,
                   };
                   const bio_data = {
                     name: "biography",
-                    number: "0",
+                    number: 0,
                     image: bioImageResponse.id,
                     content: values.biography,
                     type: "image_text",
                   };
                   const academic_data = {
                     name: "academic_history",
-                    number: "0",
+                    number: 0,
                     content: values.academicHistory,
                     type: "text",
                   };
                   const awesome_data = {
                     name: "awesome_image",
-                    number: "0",
+                    number: 0,
                     image: awesomeImageResponse.id,
                     type: "image",
                   };
                   const professional_data = {
                     name: "professional_history",
-                    number: "0",
+                    number: 0,
                     content: values.professionalHistory,
                     type: "text",
                   };
                   setSubmitting(true);
-                  postPortfolio(portfolio_data)
-                    .then(function (portfolio_response: any) {
-                      const portfolio_id = portfolio_response.data.id;
-                      postPage(portfolio_id, page_data)
-                        .then(function (page_response: any) {
-                          console.log(page_response);
-                          const page_id = page_response.data.id;
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            bio_data
-                          );
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            academic_data
-                          );
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            awesome_data
-                          );
-                          PostSection(
-                            postSection,
-                            portfolio_id,
-                            page_id,
-                            professional_data
-                          );
-                        })
-                        .catch(function (error: any) {
-                          console.log(error);
-                          setSubmitting(false);
-                        });
-                      savePortfolioId(parseInt(portfolio_id));
-                      setSubmitting(false);
-                      setRedirect(true);
-                    })
-                    .catch(function (error: any) {
-                      setSubmittionError(true);
-                      setSubmitting(false);
-                      console.log(error);
-                      console.log(submittionError);
-                    });
+                  postFullPortfolio(
+                    portfolio_data, 
+                    [page_data], 
+                    [bio_data, academic_data, awesome_data, professional_data]
+                  ); 
+                  setSubmitting(false);
+                  setRedirect(true);
+//                  postPortfolio(portfolio_data)
+//                    .then(function (portfolio_response: any) {
+//                      const portfolio_id = portfolio_response.data.id;
+//                      postPage(portfolio_id, page_data)
+//                        .then(function (page_response: any) {
+//                          console.log(page_response);
+//                          const page_id = page_response.data.id;
+//                          PostSection(
+//                            postSection,
+//                            portfolio_id,
+//                            page_id,
+//                            bio_data
+//                          );
+//                          PostSection(
+//                            postSection,
+//                            portfolio_id,
+//                            page_id,
+//                            academic_data
+//                          );
+//                          PostSection(
+//                            postSection,
+//                            portfolio_id,
+//                            page_id,
+//                            awesome_data
+//                          );
+//                          PostSection(
+//                            postSection,
+//                            portfolio_id,
+//                            page_id,
+//                            professional_data
+//                          );
+
+//                        })
+//                        .catch(function (error: any) {
+//                          console.log(error);
+//                          setSubmitting(false);
+//                        });
+//                      savePortfolioId(parseInt(portfolio_id));
+//                      setSubmitting(false);
+//                      setRedirect(true);
+//                    })
+//                    .catch(function (error: any) {
+//                      setSubmittionError(true);
+//                      setSubmitting(false);
+//                      console.log(error);
+//                      console.log(submittionError);
+//                    });
                 }}
               >
                 {({ errors, touched, isSubmitting }) => (
