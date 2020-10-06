@@ -5,7 +5,7 @@ RUN mkdir /frontend
 
 WORKDIR /frontend
 
-COPY ./eportfolio-app /frontend/
+COPY ./src/frontend /frontend/
 
 RUN npm install
 

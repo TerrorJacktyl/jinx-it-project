@@ -14,11 +14,11 @@ WORKDIR /backend
 # Install our python package dependencies with pip, so Django, rest-api-framework etc.
 # Each step of the build process is cached so if requirements are added first
 # then this pip install can be skipped if only the code changes
-COPY ./jinx_project/requirements.txt /backend
+COPY ./src/backend/requirements.txt /backend
 RUN pip install -r requirements.txt
 
 # Copy all our Django code to our newly initialised work directory
-COPY ./jinx_project/ /backend/
+COPY ./src/backend /backend/
 
 # Commented out because it was moved to the docker-compose.yml to enable testing first (which depends on the db)
 # Start server
