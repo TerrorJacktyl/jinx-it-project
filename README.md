@@ -54,6 +54,14 @@ If you run `docker` or `docker-compose` with `sudo`, please make sure you _rever
 $ sudo chown -R $USER:$USER .
 ```
 
+## Project file structure
+
+| Folder   | Contains                                              |
+| -------- | ----------------------------------------------------- |
+| `deploy` | Files specific to the production environment.         |
+| `env`    | Environment variables specific to development.        |
+| `src`    | Source code for frontend (React) and backend (Djagno) |
+
 ### Building and running
 
 These are all the build commands you should need:
