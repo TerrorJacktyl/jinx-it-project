@@ -50,10 +50,10 @@ If a sections has an id, then it would be modified instead of deleted.
 
 For example, the following request would delete everything except for the first item, and also creates a new section based on the data in the second item.
 
-```
+```json
 [
     {
-        "id": 4235
+        "id": 4235,
         "name": "I will be modified",
         "type": "text",
         "content": "every other existing section gets deleted"
