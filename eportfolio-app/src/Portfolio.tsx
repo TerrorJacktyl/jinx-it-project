@@ -16,8 +16,7 @@ import {
 } from "jinxui";
 import { TPortfolio, TPage, TSection } from "./Types";
 
-
-const SectionContainer = styled.div`
+const TextSectionContainer = styled.div`
   padding-left: 12px;
   padding-right: 12px;
 `;
@@ -47,9 +46,10 @@ const Portfolio = () => {
   const { getFullPortfolio, getSavedPortfolioId } = useUser();
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
-  const [currPage, setCurrPage] = useState<number>(0);
+  const [currPage] = useState<number>(0);
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
+
   useEffect(() => {
     const fetchPortfolio = async () => {
       const portfolioId = await getSavedPortfolioId();
@@ -60,7 +60,7 @@ const Portfolio = () => {
       setSections(sections);
     };
     fetchPortfolio();
-  }, []);
+  }, [getFullPortfolio]);
 
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {
@@ -75,15 +75,22 @@ const Portfolio = () => {
   return (
     <ThemeProvider theme={DarkTheme}>
       <CssBaseline />
-    <AccountPageDiv>
-        <HeaderBar title={portfolio !== null ? portfolio.name : null}></HeaderBar>
-      <PageDiv>
-        <PageName>{pages.length !== 0 ? pages[currPage].name : null}</PageName>
-        {sections.length !== 0
-          ? sections.sort(compare).map((section: TSection) => {
+      <AccountPageDiv>
+        <HeaderBar
+          title={portfolio !== null ? portfolio.name : null}
+        ></HeaderBar>
+        <PageDiv>
+          <PageName>
+            {pages.length !== 0 ? pages[currPage].name : null}
+          </PageName>
+          {sections.length !== 0
+            ? sections.sort(compare).map((section: TSection) => {
               if (section.type === "text") {
                 return (
-                  <TextSection name={section.name} content={section.content} />
+                  <TextSection
+                    name={section.name}
+                    content={section.content}
+                  />
                 );
               } else if (section.type === "image") {
                 return <UserImage src={section.path} />;
@@ -95,9 +102,9 @@ const Portfolio = () => {
                 );
               }
             })
-          : null}
-      </PageDiv>
-    </AccountPageDiv>
+            : null}
+        </PageDiv>
+      </AccountPageDiv>
     </ThemeProvider>
   );
 };

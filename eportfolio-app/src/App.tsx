@@ -6,7 +6,7 @@ import Home from "./Home";
 import Edit from "./Edit";
 import Portfolio from "./Portfolio"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { UserContextProvider, LoggedInRoute, LoggedOutRoute, Routes } from "jinxui";
+import { UserContextProvider, LoggedInRoute, Routes } from "jinxui";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
           <Switch>
             <Route path={Routes.HOME} exact component={Home} />
             <Route path={Routes.LOGIN} exact component={Login} />
-            <LoggedOutRoute path={Routes.SIGNUP} exact component={Signup} />
+            <Route path={Routes.SIGNUP} exact component={Signup} />
             <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
             <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Portfolio} />
           </Switch>

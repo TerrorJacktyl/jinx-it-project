@@ -129,6 +129,10 @@ export const useUser = () => {
       });
       const config = await login(username, password);
       await setAccountDetails(firstName, lastName, config);
+      // Manually update state to include first name, since login normally does this
+      // but can't because the firstName/lastName haven't been stored yet.
+      // await updateState({firstName: firstName});
+      await login(username, password);
       return response;
     } catch (e) {
       throw handleError(e);

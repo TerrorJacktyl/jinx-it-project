@@ -38,16 +38,6 @@ const FormText = styled.h4`
   font-weight: 300;
 `;
 
-const LoginButton = styled(PrimaryButton)`
-  margin: auto;
-  margin-top: 30px;
-`;
-
-const ResetPasswordButton = styled(SecondaryButton)`
-  margin: auto;
-  margin-top: 30px;
-`;
-
 const StyledFormDiv = styled(FormDiv)`
   margin-top: 100px;
 `;
@@ -55,14 +45,6 @@ const StyledFormDiv = styled(FormDiv)`
 const StyledLink = styled.a`
   text-decoration: none;
   position: relative;
-`;
-
-const SmallText = styled(FormText)`
-  font-size: 14px;
-  margin-top: 0px;
-  margin-right: auto;
-  margin-left: 30px;
-  text-align: left;
 `;
 
 const SignupSchema = Yup.object().shape({
@@ -91,7 +73,8 @@ const Login = () => {
   );
 
   const onLogin = () => {
-    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
+    // At the moment, this fails if a portfolio hasn't been created yet.
+    return <Redirect to={Routes.PORTFOLIO_EDIT} />;
   };
 
   if (redirect) {

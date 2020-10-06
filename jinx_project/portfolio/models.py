@@ -1,9 +1,9 @@
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth.models import User
+
 from datetime import datetime
 from django.dispatch import receiver
-
 
 from account.signals import account_created
 
