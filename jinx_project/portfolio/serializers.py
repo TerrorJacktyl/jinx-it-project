@@ -88,6 +88,10 @@ class SectionSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        # skip number validation if the section is in a list
+        if self.context.get('in_list', False):
+            return attrs
+
         if 'page' in attrs:
             page = attrs.get('page')
         else:

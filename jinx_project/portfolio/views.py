@@ -137,11 +137,13 @@ class SectionList(generics.ListCreateAPIView):
     def put(self, request, *args, **kwargs):
         for i, section in enumerate(request.data):
             section['number'] = i
+        context = self.get_serializer_context()
+        context['in_list'] = True
         serializer = serializers.SectionListSerializer(
             self.get_queryset(),
             data=request.data,
             child=serializers.PolymorphSectionSerializer(
-                context=self.get_serializer_context()
+                context=context
             ),
         )
         if serializer.is_valid():
