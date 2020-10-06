@@ -1,13 +1,48 @@
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/) 
+# Jinx ePortfolio App
 
-# Jinx backend
+A platform where anyone from enthusiasts to professionals can create stunning portfolios that showcase their crafts and projects, and share them with the world.
 
-This branch uses Docker to configure:
+## Getting started
 
-1. Django
-1. PostgreSQL
-1. **an api?**
+To build and run the app, you'll need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on your system.
+
+1. From the root of the project, run the project for the first time by running this command in a terminal:
+
+```bash
+docker-compose run --build
+```
+
+2. Go make a coffee - this will take between 1-10 minutes depending on your computer's processing power.
+
+3. You'll know the app is running when you can see some lines on the terminal with `jinx_react` or `jinx_django` at the beginning of each line.
+
+4. Access the app in your web browser on [`localhost:3000`](http://localhost:3000). If you want to play around with the back end, head to [`localhost:8080/admin`](http://localhost:8080/admin).
+
+5. Close the app by pressing <kbd>Ctrl</kbd><kbd>c</kbd> in the terminal, and patiently wait for the app to close.
+
+6. To run the app again, simply run from the project root:
+
+```bash
+docker-compose up
+```
+
+## Stack
+
+Our app runs with the following components:
+
+1. The PostgreSQL database stores textual data (i.e. account data, portfolio text, paths to images). The Linux filesystem holds media (i.e. images, pdfs, videos).
+2. The Django backend exposes the API endpoints (`/api` and `/auth`), and handles CRUD operations on the database.
+3. The React frontend defines the user interface and structure of the web pages (i.e. home, edit page, account settings).
+
+---
+
+# Development
+
+If you're looking at working on the project, the sections below should help if you run into bugs or trouble.
+
+## Guides and advice
 
 ### Preliminary note: permissions on Linux
 
@@ -19,9 +54,9 @@ If you run `docker` or `docker-compose` with `sudo`, please make sure you _rever
 $ sudo chown -R $USER:$USER .
 ```
 
-## Getting started
+### Building and running
 
-### Building
+These are all the build commands you should need:
 
 ```bash
 # build (standard)
@@ -31,13 +66,7 @@ $ docker-compose build
 $ docker-compose build --no-cache
 ```
 
-Having trouble building? Look under the Issues header :)
-
-#### Warning: did you just change the models in the database?
-
-If you changed a model that will affect existing data in your database, _a rebuild will not be enough to refresh your data_. You will need to remove the postgres image to wipe your database with `docker rmi postgres` before you do a rebuild.
-
-### Running
+Likewise, these are all the run commands you should need:
 
 ```bash
 # run
@@ -47,9 +76,7 @@ $ docker-compose up
 $ docker-compose run django python manage.py makemigrations && python manage.py migrate
 ```
 
-## Mucking around
-
-### Attach shells to specific containers
+### Attach shells to running Docker containers
 
 It's often useful to attach terminals to running containers, or run specific commands inside of them. To open a shell in a container of your choice:
 
@@ -108,6 +135,12 @@ $ docker exec -it jinx_django manage.py shell
 {'first_name': 'Jack', 'last_name': 'Zezula', 'email': 'jackzezula@tuta.io', 'password': 'jackzezula'}
 ```
 
+### API documentation
+
+This application uses Swagger to automatically document the API. You can access it by running the server and going to `localhost:8080/swagger` in your web browser.
+
+See [drf-yasg documentation](https://drf-yasg.readthedocs.io/en/stable/) for more information.
+
 ### Interacting with the database
 
 If you need to edit the database manually (e.g. creating new roles, editing their permissions) rather than through Django's models interface, you can do the following.
@@ -134,64 +167,62 @@ $ psql -d jinx_db -U jinx
 > \l -- list databases with owner
 ```
 
-## To do
+---
 
-#### Setting up the Database
+## Issues and fixes
 
-- [ x ] Change `~/jinx_project/jinx_project/settings.py` so that it uses Postgres.
-- [ x ] Define a schema for our data.
-- [ x ] Configure models in Django and get it CRUDing with the DB.
-- [ x ] Create a basic API allowing the front end some CRUD functionality through Django.
+This is a list of issues we've encountered and some solutions for them. If you resolve an issue, please add them here!
 
-#### Development!
+### The database doesn't reset on a rebuild
 
-## Issues
+You might want to change various aspects of the database, i.e:
 
-### Changing `docker-compose.yml` doesn't change the database
+1. Wiping the data from the database
+2. Changing the database settings in `docker-compose.yml` under `db`
+3. Changing a model that will affect existing data in the database
 
-You might be trying to add users to the database by changing `POSTGRES_USER`, `POSTGRES_PASSWORD` in the `db` environment variables for `docker-compose.yml`. To your horror, it won't work, and it's because this information in `docker-compose.yml` _only affects the database the **first** time it's built_.
-
-To resolve this, you'll need to remove the database image (`postgres` for us) with:
+In these situations, _a rebuild will not be enough_. You will need to remove the database image from Docker. **Warning: this will delete any data in your database.** Before you do your next rebuild, run:
 
 ```bash
-$ docker rmi postgresql
+docker rmi postgres
 ```
 
-If another image isn't updating when you change its configuration in `docker-compose.yml`, try:
+With regard to point 2, this is necessary because the information in `docker-compose.yml` _only affects the database the **first** time it's built_.
 
-1. Finding the name of the image (under the `REPOSITORY` column in output) with:
+### Something's terribly wrong! How do I 'reset'?
+
+If you've done something like manually installing, updating or editing dependencies within the containers, you might run into some bugs.
+
+If rebuilding doesn't solve your issues, a harder reset is deleting the image.
+
+1. Find the name of the image (under the `REPOSITORY` column in output) with:
 
 ```bash
-$ docker images
+docker images
 ```
 
 2. Remove the image `imagename` with:
 
 ```bash
-$ docker rmi <imagename>
+docker rmi <imagename>
 ```
 
-3. Or if you're adventurous, it's 3 AM or a quarter to _fuck it_, kill all your images with:
+3. Or if you're adventurous or it's 3 AM, kill all your images with:
 
 ```bash
 # won't somebody think of the children!
-$ docker image prune -a
+docker image prune -a
 ```
 
-### Build instructions not working?
+### The build instructions not working
 
-First, make sure to delete any old images of the project using `docker rmi <imagename>` as specified above. Then try building all the required images from scratch using `docker-compose build`. Since the database is built from scratch, django models must be migrated using `docker-compose run django python manage.py migrate`. Everything should now be ready to go, run the containers with `docker-compose up`. Happy hacking!
+First, make sure to delete any old images of the project using `docker rmi <imagename>` as specified above. Then try building all the required images from scratch using `docker-compose build`. Since the database is built from scratch, django models must be migrated using `docker-compose run django python manage.py migrate`. Everything should now be ready to go, so you can run the containers with `docker-compose up`. Happy hacking!
 
-If the build is complaining about psycopg2, don't worry! First, check jinx_project/requirements.txt and see if `psycopg2-binary>=2.8` is on a line. If not, add it. Now follow the build instructions as specified directly above.
+### Material UI icons won't load
 
-If you are getting problems loading material ui icons, you might need to do a full system rubuild.
+If you are getting problems loading Material-UI icons, you might need to do a full system rebuild (`docker system prune -a` before a build).
 
-## Superuser
-
-User: `jinx`\
-Pass: `jinxadminpassword`
-
-### Modifying database models
+### Modifying Django models doesn't work
 
 When you run `manage.py makemigrations`, you get:
 
@@ -206,10 +237,8 @@ To fix this:
 ./manage.py makemigrations && ./manage.py migrate
 ```
 
-# API Documentation
+### Map undefined error on line zero
 
-This application uses Swagger to automatically document the API
+This is a strange error, likely caused by issues between recent releases of TypeScript, React scripts and ES-Lint, which resulted in us downgrading to TypeScript 3.9.7.
 
-You can access it by running the server and going to `/swagger/` in your web browser
-
-See [drf-yasg documentation](https://drf-yasg.readthedocs.io/en/stable/) for more information
+Ensuring that `src/frontend/package.json` contains the line `"typescript": "^3.9.7",` and doing a full rebuild should fix this issue.
