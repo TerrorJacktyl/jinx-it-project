@@ -1,4 +1,4 @@
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+[![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)](https://www.gnu.org/licenses/agpl-3.0.en.html)
 
 # Jinx ePortfolio App
 
