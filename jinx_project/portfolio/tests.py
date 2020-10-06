@@ -607,3 +607,122 @@ class SectionOrderingMachine(stateful.RuleBasedStateMachine, UserMixin):
 #         )
 
 #     runTest.is_hypothesis_test = True
+
+
+class SectionBulkTest(UserMixin, APITestCase):
+    def setUp(self):
+        """Code run before each test. Setup API access simulation."""
+        self.setUpUser()
+        self.portfolio = models.Portfolio.objects.create(
+            owner=self.user, name='chihuahua')
+        self.page = models.Page.objects.create(
+            portfolio=self.portfolio,
+            name='churning crown',
+            number=0,
+        )
+        self.sections = {}
+        for i in range(10):
+            section = models.TextSection.objects.create(
+                page=self.page,
+                name='section number {}'.format(i),
+                number=i,
+                content='lorem ipsum'
+            )
+            self.sections[section.id] = section
+
+    def test_section_list_retrieve(self):
+        response = self.client.get(
+            reverse(
+                'section_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+        )
+        for i, section in enumerate(response.data):
+            instance = self.sections.get(section.get('id', None), None)
+            self.assertIsNotNone(instance)
+            self.assertEqual(instance.name, section.get('name'))
+            self.assertEqual(instance.number, section.get('number'))
+            self.assertEqual(instance.number, i)
+            self.assertTrue('type' in section)
+            if section['type'] == 'text':
+                self.assertEqual(instance.content, section.get('content'))
+
+    # TODO: convert this to a hypothesis state machine test?
+    # Currently we may not be testing all possible combinations of updates/creates/deletes
+    def test_section_update(self):
+        path = reverse(
+            'section_list',
+            kwargs={
+                'portfolio_id': self.portfolio.id,
+                'page_id': self.page.id,
+            }
+        )
+
+        # what the data in the database should be
+        model = []
+
+        with self.subTest(msg='delete everything'):
+            self.client.put(
+                path,
+                [],
+                format='json'
+            )
+            response = self.client.get(path)
+
+            self.assertEqual(response.json(), model)
+
+        with self.subTest(msg='add sections'):
+            model.append({
+                'name': 'polarised neptune',
+                'type': 'text',
+                'content': 'medial bodging committed unworthier',
+            })
+            model.append({
+                'name': 'ostrich drainpipe',
+                'type': 'text',
+                'content': 'novices rehearing leafier stationer',
+            })
+            response = self.client.put(
+                path,
+                model,
+                format='json'
+            )
+            for i in range(len(model)):
+                model[i]['id'] = response.json()[i]['id']
+                model[i]['number'] = i
+
+            self.assertEqual(response.json(), model)
+
+        with self.subTest(msg='update'):
+            model[0]['content'] = 'selected Kantian manifolds'
+            response = self.client.put(
+                path,
+                model,
+                format='json'
+            )
+            self.assertEqual(response.json(), model)
+
+        with self.subTest(msg='update, delete, create'):
+            # delete first section
+            model.pop(0)
+            # update second section
+            model[0]['name'] = 'encapsulate altarpiece'
+            # add a new section
+            model.append({
+                'name': 'sacrifice liberates',
+                'type': 'text',
+                'content': 'possessive colonoscopies suburbans',
+            })
+
+            response = self.client.put(
+                path,
+                model,
+                format='json'
+            )
+            model[1]['id'] = response.json()[1]['id']
+            for i in range(len(model)):
+                model[i]['number'] = i
+            self.assertEqual(response.json(), model)
