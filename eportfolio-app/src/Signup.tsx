@@ -107,7 +107,7 @@ const Signup = () => {
       <ThemeProvider theme={DarkTheme}>
         <CssBaseline />
         <AccountPageDiv>
-          <HeaderBar></HeaderBar>
+          <HeaderBar lightTheme={true}></HeaderBar>
           <StyledFormDiv>
             <FormTitle>Sign up for free!</FormTitle>
             {submittionError ? (

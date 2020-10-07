@@ -7,7 +7,7 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import { Button, CssBaseline } from "@material-ui/core";
+import { Button, CssBaseline, Typography } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 
 import { TextField } from "formik-material-ui";
@@ -20,6 +20,7 @@ import {
   useUser,
   HeaderBar,
   PrimaryButton,
+  PrimaryColumnDiv,
   SecondaryButton,
   NewSectionMenu,
   TextSectionInput,
@@ -31,8 +32,8 @@ import {
 
 const FRONT_END_URL = "http://localhost:3000/";
 
-const WideFormDiv = styled(FormDiv)`
-  width: 920px;
+const WideFormDiv = styled(PrimaryColumnDiv)`
+  // width: 920px;
 `;
 
 const FormTitle = styled.h2`
@@ -123,9 +124,9 @@ const Edit = () => {
     return (
       <>
         <ThemeProvider theme={appliedTheme}>
-          <HeaderBar>
+          <HeaderBar lightTheme={theme}>
             <Button
-              style={{ height: "100%", borderRadius: 0 }}
+              style={{ height: "100%" }}
               onClick={() => {
                 switchLightThemeMode();
                 setTheme(!theme);
@@ -136,7 +137,7 @@ const Edit = () => {
             </Button>
           </HeaderBar>
           <CssBaseline />
-          <StyledFormDiv>
+          <PrimaryColumnDiv>
             <div></div>
             <div>
               <FormTitle>Enter your information</FormTitle>
@@ -290,7 +291,7 @@ const Edit = () => {
               </Formik>
             </div>
             <div></div>
-          </StyledFormDiv>
+          </PrimaryColumnDiv>
         </ThemeProvider>
       </>
     );

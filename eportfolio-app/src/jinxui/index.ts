@@ -34,6 +34,7 @@ export { default as UserImage } from "./components/display/UserImage";
 export { default as PrimaryMenu } from "./components/display/PrimaryMenu";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
+export { default as PrimaryColumnDiv } from "./components/display/PrimaryColumnDiv";
 
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection"
@@ -64,5 +65,16 @@ export type { IThemeContext } from "./contexts/index"
 export { useUser } from "./hooks/useUser";
 
 /* Theme */
-export { LightTheme } from "./theme/GlobalTheme";
-export { DarkTheme } from "./theme/GlobalTheme";
+export {
+  LightTheme,
+  DarkTheme,
+  LightShadowColour,
+  DarkShadowColour,
+  LightHeaderGrad,
+  DarkHeaderGrad,
+  LightTitleBGGrad,
+  DarkTitleBGGrad,
+  LightPrimaryButtonGrad,
+  LightPrimaryButtonGradHover,
+  DarkPrimaryButtonGrad,
+} from "./theme/GlobalTheme";

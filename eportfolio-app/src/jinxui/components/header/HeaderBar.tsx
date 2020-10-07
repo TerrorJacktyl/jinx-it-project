@@ -12,6 +12,12 @@ import MenuIcon from "@material-ui/icons/Menu";
 import {
   UserAvatarDropdown,
   HeaderButton,
+  LightTheme,
+  DarkTheme,
+  LightShadowColour,
+  DarkShadowColour,
+  LightHeaderGrad,
+  DarkHeaderGrad,
 } from "jinxui";
 
 import styled from "styled-components";
@@ -25,6 +31,7 @@ const StyledDivOuter = styled.div`
   grid-template-columns: auto auto auto;
   grid-template-rows: minMax(46px, max-content);
 `;
+
 const StyledDivLeft = styled.div`
   padding-left: 0px;
   display: flex;
@@ -44,14 +51,19 @@ const StyledDivRight = styled.div`
   align-items: center;
 `;
 
+
 const HeaderBar = (props: any) => {
   const trigger = useScrollTrigger();
+  const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad
   return (
     <StylesProvider injectFirst>
         <Slide appear={false} direction="down" in={!trigger}>
           <StyledAppBar 
             color="inherit"
             elevation={4}
+            style={{
+              background: headerGrad
+            }}
           >
             <StyledDivOuter>
               <StyledDivLeft>
@@ -74,7 +86,5 @@ const HeaderBar = (props: any) => {
     </StylesProvider>
   );
 };
-
-
 
 export default HeaderBar;
