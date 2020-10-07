@@ -30,23 +30,12 @@ import {
   Routes,
 } from "jinxui";
 
-const FRONT_END_URL = "http://localhost:3000/";
+import { TPortfolio, TPage, TSection } from "./Types"
 
-const WideFormDiv = styled(PrimaryColumnDiv)`
-  // width: 920px;
-`;
+const FRONT_END_URL = "http://localhost:3000/";
 
 const FormTitle = styled.h2`
   font-weight: 300;
-`;
-
-const StyledFormDiv = styled(WideFormDiv)`
-  margin-top: 70px;
-  height: auto;
-  margin-bottom: 100px;
-  width: 90%;
-  display: grid;
-  grid-template-columns: 1fr minMax(200px, 900px) 1fr;
 `;
 
 const BottomButtonsDiv = styled.div`
@@ -63,7 +52,7 @@ const EditSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
 });
 
-function sectionDataIsEmpty(data: any) {
+function sectionDataIsEmpty(data: TSection) {
   return (
     (data.type === "text" && data.content === "") ||
     (data.type === "image" && data.image === 0) ||
@@ -72,10 +61,10 @@ function sectionDataIsEmpty(data: any) {
 }
 
 function PostSection(
-  postSection: any,
+  postSection: Function,
   portfolio_id: string,
   page_id: string,
-  data: any
+  data: TSection
 ) {
   if (!sectionDataIsEmpty(data)) {
     postSection(portfolio_id, page_id, data)
@@ -155,30 +144,30 @@ const Edit = () => {
                   };
                   const page_data = {
                     name: "home",
-                    number: "0",
+                    number: 0,
                   };
                   const bio_data = {
                     name: "biography",
-                    number: "0",
+                    number: 0,
                     image: bioImageResponse.id,
                     content: values.biography,
                     type: "image_text",
                   };
                   const academic_data = {
                     name: "academic_history",
-                    number: "0",
+                    number: 0,
                     content: values.academicHistory,
                     type: "text",
                   };
                   const awesome_data = {
                     name: "awesome_image",
-                    number: "0",
+                    number: 0,
                     image: awesomeImageResponse.id,
                     type: "image",
                   };
                   const professional_data = {
                     name: "professional_history",
-                    number: "0",
+                    number: 0,
                     content: values.professionalHistory,
                     type: "text",
                   };

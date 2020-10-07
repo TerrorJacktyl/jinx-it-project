@@ -24,14 +24,6 @@ import styled from "styled-components";
 
 import { TextField } from "formik-material-ui";
 
-// The styling isn't DRY - where are we putting this?
-const StyledFormEntry = styled(FormEntry)`
-  // font-family: "Heebo", sans-serif;
-  width: 300px;
-  margin-top: 40px;
-  margin-bottom: 5px;
-`;
-
 const FormTitleDiv = styled.div`
   // color: #eeeeee;
   // font-weight: 300;
@@ -40,14 +32,8 @@ const FormTitleDiv = styled.div`
   //height: 300px;
 `;
 
-const FormText = styled.h4`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
-  font-weight: 300;
-`;
-
 const FormOuterDiv = styled.div`
-  height: 100vh;
+  height: 90%;
   width: 100vw;
   display: flex;
   align-items: center;
@@ -55,10 +41,6 @@ const FormOuterDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-top: 10px;
-`;
-
-const StyledFormDiv = styled(FormDiv)`
-  // margin-top: 100px;
 `;
 
 const StyledLink = styled.a`

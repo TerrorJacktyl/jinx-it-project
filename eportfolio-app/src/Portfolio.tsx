@@ -23,12 +23,12 @@ const TextSectionContainer = styled.div`
 
 type TextSectionProps = {
   name: string;
-  content: string;
+  content?: string;
 };
 
 type MediaSectionProps = {
   name: string;
-  path: string;
+  path?: string;
 };
 
 /* At the moment displays portfolio with the hardcoded id, and only the first page
@@ -117,14 +117,14 @@ const Portfolio = () => {
 const TextSection: React.FC<TextSectionProps> = ({ name, content }) => (
   <TextSectionContainer>
     <SectionName>{name}</SectionName>
-    <TextSectionDiv>{content}</TextSectionDiv>
+    <TextSectionDiv>{content == null ? "" : content}</TextSectionDiv>
   </TextSectionContainer>
 );
 
 const MediaSection: React.FC<MediaSectionProps> = ({ name, path }) => (
   <TextSectionContainer>
     <SectionName>{name}</SectionName>
-    <img src={path} alt="" />
+    <img src={path == null ? "" : path} alt="" />
   </TextSectionContainer>
 );
 
