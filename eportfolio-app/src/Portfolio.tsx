@@ -16,7 +16,7 @@ import {
 } from "jinxui";
 import { TPortfolio, TPage, TSection } from "./Types";
 
-const TextSectionContainer = styled.div`
+const SectionContainer = styled.div`
   padding-left: 12px;
   padding-right: 12px;
 `;

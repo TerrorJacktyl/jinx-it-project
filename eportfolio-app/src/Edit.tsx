@@ -29,6 +29,7 @@ import {
   PortfolioNameSectionInput,
   Routes,
 } from "jinxui";
+import { TPortfolio, TPage, TSection } from "./Types";
 
 const FRONT_END_URL = "http://localhost:3000/";
 
@@ -94,38 +95,58 @@ const BetweenSections = () => {
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
-const Edit = () => {
+const Edit = ({ existingPortfolio }) => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
-  const [bioImageResponse, setBioImageResponse] = useState({
-    path: FRONT_END_URL + "blank_user.png",
-    id: null,
-  });
-  const [awesomeImageResponse, setAwesomeImageResponse] = useState({
-    path: FRONT_END_URL + "blank_user.png",
-    id: null,
-  });
+//  const [bioImageResponse, setBioImageResponse] = useState({
+//    path: FRONT_END_URL + "blank_user.png",
+//    id: null,
+//  });
+//  const [awesomeImageResponse, setAwesomeImageResponse] = useState({
+//    path: FRONT_END_URL + "blank_user.png",
+//    id: null,
+//  });
+  const blankImagePath = FRONT_END_URL + "blank_user.png";
+  const [imageResponses, setImageResponses] = useState({});
   const {
     postFullPortfolio,
+    putSections,
     postPortfolio,
     postPage,
     postSection,
     savePortfolioId,
+    getFullPortfolio,
     getSavedPortfolioId,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
+  const [portfolioId, setPortfolioId] = useState(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TSection[]>([]);
   // const classes = useStyles();
   // Call useEffect to fetch an existing portfolio's data
-//  useEffect (async () => {
-//    const portfolioId = await getSavedPortfolioId();
-//    const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
-//    setPages(pages);
-//    setSections(sections); 
-//  }, []);
+  useEffect (async () => {
+    if (existingPortfolio) {
+      var imageResponses = {}
+      const portfolioId = await getSavedPortfolioId();
+      const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
+      setPortfolioId(portfolioId);
+      setPages(pages);
+      setSections(sections); 
+      sections.forEach((section: any) => {
+        if (section.type === "image" || section.type === "image_text") {
+          imageResponses[toString(section.image)] = section.path
+        }
+      })
+      setImageResponses(imageResponses);
+    }
+  }, []);
+
+  const addImageResponse = (response) => {
+    const newImages = imageResponse[response.id] = response.path
+    setImageResponses(newImages);
+  }
 
   const onPublish = async () => {
     return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
@@ -155,12 +176,20 @@ const Edit = () => {
             <div>
               <FormTitle>Enter your information</FormTitle>
               <Formik
-                initialValues={{
-                  websiteName: "",
-                  biography: "",
-                  academicHistory: "",
-                  professionalHistory: "",
-                }}
+                // TODO: Set these to the existing data if editing an existing portfolio
+                initialValues={
+                  sections.filter((section: any) => {
+                    return section.type === "text")
+                  })
+                  .reduce((acc, currSection) => {
+                    const newAcc = acc[toString(currSection.number)] = currSection.content
+                    return newAcc
+                  }, {});
+//                  websiteName: "",
+//                  biography: "",
+//                  academicHistory: "",
+//                  professionalHistory: "",
+                }
                 validationSchema={EditSchema}
                 onSubmit={(values, { setSubmitting }) => {
                   const portfolio_data = {
@@ -170,36 +199,37 @@ const Edit = () => {
                     name: "home",
                     number: 0,
                   };
-                  const bio_data = {
-                    name: "biography",
-                    number: 0,
-                    image: bioImageResponse.id,
-                    content: values.biography,
-                    type: "image_text",
-                  };
-                  const academic_data = {
-                    name: "academic_history",
-                    number: 0,
-                    content: values.academicHistory,
-                    type: "text",
-                  };
-                  const awesome_data = {
-                    name: "awesome_image",
-                    number: 0,
-                    image: awesomeImageResponse.id,
-                    type: "image",
-                  };
-                  const professional_data = {
-                    name: "professional_history",
-                    number: 0,
-                    content: values.professionalHistory,
-                    type: "text",
-                  };
+//                  const bio_data = {
+//                    name: "biography",
+//                    number: 0,
+//                    image: bioImageResponse.id,
+//                    content: values.biography,
+//                    type: "image_text",
+//                  };
+//                  const academic_data = {
+//                    name: "academic_history",
+//                    number: 0,
+//                    content: values.academicHistory,
+//                    type: "text",
+//                  };
+//                  const awesome_data = {
+//                    name: "awesome_image",
+//                    number: 0,
+//                    image: awesomeImageResponse.id,
+//                    type: "image",
+//                  };
+//                  const professional_data = {
+//                    name: "professional_history",
+//                    number: 0,
+//                    content: values.professionalHistory,
+//                    type: "text",
+//                  };
                   setSubmitting(true);
+                  // TODO: Add seperate function for updating an existing portoflio
                   postFullPortfolio(
                     portfolio_data, 
                     [page_data], 
-                    [bio_data, academic_data, awesome_data, professional_data]
+                    sections
                   ); 
                   setSubmitting(false);
                   setRedirect(true);
@@ -269,7 +299,37 @@ const Edit = () => {
                       />
                     </PortfolioNameSectionInput>
                     <BetweenSections />
-                    {ImageTextSectionInput(
+                    {existingPortfolio 
+                      ? sections.map((section: TSection) => {
+                        if (section.type === "text") {
+                          return (<TextSectionInput
+                            title={section.title}
+                            sectionName={toString(section.number)} 
+                            // TODO: Handle touched and errors, possibly use square brackets
+                          />);
+                        } else if {section.type === "image"
+                          return (
+                            ImageSectionInput(
+                              section.name,
+                              toString(section.number),
+                              imageResponses[section.image] 
+                              addImageResponse
+                            )
+                          );
+                        } else {
+                          return (
+                            ImageTextSectionInput(
+                              section.name,
+                              toString(section.number),
+                              // TODO: Handle touched and errors 
+                              imageResponses[section.image]
+                              addImageResponse
+                            )
+                          )
+                        }
+                      }) : null
+                    }
+                    {/*{ImageTextSectionInput(
                       "Biography",
                       "biography",
                       touched.biography,
@@ -305,7 +365,7 @@ const Edit = () => {
                       <ErrorMessage>
                         Error signing up. Please try again later.
                       </ErrorMessage>
-                    ) : null}
+                    ) : null}*/}
                   </Form>
                 )}
               </Formik>
@@ -318,3 +378,22 @@ const Edit = () => {
   }
 };
 export default Edit;
+ 
+const FormSections = (sections: TSection[]) => {
+
+  return (
+    <Form>
+      {sections.map((section: TSection) => {
+        if (section.type === "text") {
+          <TextSectionInput
+            title={section.title}
+            sectionName={section.title}
+            touched={touched.academicHistory}
+            errors={errors.academicHistory}
+          />
+
+        }
+      })}
+    </Form>
+  );
+}

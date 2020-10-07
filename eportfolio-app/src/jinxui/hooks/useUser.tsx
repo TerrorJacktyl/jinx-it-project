@@ -184,6 +184,7 @@ export const useUser = () => {
     return result;
   }
 
+  // Deprecated due to bulk section PUT request, but will leave in for now
   async function postSection(portfolio_id: string, page_id: string, data: any) {
     const path =
       PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections";
@@ -195,15 +196,22 @@ export const useUser = () => {
     return result;
   }
 
-  /* Only handles the posting of a new portfolio with a single page at the moment. Change 
-     sections type to TSections[][] when multpile pages are accounted for */
+  // TODO: Fix the types
+  async function putSections(portfolioId: any, pageId: any, portfolioList: any) {
+    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + pageId + "/sections"
+    const result = await API.put(path, portfolioList, state.config);
+    // Possibly uncomment following line, don't think it will be needed for existing portofolios though as its id the current one
+    // await savePortfolioId(parseInt(portfolioId))
+  }
+
+  /* Should only be used for CREATION of a new portfolio. Only handles the posting of a 
+     new portfolio with a single page at the moment. Change sections type to TSections[][] 
+     when multpile pages are accounted for */
   // TODO: Fix the types
   async function postFullPortfolio(portfolio: any, pages: any[], sections: any[]) {
     const portfolioResp = await postPortfolio(portfolio);
     const pageResp = await postPage(portfolioResp.id, pages[0]);
-    sections.forEach(async (section: any) => {
-      const result = await postSection(portfolioResp.id, pageResp.id, section);
-    });
+    const sectionResp = await putSections(portfolioResp.id, pageResp.id, sections);
     // Assures redirection to the newly created portfolio
     await savePortfolioId(parseInt(portfolioResp.id));
   }
@@ -394,6 +402,7 @@ export const useUser = () => {
     postPortfolio,
     postPage,
     postSection,
+    putSections,
     postFullPortfolio,
     getPortfolios,
     getPortfolio,
