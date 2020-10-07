@@ -30,7 +30,7 @@ import {
   Routes,
 } from "jinxui";
 
-import { TPortfolio, TPage, TSection } from "./Types"
+import { TSection, TPortfolioData, TPageData, TSectionData, } from "./Types"
 
 const FRONT_END_URL = "http://localhost:3000/";
 

@@ -103,7 +103,6 @@ const Login = () => {
       <ThemeProvider theme={LightTheme}>
         <CssBaseline />
         <AccountPageDiv>
-<<<<<<< HEAD
 
           <HeaderBar title="Login" lightTheme={true} />
 
@@ -133,6 +132,7 @@ const Login = () => {
                       })
                       .catch((error) => {
                         setSubmittionError(error);
+                        setSubmitting(false)
                       });
                   }}
                   >
@@ -183,63 +183,6 @@ const Login = () => {
                 </Formik>
             </FormDiv>
           </FormOuterDiv>
-=======
-          <HeaderBar title="Login" />
-          <StyledFormDiv>
-            <FormTitle>Enter Details</FormTitle>
-            {submittionError ? (
-              <FormAlert severity="error">
-                Error logging in: {submittionError}.
-              </FormAlert>
-            ) : null}
-            <Formik
-              initialValues={{ username: "", password: "" }}
-              validationSchema={SignupSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(true);
-                login(values.username, values.password)
-                  .then((config: any) => {
-                    setRedirect(true);
-                  })
-                  .catch((error) => {
-                    setSubmittionError(error);
-                    setSubmitting(false)
-                  });
-              }}
-            >
-              {({ errors, touched, isSubmitting }) => (
-                <Form>
-                  <StyledFormEntry
-                    name="username"
-                    type="username"
-                    placeholder="Username"
-                  />
-                  {errors.username && touched.username ? (
-                    <ErrorMessage>{errors.username}</ErrorMessage>
-                  ) : null}
-
-                  <StyledFormEntry
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                  />
-                  {errors.password && touched.password ? (
-                    <ErrorMessage>{errors.password}</ErrorMessage>
-                  ) : null}
-
-                  <PrimaryButton type="submit" disabled={isSubmitting}>
-                    LOGIN
-                  </PrimaryButton>
-                  <SecondaryButton>"Reset Password"</SecondaryButton>
-
-                  <StyledLink href={Routes.SIGNUP}>
-                    <FormText>Sign up for an account</FormText>
-                  </StyledLink>
-                </Form>
-              )}
-            </Formik>
-          </StyledFormDiv>
->>>>>>> kevin/react_deployment
         </AccountPageDiv>
       </ThemeProvider>
     );
