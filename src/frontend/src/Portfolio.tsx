@@ -58,7 +58,7 @@ const Portfolio = () => {
       setSections(sections);
     };
     fetchPortfolio();
-  }, [getFullPortfolio, portfolioId]);
+  }, []);
 
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {
