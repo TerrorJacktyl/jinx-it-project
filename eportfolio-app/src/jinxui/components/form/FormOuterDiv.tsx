@@ -1,14 +1,15 @@
 import styled from "styled-components"
 
 const FormOuterDiv = styled.div`
-  height: 90%;
+  height: 98%;
   width: 100vw;
   display: flex;
   align-items: center;
   align-content: center;
   flex-direction: column;
   justify-content: center;
-  margin-top: 10px;
+  padding: 30px;
+  padding-top: 50px;
 `;
 
 export default FormOuterDiv

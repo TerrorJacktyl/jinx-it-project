@@ -6,6 +6,7 @@ const FormBottomButtonsDiv = styled.div`
   flex-wrap: wrap;
   justify-content: space-around;
   align-content: center;
+  height: 70px;
 `;
 
 export default FormBottomButtonsDiv;

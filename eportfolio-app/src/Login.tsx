@@ -38,12 +38,7 @@ const StyledLink = styled.a`
 const FormSectionsDiv = styled.div`
   margin: 30px;
   display: grid;
-  grid-template-rows:
-    90px
-    90px
-    max-content
-    30px
-    10px;
+  grid-template-rows: repeat(auto-fill, 93px);
 `;
 
 const SignupSchema = Yup.object().shape({

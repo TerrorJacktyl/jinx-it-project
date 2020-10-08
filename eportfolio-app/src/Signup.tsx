@@ -217,11 +217,11 @@ const Signup = () => {
                     />
                     <FormBottomButtonsDiv>
 
-                    <StyledButton 
+                    <PrimaryButton 
                       type="submit" 
                       disabled={isSubmitting}>
                       JOIN
-                    </StyledButton>
+                    </PrimaryButton>
                       </FormBottomButtonsDiv>
 
                     <StyledLink href={Routes.LOGIN}>
