@@ -26,7 +26,7 @@ services:
       bash -c "python manage.py runserver 0.0.0.0:8000"
     # Sets environment varaibles from a file
     env_file:
-      - env/django_dev.env
+      - src/backend/django_dev.env
     environment:
       - DJANGO_DB_PASSWORD=jinx
     # Maps a volume from our local location to /backend in our container.
