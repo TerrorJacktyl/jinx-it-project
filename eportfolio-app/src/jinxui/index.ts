@@ -5,6 +5,8 @@ export { default as FormDiv } from "./components/form/FormDiv";
 export { default as FormEntry } from "./components/form/FormEntry";
 export { default as SubmitButton } from "./components/form/SubmitButton";
 export { default as FormAlert } from "./components/form/FormAlert";
+export { default as FormOuterDiv } from "./components/form/FormOuterDiv";
+export { default as FormBottomButtonsDiv } from "./components/form/FormBottomButtonsDiv"
 
 /* Site */
 export { default as SiteLayout } from "./components/site/SiteLayout";

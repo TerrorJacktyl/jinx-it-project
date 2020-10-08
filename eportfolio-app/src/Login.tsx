@@ -19,28 +19,15 @@ import {
   LightTheme,
   LightTitleBGGrad,
   HeaderBar,
+  FormOuterDiv,
+  FormBottomButtonsDiv,
 } from "jinxui";
 import styled from "styled-components";
 
 import { TextField } from "formik-material-ui";
 
 const FormTitleDiv = styled.div`
-  // color: #eeeeee;
-  // font-weight: 300;
-  // display: flex;
   margin-top: 30px;
-  //height: 300px;
-`;
-
-const FormOuterDiv = styled.div`
-  height: 90%;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 10px;
 `;
 
 const StyledLink = styled.a`
@@ -56,14 +43,7 @@ const FormSectionsDiv = styled.div`
     90px
     max-content
     30px
-    10px
-`;
-
-const BottomButtonsDiv = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  flex-wrap: wrap;
-  justify-content: center;
+    10px;
 `;
 
 const SignupSchema = Yup.object().shape({
@@ -103,85 +83,85 @@ const Login = () => {
       <ThemeProvider theme={LightTheme}>
         <CssBaseline />
         <AccountPageDiv>
-
           <HeaderBar title="Login" lightTheme={true} />
 
           <FormOuterDiv>
+            <div />
             <FormDiv
               variant="elevation"
               elevation={8}
               style={{ background: LightTitleBGGrad }}
-              >
-                {/* <FormTitle>Enter Details</FormTitle> */}
+            >
+              {/* <FormTitle>Enter Details</FormTitle> */}
               <FormTitleDiv>
                 <Typography variant="h5">Enter Details</Typography>
               </FormTitleDiv>
-                {submittionError ? (
-                  <FormAlert severity="error">
-                    Error logging in: {submittionError}.
-                  </FormAlert>
-                ) : null}
-                <Formik
-                  initialValues={{ username: "", password: "" }}
-                  validationSchema={SignupSchema}
-                  onSubmit={(values, { setSubmitting }) => {
-                    setSubmitting(true);
-                    login(values.username, values.password)
-                      .then((config: any) => {
-                        setRedirect(true);
-                      })
-                      .catch((error) => {
-                        setSubmittionError(error);
-                        setSubmitting(false)
-                      });
-                  }}
-                  >
-                  {({ errors, touched, isSubmitting }) => (
-                    <Form>
+              {submittionError ? (
+                <FormAlert severity="error">
+                  Error logging in: {submittionError}.
+                </FormAlert>
+              ) : null}
+              <Formik
+                initialValues={{ username: "", password: "" }}
+                validationSchema={SignupSchema}
+                onSubmit={(values, { setSubmitting }) => {
+                  setSubmitting(true);
+                  login(values.username, values.password)
+                    .then((config: any) => {
+                      setRedirect(true);
+                    })
+                    .catch((error) => {
+                      setSubmittionError(error);
+                      setSubmitting(false);
+                    });
+                }}
+              >
+                {({ errors, touched, isSubmitting }) => (
+                  <Form>
                     <FormSectionsDiv>
                       <div>
-
-                      <Field
-                        component={TextField}
-                        name="username"
-                        id="username"
-                        label="Username"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
+                        <Field
+                          component={TextField}
+                          name="username"
+                          id="username"
+                          label="Username"
+                          variant="outlined"
+                          color="primary"
+                          fullWidth
                         />
-                        </div><div>
-
-                      <Field
-                        component={TextField}
-                        name="password"
-                        id="password"
-                        type="password"
-                        label="Password"
-                        variant="outlined"
-                        color="primary"
-                        fullWidth
+                      </div>
+                      <div>
+                        <Field
+                          component={TextField}
+                          name="password"
+                          id="password"
+                          type="password"
+                          label="Password"
+                          variant="outlined"
+                          color="primary"
+                          fullWidth
                         />
-                        </div>
-                        <BottomButtonsDiv>
-                      <PrimaryButton type="submit" disabled={isSubmitting}>
-                        LOGIN
-                      </PrimaryButton>
-                      <SecondaryButton>Reset Password</SecondaryButton>
-                    </BottomButtonsDiv>
-                    <div>
-
-
-                      <StyledLink href={Routes.SIGNUP}>
-                        {/* <FormText>Sign up for an account</FormText> */}
-                        <Typography variant="button">Sign up for an account</Typography>
-                      </StyledLink>
-                    </div>
-                  </FormSectionsDiv>
-                    </Form>
-                  )}
-                </Formik>
+                      </div>
+                      <FormBottomButtonsDiv>
+                        <PrimaryButton type="submit" disabled={isSubmitting}>
+                          LOGIN
+                        </PrimaryButton>
+                        <SecondaryButton>Reset Password</SecondaryButton>
+                      </FormBottomButtonsDiv>
+                      <div>
+                        <StyledLink href={Routes.SIGNUP}>
+                          {/* <FormText>Sign up for an account</FormText> */}
+                          <Typography variant="button">
+                            Sign up for an account
+                          </Typography>
+                        </StyledLink>
+                      </div>
+                    </FormSectionsDiv>
+                  </Form>
+                )}
+              </Formik>
             </FormDiv>
+            <div />
           </FormOuterDiv>
         </AccountPageDiv>
       </ThemeProvider>
