@@ -36,29 +36,65 @@ const StyledLink = styled.a`
 const TopBlockDiv = styled(Paper)`
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
-  width: 100vw;
+  width: 98vw;
   height: 100vh;
   display: grid;
-  // grid-template-rows:
-  //   minmax(90px,2fr)
-  //   minmax(100px,340px)
-  //   50px
-  //   minmax(90px, 140px)
-  //   minmax(70px, 120px)
-  //   40px
-  //   minmax(100px, 1fr);
+  grid-template-rows:
+    minmax(80px, 1fr) minmax(50px,400px) minmax(max-content,0.7fr) minmax(max-content,1.2fr) minmax(100px,0.7fr);
   justify-content: center;
   align-content: center;
 `;
 
-const TopBlockInner = styled.div`
-  max-height: 600px;
-  justify-items: center;
-  display: grid;
-  width: 900px;
-  @media(max-width: ${(props) => MAX_WIDTH}) {
-    width: 300px;
+const JinxLogo = styled.img`
+  height: 90%;
+  width: 90%;
+  object-fit: scale-down;
+  opacity: 70%;
+  @media (max-width: ${(props) => MAX_WIDTH}) {
+    width: 70%;
   }
+  @media (max-height: ${(props) => MAX_HEIGHT}) {
+    width: 70%;
+  })
+  align-self: center;
+  justify-self: center;
+`;
+
+
+const JinxName = styled.h1`
+  font-family: "Josefin Sans", sans-serif;
+  font-style: normal;
+  font-weight: 250;
+  font-size: 100px;
+  letter-spacing: 0.3em;
+  margin: 0;
+  margin-left: 30px;
+  @media (max-width: ${(props) => MAX_WIDTH}) {
+    font-size: 60px;
+  }
+  @media (max-height: ${(props) => MAX_HEIGHT}) {
+    font-size: 60px;
+  }
+  opacity: 70%;
+`;
+
+const CatchPhrase = styled.h3`
+  font-family: "Heebo", sans-serif;
+  font-weight: 200;
+  font-size: 30px;
+  @media (max-width: 350px) {
+    width: 200px;
+  }
+  @media (max-width: ${(props) => MAX_WIDTH}) {
+    font-size: 23px; 
+  }
+  @media (max-height: ${(props) => MAX_HEIGHT}) {
+    font-size: 23px;
+  }
+  margin: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-self: center
 `;
 
 const StyledLogin = styled(SecondaryButton)`
@@ -69,39 +105,11 @@ const StyledLogin = styled(SecondaryButton)`
   height: 30px;
 `;
 
-const JinxLogo = styled.img`
-  height: 90%;
-  width: 90%;
-  object-fit: scale-down;
-  opacity: 70%;
-  @media (max-width: ${(props) => MAX_WIDTH}) {
-    width: 150px;
-  }
-  @media (max-height: ${(props) => MAX_HEIGHT}) {
-    width: 150px;
-  })
-`;
-
 const BodyDiv = styled.div`
   overflow: auto;
 `;
 
-const JinxName = styled.h1`
-  font-family: "Josefin Sans", sans-serif;
-  font-style: normal;
-  font-weight: 250;
-  font-size: 50px;
-  letter-spacing: 0.3em;
-  margin: 0;
-  margin-left: 30px;
-  @media (max-width: ${(props) => MAX_WIDTH}) {
-    font-size: 40px;
-  }
-  @media (max-height: ${(props) => MAX_HEIGHT}) {
-    font-size: 40px;
-  }
-  opacity: 70%;
-`;
+
 
 const Gap = styled.div`
   height: 100px;
@@ -111,20 +119,7 @@ const Content = styled.div`
   margin: 60px;
 `;
 
-const CatchPhrase = styled.h3`
-  font-family: "Heebo", sans-serif;
-  font-weight: 300;
-  font-size: 50px;
-  @media (max-width: ${(props) => MAX_WIDTH}) {
-    font-size: 25px;
-  }
-  @media (max-height: ${(props) => MAX_HEIGHT}) {
-    font-size: 25px;
-  }
-  margin: 60px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-`;
+
 
 const SecondaryCatchPhrase = styled.h5`
   margin 20px;
@@ -167,7 +162,8 @@ const Home = () => {
               </HeaderDiv>
             </SiteHeader>
             {/* <LogoDiv> */}
-            <TopBlockInner>
+            {/* <TopBlockInner> */}
+              
               <JinxLogo src={require("images/Logo_Main.png")} />
 
               {/* </LogoDiv> */}
@@ -180,15 +176,15 @@ const Home = () => {
               </Typography> */}
               <CatchPhrase>Your portfolio, made simple</CatchPhrase>
 
-              <SecondaryCatchPhrase>
+              {/* <SecondaryCatchPhrase> */}
                 {/* <Typography variant="h5"> */}
-                  Make a stunning looking portfolio website in seconds
+                  {/* Make a stunning looking portfolio website in seconds */}
                 {/* </Typography> */}
-              </SecondaryCatchPhrase>
+              {/* </SecondaryCatchPhrase> */}
               <StyledLink href="/signup">
                 <PrimaryButton>JOIN TODAY</PrimaryButton>
               </StyledLink>
-            </TopBlockInner>
+            {/* </TopBlockInner> */}
           </TopBlockDiv>
           <SiteLayout>
             <Gap />
