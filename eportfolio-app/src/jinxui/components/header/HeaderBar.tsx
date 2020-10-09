@@ -51,8 +51,13 @@ const StyledDivRight = styled.div`
   align-items: center;
 `;
 
+type HeaderBarProps = {
+  title?: string;
+  lightTheme: boolean;
+  children?: React.ReactNode;
+}
 
-const HeaderBar = (props: any) => {
+const HeaderBar = (props: HeaderBarProps) => {
   const trigger = useScrollTrigger();
   const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad
   return (
@@ -73,7 +78,7 @@ const HeaderBar = (props: any) => {
                 >
                   <MenuIcon />
                 </HeaderButton>
-                <Typography variant="h6">{props.title}</Typography>
+                <Typography variant="h6">{props.title ? props.title : ""}</Typography>
               </StyledDivLeft>
               <StyledDivCenter></StyledDivCenter>
               <StyledDivRight>

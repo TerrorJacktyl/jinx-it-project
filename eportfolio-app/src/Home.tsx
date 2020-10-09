@@ -14,6 +14,7 @@ import {
   LightTitleBGGrad,
   HeaderBar,
   Routes,
+  HomeTemplates,
 } from "jinxui";
 
 const MAX_WIDTH = "630px"
@@ -188,7 +189,8 @@ const Home = () => {
           </TopBlockDiv>
           <SiteLayout>
             <Gap />
-            <Content>
+            <HomeTemplates/>
+            {/* <Content>
               <Typography variant="body1" color="textPrimary">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -212,7 +214,7 @@ const Home = () => {
                 nulla pariatur. Excepteur sint occaecat cupidatat non proident,
                 sunt in culpa qui officia deserunt mollit anim id est laborum.
               </Typography>
-            </Content>
+            </Content> */}
           </SiteLayout>
         </BodyDiv>
       </ThemeProvider>
