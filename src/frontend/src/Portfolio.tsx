@@ -47,7 +47,7 @@ const Portfolio = () => {
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
 
-  
+
   useEffect(() => {
     const fetchPortfolio = async () => {
       const { portfolio, pages, sections } = await getFullPortfolio(
@@ -59,11 +59,7 @@ const Portfolio = () => {
       setSections(sections);
     };
     fetchPortfolio();
-<<<<<<< HEAD:src/frontend/src/Portfolio.tsx
-  }, []);
-=======
   }, []); // Empty dependency array required to prevent infinite loop
->>>>>>> kevin/home_page:eportfolio-app/src/Portfolio.tsx
 
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {

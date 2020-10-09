@@ -1,8 +1,9 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
+import { CssBaseline } from '@material-ui/core';
 
 import {
     ThemeProvider,
@@ -10,6 +11,10 @@ import {
 } from "@material-ui/core/styles";
 
 import { LightTheme } from 'jinxui';
+
+import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 function Copyright() {
     return (
@@ -28,15 +33,127 @@ export default function Test() {
     return (
         <>
             <ThemeProvider theme={LightTheme}>
-                <Container maxWidth="sm">
-                    <Box my={4}>
-                        <Typography variant="h4" component="h1" gutterBottom>
-                            Create React App v4-beta example
-                        </Typography>
-                        <Copyright />
-                    </Box>
+                <CssBaseline />
+                <Typography
+                    variant="h1"
+                    color="primary"
+                    gutterBottom>
+                    Portfolio page
+                </Typography>
+                <Container maxWidth="md">
+                    <SectionGrid />
+                    <Copyright />
                 </Container>
             </ThemeProvider>
         </>
+    );
+}
+
+type TextSectionProps = {
+    name?: string;
+    content?: string;
+};
+
+type SectionData = {
+    name?: string;
+    content?: string;
+    path?: string;
+    alt?: string;
+}
+
+const Section = (data: SectionData) => {
+    return (
+        // Text alignment hard coded - unsure how to put inside theme
+        <Box textAlign="left">
+            <Typography
+                variant="h3"
+                color="primary"
+            >{data.name}</Typography>
+            <Grid container>
+                <Grid item>
+                    <Typography
+                        variant="body1"
+                        color="primary">
+                        {data.content}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <img src={data.path == null ? "" : data.path} alt={data.alt} />
+                </Grid>
+            </Grid>
+        </Box>
+    )
+}
+
+const TextSection = (data: TextSectionProps) => {
+    return (
+        // Text alignment hard coded - unsure how to put inside theme
+        <Box textAlign="left">
+            <Typography
+                variant="h3"
+                color="primary"
+            >{data.name}</Typography>
+            <Typography
+                variant="body1"
+                color="primary"
+            >{data.content}</Typography>
+        </Box>
+    )
+}
+
+// const MediaSection = (data: MediaSectionProps) => {
+//     return (
+//         <Box textAlign="left">
+//             <Typography
+//                 variant="h3"
+//                 color="primary"
+//             >{data.name}</Typography>
+//         </Box>
+//     )
+// }
+
+export function SectionGrid() {
+
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
+            root: {
+                flexGrow: 1,
+            },
+            paper: {
+                padding: theme.spacing(2),
+                textAlign: 'center',
+                color: theme.palette.primary.main,
+            },
+        }),
+    );
+
+    const classes = useStyles();
+
+    const sections = [
+        {
+            name: "Me and my cat",
+            content: "The first!",
+            path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.xjlgUSio99GyPCgsL4S63QHaEK%26pid%3DApi&f=1",
+            alt: "tiddlywinks",
+        },
+        {
+            content: "The second!",
+        },
+        {
+            name: "Biography",
+            content: "The third!",
+        },
+    ]
+
+    return (
+        <div className={classes.root}>
+            <Grid container spacing={3}>
+                {sections.map((section, index) => (
+                    <Grid item xs={12} key={index}>
+                        <Section {...section} />
+                    </Grid>
+                ))}
+            </Grid>
+        </div>
     );
 }
