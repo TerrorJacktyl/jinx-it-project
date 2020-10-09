@@ -30,6 +30,34 @@ function Copyright() {
 }
 
 export default function Test() {
+
+    const sections: SectionData[] = [
+        {
+            name: "Me and my cat",
+            content: "The first!",
+            path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.xjlgUSio99GyPCgsL4S63QHaEK%26pid%3DApi&f=1",
+            alt: "tiddlywinks",
+        },
+        {
+            content: "The second!",
+        },
+        {
+            name: "Biography",
+            content: "The third!",
+        },
+    ]
+
+
+    const Pet = ({ name }: { name: string }) => {
+        return <h1>{name}</h1>;
+    }
+
+    const pets: Array<JSX.Element> = [
+        <Pet name={"Millie"} />,
+        <Section {...sections[0]} />,
+    ]
+
+
     return (
         <>
             <ThemeProvider theme={LightTheme}>
@@ -41,18 +69,14 @@ export default function Test() {
                     Portfolio page
                 </Typography>
                 <Container maxWidth="md">
-                    <SectionGrid />
+                    <SectionGrid sections={sections} />
+                    <CentredGrid components={pets} />
                     <Copyright />
                 </Container>
             </ThemeProvider>
         </>
     );
 }
-
-type TextSectionProps = {
-    name?: string;
-    content?: string;
-};
 
 type SectionData = {
     name?: string;
@@ -85,34 +109,17 @@ const Section = (data: SectionData) => {
     )
 }
 
-const TextSection = (data: TextSectionProps) => {
+const SectionGrid = ({ sections }: { sections: SectionData[] }) => {
     return (
-        // Text alignment hard coded - unsure how to put inside theme
-        <Box textAlign="left">
-            <Typography
-                variant="h3"
-                color="primary"
-            >{data.name}</Typography>
-            <Typography
-                variant="body1"
-                color="primary"
-            >{data.content}</Typography>
-        </Box>
-    )
+        <CentredGrid components={sections.map(data => <Section {...data} />)} />
+    );
 }
 
-// const MediaSection = (data: MediaSectionProps) => {
-//     return (
-//         <Box textAlign="left">
-//             <Typography
-//                 variant="h3"
-//                 color="primary"
-//             >{data.name}</Typography>
-//         </Box>
-//     )
-// }
-
-export function SectionGrid() {
+/**
+ * Given a list of components as props, render them in a centred grid.
+ * Note that if you don't pass the components as props, you will burn.
+ */
+export function CentredGrid({ components }: { components: JSX.Element[] }) {
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -129,28 +136,12 @@ export function SectionGrid() {
 
     const classes = useStyles();
 
-    const sections = [
-        {
-            name: "Me and my cat",
-            content: "The first!",
-            path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.xjlgUSio99GyPCgsL4S63QHaEK%26pid%3DApi&f=1",
-            alt: "tiddlywinks",
-        },
-        {
-            content: "The second!",
-        },
-        {
-            name: "Biography",
-            content: "The third!",
-        },
-    ]
-
     return (
         <div className={classes.root}>
             <Grid container spacing={3}>
-                {sections.map((section, index) => (
+                {components.map((component, index) => (
                     <Grid item xs={12} key={index}>
-                        <Section {...section} />
+                        {component}
                     </Grid>
                 ))}
             </Grid>
