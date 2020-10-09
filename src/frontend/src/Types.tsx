@@ -17,12 +17,29 @@ export type TPage = {
 };
 
 export type TSection = {
-  id: number,
+  id?: number,
   name: string,
   type: string,
   number: number,
-  content: string,
-  media: string,
-  image: number,
-  path: string,
+  content?: string,
+  media?: string,
+  image?: number | null,
+  path?: string,
 };
+
+export type TPortfolioData = {
+  name: string,
+  number?: number,
+}
+
+export type TPageData = {
+  name: string,
+  number?: number,
+}
+
+export type TSectionData = {
+  content?: string,
+  media?: string,
+  image?: number | null,
+  path?: string,
+}

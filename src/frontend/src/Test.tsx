@@ -4,6 +4,13 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 
+import {
+    ThemeProvider,
+    createMuiTheme,
+} from "@material-ui/core/styles";
+
+import { LightTheme } from 'jinxui';
+
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -19,13 +26,17 @@ function Copyright() {
 
 export default function Test() {
     return (
-        <Container maxWidth="sm">
-            <Box my={4}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Create React App v4-beta example
-          </Typography>
-                <Copyright />
-            </Box>
-        </Container>
+        <>
+            <ThemeProvider theme={LightTheme}>
+                <Container maxWidth="sm">
+                    <Box my={4}>
+                        <Typography variant="h4" component="h1" gutterBottom>
+                            Create React App v4-beta example
+                        </Typography>
+                        <Copyright />
+                    </Box>
+                </Container>
+            </ThemeProvider>
+        </>
     );
 }
