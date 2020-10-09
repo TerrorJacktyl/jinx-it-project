@@ -39,7 +39,7 @@ export default function Test() {
             alt: "tiddlywinks",
         },
         {
-            path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.xjlgUSio99GyPCgsL4S63QHaEK%26pid%3DApi&f=1",
+            path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic01.nyt.com%2Fimages%2F2018%2F05%2F24%2Fus%2Fvid24-volcano-image%2Fvid24-volcano-image-videoSixteenByNine3000.jpg&f=1&nofb=1",
         },
         {},
         {
@@ -94,6 +94,18 @@ type SectionData = {
  * 3. Text and image => Split left and right
  */
 const Section = (data: SectionData) => {
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
+            img: {
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain'
+            },
+        }),
+    );
+
+    const classes = useStyles();
+
     return (
         // Text alignment hard coded - unsure how to put inside theme
         <Box textAlign="left">
@@ -112,7 +124,10 @@ const Section = (data: SectionData) => {
                     </Typography>
                 </Grid> : null}
                 {data.path ? <Grid item>
-                    <img src={data.path == null ? "" : data.path} alt={data.alt} />
+                    <img src={data.path == null ? "" : data.path}
+                        alt={data.alt}
+                        className={classes.img}
+                    />
                 </Grid> : null}
             </Grid>
         </Box>
@@ -139,6 +154,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
         createStyles({
             root: {
                 flexGrow: 1,
+                padding: "1em 2em 2em 1em"
             },
         }),
     );
