@@ -39,8 +39,9 @@ export default function Test() {
             alt: "tiddlywinks",
         },
         {
-            content: "The second!",
+            path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.xjlgUSio99GyPCgsL4S63QHaEK%26pid%3DApi&f=1",
         },
+        {},
         {
             name: "Biography",
             content: "The third!",
@@ -70,7 +71,7 @@ export default function Test() {
                 </Typography>
                 <Container maxWidth="md">
                     <SectionGrid sections={sections} />
-                    <CentredGrid components={pets} />
+                    {/* <CentredGrid components={pets} /> */}
                     <Copyright />
                 </Container>
             </ThemeProvider>
@@ -85,6 +86,13 @@ type SectionData = {
     alt?: string;
 }
 
+/**
+ * Generic section component that accepts any of the section fields.
+ * All section fields are optional. Empty sections become empty space.
+ * 1. Text only => left aligned
+ * 2. Image only => centre aligned
+ * 3. Text and image => Split left and right
+ */
 const Section = (data: SectionData) => {
     return (
         // Text alignment hard coded - unsure how to put inside theme
@@ -93,17 +101,19 @@ const Section = (data: SectionData) => {
                 variant="h3"
                 color="primary"
             >{data.name}</Typography>
-            <Grid container>
-                <Grid item>
+            <Grid container
+                direction="row"
+                justify={data.content ? (data.path ? "space-between" : "flex-start") : "center"}>
+                {data.content ? <Grid item>
                     <Typography
                         variant="body1"
                         color="primary">
                         {data.content}
                     </Typography>
-                </Grid>
-                <Grid item>
+                </Grid> : null}
+                {data.path ? <Grid item>
                     <img src={data.path == null ? "" : data.path} alt={data.alt} />
-                </Grid>
+                </Grid> : null}
             </Grid>
         </Box>
     )
@@ -111,7 +121,11 @@ const Section = (data: SectionData) => {
 
 const SectionGrid = ({ sections }: { sections: SectionData[] }) => {
     return (
-        <CentredGrid components={sections.map(data => <Section {...data} />)} />
+        <>
+            <Paper>
+                <CentredGrid components={sections.map(data => <Section {...data} />)} />
+            </Paper>
+        </>
     );
 }
 
@@ -125,11 +139,6 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
         createStyles({
             root: {
                 flexGrow: 1,
-            },
-            paper: {
-                padding: theme.spacing(2),
-                textAlign: 'center',
-                color: theme.palette.primary.main,
             },
         }),
     );
