@@ -8,6 +8,7 @@ import Container from '@material-ui/core/Container';
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 import { TSectionData } from 'jinxui';
+import { TSection } from "jinxui/types";
 
 
 /**
@@ -72,11 +73,16 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
     const classes = useStyles();
 
+    // Add logic for mapping data to different section components (i.e. timeline) in here
+    const dataToSection = (data: TSectionData) => {
+        <Section {...data} />
+    }
+
     return (
         <>
             <Container maxWidth="md" className={classes.container}>
                 <Paper>
-                    <CentredGrid components={sections.map(data => <Section {...data} />)} />
+                    <CentredGrid components={sections.map(dataToSection)} />
                 </Paper>
             </Container>
         </>
