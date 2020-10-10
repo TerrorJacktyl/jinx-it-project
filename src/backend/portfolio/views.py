@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.db.models import Q
+
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import status
+from rest_framework.response import Response
 
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -156,6 +159,25 @@ class SectionList(generics.ListCreateAPIView):
 
     swagger_schema = swagger.PortfolioAutoSchema
 
+    # bulk section creation/update
+    def put(self, request, *args, **kwargs):
+        request.data.sort(key=(lambda s: s['number']))
+        for i, section in enumerate(request.data):
+            section['number']=i
+        context=self.get_serializer_context()
+        context['in_list']=True
+        serializer=serializers.SectionListSerializer(
+            self.get_queryset(),
+            data=request.data,
+            child=serializers.PolymorphSectionSerializer(
+                context=context
+            ),
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PolymorphSectionSerializer
@@ -175,16 +197,16 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         return ret
 
     def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['page_id'] = self.kwargs['page_id']
+        context=super().get_serializer_context()
+        context['page_id']=self.kwargs['page_id']
         return context
 
     # modified based on code from GenericAPIView default implementation
     def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset=self.filter_queryset(self.get_queryset())
 
         # Perform the lookup filtering.
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        lookup_url_kwarg=self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in self.kwargs, (
             'Expected view %s to be called with a URL keyword argument '
@@ -194,12 +216,12 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         )
 
         # find the object with the right key
-        key = self.lookup_field
-        val = self.kwargs[lookup_url_kwarg]
-        obj = None
+        key=self.lookup_field
+        val=self.kwargs[lookup_url_kwarg]
+        obj=None
         for item in queryset:
             if str(getattr(item, key)) == val:
-                obj = item
+                obj=item
                 break
         else:
             raise Http404
@@ -209,15 +231,15 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
         return obj
 
-    swagger_schema = swagger.PortfolioAutoSchema
+    swagger_schema=swagger.PortfolioAutoSchema
 
 
 class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.ImageInputSerializer
+    serializer_class=serializers.ImageInputSerializer
     # These parses required for receiving over image data
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes=(MultiPartParser, FormParser)
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes=[permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         # Allows this url to handle GET and POST with different serializers
@@ -225,7 +247,7 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
             return serializers.ImageInputSerializer
         return serializers.ImageOutputSerializer
 
-    lookup_url_kwarg = 'image_id'
+    lookup_url_kwarg='image_id'
 
     def get_queryset(self):
         return models.Image.objects.filter(owner=self.request.user)
@@ -235,8 +257,8 @@ class ImageDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ImageList(generics.ListCreateAPIView):
-    serializer_class = serializers.ImageInputSerializer
-    parser_classes = (MultiPartParser, FormParser)
+    serializer_class=serializers.ImageInputSerializer
+    parser_classes=(MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         # Allows this url to handle GET and POST with different serializers
@@ -253,7 +275,7 @@ class ImageList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_destroy(self, instance):
-        parent_id = instance.page
+        parent_id=instance.page
         # pylint: disable=no-member
         super().perform_destroy(instance)
         models.Section.objects.normalise(parent_id)

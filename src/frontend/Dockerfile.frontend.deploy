@@ -9,13 +9,13 @@ WORKDIR /code
 # dependancies every time code changes, it will only be reinstalled if
 # package.json changes
 
-COPY eportfolio-app/package.json eportfolio-app/package-lock.json ./
+COPY src/frontend/package.json src/frontend/package-lock.json ./
 
 # don't install development files as those won't be needed
 RUN npm install --production
 
 COPY deploy/react/build.sh .
-COPY eportfolio-app .
+COPY src/frontend .
 
 CMD ["./build.sh"]
 

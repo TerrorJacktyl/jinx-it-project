@@ -18,11 +18,11 @@ WORKDIR /code
 
 # each step of the build process is cached so if requirements are added first
 # then this pip install can be skipped if only the code changes
-COPY jinx_project/requirements.txt /code
+COPY src/backend/requirements.txt /code
 RUN pip install -r requirements.txt
 
 # copy the rest of the project
-COPY jinx_project /code
+COPY src/backend /code
 
 # let port 8000 through
 EXPOSE 8000
