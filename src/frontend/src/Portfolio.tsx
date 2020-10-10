@@ -17,7 +17,6 @@ import {
 const Portfolio = () => {
   const { userData, getFullPortfolio, getSavedPortfolioId } = useUser();
   const portfolioId = getSavedPortfolioId();
-  // const tempPortfolioId = 26;
 
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
@@ -39,6 +38,7 @@ const Portfolio = () => {
     fetchPortfolio();
   }, []); // Empty dependency array required to prevent infinite loop
 
+  // Used to show background image capability: derive from theme eventually
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
   return (

@@ -64,7 +64,7 @@ export const Section = (data: TSectionData) => {
 export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
-            sectionsContainer: {
+            container: {
                 padding: "3em 3em 3em 3em",
             },
         }),
@@ -74,7 +74,7 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
     return (
         <>
-            <Container maxWidth="md" className={classes.sectionsContainer}>
+            <Container maxWidth="md" className={classes.container}>
                 <Paper>
                     <CentredGrid components={sections.map(data => <Section {...data} />)} />
                 </Paper>
@@ -104,7 +104,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
         <div className={classes.root}>
             <Grid container spacing={3}>
                 {components.map((component, index) => (
-                    <Grid item xs={12} key={index}>
+                    <Grid item xs={12} key={index} style={{ padding: "0 0 5em 0", }}>
                         {component}
                     </Grid>
                 ))}
@@ -121,8 +121,6 @@ export function BackgroundImage(props: any) {
         createStyles({
             background: {
                 backgroundImage: `url(${props.url})`,
-                // This doesn't work: it can't see the default color, but it can see 
-                // other colours i.e. theme.palette.primary.main
                 backgroundColor: theme.palette.background.default,
                 backgroundPosition: 'center', /* Center the image */
                 backgroundRepeat: 'no-repeat', /* Do not repeat the image */
