@@ -53,7 +53,7 @@ export default function Test() {
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
             background: {
-                backgroundImage: "url(https://mages.unsplash.com/photo-1590330347519-481d4846c98e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60)",
+                backgroundImage: 'none',
                 // This doesn't work: it can't see the default color, but it can see 
                 // other colours i.e. theme.palette.primary.main
                 backgroundColor: theme.palette.background.default,

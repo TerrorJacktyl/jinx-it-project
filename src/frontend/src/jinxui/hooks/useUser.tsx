@@ -230,7 +230,7 @@ export const useUser = () => {
     try {
       const response = await API.post(path, data, state.config);
       return response;
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
   }
@@ -275,7 +275,7 @@ export const useUser = () => {
     try {
       const response: TPortfolio[] = await API.get(path, state.config);
       return response;
-    } catch(e) {
+    } catch (e) {
       throw e;
     }
     // const result = API.get(path, state.config).then(
@@ -295,9 +295,9 @@ export const useUser = () => {
     //   });
     // return result;
     try {
-      const response: TPortfolio = await API.get(path, state.config);
-      return response;
-    } catch(e) {
+      const response = await API.get(path, state.config);
+return response.data;
+    } catch (e) {
       throw e;
     }
   }
@@ -312,9 +312,9 @@ export const useUser = () => {
     //   });
     // return result;
     try {
-      const response:TPage[] = await API.get(path, state.config);
-      return response;
-    } catch(e) {
+      const response = await API.get(path, state.config);
+      return response.data;
+    } catch (e) {
       throw e;
     }
   }
@@ -341,9 +341,9 @@ export const useUser = () => {
     //   });
     // return result;
     try {
-      const response: TSection[] = await API.get(path, state.config);
-      return response;
-    } catch(e) {
+      const response = await API.get(path, state.config);
+      return response.data ;
+    } catch (e) {
       throw e;
     }
   }
