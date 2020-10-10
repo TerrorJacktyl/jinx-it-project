@@ -29,51 +29,63 @@ function Copyright() {
     );
 }
 
+
 export default function Test() {
 
     const sections: SectionData[] = [
         {
             name: "Me and my cat",
-            content: "The first!",
+            content: "Here is my cute cat Tiddles. I would put a picture of myself here but I'm a bot. Please don't tell anyone.",
             path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.xjlgUSio99GyPCgsL4S63QHaEK%26pid%3DApi&f=1",
             alt: "tiddlywinks",
         },
         {
+            name: "A pic from when I almost died lol!",
             path: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic01.nyt.com%2Fimages%2F2018%2F05%2F24%2Fus%2Fvid24-volcano-image%2Fvid24-volcano-image-videoSixteenByNine3000.jpg&f=1&nofb=1",
         },
         {},
         {
             name: "Biography",
-            content: "The third!",
+            content: " Anyways, um... I bought a whole bunch of shungite rocks, do you know what shungite is? Anybody know what shungite is? No, not Suge Knight, I think he's locked up in prison. I'm talkin' shungite. Anyways, it's a two billion year-old like, rock stone that protects against frequencies and unwanted frequencies that may be traveling in the air. That's my story, I bought a whole bunch of stuff. Put 'em around the la casa. Little pyramids, stuff like that.",
         },
     ]
 
+    const useStyles = makeStyles((theme: Theme) =>
+        createStyles({
+            background: {
+                backgroundImage: "url(https://mages.unsplash.com/photo-1590330347519-481d4846c98e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60)",
+                // This doesn't work: it can't see the default color, but it can see 
+                // other colours i.e. theme.palette.primary.main
+                backgroundColor: theme.palette.background.default,
+                backgroundPosition: 'center', /* Center the image */
+                backgroundRepeat: 'no-repeat', /* Do not repeat the image */
+                backgroundSize: 'cover', /* Resize the background image to cover the entire container */
+            },
+        }),
+    );
 
-    const Pet = ({ name }: { name: string }) => {
-        return <h1>{name}</h1>;
-    }
-
-    const pets: Array<JSX.Element> = [
-        <Pet name={"Millie"} />,
-        <Section {...sections[0]} />,
-    ]
-
+    const classes = useStyles();
 
     return (
         <>
+            <CssBaseline />
             <ThemeProvider theme={LightTheme}>
-                <CssBaseline />
-                <Typography
-                    variant="h1"
-                    color="primary"
-                    gutterBottom>
-                    Portfolio page
-                </Typography>
-                <Container maxWidth="md">
-                    <SectionGrid sections={sections} />
-                    {/* <CentredGrid components={pets} /> */}
-                    <Copyright />
-                </Container>
+
+                {/* Background: image from style, default to regular background if no image found} */}
+                <Paper className={classes.background}>
+                    <Typography
+                        variant="h1"
+                        color="primary"
+                        gutterBottom>
+                        Portfolio page
+                    </Typography>
+                    <Container maxWidth="md">
+                        <SectionGrid sections={sections} />
+                        {/* <CentredGrid components={pets} /> */}
+                        <Copyright />
+
+                    </Container>
+                </Paper>
             </ThemeProvider>
         </>
     );
@@ -106,6 +118,9 @@ const Section = (data: SectionData) => {
 
     const classes = useStyles();
 
+    // Cols per item when we want the text/media to fit on one row
+    const colsPerItem = data.content && data.path ? 6 : 12;
+
     return (
         // Text alignment hard coded - unsure how to put inside theme
         <Box textAlign="left">
@@ -116,14 +131,14 @@ const Section = (data: SectionData) => {
             <Grid container
                 direction="row"
                 justify={data.content ? (data.path ? "space-between" : "flex-start") : "center"}>
-                {data.content ? <Grid item>
+                {data.content ? <Grid item xs={colsPerItem}>
                     <Typography
                         variant="body1"
                         color="primary">
                         {data.content}
                     </Typography>
                 </Grid> : null}
-                {data.path ? <Grid item>
+                {data.path ? <Grid item xs={colsPerItem}>
                     <img src={data.path == null ? "" : data.path}
                         alt={data.alt}
                         className={classes.img}
