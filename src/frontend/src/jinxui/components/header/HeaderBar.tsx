@@ -57,32 +57,33 @@ const HeaderBar = (props: any) => {
   const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad
   return (
     <StylesProvider injectFirst>
-        <Slide appear={false} direction="down" in={!trigger}>
-          <StyledAppBar 
-            color="inherit"
-            elevation={4}
-            style={{
-              background: headerGrad
-            }}
-          >
-            <StyledDivOuter>
-              <StyledDivLeft>
-                <HeaderButton
-                  color="inherit"
-                  aria-label="menu"
-                >
-                  <MenuIcon />
-                </HeaderButton>
-                <Typography variant="h6">{props.title}</Typography>
-              </StyledDivLeft>
-              <StyledDivCenter></StyledDivCenter>
-              <StyledDivRight>
-                <UserAvatarDropdown />
-                {props.children}
-              </StyledDivRight>
-            </StyledDivOuter>
-          </StyledAppBar>
-        </Slide>
+      <Slide appear={false} direction="down" in={!trigger}>
+        <StyledAppBar
+          color="inherit"
+          elevation={4}
+          style={{
+            background: headerGrad
+          }}
+          position="sticky"
+        >
+          <StyledDivOuter>
+            <StyledDivLeft>
+              <HeaderButton
+                color="inherit"
+                aria-label="menu"
+              >
+                <MenuIcon />
+              </HeaderButton>
+              <Typography variant="h6">{props.title}</Typography>
+            </StyledDivLeft>
+            <StyledDivCenter></StyledDivCenter>
+            <StyledDivRight>
+              <UserAvatarDropdown />
+              {props.children}
+            </StyledDivRight>
+          </StyledDivOuter>
+        </StyledAppBar>
+      </Slide>
     </StylesProvider>
   );
 };

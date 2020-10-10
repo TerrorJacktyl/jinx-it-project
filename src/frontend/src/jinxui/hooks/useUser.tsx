@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { UserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig } from "axios";
-import { TPortfolio, TPage, TSection, TPortfolioData, TPageData, TSectionData } from "../../Types";
-import AxiosResponse from "axios";
+import { TPortfolio, TPage, TSection, TPortfolioData, TPageData, TSectionData } from "../types/PortfolioTypes";
+
 /**
  * The 'user' hook
  *
@@ -46,12 +46,12 @@ export const useUser = () => {
         };
 
         const accDetails = await getAccountDetails(config);
-        console.log(accDetails?.data.first_name);
         // Update internal state about user
         // Do not return until internal state has been updated
         const stateChanges = {
           username: username,
-          firstName: accDetails?.data.first_name,
+          firstName: accDetails.first_name,
+          lastName: accDetails.last_name,
           token: response.data["auth_token"],
           authenticated: true,
           config: config,
@@ -296,7 +296,7 @@ export const useUser = () => {
     // return result;
     try {
       const response = await API.get(path, state.config);
-return response.data;
+      return response.data;
     } catch (e) {
       throw e;
     }
@@ -323,7 +323,7 @@ return response.data;
     try {
       const response = await API.get(ACCOUNT_PATH, konfig);
       if ("first_name" in response.data) {
-        return response;
+        return response.data;
       }
     } catch (error) {
       throw handleError(error);
@@ -342,7 +342,7 @@ return response.data;
     // return result;
     try {
       const response = await API.get(path, state.config);
-      return response.data ;
+      return response.data;
     } catch (e) {
       throw e;
     }
@@ -420,7 +420,11 @@ return response.data;
   };
 
   return {
-    userData: state,
+    userData: {
+      ...state,
+      // Extra function
+      name: `${state.firstName} ${state.lastName}`,
+    },
     login,
     savePortfolioId,
     switchLightThemeMode,

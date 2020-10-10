@@ -60,8 +60,9 @@ export {
   retrieveUserData,
 } from "./contexts/index";
 
-export type { IUserContext } from "./contexts/index";
-export type { IThemeContext } from "./contexts/index";
+/* Types */
+export type { IUserContext, IThemeContext } from "./contexts/index";
+export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";

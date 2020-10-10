@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -7,12 +7,11 @@ import { CssBaseline } from '@material-ui/core';
 
 import {
     ThemeProvider,
-    createMuiTheme,
 } from "@material-ui/core/styles";
 
 import { LightTheme } from 'jinxui';
 
-import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
