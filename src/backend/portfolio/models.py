@@ -26,8 +26,9 @@ def create_default_portfolio(sender, **kwargs):
         page=page,
         name='Hello There!',
         number='0',
-        content='Welcome to Jinx\'s portfolio creation software! '
-        'This is a default portfolio, feel free to modify or delete.'
+        content=
+            'Welcome to Jinx\'s portfolio creation software! '
+            'This is a default portfolio, feel free to modify or delete.'
     )
     account.primary_portfolio = portfolio
     account.save()
