@@ -75,7 +75,7 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
     // Add logic for mapping data to different section components (i.e. timeline) in here
     const dataToSection = (data: TSectionData) => {
-        <Section {...data} />
+        return <Section {...data} />
     }
 
     return (
