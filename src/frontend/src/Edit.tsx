@@ -7,14 +7,13 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import { Button, CssBaseline, Typography } from "@material-ui/core";
+import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 
 import { TextField } from "formik-material-ui";
 
 import {
   ErrorMessage,
-  FormDiv,
   LightTheme,
   DarkTheme,
   useUser,
@@ -30,9 +29,7 @@ import {
   Routes,
 } from "jinxui";
 
-import { TSection, TPortfolioData, TPageData, TSectionData, } from "./Types"
-
-const FRONT_END_URL = "http://localhost:3000/";
+import { TSection } from "./Types"
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -85,11 +82,11 @@ const Edit = () => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
   const [bioImageResponse, setBioImageResponse] = useState({
-    path: FRONT_END_URL + "blank_user.png",
+    path: "",
     id: null,
   });
   const [awesomeImageResponse, setAwesomeImageResponse] = useState({
-    path: FRONT_END_URL + "blank_user.png",
+    path: "",
     id: null,
   });
   const {
@@ -241,20 +238,13 @@ const Edit = () => {
                     {ImageTextSectionInput(
                       "Biography",
                       "biography",
-                      touched.biography,
-                      errors.biography,
                       bioImageResponse,
                       setBioImageResponse
                     )}
                     <BetweenSections />
-                    {errors.academicHistory && touched.academicHistory ? (
-                      <ErrorMessage>{errors.academicHistory}</ErrorMessage>
-                    ) : null}
                     <TextSectionInput
                       title="Academic History"
                       sectionName="academicHistory"
-                      touched={touched.academicHistory}
-                      errors={errors.academicHistory}
                     />
                     <BetweenSections />
                     {ImageSectionInput(

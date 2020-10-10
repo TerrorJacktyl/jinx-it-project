@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 const DarkTheme = createMuiTheme({
   palette: {
@@ -38,12 +38,14 @@ const LightPrimaryButtonGrad =
 const LightPrimaryButtonGradHover =
   "linear-gradient(90deg, #00D1ED 0%, #00EBB2 100%)";
 const DarkPrimaryButtonGrad = "linear-gradient(90deg, #00C2FF 0%, #00FFC2 100%)"
+const BlueIconGrad = "linear-gradient(225deg, #497CFF 0%, #3DB9FF 100%)";
 
-const LightTheme = createMuiTheme({
+let LightTheme = createMuiTheme({
   palette: {
     type: "light",
     primary: {
       main: "#5D71BB",
+      contrastText: "#EEEEEE",
     },
     secondary: {
       main: "#42f7d5",
@@ -59,6 +61,12 @@ const LightTheme = createMuiTheme({
     fontWeightMedium: 200,
     fontWeightRegular: 300,
     fontWeightBold: 400,
+    h3: {
+      fontWeight: 200,
+    },
+    button: {
+      textTransform: "none"
+    }
   },
   shadows: [
     "none",
@@ -84,13 +92,15 @@ const LightTheme = createMuiTheme({
     "0px 19px 15px -6px rgba(" + LightShadowColour +  ", 0.3),0px 12px 33px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 38px 7px rgba(" + LightShadowColour + ", 0.04)",
     "0px 19px 15px -6px rgba(" + LightShadowColour +  ", 0.3),0px 13px 35px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 40px 7px rgba(" + LightShadowColour + ", 0.04)",
     "0px 19px 16px -6px rgba(" + LightShadowColour +  ", 0.3),0px 14px 37px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 42px 7px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 20px 16px -7px rgba(" + LightShadowColour +  " 0.3),0px 15px 38px 3px rgba( " + LightShadowColour + " 0.06),0px 9px 44px 8px rgba(" + LightShadowColour + " 0.04)",
-    "0px 20px 18px -7px rgba(" + LightShadowColour +  " 0.3),0px 16px 40px 3px rgba( " + LightShadowColour + " 0.06),0px 9px 46px 8px rgba(" + LightShadowColour + " 0.04)",
+    "0px 20px 16px -7px rgba(" + LightShadowColour +  " 0.3),0px 15px 38px 3px rgba( " +  LightShadowColour + " 0.06),0px 9px 44px 8px rgba(" + LightShadowColour + " 0.04)",
+    "0px 20px 18px -7px rgba(" + LightShadowColour +  " 0.3),0px 16px 40px 3px rgba( " +  LightShadowColour + " 0.06),0px 9px 46px 8px rgba(" + LightShadowColour + " 0.04)",
   ],
   shape: {
     borderRadius: 0
   }
 });
+
+LightTheme = responsiveFontSizes(LightTheme);
 
 
 export {
@@ -105,4 +115,5 @@ export {
   LightPrimaryButtonGrad,
   LightPrimaryButtonGradHover,
   DarkPrimaryButtonGrad,
+  BlueIconGrad,
 }

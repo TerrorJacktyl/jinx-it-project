@@ -6,6 +6,8 @@ const UserImage = styled.img`
   height: auto;
   margin-top: 0px;
   border: 1px solid gray;
+  // min-width: 400px;
+  // padding: 100px;
   width: 100%;
 `;
 

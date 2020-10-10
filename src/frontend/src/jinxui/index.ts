@@ -6,10 +6,13 @@ export { default as FormEntry } from "./components/form/FormEntry";
 export { default as SubmitButton } from "./components/form/SubmitButton";
 export { default as FormAlert } from "./components/form/FormAlert";
 export { default as FormOuterDiv } from "./components/form/FormOuterDiv";
-export { default as FormBottomButtonsDiv } from "./components/form/FormBottomButtonsDiv"
+export { default as FormBottomButtonsDiv } from "./components/form/FormBottomButtonsDiv";
+export { default as FormSectionsDiv } from "./components/form/FormSectionDiv";
 
 /* Site */
 export { default as SiteLayout } from "./components/site/SiteLayout";
+export { default as PrimaryColumnDiv } from "./components/site/PrimaryColumnDiv";
+export { default as PrimaryMenu } from "./components/site/PrimaryMenu";
 
 /* Button */
 export { PrimaryButton } from "./components/button/Button";
@@ -32,11 +35,8 @@ export { default as PageName } from "./components/display/PageName";
 export { default as SectionName } from "./components/display/SectionName";
 export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
-export { default as UserImage } from "./components/display/UserImage";
-export { default as PrimaryMenu } from "./components/display/PrimaryMenu";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
-export { default as PrimaryColumnDiv } from "./components/display/PrimaryColumnDiv";
 
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection"
@@ -47,9 +47,12 @@ export { default as PortfolioNameSectionInput } from "./components/edit/Portfoli
 export { default as TextSectionInput } from "./components/edit/TextSectionInput"
 export { default as ImageSectionInput } from "./components/edit/ImageSectionInput"
 export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
+export { default as UserImage } from "./components/edit/UserImage";
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";
+export { UploadIcon, FormIcon, LogoTextIcon } from "./components/home/HomeIcons";
+export { default as HomeFooter } from "./components/home/HomeFooter";
 
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
@@ -82,4 +85,5 @@ export {
   LightPrimaryButtonGrad,
   LightPrimaryButtonGradHover,
   DarkPrimaryButtonGrad,
+  BlueIconGrad,
 } from "./theme/GlobalTheme";

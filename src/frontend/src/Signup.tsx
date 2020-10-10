@@ -7,7 +7,6 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
   FormDiv,
-  FormEntry,
   PrimaryButton,
   AccountPageDiv,
   FormAlert,
@@ -17,36 +16,33 @@ import {
   HeaderBar,
   FormOuterDiv,
   LightTitleBGGrad,
-  FormBottomButtonsDiv
+  FormBottomButtonsDiv,
 } from "jinxui";
 
 import { TextField } from "formik-material-ui";
-
-const StyledButton = styled(PrimaryButton)`
-  margin: auto;
-  margin-top: 30px;
-`;
 
 const StyledLink = styled.a`
   text-decoration: none;
   position: relative;
 `;
 
+// Main container for fields.
 const FormSectionsDiv = styled.div`
   margin: 30px;
   display: grid;
   grid-template-rows:
-    90px
-    90px
-    90px
-    90px
-    90px
-    90px
+    93px
+    93px
+    93px
+    93px
+    93px
+    93px
     max-content
     30px
     10px
 `;
 
+// Extra white space at top.
 const FormTitleDiv = styled.div`
   margin-top: 30px;
 `;
@@ -155,6 +151,8 @@ const Signup = () => {
                 {({ errors, touched, isSubmitting }) => (
                   <Form>
                     <FormSectionsDiv>
+                      {/* <div> */}
+
                     <Field
                       component={TextField}
                       id="firstName"
@@ -163,7 +161,7 @@ const Signup = () => {
                       fullWidth
                       name="firstName"
                       label="First Name"
-                    />
+                      />
 
                     <Field
                       component={TextField}

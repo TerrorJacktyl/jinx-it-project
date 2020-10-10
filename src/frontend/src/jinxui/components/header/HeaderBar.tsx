@@ -12,38 +12,39 @@ import MenuIcon from "@material-ui/icons/Menu";
 import {
   UserAvatarDropdown,
   HeaderButton,
-  LightTheme,
-  DarkTheme,
-  LightShadowColour,
-  DarkShadowColour,
   LightHeaderGrad,
   DarkHeaderGrad,
 } from "jinxui";
 
 import styled from "styled-components";
 
+// Ensure that app bar sticks to top and sides
 const StyledAppBar = styled(AppBar)`
   margin: 0px;
 `;
 
+// Three columns, left middle and right
 const StyledDivOuter = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: minMax(46px, max-content);
 `;
 
+//Left items
 const StyledDivLeft = styled.div`
   padding-left: 0px;
   display: flex;
   align-items: center;
 `;
 
+// Center items
 const StyledDivCenter = styled.div`
   display: flex;
   justify-content: center;
   align-self: center;
 `;
 
+// Right items
 const StyledDivRight = styled.div`
   padding-right: 0px;
   display: flex;
