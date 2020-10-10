@@ -38,6 +38,15 @@ export { default as OneColumnSectionDiv } from "./components/display/OneColumnSe
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
 export { default as PrimaryColumnDiv } from "./components/display/PrimaryColumnDiv";
 
+/* Display Mui*/
+export {
+  Section,
+  SectionGrid,
+  CentredGrid,
+  BackgroundImage,
+  Copyright,
+} from "./components/display/MuiComponents";
+
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection";
 export { default as NewSectionMenu } from "./components/edit/NewSectionMenu";
