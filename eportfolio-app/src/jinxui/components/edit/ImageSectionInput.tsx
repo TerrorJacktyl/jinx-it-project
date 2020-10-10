@@ -8,15 +8,15 @@ import {
 
 function ImageSectionInput(
   title: string,
-  sectionName: string,
-  imageResponse: any,
+  key: string,
+  path: any,
   setImageResponse: any
 ) {
   return (
     <>
       <PaperSection title={title}>
         <OneColumnSectionDiv>
-          {UploadImageSubSection(sectionName, imageResponse, setImageResponse)}
+          {UploadImageSubSection(key, path, setImageResponse)}
         </OneColumnSectionDiv>
       </PaperSection>
     </>

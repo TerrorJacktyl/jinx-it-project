@@ -16,7 +16,7 @@ export type TPage = {
   sections: number[]
 };
 
-export type TSection = {
+export interface TSection {
   id: number,
   name: string,
   type: string,
@@ -26,3 +26,7 @@ export type TSection = {
   image: number,
   path: string,
 };
+
+export interface TEditSection extends TSection {
+  uid: string
+}; 

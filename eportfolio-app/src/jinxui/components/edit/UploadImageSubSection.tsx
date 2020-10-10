@@ -51,18 +51,18 @@ const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
 `;
 
 function UploadImageSubSection(
-  uploadButtonLabel: string,
-  imageResponse: any,
+  key: string,
+  path: any,
   setImageResponse: any
 ) {
   const { uploadImage } = useUser();
   // const classes = useStyles();
   return (
     <>
-      <label htmlFor={uploadButtonLabel}>
+      <label htmlFor={key}>
         <StyledInput
           accept="image/*"
-          id={uploadButtonLabel}
+          id={key}
           multiple
           type="file"
           onChange={(event) => {
@@ -73,7 +73,7 @@ function UploadImageSubSection(
               )
                 .then((response) => {
                   console.log(response);
-                  setImageResponse(response.data);
+                  setImageResponse(key, response.data);
                 })
                 .catch((error) => {
                   console.log(error);
@@ -85,7 +85,7 @@ function UploadImageSubSection(
         />
         <ImageGrid>
           <ImageGridMain>
-            <UserImage src={imageResponse.path} />{" "}
+            <UserImage src={path} />{" "}
           </ImageGridMain>
           <StyledImageUploadOverlay elevation={0} square>
             Upload Image

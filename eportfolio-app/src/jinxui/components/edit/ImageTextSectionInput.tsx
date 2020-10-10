@@ -11,10 +11,10 @@ import {
 
 function ImageTextSectionInput(
   title: string,
-  sectionName: string,
+  key: string,
   touched: any,
   errors: any,
-  imageResponse: any,
+  path: any,
   setImageResponse: any
 ) {
   return (
@@ -22,13 +22,13 @@ function ImageTextSectionInput(
       <PaperSection title={title}>
         <TwoColumnSectionDiv>
           <div>
-            {TextFieldSubSection(sectionName, 18)}
+            {TextFieldSubSection(key, 18)}
             {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
           </div>
           <div>
             {UploadImageSubSection(
-              sectionName,
-              imageResponse,
+              key,
+              path,
               setImageResponse
             )}
           </div>

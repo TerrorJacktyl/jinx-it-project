@@ -3,7 +3,8 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { TPortfolio, TPage, TSection } from "./Types";
+import { v4 as uuidv4 } from "uuid";
+import { TPage, TSection, TEditSection } from "./Types";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -29,7 +30,6 @@ import {
   PortfolioNameSectionInput,
   Routes,
 } from "jinxui";
-import { TPortfolio, TPage, TSection } from "./Types";
 
 const FRONT_END_URL = "http://localhost:3000/";
 
@@ -95,7 +95,7 @@ const BetweenSections = () => {
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
-const Edit = ({ existingPortfolio }) => {
+const Edit = (existingPortfolio: boolean) => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
 //  const [bioImageResponse, setBioImageResponse] = useState({
@@ -107,7 +107,6 @@ const Edit = ({ existingPortfolio }) => {
 //    id: null,
 //  });
   const blankImagePath = FRONT_END_URL + "blank_user.png";
-  const [imageResponses, setImageResponses] = useState({});
   const {
     postFullPortfolio,
     putSections,
@@ -121,31 +120,38 @@ const Edit = ({ existingPortfolio }) => {
   } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
-  const [portfolioId, setPortfolioId] = useState(null);
+  const [portfolioId, setPortfolioId] = useState(-1);
   const [pages, setPages] = useState<TPage[]>([]);
-  const [sections, setSections] = useState<TSection[]>([]);
+  const [sections, setSections] = useState<TEditSection[]>([]);
   // const classes = useStyles();
   // Call useEffect to fetch an existing portfolio's data
-  useEffect (async () => {
-    if (existingPortfolio) {
-      var imageResponses = {}
+  useEffect (() => {
+
+    const fetchExistingPortfolio = async () => {
       const portfolioId = await getSavedPortfolioId();
       const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
       setPortfolioId(portfolioId);
       setPages(pages);
-      setSections(sections); 
-      sections.forEach((section: any) => {
-        if (section.type === "image" || section.type === "image_text") {
-          imageResponses[toString(section.image)] = section.path
-        }
+      const IdSections = sections.map((section: TSection) => {
+        const uidPair = { 'uid': uuidv4() };
+        const newSection = { ...section, ...uidPair };
+        return newSection;
       })
-      setImageResponses(imageResponses);
+      setSections(IdSections); 
+    }
+
+    if (existingPortfolio) {
+      fetchExistingPortfolio();
     }
   }, []);
 
-  const addImageResponse = (response) => {
-    const newImages = imageResponse[response.id] = response.path
-    setImageResponses(newImages);
+  // Changes the path of an existing image section to an uploaded image
+  // Watch out for key type as it may be string and uid may be number
+  const addImageResponse = (key: any, response: any) => {
+    const index = sections.findIndex((section: TEditSection) => section.uid === key);
+    var newSections = sections
+    newSections[index].path = response.path
+    setSections(newSections);
   }
 
   const onPublish = async () => {
@@ -176,20 +182,24 @@ const Edit = ({ existingPortfolio }) => {
             <div>
               <FormTitle>Enter your information</FormTitle>
               <Formik
-                // TODO: Set these to the existing data if editing an existing portfolio
+                // TODO: Add the initial case for a new portfolio, and add a check on props 
+                // Maybe be helpful to use mapValuesToProps
                 initialValues={
                   sections.filter((section: any) => {
-                    return section.type === "text")
+                    return (section.type === "text");
                   })
                   .reduce((acc, currSection) => {
-                    const newAcc = acc[toString(currSection.number)] = currSection.content
-                    return newAcc
-                  }, {});
+                    const newPair = { [currSection.uid]: currSection.content };
+                    const newAcc = { ...acc, ...newPair };
+                    return newAcc;
+                    // TODO: Initialise Accumulator with existing portfolio name
+                  }, { websiteName: "", })
+                }
 //                  websiteName: "",
 //                  biography: "",
 //                  academicHistory: "",
 //                  professionalHistory: "",
-                }
+                // TODO: Redo EditSchema for dynamic sections
                 validationSchema={EditSchema}
                 onSubmit={(values, { setSubmitting }) => {
                   const portfolio_data = {
@@ -264,7 +274,6 @@ const Edit = ({ existingPortfolio }) => {
 //                            page_id,
 //                            professional_data
 //                          );
-
 //                        })
 //                        .catch(function (error: any) {
 //                          console.log(error);
@@ -299,20 +308,22 @@ const Edit = ({ existingPortfolio }) => {
                       />
                     </PortfolioNameSectionInput>
                     <BetweenSections />
-                    {existingPortfolio 
-                      ? sections.map((section: TSection) => {
+                    {(existingPortfolio && sections.length !== 0)
+                      ? sections.map((section: TEditSection) => {
                         if (section.type === "text") {
                           return (<TextSectionInput
-                            title={section.title}
-                            sectionName={toString(section.number)} 
-                            // TODO: Handle touched and errors, possibly use square brackets
+                            title={section.name}
+                            sectionName={section.uid} 
+                            // TODO: Fix implicit any type error coming from initial values
+                            touched={touched[section.uid]}
+                            errors={errors[section.uid]}
                           />);
-                        } else if {section.type === "image"
+                        } else if (section.type === "image") {
                           return (
                             ImageSectionInput(
                               section.name,
-                              toString(section.number),
-                              imageResponses[section.image] 
+                              section.uid,
+                              section.path, 
                               addImageResponse
                             )
                           );
@@ -320,19 +331,20 @@ const Edit = ({ existingPortfolio }) => {
                           return (
                             ImageTextSectionInput(
                               section.name,
-                              toString(section.number),
-                              // TODO: Handle touched and errors 
-                              imageResponses[section.image]
-                              addImageResponse
+                              section.uid,
+                              section.path,
+                              addImageResponse,
+                              touched[section.uid],
+                              errors[section.uid]
+                              )
                             )
-                          )
-                        }
-                      }) : null
-                    }
-                    {/*{ImageTextSectionInput(
-                      "Biography",
-                      "biography",
-                      touched.biography,
+                          }
+                        }) : null
+                      }
+                      {/*{ImageTextSectionInput(
+                        "Biography",
+                        "biography",
+                        touched.biography,
                       errors.biography,
                       bioImageResponse,
                       setBioImageResponse
@@ -378,22 +390,3 @@ const Edit = ({ existingPortfolio }) => {
   }
 };
 export default Edit;
- 
-const FormSections = (sections: TSection[]) => {
-
-  return (
-    <Form>
-      {sections.map((section: TSection) => {
-        if (section.type === "text") {
-          <TextSectionInput
-            title={section.title}
-            sectionName={section.title}
-            touched={touched.academicHistory}
-            errors={errors.academicHistory}
-          />
-
-        }
-      })}
-    </Form>
-  );
-}
