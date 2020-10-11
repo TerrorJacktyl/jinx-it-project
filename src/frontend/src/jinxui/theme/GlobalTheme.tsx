@@ -22,7 +22,7 @@ const DarkTheme = createMuiTheme({
     fontWeightBold: 400,
     h3: {
       fontWeight: 200,
-      fontSize: 30
+      fontSize: "3rem"
     }
   },
 });
@@ -33,7 +33,7 @@ const LightHeaderGrad = "linear-gradient(90deg,#A6C9FF 0%, #99AFFF 100%)"
 const DarkHeaderGrad = "linear-gradient(90deg, #00C2FF 0%, #0066FF 100%)"
 const LightTitleBGGrad = "linear-gradient(0deg, #BBDEFF 0%, #C1D2FF 100%)"
 const DarkTitleBGGrad = "linear-gradient(0deg, #BBDEFF 0%, #C1D2FF 100%)"
-const LightPrimaryButtonGrad = 
+const LightPrimaryButtonGrad =
   "linear-gradient(90deg, #48E9FF 0%, #49FFD3 100%)";
 const LightPrimaryButtonGradHover =
   "linear-gradient(90deg, #00D1ED 0%, #00EBB2 100%)";
@@ -104,7 +104,7 @@ LightTheme = responsiveFontSizes(LightTheme);
 
 
 export {
-  LightTheme, 
+  LightTheme,
   DarkTheme,
   LightShadowColour,
   DarkShadowColour,

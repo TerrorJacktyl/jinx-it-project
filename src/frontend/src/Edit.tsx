@@ -27,9 +27,8 @@ import {
   ImageTextSectionInput,
   PortfolioNameSectionInput,
   Routes,
+  TSection,
 } from "jinxui";
-
-import { TSection } from "./Types"
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -140,30 +139,30 @@ const Edit = () => {
                     name: values.websiteName,
                   };
                   const page_data = {
-                    name: "home",
+                    name: "Home",
                     number: 0,
                   };
                   const bio_data = {
-                    name: "biography",
+                    name: "Biography",
                     number: 0,
                     image: bioImageResponse.id,
                     content: values.biography,
                     type: "image_text",
                   };
                   const academic_data = {
-                    name: "academic_history",
+                    name: "Academic history",
                     number: 0,
                     content: values.academicHistory,
                     type: "text",
                   };
                   const awesome_data = {
-                    name: "awesome_image",
+                    name: "Awesome image",
                     number: 0,
                     image: awesomeImageResponse.id,
                     type: "image",
                   };
                   const professional_data = {
-                    name: "professional_history",
+                    name: "Professional history",
                     number: 0,
                     content: values.professionalHistory,
                     type: "text",

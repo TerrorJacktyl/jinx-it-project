@@ -38,6 +38,15 @@ export { default as PageDiv } from "./components/display/PageDiv";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
 
+/* Display Mui*/
+export {
+  Section,
+  SectionGrid,
+  CentredGrid,
+  BackgroundImage,
+  Copyright,
+} from "./components/display/MuiComponents";
+
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection"
 export { default as NewSectionMenu } from "./components/edit/NewSectionMenu"
@@ -66,8 +75,9 @@ export {
   retrieveUserData,
 } from "./contexts/index";
 
-export type { IUserContext } from "./contexts/index";
-export type { IThemeContext } from "./contexts/index"
+/* Types */
+export type { IUserContext, IThemeContext } from "./contexts/index";
+export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";
