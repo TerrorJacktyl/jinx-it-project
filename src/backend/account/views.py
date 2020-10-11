@@ -16,8 +16,14 @@ from .swagger import AccountAutoSchema
 class AccountList(generics.ListAPIView):
     serializer_class = AccountSerializer
     permission_classes = [permissions.AllowAny]
-    queryset = Account.objects.all()
     swagger_schema = AccountAutoSchema
+
+    def get_queryset(self):
+        queryset = Account.objects.all()
+        username = self.request.query_params.get('username', None)
+        if username:
+            queryset = queryset.filter(user__username=username)
+        return queryset
 
 
 class AccountDetail(generics.RetrieveUpdateAPIView):
