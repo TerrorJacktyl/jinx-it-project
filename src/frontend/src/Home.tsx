@@ -16,6 +16,13 @@ import {
   HomeFooter,
 } from "jinxui";
 
+// Mobile / responsive issues:
+// - Login button not appearing on page
+// - Signup form not completely visible
+// - Login doesn't appear to work
+// - Number three image appears to be broken
+// - Login button half off screen
+
 // Constants required for various media quiries for mobile repsonsiveness
 const MAX_WIDTH = "630px";
 const MAX_HEIGHT = "800px";
