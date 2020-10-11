@@ -20,7 +20,7 @@ function App() {
             <Route path={Routes.LOGIN} exact component={Login} />
             <Route path={Routes.SIGNUP} exact component={Signup} />
             {/* TEST: below prop is true just for testing, change it back after */}
-            <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit(true)} />
+            <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
             <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Portfolio} />
           </Switch>
         </div>

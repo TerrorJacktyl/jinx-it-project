@@ -7,15 +7,15 @@ import {
 } from "jinxui";
 
 // TODO: Explicitly declare props
-const TextSectionInput = (props: any) => {
+const TextSectionInput = (title: string, key: string) => {
   return (
     <>
-      <PaperSection title={props.title}>
+      <PaperSection title={title}>
         <OneColumnSectionDiv>
-          {TextFieldSubSection(props.key, 15)}
-          {props.errors && props.touched ? (
+          {TextFieldSubSection(key, 15)}
+          {/*props.errors && props.touched ? (
             <ErrorMessage>{props.errors}</ErrorMessage>
-          ) : null}
+          ) : null*/}
         </OneColumnSectionDiv>
       </PaperSection>
     </>

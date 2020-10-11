@@ -62,6 +62,13 @@ const BottomButtonsDiv = styled.div`
 
 const EditSchema = Yup.object().shape({
   websiteName: Yup.string().max(50, "Too Long!").required("Required"),
+  sections: Yup.array().of(
+    Yup.object().shape(
+      {
+        content: Yup.string().required("Section must have content")
+      }
+    )
+  )
 });
 
 function sectionDataIsEmpty(data: any) {
@@ -95,7 +102,9 @@ const BetweenSections = () => {
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
-const Edit = (existingPortfolio: boolean) => {
+const Edit = () => {
+  // TEST: Remove this when we've decided on an existing portfolio check
+  const existingPortfolio = true;
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
 //  const [bioImageResponse, setBioImageResponse] = useState({
@@ -311,36 +320,39 @@ const Edit = (existingPortfolio: boolean) => {
                     {(existingPortfolio && sections.length !== 0)
                       ? sections.map((section: TEditSection) => {
                         if (section.type === "text") {
-                          return (<TextSectionInput
-                            title={section.name}
-                            sectionName={section.uid} 
-                            // TODO: Fix implicit any type error coming from initial values
-                            touched={touched[section.uid]}
-                            errors={errors[section.uid]}
-                          />);
-                        } else if (section.type === "image") {
                           return (
-                            ImageSectionInput(
+                            TextSectionInput(
                               section.name,
-                              section.uid,
-                              section.path, 
-                              addImageResponse
+                              section.uid
+                              // TODO: Fix implicit any type error coming from initial values, currently commented out
+                              /*touched={touched[section.uid]}
+                              errors={errors[section.uid]}*/
                             )
                           );
+                        } else if (section.type === "image") {
+                            return (
+                              ImageSectionInput(
+                                section.name,
+                                section.uid,
+                                section.path, 
+                                addImageResponse
+                              )
+                            );
                         } else {
                           return (
                             ImageTextSectionInput(
                               section.name,
                               section.uid,
                               section.path,
-                              addImageResponse,
-                              touched[section.uid],
-                              errors[section.uid]
-                              )
+                              addImageResponse
+                              // TODO: Fix implicit any type error coming from initial values, currently commented out
+                              /*touched[section.uid],
+                              errors[section.uid]*/
                             )
-                          }
-                        }) : null
-                      }
+                          );
+                        }
+                      }) : null
+                    }
                       {/*{ImageTextSectionInput(
                         "Biography",
                         "biography",
