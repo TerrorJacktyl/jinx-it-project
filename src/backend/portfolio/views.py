@@ -150,7 +150,7 @@ class SectionList(generics.ListCreateAPIView):
         for section in section_types:
             ret += section.objects.filter(**filter_param)
 
-        return sorted(ret)
+        return sorted(ret, key=lambda s: s.number)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
