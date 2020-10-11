@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import exceptions
 
 from common.permissions import IsReadOnly
 
@@ -30,6 +31,11 @@ class AccountDetail(generics.RetrieveUpdateAPIView):
         if account_id == 'me':
             obj = get_object_or_404(self.queryset, user=self.request.user)
         else:
+            try:
+                account_id = int(account_id)
+            except ValueError as ve:
+                raise exceptions.NotFound from ve
+
             obj = get_object_or_404(self.queryset, id=account_id)
 
         self.check_object_permissions(self.request, obj)
