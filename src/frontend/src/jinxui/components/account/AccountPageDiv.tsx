@@ -5,6 +5,7 @@ const AccountPageDiv = styled.div`
   background-image: url(${require("images/Logo_Background.svg")});
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 85%;
   overflow: auto;
   text-align: center;
 `;

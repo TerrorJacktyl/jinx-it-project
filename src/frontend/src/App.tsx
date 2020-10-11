@@ -4,9 +4,10 @@ import Login from "./Login";
 import Signup from "./Signup";
 import Home from "./Home";
 import Edit from "./Edit";
-import Portfolio from "./Portfolio"
+import Portfolio from "./Portfolio";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, Routes } from "jinxui";
+
 
 function App() {
   const app = (

@@ -1,35 +1,13 @@
 import React, { useState, useEffect } from "react";
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from "@material-ui/core/styles";
-import { CssBaseline } from "@material-ui/core";
 
-import styled from "styled-components";
 import {
-  AccountPageDiv,
-  PageName,
-  SectionName,
-  TextSectionDiv,
-  PageDiv,
-  useUser,
-  UserImage,
-  DarkTheme,
-  HeaderBar,
-} from "jinxui";
-import { TPortfolio, TPage, TSection } from "./Types";
-
-const TextSectionContainer = styled.div`
-  padding-left: 12px;
-  padding-right: 12px;
-`;
-
-type TextSectionProps = {
-  name: string;
-  content: string;
-};
-
-type MediaSectionProps = {
-  name: string;
-  path: string;
-};
+  LightTheme, useUser, TPortfolio, TPage, TSection,
+  HeaderBar, Copyright, SectionGrid, BackgroundImage
+} from 'jinxui';
 
 /* At the moment displays portfolio with the hardcoded id, and only the first page
    of said portfolio. Consider either passing the portfolio id as props, or having
@@ -37,9 +15,8 @@ type MediaSectionProps = {
    define a user's default portfolio that they'll be redirected to upon login and
    initial portfolio creation */
 const Portfolio = () => {
-  const { getFullPortfolio, getSavedPortfolioId } = useUser();
+  const { userData, getFullPortfolio, getSavedPortfolioId } = useUser();
   const portfolioId = getSavedPortfolioId();
-  // const tempPortfolioId = 26;
 
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
@@ -47,85 +24,42 @@ const Portfolio = () => {
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
 
+  // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
       const { portfolio, pages, sections } = await getFullPortfolio(
         portfolioId
       );
       setPortfolio(portfolio);
-
       setPages(pages);
       setSections(sections);
+      console.log(sections);
     };
     fetchPortfolio();
-  }, []);
+  }, []); // Empty dependency array required to prevent infinite loop
 
-  const compare = (s1: TSection, s2: TSection) => {
-    if (s1.number < s2.number) {
-      return -1;
-    }
-    if (s1.number > s2.number) {
-      return 1;
-    }
-    return 0;
-  };
+  // Used to show background image capability: derive from theme eventually
+  const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+
   return (
-    <ThemeProvider theme={DarkTheme}>
+    <>
       <CssBaseline />
-      <AccountPageDiv>
-        <HeaderBar
-          title={portfolio !== null ? portfolio.name : null}
-        ></HeaderBar>
-        <PageDiv>
-          <PageName>
-            {pages.length !== 0 ? pages[currPage].name : null}
-          </PageName>
-          {sections.length !== 0
-            ? sections.sort(compare).map((section: TSection) => {
-              if (section.type === "text") {
-                return (
-                  <TextSection
-                    name={section.name}
-                    content={section.content}
-                  />
-                );
-              } else if (section.type === "image") {
-                return <UserImage src={section.path} />;
-              } else if (section.type === "image_text") {
-                return (
-                  <>
-                    <UserImage src={section.path} />
-                    <TextSection
-                      name={section.name}
-                      content={section.content}
-                    />
-                  </>
-                );
-              } else {
-                return (
-                  <MediaSection name={section.name} path={section.media} />
-                );
-              }
-            })
-            : null}
-        </PageDiv>
-      </AccountPageDiv>
-    </ThemeProvider>
+      <ThemeProvider theme={LightTheme}>
+        <HeaderBar />
+        <BackgroundImage url={defaultBackgroundSrc}>
+          <Typography
+            variant="h1"
+            gutterBottom>
+            {portfolio ? portfolio.name : "loading"}
+          </Typography>
+          <SectionGrid sections={sections} />
+          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
+            <Copyright text={userData.name} />
+          </Container>
+        </BackgroundImage>
+      </ThemeProvider>
+    </>
   );
-};
-
-const TextSection: React.FC<TextSectionProps> = ({ name, content }) => (
-  <TextSectionContainer>
-    <SectionName>{name}</SectionName>
-    <TextSectionDiv>{content}</TextSectionDiv>
-  </TextSectionContainer>
-);
-
-const MediaSection: React.FC<MediaSectionProps> = ({ name, path }) => (
-  <TextSectionContainer>
-    <SectionName>{name}</SectionName>
-    <img src={path} alt="" />
-  </TextSectionContainer>
-);
+}
 
 export default Portfolio;

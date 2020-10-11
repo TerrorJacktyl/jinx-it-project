@@ -9,7 +9,6 @@ const StyledPrimaryMenu = React.forwardRef((props: MenuProps, ref: any) => (
     PaperProps={{ 
       style: { 
         border: "1px solid #d3d4d5",
-        borderRadius: 0,
       } 
     }}
     getContentAnchorEl={null}

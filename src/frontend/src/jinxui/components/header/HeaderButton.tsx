@@ -3,7 +3,6 @@ import styled from "styled-components"
 
 const StyledHeaderButton = styled(Button)`
   height: 100%;
-  border-radius: 0px;
 `;
 
 export default StyledHeaderButton
