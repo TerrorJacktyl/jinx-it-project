@@ -5,6 +5,8 @@ export { default as FormDiv } from "./components/form/FormDiv";
 export { default as FormEntry } from "./components/form/FormEntry";
 export { default as SubmitButton } from "./components/form/SubmitButton";
 export { default as FormAlert } from "./components/form/FormAlert";
+export { default as FormOuterDiv } from "./components/form/FormOuterDiv";
+export { default as FormBottomButtonsDiv } from "./components/form/FormBottomButtonsDiv";
 
 /* Site */
 export { default as SiteLayout } from "./components/site/SiteLayout";
@@ -34,16 +36,26 @@ export { default as UserImage } from "./components/display/UserImage";
 export { default as PrimaryMenu } from "./components/display/PrimaryMenu";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
+export { default as PrimaryColumnDiv } from "./components/display/PrimaryColumnDiv";
+
+/* Display Mui*/
+export {
+  Section,
+  SectionGrid,
+  CentredGrid,
+  BackgroundImage,
+  Copyright,
+} from "./components/display/MuiComponents";
 
 /* Edit */
-export { default as PaperSection } from "./components/edit/PaperSection"
-export { default as NewSectionMenu } from "./components/edit/NewSectionMenu"
-export { default as UploadImageSubSection } from "./components/edit/UploadImageSubSection"
-export { default as TextFieldSubSection } from "./components/edit/TextFieldSubSection"
-export { default as PortfolioNameSectionInput } from "./components/edit/PortfolioNameSectionInput"
-export { default as TextSectionInput } from "./components/edit/TextSectionInput"
-export { default as ImageSectionInput } from "./components/edit/ImageSectionInput"
-export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
+export { default as PaperSection } from "./components/edit/PaperSection";
+export { default as NewSectionMenu } from "./components/edit/NewSectionMenu";
+export { default as UploadImageSubSection } from "./components/edit/UploadImageSubSection";
+export { default as TextFieldSubSection } from "./components/edit/TextFieldSubSection";
+export { default as PortfolioNameSectionInput } from "./components/edit/PortfolioNameSectionInput";
+export { default as TextSectionInput } from "./components/edit/TextSectionInput";
+export { default as ImageSectionInput } from "./components/edit/ImageSectionInput";
+export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput";
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
 export { Routes } from "./routes/Routes";
@@ -57,12 +69,24 @@ export {
   retrieveUserData,
 } from "./contexts/index";
 
-export type { IUserContext } from "./contexts/index";
-export type { IThemeContext } from "./contexts/index"
+/* Types */
+export type { IUserContext, IThemeContext } from "./contexts/index";
+export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";
 
 /* Theme */
-export { LightTheme } from "./theme/GlobalTheme";
-export { DarkTheme } from "./theme/GlobalTheme";
+export {
+  LightTheme,
+  DarkTheme,
+  LightShadowColour,
+  DarkShadowColour,
+  LightHeaderGrad,
+  DarkHeaderGrad,
+  LightTitleBGGrad,
+  DarkTitleBGGrad,
+  LightPrimaryButtonGrad,
+  LightPrimaryButtonGradHover,
+  DarkPrimaryButtonGrad,
+} from "./theme/GlobalTheme";
