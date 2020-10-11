@@ -222,7 +222,7 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
         val = self.kwargs[lookup_url_kwarg]
         obj = None
         for item in queryset:
-            if str(getattr(item, key)) == val:
+            if getattr(item, key) == val:
                 obj = item
                 break
         else:
