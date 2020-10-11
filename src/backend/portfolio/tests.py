@@ -730,3 +730,331 @@ class SectionBulkTest(UserMixin, APITestCase):
             model[1]['id'] = response.json()[1]['id']
 
             self.assertEqual(response.json(), model)
+
+
+class PermissionTest(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(
+            username='ludwig',
+            password='marvellinggranola',
+            email='ludwig@example.com',
+        )
+        self.other_user = User.objects.create_user(
+            username='alfred',
+            password='curlingstirrups',
+            email='alfred@example.com',
+        )
+
+        self.public_portfolio = models.Portfolio.objects.create(
+            owner=self.owner,
+            name='oestrous sorceresses',
+            private=False,
+        )
+        self.public_page = models.Page.objects.create(
+            portfolio=self.public_portfolio,
+            name='regimented archdeacon',
+            number=0,
+        )
+        self.public_section = models.TextSection.objects.create(
+            page=self.public_page,
+            name='unscrupulous accumulations',
+            content='sympathizer devastator',
+            number=0
+        )
+
+        self.private_portfolio = models.Portfolio.objects.create(
+            owner=self.owner,
+            name='unscrambled machinations',
+            private=True,
+        )
+        self.private_page = models.Page.objects.create(
+            portfolio=self.private_portfolio,
+            name='curried interpretation',
+            number=0,
+        )
+        self.private_section = models.TextSection.objects.create(
+            page=self.private_page,
+            name='loiterer republic',
+            content='diabolic subcommittee',
+            number=0
+        )
+
+    def portfolio_list_helper(self, status_codes):
+        response = self.client.get(reverse('portfolio_list'))
+        self.assertEqual(response.status_code, status_codes[0])
+
+        response = self.client.post(
+            reverse('portfolio_list'),
+            {
+                'name': 'grasshoppers equation'
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status_codes[1])
+    
+    def portfolio_detail_helper(self, portfolio_id, status_codes):
+        response = self.client.get(
+            reverse(
+                'portfolio_detail',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, status_codes[0])
+
+        response = self.client.patch(
+            reverse(
+                'portfolio_detail',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                }
+            ),
+            {
+                'name': 'walking insolvents'
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status_codes[1])
+
+    def page_helper(self, portfolio_id, page_id, status_codes):
+        response = self.client.get(
+            reverse(
+                'page_list',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, status_codes[0])
+    
+        response = self.client.post(
+            reverse(
+                'page_list',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                }
+            ),
+            {
+                'name': 'supposed novices',
+                'number': 0,
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status_codes[1])
+
+        response = self.client.get(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                    'page_id': page_id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, status_codes[2])
+
+        response = self.client.patch(
+            reverse(
+                'page_detail',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                    'page_id': page_id,
+                }
+            ),
+            {
+                'name': 'deliriously tuneful'
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status_codes[3])
+
+    def section_helper(self, portfolio_id, page_id, section_id, status_codes):
+        response = self.client.get(
+            reverse(
+                'section_list',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                    'page_id': page_id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, status_codes[0])
+
+        response = self.client.post(
+            reverse(
+                'section_list',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                    'page_id': page_id,
+                }
+            ),
+            {
+                'name': 'ostracizing sweetheart',
+                'type': 'text',
+                'number': 0,
+                'content': 'bonged scandalmongers',
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status_codes[1])
+
+        response = self.client.get(
+            reverse(
+                'section_detail',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                    'page_id': page_id,
+                    'section_id': section_id,
+                }
+            )
+        )
+        self.assertEqual(response.status_code, status_codes[2])
+
+        response = self.client.patch(
+            reverse(
+                'section_detail',
+                kwargs={
+                    'portfolio_id': portfolio_id,
+                    'page_id': page_id,
+                    'section_id': section_id,
+                }
+            ),
+            {
+                'name': 'reincarnated waterwheels'
+            },
+            format='json',
+        )
+        self.assertEqual(response.status_code, status_codes[3])
+
+    def test_owner(self):
+        # pylint: disable=no-member
+        self.client.force_authenticate(user=self.owner)
+        with self.subTest(msg='portfolio list'):
+            self.portfolio_list_helper(
+                [200, 201]
+            )
+        with self.subTest(msg='public portfolio'):
+            self.portfolio_detail_helper(
+                self.public_portfolio.id,
+                [200, 200]
+            )
+        with self.subTest(msg='private portfolio'):
+            self.portfolio_detail_helper(
+                self.private_portfolio.id,
+                [200, 200]
+            )
+        with self.subTest(msg='public page'):
+            self.page_helper(
+                self.public_portfolio.id,
+                self.public_page.id,
+                [200, 201, 200, 200]
+            )
+        with self.subTest(msg='private page'):
+            self.page_helper(
+                self.private_portfolio.id,
+                self.private_page.id,
+                [200, 201, 200, 200]
+            )
+        with self.subTest(msg='public section'):
+            self.section_helper(
+                self.public_portfolio.id,
+                self.public_page.id,
+                self.public_section.id,
+                [200, 201, 200, 200]
+            )
+        with self.subTest(msg='private section'):
+            self.section_helper(
+                self.private_portfolio.id,
+                self.private_page.id,
+                self.private_section.id,
+                [200, 201, 200, 200]
+            )
+
+    def test_logged_in(self):
+        # pylint: disable=no-member
+        self.client.force_authenticate(user=self.other_user)
+        with self.subTest(msg='portfolio list'):
+            self.portfolio_list_helper(
+                [200, 201]
+            )
+        with self.subTest(msg='public portfolio'):
+            self.portfolio_detail_helper(
+                self.public_portfolio.id,
+                [200, 403]
+            )
+        with self.subTest(msg='private portfolio'):
+            self.portfolio_detail_helper(
+                self.private_portfolio.id,
+                [403, 403]
+            )
+        with self.subTest(msg='public page'):
+            self.page_helper(
+                self.public_portfolio.id,
+                self.public_page.id,
+                [200, 403, 200, 403]
+            )
+        with self.subTest(msg='private page'):
+            self.page_helper(
+                self.private_portfolio.id,
+                self.private_page.id,
+                [403, 403, 403, 403]
+            )
+        with self.subTest(msg='public section'):
+            self.section_helper(
+                self.public_portfolio.id,
+                self.public_page.id,
+                self.public_section.id,
+                [200, 403, 200, 403]
+            )
+        with self.subTest(msg='private section'):
+            self.section_helper(
+                self.private_portfolio.id,
+                self.private_page.id,
+                self.private_section.id,
+                [403, 403, 403, 403]
+            )
+
+    def test_anonymous(self):
+        # pylint: disable=no-member
+        self.client.force_authenticate(user=None)
+        with self.subTest(msg='portfolio list'):
+            self.portfolio_list_helper(
+                [200, 401]
+            )
+        with self.subTest(msg='public portfolio'):
+            self.portfolio_detail_helper(
+                self.public_portfolio.id,
+                [200, 401]
+            )
+        with self.subTest(msg='private portfolio'):
+            self.portfolio_detail_helper(
+                self.private_portfolio.id,
+                [401, 401]
+            )
+        with self.subTest(msg='public page'):
+            self.page_helper(
+                self.public_portfolio.id,
+                self.public_page.id,
+                [200, 401, 200, 401]
+            )
+        with self.subTest(msg='private page'):
+            self.page_helper(
+                self.private_portfolio.id,
+                self.private_page.id,
+                [401, 401, 401, 401]
+            )
+        with self.subTest(msg='public section'):
+            self.section_helper(
+                self.public_portfolio.id,
+                self.public_page.id,
+                self.public_section.id,
+                [200, 401, 200, 401]
+            )
+        with self.subTest(msg='private section'):
+            self.section_helper(
+                self.private_portfolio.id,
+                self.private_page.id,
+                self.private_section.id,
+                [401, 401, 401, 401]
+            )
