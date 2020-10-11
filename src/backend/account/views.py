@@ -1,17 +1,18 @@
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+
+from common.permissions import IsReadOnly
 
 from .serializers import AccountSerializer
 from .models import Account
-from .permissions import AccountOwner
+from .permissions import IsAccountOwner
 from .swagger import AccountAutoSchema
 
 
 class AccountDetail(generics.RetrieveUpdateAPIView):
     serializer_class = AccountSerializer
-    permission_classes = [IsAuthenticated, AccountOwner]
+    permission_classes = []
     queryset = Account.objects.all()
 
     # can only see own account for now

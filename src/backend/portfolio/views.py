@@ -12,11 +12,13 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status, exceptions
 
+from common.permissions import IsReadOnly
+
 from . import models
 from . import serializers
 from . import swagger
 
-from .permissions import IsOwner, IsNotPrivate, IsReadOnly
+from .permissions import IsOwner, IsNotPrivate
 
 
 class PortfolioList(generics.ListCreateAPIView):
