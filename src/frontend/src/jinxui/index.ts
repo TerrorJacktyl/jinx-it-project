@@ -25,6 +25,7 @@ export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
 export { default as HeaderBar } from "./components/header/HeaderBar";
 export { default as HeaderButton } from "./components/header/HeaderButton";
+export { default as HeaderBarSpacer } from "./components/header/HeaderBarSpacer";
 
 /* Account */
 export { default as AccountPageDiv } from "./components/account/AccountPageDiv";

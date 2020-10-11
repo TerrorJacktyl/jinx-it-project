@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import CSSBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Paper from "@material-ui/core/Paper";
+import Icon from "@material-ui/core/Icon";
 import {
   SiteLayout,
   PrimaryButton,
@@ -17,15 +19,16 @@ import {
 } from "jinxui";
 
 // Mobile / responsive issues:
-// - Login button not appearing on page
-// - Signup form not completely visible
-// - Login doesn't appear to work
-// - Number three image appears to be broken
-// - Login button half off screen
+// - Login doesn't appear to work from mobile phone
 
 // Constants required for various media quiries for mobile repsonsiveness
 const MAX_WIDTH = "630px";
 const MAX_HEIGHT = "800px";
+
+const StyledSiteLayout = styled(SiteLayout)`
+  // overflow-x: hidden;
+  // width: 100%;
+`;
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -48,9 +51,10 @@ const TopBlockDiv = styled(Paper)`
   display: grid;
   grid-template-rows:
     minmax(80px,1fr) minmax(50px,400px) minmax(50px,1fr) 
-    minmax(max-content,1.2fr) minmax(100px,0.7fr);
+    minmax(max-content,1.2fr) minmax(100px,0.7fr) 40px;
   justify-content: center;
   align-content: center;
+  justify-items: center;
 `;
 
 // Main logo
@@ -111,8 +115,8 @@ const Home = () => {
     <>
       <ThemeProvider theme={currentTheme}>
         {/* CSSBaseline required for setting background colour */}
-        <CSSBaseline />
-          <TopBlockDiv elevation={8} style={{ background: LightTitleBGGrad }}>
+        <CSSBaseline/>
+          <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
             <SiteHeader>
               <HeaderDiv>
                 <HeaderBar title="" lightTheme={true}>
@@ -137,17 +141,20 @@ const Home = () => {
             <StyledLink href="/signup">
               <PrimaryButton>JOIN TODAY</PrimaryButton>
             </StyledLink>
+            <Icon>
+              <ExpandMoreIcon />
+            </Icon>
           </TopBlockDiv>
 
           {/* How to section - Mostly implemented in HomeTemplates.tsx*/}
 
-          <SiteLayout>
+          <StyledSiteLayout>
             <Gap />
             <HomeTemplates />
             <StyledLink href="/signup">
               <PrimaryButton>JOIN TODAY</PrimaryButton>
             </StyledLink>
-          </SiteLayout>
+          </StyledSiteLayout>
           <Gap />
 
           {/* Footer - Implemented in HomeFooter.tsx*/}

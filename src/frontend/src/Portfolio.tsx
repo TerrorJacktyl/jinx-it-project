@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
-  HeaderBar, Copyright, SectionGrid, BackgroundImage
+  HeaderBar, Copyright, SectionGrid, BackgroundImage, HeaderBarSpacer,
 } from 'jinxui';
 
 /* At the moment displays portfolio with the hardcoded id, and only the first page
@@ -47,6 +47,7 @@ const Portfolio = () => {
       <ThemeProvider theme={LightTheme}>
         <HeaderBar lightTheme={true}/>
         <BackgroundImage url={defaultBackgroundSrc}>
+          <HeaderBarSpacer />
           <Typography
             variant="h1"
             gutterBottom>

@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
 const FormOuterDiv = styled.div`
-  height: 98%;
   width: 100vw;
   display: flex;
   align-items: center;
