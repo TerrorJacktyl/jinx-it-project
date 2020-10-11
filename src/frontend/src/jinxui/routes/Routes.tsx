@@ -7,5 +7,5 @@ export const Routes = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   PORTFOLIO_EDIT: "/edit",
-  PORTFOLIO_DISPLAY: "/portfolio",
+  PORTFOLIO_DISPLAY: "/u/:username",
 }

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "jinxui";
 import API from "../../API";
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { TPortfolio, TPage, TSection, TPortfolioData, TPageData, TSectionData } from "../types/PortfolioTypes";
 import { ValidationError } from "yup";
 
@@ -21,7 +21,7 @@ export const useUser = () => {
 
   const LOGIN_PATH = "auth/token/login";
   const LOGOUT_PATH = "auth/token/logout";
-  const ACCOUNT_PATH = "api/accounts/me";
+  const ACCOUNT_PATH = "api/accounts";
   const SIGNUP_PATH = "auth/users";
   const IMAGES_PATH = "api/images";
   const PORTFOLIOS_PATH = "api/portfolios";
@@ -248,7 +248,7 @@ export const useUser = () => {
     konfig: AxiosRequestConfig = state.config
   ) {
     const result = API.put(
-      ACCOUNT_PATH,
+      ACCOUNT_PATH + "/me",
       {
         first_name: first_name,
         last_name: last_name,
@@ -322,10 +322,23 @@ export const useUser = () => {
 
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
     try {
-      const response = await API.get(ACCOUNT_PATH, konfig);
+      const response = await API.get(ACCOUNT_PATH + "/me", konfig);
       if ("first_name" in response.data) {
         return response.data;
       }
+    } catch (error) {
+      throw handleError(error);
+    }
+  }
+
+  async function getAccountDetailsFromUsername(username: string): Promise<{
+    first_name: string,
+    last_name: string,
+    primary_portfolio: number,
+  }>{
+    try {
+      const response = await API.get(ACCOUNT_PATH + `?username=${username}`, state.config);
+      return response.data[0]
     } catch (error) {
       throw handleError(error);
     }
@@ -445,6 +458,7 @@ export const useUser = () => {
     getSavedLightThemeMode,
     getImage,
     getAccountDetails,
+    getAccountDetailsFromUsername,
     handleError,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).

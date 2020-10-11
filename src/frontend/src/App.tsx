@@ -5,9 +5,8 @@ import Signup from "./Signup";
 import Home from "./Home";
 import Edit from "./Edit";
 import Portfolio from "./Portfolio";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, Routes } from "jinxui";
-
 
 function App() {
   const app = (
@@ -21,7 +20,9 @@ function App() {
             <Route path={Routes.LOGIN} exact component={Login} />
             <Route path={Routes.SIGNUP} exact component={Signup} />
             <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
-            <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={Portfolio} />
+            <Route path={Routes.PORTFOLIO_DISPLAY} exact render={
+              ({match}: RouteComponentProps<{username: string}>) => <Portfolio username={match.params.username} />
+            } />
           </Switch>
         </div>
       </Router>
