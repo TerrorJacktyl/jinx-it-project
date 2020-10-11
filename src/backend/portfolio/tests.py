@@ -685,14 +685,16 @@ class SectionBulkTest(UserMixin, APITestCase):
                 'type': 'text',
                 'content': 'novices rehearing leafier stationer',
             })
+            for i, sec in enumerate(model):
+                sec['number'] = i
+
             response = self.client.put(
                 path,
                 model,
                 format='json'
             )
-            for i in range(len(model)):
-                model[i]['id'] = response.json()[i]['id']
-                model[i]['number'] = i
+            for i, sec in enumerate(model):
+                sec['id'] = response.json()[i]['id']
 
             self.assertEqual(response.json(), model)
 
@@ -716,6 +718,8 @@ class SectionBulkTest(UserMixin, APITestCase):
                 'type': 'text',
                 'content': 'possessive colonoscopies suburbans',
             })
+            for i, sec in enumerate(model):
+                sec['number'] = i
 
             response = self.client.put(
                 path,
@@ -723,6 +727,5 @@ class SectionBulkTest(UserMixin, APITestCase):
                 format='json'
             )
             model[1]['id'] = response.json()[1]['id']
-            for i in range(len(model)):
-                model[i]['number'] = i
+
             self.assertEqual(response.json(), model)
