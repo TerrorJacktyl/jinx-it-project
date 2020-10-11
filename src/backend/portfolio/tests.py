@@ -100,6 +100,7 @@ class PortfolioTest(UserMixin, PortfolioMixin, APITestCase):
             'owner': self.portfolio.owner.id,
             'name': self.portfolio.name,
             'pages': list(map(lambda p: p.id, self.portfolio.pages.all())),
+            'private': self.portfolio.private,
         })
 
     def test_portfolio_update(self):
