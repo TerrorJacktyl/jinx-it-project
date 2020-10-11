@@ -49,7 +49,6 @@ const Portfolio = () => {
         <BackgroundImage url={defaultBackgroundSrc}>
           <Typography
             variant="h1"
-            color="primary"
             gutterBottom>
             {portfolio ? portfolio.name : "loading"}
           </Typography>

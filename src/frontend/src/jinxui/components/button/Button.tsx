@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { ButtonProps } from "@material-ui/core";
-import { StylesProvider, makeStyles } from "@material-ui/core/styles";
+import { StylesProvider } from "@material-ui/core/styles";
 import { LightPrimaryButtonGrad, LightPrimaryButtonGradHover } from "jinxui"
 
 

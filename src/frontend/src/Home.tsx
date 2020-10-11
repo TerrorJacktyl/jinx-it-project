@@ -2,14 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import Typography from "@material-ui/core/Typography";
 import CSSBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider, useTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper"
 import {
   SiteLayout,
   PrimaryButton,
   SecondaryButton,
   useUser,
-  DarkTheme,
   LightTheme,
   LightTitleBGGrad,
   HeaderBar,
@@ -53,10 +52,6 @@ const StyledLogin = styled(SecondaryButton)`
   margin-left: 20px;
   margin-bottom: 0px;
   height: 30px;
-`;
-
-const LogoDiv = styled.div`
-  text-align: center;
 `;
 
 const JinxLogo = styled.img`
@@ -105,18 +100,6 @@ const CatchPhrase = styled.h3`
     font-size: 20px;
   }
 `;
-
-const SampleBody = styled.p`
-  padding-top: 20px;
-  font-family: "Heebo", sans-serif;
-  font-weight: 80;
-  font-size: 18px;
-  line-height: 30px;
-
-  text-align: justify;
-  letter-spacing: 0.1em;
-`;
-
 
 
 const currentTheme = LightTheme

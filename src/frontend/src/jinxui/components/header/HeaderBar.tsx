@@ -12,10 +12,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import {
   UserAvatarDropdown,
   HeaderButton,
-  LightTheme,
-  DarkTheme,
-  LightShadowColour,
-  DarkShadowColour,
   LightHeaderGrad,
   DarkHeaderGrad,
 } from "jinxui";

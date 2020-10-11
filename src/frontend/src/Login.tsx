@@ -6,16 +6,13 @@ import { Formik, Form, Field } from "formik";
 
 import * as Yup from "yup";
 import {
-  ErrorMessage,
   FormDiv,
-  FormEntry,
   PrimaryButton,
   SecondaryButton,
   AccountPageDiv,
   FormAlert,
   Routes,
   useUser,
-  DarkTheme,
   LightTheme,
   LightTitleBGGrad,
   HeaderBar,

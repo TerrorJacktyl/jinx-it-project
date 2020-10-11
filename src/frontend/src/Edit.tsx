@@ -7,14 +7,13 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
-import { Button, CssBaseline, Typography } from "@material-ui/core";
+import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 
 import { TextField } from "formik-material-ui";
 
 import {
   ErrorMessage,
-  FormDiv,
   LightTheme,
   DarkTheme,
   useUser,
@@ -30,7 +29,7 @@ import {
   Routes,
 } from "jinxui";
 
-import { TSection, TPortfolioData, TPageData, TSectionData, } from "./jinxui/types/PortfolioTypes"
+import { TSection } from "./jinxui/types/PortfolioTypes"
 
 const FRONT_END_URL = "http://localhost:3000/";
 

@@ -3,6 +3,7 @@ import { UserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig } from "axios";
 import { TPortfolio, TPage, TSection, TPortfolioData, TPageData, TSectionData } from "../types/PortfolioTypes";
+import { ValidationError } from "yup";
 
 /**
  * The 'user' hook
@@ -168,7 +169,7 @@ export const useUser = () => {
     // const name = data.name ?
 
     if (!data) {
-      throw "Portfolio data is null"
+      throw ("Portfolio data is null")
     }
     try {
       const response = await API.post(
