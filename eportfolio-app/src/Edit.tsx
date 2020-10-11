@@ -146,6 +146,7 @@ const Edit = () => {
         const newSection = { ...section, ...uidPair };
         return newSection;
       })
+      console.log(IdSections);
       setSections(IdSections); 
     }
 
@@ -160,6 +161,15 @@ const Edit = () => {
     const index = sections.findIndex((section: TEditSection) => section.uid === key);
     var newSections = sections
     newSections[index].path = response.path
+    setSections(newSections);
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+    const index = sections.findIndex((section: TEditSection) => section.uid === key);
+    var newSections = sections
+    console.log(newSections);
+    newSections[index].content = e.target.value
+    console.log(newSections);
     setSections(newSections);
   }
 
@@ -245,6 +255,7 @@ const Edit = () => {
 //                  };
                   setSubmitting(true);
                   // TODO: Add seperate function for updating an existing portoflio
+                  // TODO: Remove uid field from each section object before submission
                   postFullPortfolio(
                     portfolio_data, 
                     [page_data], 
@@ -323,7 +334,9 @@ const Edit = () => {
                           return (
                             TextSectionInput(
                               section.name,
-                              section.uid
+                              section.content,
+                              section.uid,
+                              handleChange
                               // TODO: Fix implicit any type error coming from initial values, currently commented out
                               /*touched={touched[section.uid]}
                               errors={errors[section.uid]}*/
@@ -343,7 +356,9 @@ const Edit = () => {
                             ImageTextSectionInput(
                               section.name,
                               section.uid,
+                              section.content,
                               section.path,
+                              handleChange,
                               addImageResponse
                               // TODO: Fix implicit any type error coming from initial values, currently commented out
                               /*touched[section.uid],
@@ -378,7 +393,7 @@ const Edit = () => {
                       awesomeImageResponse,
                       setAwesomeImageResponse
                     )}
-                    <BetweenSections />
+                    <BetweenSections />*/}
                     <BottomButtonsDiv>
                       <PrimaryButton type="submit">PUBLISH</PrimaryButton>
                       <a href={Routes.HOME}>
@@ -389,7 +404,7 @@ const Edit = () => {
                       <ErrorMessage>
                         Error signing up. Please try again later.
                       </ErrorMessage>
-                    ) : null}*/}
+                    ) : null}
                   </Form>
                 )}
               </Formik>

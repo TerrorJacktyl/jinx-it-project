@@ -12,9 +12,11 @@ import {
 function ImageTextSectionInput(
   title: string,
   key: string,
+  value: string,
 //  touched: any,
 //  errors: any,
   path: any,
+  handleChange: any,
   setImageResponse: any
 ) {
   return (
@@ -22,7 +24,7 @@ function ImageTextSectionInput(
       <PaperSection title={title}>
         <TwoColumnSectionDiv>
           <div>
-            {TextFieldSubSection(key, 18)}
+            {TextFieldSubSection(key, value, handleChange, 18)}
             {/*errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null*/}
           </div>
           <div>
