@@ -5,12 +5,12 @@ from . import views
 
 urlpatterns = [
     path(
-        '',
+        'accounts',
         views.AccountList.as_view(),
         name='account_list',
     ),
     path(
-        '<account_id>',
+        'accounts/<account_id>',
         views.AccountDetail.as_view(),
         name='account_detail',
     ),
