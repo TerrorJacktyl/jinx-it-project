@@ -43,7 +43,7 @@ const StyledDivCenter = styled.div`
 const StyledDivRight = styled.div`
   padding-right: 0px;
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
 `;
 

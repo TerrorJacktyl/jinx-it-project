@@ -49,7 +49,7 @@ const TopBlockDiv = styled(Paper)`
 const StyledLogin = styled(SecondaryButton)`
   margin-top: 0px;
   margin-right: 30px;
-  margin-left: 20px;
+  margin-left: 0px;
   margin-bottom: 0px;
   height: 30px;
 `;

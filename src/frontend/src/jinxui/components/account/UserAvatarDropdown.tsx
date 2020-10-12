@@ -24,6 +24,10 @@ const StyledInnerName = styled.div`
   }
 `;
 
+const DivWrapper = styled.div`
+  padding-right: 10px;
+`
+
 const UserAvatarDropdown = () => {
   const [open, setOpen] = React.useState(false);
   const [logoutRedirect, setLogoutRedirect] = React.useState(false);
@@ -82,7 +86,7 @@ const UserAvatarDropdown = () => {
   if (logoutRedirect) return onLogout();
   else
     return (
-      <>
+      <DivWrapper>
         {userData.firstName ? (
           <StyledName
             ref={anchorRef}
@@ -125,7 +129,7 @@ const UserAvatarDropdown = () => {
             </MenuItem>
           </PrimaryMenu>
         </ClickAwayListener>
-      </>
+      </DivWrapper>
     );
 };
 
