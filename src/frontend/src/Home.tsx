@@ -23,6 +23,7 @@ const SiteHeader = styled.header`
 const HeaderDiv = styled.div`
   max-width: 90%;
   padding: 0.6rem 0.5rem 0.2rem;
+  margin: auto;
 `;
 
 const StyledLink = styled.a`
