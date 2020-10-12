@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from "@material-ui/core/styles";
+import EditIcon from "@material-ui/icons/Edit";
+import { Button } from "@material-ui/core";
 
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
-  HeaderBar, Copyright, SectionGrid, BackgroundImage
+  HeaderBar, Copyright, SectionGrid, BackgroundImage,
+  Routes
 } from 'jinxui';
 
 /* At the moment displays portfolio with the hardcoded id, and only the first page
@@ -23,6 +27,12 @@ const Portfolio = () => {
   const [currPage] = useState<number>(0);
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
+  const [editRedirect, setEditRedirect] = useState(false);
+
+  const onEdit = () => {
+    // At the moment, this fails if a portfolio hasn't been created yet.
+    return <Redirect to={Routes.PORTFOLIO_EDIT} />;
+  };
 
   // Updating portfolio/page/section data
   useEffect(() => {
@@ -41,25 +51,40 @@ const Portfolio = () => {
   // Used to show background image capability: derive from theme eventually
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
-  return (
-    <>
-      <CssBaseline />
-      <ThemeProvider theme={LightTheme}>
-        <HeaderBar />
-        <BackgroundImage url={defaultBackgroundSrc}>
-          <Typography
-            variant="h1"
-            gutterBottom>
-            {portfolio ? portfolio.name : "loading"}
-          </Typography>
-          <SectionGrid sections={sections} />
-          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
-            <Copyright text={userData.name} />
-          </Container>
-        </BackgroundImage>
-      </ThemeProvider>
-    </>
-  );
+  if (editRedirect){
+    return onEdit();
+  }
+  else{
+    return (
+      <>
+        <CssBaseline />
+        <ThemeProvider theme={LightTheme}>
+          <HeaderBar />
+          <BackgroundImage url={defaultBackgroundSrc}>
+            <Button
+              style={{ position: "absolute", top: 50, right: 0}}
+              onClick={() => {
+                setEditRedirect(true);
+              }}
+              color="inherit"
+            >
+              <EditIcon style={{ fontSize: 40 }} />
+            </Button>
+            <Typography
+              variant="h1"
+              gutterBottom
+              style={{ paddingTop: "35px", marginBottom: "10px"}}>
+              {portfolio ? portfolio.name : "loading"}
+            </Typography>
+            <SectionGrid sections={sections} />
+            <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
+              <Copyright text={userData.name} />
+            </Container>
+          </BackgroundImage>
+        </ThemeProvider>
+      </>
+    );
+  }
 }
 
 export default Portfolio;
