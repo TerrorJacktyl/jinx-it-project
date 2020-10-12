@@ -26,8 +26,7 @@ const HeaderDiv = styled.div`
 `;
 
 const StyledLink = styled.a`
-  // text-decoration: none;
-  // position: relative;
+  text-decoration: none;
 `;
 
 const TopBlockDiv = styled(Paper)`
