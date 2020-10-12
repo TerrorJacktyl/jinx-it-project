@@ -66,6 +66,17 @@ export const useUser = () => {
     }
   }
 
+  async function savePortfolioId(id: number) {
+    try {
+      await updateState({
+        ...state,
+        portfolioId: id,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async function switchLightThemeMode() {
     try {
       await updateState({
@@ -267,6 +278,10 @@ export const useUser = () => {
     }
   }
 
+  function getSavedPortfolioId() {
+    return state.portfolioId;
+  }
+
   function getSavedLightThemeMode() {
     return state.lightThemeMode;
   }
@@ -441,6 +456,7 @@ export const useUser = () => {
       name: `${state.firstName} ${state.lastName}`,
     },
     login,
+    savePortfolioId,
     switchLightThemeMode,
     logout,
     signup,
@@ -455,6 +471,7 @@ export const useUser = () => {
     getPages,
     getSections,
     getFullPortfolio,
+    getSavedPortfolioId,
     getSavedLightThemeMode,
     getImage,
     getAccountDetails,
