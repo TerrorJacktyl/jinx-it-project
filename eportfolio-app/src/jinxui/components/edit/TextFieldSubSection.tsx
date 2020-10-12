@@ -7,7 +7,7 @@ const TextFieldSubSection = (key: string, value:string, handleChange: any, rows:
     <Field
       component={TextField}
       name={key}
-      value={value}
+      defaultValue={value}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, key)}
       id="standard-full-width"
       style={{ margin: 0, marginBottom: 15 }}

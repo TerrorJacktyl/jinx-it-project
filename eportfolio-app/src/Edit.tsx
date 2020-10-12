@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
-import { TPage, TSection, TEditSection } from "./Types";
+import { TPortfolio, TPage, TSection, TEditSection } from "./Types";
 import {
   ThemeProvider,
   createMuiTheme,
@@ -105,19 +105,13 @@ const BetweenSections = () => {
 const Edit = () => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
+  const blankImage = FRONT_END_URL + "blank_user.png"
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
-//  const [bioImageResponse, setBioImageResponse] = useState({
-//    path: FRONT_END_URL + "blank_user.png",
-//    id: null,
-//  });
-//  const [awesomeImageResponse, setAwesomeImageResponse] = useState({
-//    path: FRONT_END_URL + "blank_user.png",
-//    id: null,
-//  });
   const blankImagePath = FRONT_END_URL + "blank_user.png";
   const {
     postFullPortfolio,
+    putFullPortfolio,
     putSections,
     postPortfolio,
     postPage,
@@ -129,7 +123,7 @@ const Edit = () => {
   } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
-  const [portfolioId, setPortfolioId] = useState(-1);
+  const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TEditSection[]>([]);
   // const classes = useStyles();
@@ -139,10 +133,10 @@ const Edit = () => {
     const fetchExistingPortfolio = async () => {
       const portfolioId = await getSavedPortfolioId();
       const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
-      setPortfolioId(portfolioId);
+      setPortfolio(portfolio);
       setPages(pages);
       const IdSections = sections.map((section: TSection) => {
-        const uidPair = { 'uid': uuidv4() };
+        const uidPair = { uid: uuidv4() };
         const newSection = { ...section, ...uidPair };
         return newSection;
       })
@@ -152,11 +146,17 @@ const Edit = () => {
 
     if (existingPortfolio) {
       fetchExistingPortfolio();
+    } else {
+      const newPortfolio = { name: "" }
+      const newPage = [{ name: "home", number: 0 }] as TPage[]
+      const newSection = [{ name: "First", number: 0, content: "", type: "text", uid: uuidv4()}] as TEditSection[]
+      setPortfolio(newPortfolio);
+      setPages(newPage);
+      setSections(newSection);
     }
   }, []);
 
   // Changes the path of an existing image section to an uploaded image
-  // Watch out for key type as it may be string and uid may be number
   const addImageResponse = (key: any, response: any) => {
     const index = sections.findIndex((section: TEditSection) => section.uid === key);
     var newSections = sections
@@ -164,10 +164,12 @@ const Edit = () => {
     setSections(newSections);
   }
 
+  // Updates a section's content if it has been changed within the text field
+  /* Maybe be better to do this through formik with .values as it was originally implemented
+     but this works for now */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
     const index = sections.findIndex((section: TEditSection) => section.uid === key);
     var newSections = sections
-    console.log(newSections);
     newSections[index].content = e.target.value
     console.log(newSections);
     setSections(newSections);
@@ -202,131 +204,65 @@ const Edit = () => {
               <FormTitle>Enter your information</FormTitle>
               <Formik
                 // TODO: Add the initial case for a new portfolio, and add a check on props 
-                // Maybe be helpful to use mapValuesToProps
+                // Maybe be more helpful to use mapValuesToProps
+                // TEST: filter and reduce for sections now may be reduncant as we are handling onChange manually
                 initialValues={
                   sections.filter((section: any) => {
-                    return (section.type === "text");
+                    return (section.type === "text" || section.type === "image_text");
                   })
                   .reduce((acc, currSection) => {
                     const newPair = { [currSection.uid]: currSection.content };
                     const newAcc = { ...acc, ...newPair };
+                    console.log(newAcc);
                     return newAcc;
                     // TODO: Initialise Accumulator with existing portfolio name
-                  }, { websiteName: "", })
+                  }, { portfolioName: "", })
                 }
-//                  websiteName: "",
-//                  biography: "",
-//                  academicHistory: "",
-//                  professionalHistory: "",
                 // TODO: Redo EditSchema for dynamic sections
                 validationSchema={EditSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                  const portfolio_data = {
-                    name: values.websiteName,
-                  };
-                  const page_data = {
-                    name: "home",
-                    number: 0,
-                  };
-//                  const bio_data = {
-//                    name: "biography",
-//                    number: 0,
-//                    image: bioImageResponse.id,
-//                    content: values.biography,
-//                    type: "image_text",
-//                  };
-//                  const academic_data = {
-//                    name: "academic_history",
-//                    number: 0,
-//                    content: values.academicHistory,
-//                    type: "text",
-//                  };
-//                  const awesome_data = {
-//                    name: "awesome_image",
-//                    number: 0,
-//                    image: awesomeImageResponse.id,
-//                    type: "image",
-//                  };
-//                  const professional_data = {
-//                    name: "professional_history",
-//                    number: 0,
-//                    content: values.professionalHistory,
-//                    type: "text",
-//                  };
                   setSubmitting(true);
-                  // TODO: Add seperate function for updating an existing portoflio
                   // TODO: Remove uid field from each section object before submission
-                  postFullPortfolio(
-                    portfolio_data, 
-                    [page_data], 
-                    sections
-                  ); 
+                  if (existingPortfolio) {
+                    putFullPortfolio(
+                      portfolio, 
+                      pages, 
+                      sections
+                    )
+                  } else {
+                    postFullPortfolio(
+                      portfolio, 
+                      pages, 
+                      sections
+                    ); 
+                  }
                   setSubmitting(false);
                   setRedirect(true);
-//                  postPortfolio(portfolio_data)
-//                    .then(function (portfolio_response: any) {
-//                      const portfolio_id = portfolio_response.data.id;
-//                      postPage(portfolio_id, page_data)
-//                        .then(function (page_response: any) {
-//                          console.log(page_response);
-//                          const page_id = page_response.data.id;
-//                          PostSection(
-//                            postSection,
-//                            portfolio_id,
-//                            page_id,
-//                            bio_data
-//                          );
-//                          PostSection(
-//                            postSection,
-//                            portfolio_id,
-//                            page_id,
-//                            academic_data
-//                          );
-//                          PostSection(
-//                            postSection,
-//                            portfolio_id,
-//                            page_id,
-//                            awesome_data
-//                          );
-//                          PostSection(
-//                            postSection,
-//                            portfolio_id,
-//                            page_id,
-//                            professional_data
-//                          );
-//                        })
-//                        .catch(function (error: any) {
-//                          console.log(error);
-//                          setSubmitting(false);
-//                        });
-//                      savePortfolioId(parseInt(portfolio_id));
-//                      setSubmitting(false);
-//                      setRedirect(true);
-//                    })
-//                    .catch(function (error: any) {
-//                      setSubmittionError(true);
-//                      setSubmitting(false);
-//                      console.log(error);
-//                      console.log(submittionError);
-//                    });
                 }}
               >
                 {({ errors, touched, isSubmitting }) => (
                   <Form>
-                    <PortfolioNameSectionInput
-                      title={"Website Name*"}
-                      sectionName={"websiteName"}
-                    >
-                      <Field
-                        component={TextField}
-                        className={"websiteName"}
-                        name={"websiteName"}
-                        id="standard-full-width"
-                        style={{ margin: 0 }}
-                        fullWidth
-                        color="secondary"
-                      />
-                    </PortfolioNameSectionInput>
+                    { portfolio !== null ? 
+                      <PortfolioNameSectionInput
+                        title={"Portfolio Name*"}
+                        sectionName={"portfolioName"}
+                      >
+                        <Field
+                          component={TextField}
+                          name={"portfolioName"}
+                          defaultValue={portfolio.name}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            var newPortfolio = portfolio
+                            newPortfolio.name = e.target.value
+                            setPortfolio(newPortfolio);
+                          }}
+                          id="standard-full-width"
+                          style={{ margin: 0 }}
+                          fullWidth
+                          color="secondary"
+                        />
+                      </PortfolioNameSectionInput>
+                    : null}
                     <BetweenSections />
                     {(existingPortfolio && sections.length !== 0)
                       ? sections.map((section: TEditSection) => {

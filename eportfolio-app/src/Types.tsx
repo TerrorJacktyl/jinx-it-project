@@ -3,17 +3,17 @@
    types defined within your file */
 
 export type TPortfolio = {
-  id: number,
-  owner: number
+  id?: number,
+  owner?: number
   name: string,
-  pages: number[]
+  pages?: number[] 
 } | null;
 
 export type TPage = {
   id: number,
   name: string,
   number: number,
-  sections: number[]
+  sections?: number[]
 };
 
 export interface TSection {
