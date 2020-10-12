@@ -135,6 +135,7 @@ export function BackgroundImage(props: any) {
         backgroundRepeat: "no-repeat" /* Do not repeat the image */,
         backgroundSize:
           "cover" /* Resize the background image to cover the entire container */,
+        minHeight: "100vh"
       },
     })
   );
