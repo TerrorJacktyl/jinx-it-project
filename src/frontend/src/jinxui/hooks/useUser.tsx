@@ -66,17 +66,6 @@ export const useUser = () => {
     }
   }
 
-  async function savePortfolioId(id: number) {
-    try {
-      await updateState({
-        ...state,
-        portfolioId: id,
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async function switchLightThemeMode() {
     try {
       await updateState({
@@ -262,8 +251,20 @@ export const useUser = () => {
     return result;
   }
 
-  function getSavedPortfolioId() {
-    return state.portfolioId;
+  // this should probably be merged into setAccountDetails
+  async function setPrimaryPortfolio(id: number) {
+    try {
+      const result = await API.patch(
+        ACCOUNT_PATH + "/me",
+        {
+          primary_portfolio: id,
+        },
+        state.config
+      );
+      return result;
+    } catch (e) {
+      throw e;
+    }
   }
 
   function getSavedLightThemeMode() {
@@ -440,11 +441,11 @@ export const useUser = () => {
       name: `${state.firstName} ${state.lastName}`,
     },
     login,
-    savePortfolioId,
     switchLightThemeMode,
     logout,
     signup,
     setAccountDetails,
+    setPrimaryPortfolio,
     uploadImage,
     postPortfolio,
     postPage,
@@ -454,7 +455,6 @@ export const useUser = () => {
     getPages,
     getSections,
     getFullPortfolio,
-    getSavedPortfolioId,
     getSavedLightThemeMode,
     getImage,
     getAccountDetails,

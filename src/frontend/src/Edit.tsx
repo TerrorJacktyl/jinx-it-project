@@ -96,7 +96,7 @@ const Edit = () => {
     postPortfolio,
     postPage,
     postSection,
-    savePortfolioId,
+    setPrimaryPortfolio,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
@@ -209,7 +209,7 @@ const Edit = () => {
                           console.log(error);
                           setSubmitting(false);
                         });
-                      savePortfolioId(parseInt(portfolio_id));
+                      setPrimaryPortfolio(parseInt(portfolio_id));
                       setSubmitting(false);
                       setRedirect(true);
                     })
