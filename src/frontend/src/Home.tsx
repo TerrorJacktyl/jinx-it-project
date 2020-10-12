@@ -123,7 +123,7 @@ const Home = () => {
                   <StyledLink
                     href={
                       userData.authenticated
-                        ? Routes.PORTFOLIO_DISPLAY
+                        ? (Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username)
                         : Routes.LOGIN
                     }
                   >

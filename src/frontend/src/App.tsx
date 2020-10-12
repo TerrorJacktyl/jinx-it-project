@@ -20,7 +20,7 @@ function App() {
             <Route path={Routes.LOGIN} exact component={Login} />
             <Route path={Routes.SIGNUP} exact component={Signup} />
             <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
-            <Route path={Routes.PORTFOLIO_DISPLAY} exact render={
+            <Route path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"} exact render={
               ({match}: RouteComponentProps<{username: string}>) => <Portfolio username={match.params.username} />
             } />
           </Switch>

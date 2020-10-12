@@ -92,6 +92,7 @@ const Edit = () => {
     id: null,
   });
   const {
+    userData,
     postPortfolio,
     postPage,
     postSection,
@@ -103,7 +104,7 @@ const Edit = () => {
   // const classes = useStyles();
 
   const onPublish = () => {
-    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />;
   };
 
   if (redirect) {
