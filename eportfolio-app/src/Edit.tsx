@@ -175,6 +175,16 @@ const Edit = () => {
     setSections(newSections);
   }
 
+  // TEST: See if this works within formik's onSubmit, as onSubmit may be a custom hook
+  const unidentify = () => {
+    var noUidSections = sections.map((section: TEditSection) => {
+      const newSection = section 
+      delete newSection.uid
+      return newSection;
+    })
+    return noUidSections;
+  }
+
   const onPublish = async () => {
     return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
   };
@@ -205,7 +215,7 @@ const Edit = () => {
               <Formik
                 // TODO: Add the initial case for a new portfolio, and add a check on props 
                 // Maybe be more helpful to use mapValuesToProps
-                // TEST: filter and reduce for sections now may be reduncant as we are handling onChange manually
+                // TEST: filter and reduce for sections now may be redundant as we are handling onChange manually
                 initialValues={
                   sections.filter((section: any) => {
                     return (section.type === "text" || section.type === "image_text");
@@ -216,24 +226,29 @@ const Edit = () => {
                     console.log(newAcc);
                     return newAcc;
                     // TODO: Initialise Accumulator with existing portfolio name
-                  }, { portfolioName: "", })
+                  }, portfolio === null ? { portfolioName: "" } : { portfolioName: portfolio.name })
                 }
                 // TODO: Redo EditSchema for dynamic sections
                 validationSchema={EditSchema}
                 onSubmit={(values, { setSubmitting }) => {
+                  // TEST: This is purely a placeholder until onChange bug is solved
+                  const portfolio_data = {
+                    name: values.portfolioName
+                  }
                   setSubmitting(true);
-                  // TODO: Remove uid field from each section object before submission
+                  // TEST: Test for type errors and that uid is removed before submission
+                  const noUidSections = unidentify(); 
                   if (existingPortfolio) {
                     putFullPortfolio(
                       portfolio, 
                       pages, 
-                      sections
+                      noUidSections
                     )
                   } else {
                     postFullPortfolio(
-                      portfolio, 
+                      portfolio_data, 
                       pages, 
-                      sections
+                      noUidSections
                     ); 
                   }
                   setSubmitting(false);
@@ -250,7 +265,6 @@ const Edit = () => {
                         <Field
                           component={TextField}
                           name={"portfolioName"}
-                          defaultValue={portfolio.name}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             var newPortfolio = portfolio
                             newPortfolio.name = e.target.value
@@ -261,6 +275,7 @@ const Edit = () => {
                           fullWidth
                           color="secondary"
                         />
+                        {console.log(portfolio.name)}
                       </PortfolioNameSectionInput>
                     : null}
                     <BetweenSections />
