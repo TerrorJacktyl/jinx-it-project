@@ -1,11 +1,8 @@
-import React from "react"
-import styled from "styled-components"
-import Paper from "@material-ui/core/Paper"
-import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined"
-import { 
-  useUser,
-  UserImage,
- } from "jinxui"
+import React from "react";
+import styled from "styled-components";
+import Paper from "@material-ui/core/Paper";
+import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
+import { useUser, UserImage } from "jinxui";
 
 const StyledInput = styled.input`
   display: none;
@@ -45,6 +42,8 @@ const StyledImageUploadOverlay = styled(Paper)`
   }
   cursor: pointer;
 `;
+const FRONT_END_URL = process.env.REACT_APP_FRONT_URL;
+const image_path = FRONT_END_URL + "blank_image.svg";
 
 const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
   z-index: 2;
@@ -85,7 +84,15 @@ function UploadImageSubSection(
         />
         <ImageGrid>
           <ImageGridMain>
-            <UserImage src={path} />{" "}
+            <UserImage 
+              src={path === "" ? image_path : path} 
+              style={path === "" ? {
+                  opacity: "30%",
+                  padding: "40%",
+                } : {
+                  opacity: "100%",
+                  padding: 0,
+                }}/>
           </ImageGridMain>
           <StyledImageUploadOverlay elevation={0} square>
             Upload Image
@@ -99,4 +106,4 @@ function UploadImageSubSection(
   );
 }
 
-export default UploadImageSubSection
+export default UploadImageSubSection;

@@ -4,9 +4,10 @@ import { IUserContext } from "jinxui";
 const USER_DATA_KEY = "userData";
 
 export const defaultUserContext: IUserContext = {
-  username: '',
-  firstName: '',
-  token: '',
+  username: "",
+  firstName: "",
+  lastName: "",
+  token: "",
   portfolioId: 0,
   authenticated: false,
   theme: 'lightTheme',

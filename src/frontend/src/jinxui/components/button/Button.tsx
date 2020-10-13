@@ -3,6 +3,9 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { ButtonProps } from "@material-ui/core";
 import { StylesProvider } from "@material-ui/core/styles";
+import { LightPrimaryButtonGrad, LightPrimaryButtonGradHover } from "jinxui"
+
+
 
 const StartSecondaryButton = React.forwardRef(
   (props: ButtonProps, ref: any) => (
@@ -18,20 +21,16 @@ const StartSecondaryButton = React.forwardRef(
   )
 );
 
-const StartPrimaryButton = React.forwardRef((props: ButtonProps, ref: any) => (
-  <StylesProvider injectFirst>
-    <Button 
-      ref={ref} 
-      variant="contained" 
-      color="secondary"
-      style={{
-        fontWeight: 400,
-        fontSize: 16,
-        textTransform: "none",
-      }}
-      {...props} />
-  </StylesProvider>
-));
+const StartPrimaryButton = React.forwardRef((props: ButtonProps, ref: any) => {
+  return(
+    <StylesProvider injectFirst>
+      <Button
+        ref={ref} 
+        variant="contained" 
+        {...props} />
+    </StylesProvider>
+  )
+});
 
 const PrimaryButton = styled(StartPrimaryButton)`
   width: 200px;
@@ -41,6 +40,13 @@ const PrimaryButton = styled(StartPrimaryButton)`
   margin: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-weight: 400;
+  font-size: 16;
+  text-transform: none;
+  background: ${() => LightPrimaryButtonGrad};
+  :hover {
+    background: ${() => LightPrimaryButtonGradHover};
+  }
 `;
 
 const SecondaryButton = styled(StartSecondaryButton)`

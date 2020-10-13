@@ -1,15 +1,34 @@
 import React from "react";
 import styled from "styled-components";
+import CSSBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Paper from "@material-ui/core/Paper";
+import Icon from "@material-ui/core/Icon";
 import {
   SiteLayout,
   PrimaryButton,
   SecondaryButton,
   useUser,
-  DarkTheme,
+  LightTheme,
+  LightTitleBGGrad,
   HeaderBar,
   Routes,
+  HomeTemplates,
+  HomeFooter,
 } from "jinxui";
+
+// Mobile / responsive issues:
+// - Login doesn't appear to work from mobile phone
+
+// Constants required for various media quiries for mobile repsonsiveness
+const MAX_WIDTH = "630px";
+const MAX_HEIGHT = "800px";
+
+const StyledSiteLayout = styled(SiteLayout)`
+  // overflow-x: hidden;
+  // width: 100%;
+`;
 
 const SiteHeader = styled.header`
   margin-bottom: 1.45rem;
@@ -20,19 +39,61 @@ const HeaderDiv = styled.div`
   padding: 0.6rem 0.5rem 0.2rem;
 `;
 
+// Used for potential modifications to login link
 const StyledLink = styled.a`
-  text-decoration: none;
-  position: relative;
 `;
 
-const TopBlockDiv = styled.div`
-  background: #1c1c1c;
-  text-align: center;
+// Main top block div. Styled so that it takes up 100% of any screen
+const TopBlockDiv = styled(Paper)`
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
-  overflow: auto;
+  height: 100vh;
+  display: grid;
+  grid-template-rows:
+    minmax(80px,1fr) minmax(50px,400px) minmax(50px,1fr) 
+    minmax(max-content,1.2fr) minmax(100px,0.7fr) 40px;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
 `;
 
+// Main logo
+const JinxLogo = styled.img`
+  height: 90%;
+  width: 90%;
+  object-fit: scale-down;
+  opacity: 70%;
+  @media (max-width: ${() => MAX_WIDTH}) {
+    width: 70%;
+  }
+  @media (max-height: ${() => MAX_HEIGHT}) {
+    width: 70%;
+  }
+  )align-self: center;
+  justify-self: center;
+`;
+
+// "Your portfolio, made simple" styling
+const CatchPhrase = styled.h3`
+  font-family: "Heebo", sans-serif;
+  font-weight: 200;
+  font-size: 30px;
+  @media (max-width: 350px) {
+    width: 200px;
+  }
+  @media (max-width: ${() => MAX_WIDTH}) {
+    font-size: 23px;
+  }
+  @media (max-height: ${() => MAX_HEIGHT}) {
+    font-size: 23px;
+  }
+  margin: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-self: center;
+`;
+
+// Call to action button
 const StyledLogin = styled(SecondaryButton)`
   margin-top: 0px;
   margin-right: 30px;
@@ -41,114 +102,66 @@ const StyledLogin = styled(SecondaryButton)`
   height: 30px;
 `;
 
-const LogoDiv = styled.div`
-  text-align: center;
+// Nice big white space
+const Gap = styled.div`
+  height: 200px;
 `;
 
-const JinxLogo = styled.img`
-  display: block;
-  margin: 0 auto;
-  width: 340px;
-  height: 340px;
-  object-fit: cover;
-`;
-
-const BodyDiv = styled.div`
-  background: #434343;
-  color: #eeeeee;
-  overflow: auto;
-`;
-
-const JinxName = styled.h1`
-  font-family: "Josefin Sans", sans-serif;
-  font-style: normal;
-  font-weight: 250;
-  font-size: 130px;
-  line-height: 192px;
-  align-items: center;
-  text-align: center;
-  letter-spacing: 0.3em;
-  margin: 0;
-`;
-
-const CatchPhrase = styled.h3`
-  font-family: "Heebo", sans-serif;
-  font-weight: 100;
-  font-size: 36px;
-  line-height: 53px;
-  align-items: center;
-  text-align: center;
-  color: #eeeeee;
-`;
-
-const SampleBody = styled.p`
-  padding-top: 20px;
-  font-family: "Heebo", sans-serif;
-  font-weight: 80;
-  font-size: 18px;
-  line-height: 30px;
-
-  text-align: justify;
-  letter-spacing: 0.1em;
-`;
+const currentTheme = LightTheme;
 
 const Home = () => {
   const { userData } = useUser();
-
   return (
-    <div>
-      <ThemeProvider theme={DarkTheme}>
-        <BodyDiv>
-          <TopBlockDiv>
+    <>
+      <ThemeProvider theme={currentTheme}>
+        {/* CSSBaseline required for setting background colour */}
+        <CSSBaseline/>
+          <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
             <SiteHeader>
               <HeaderDiv>
-                <HeaderBar title="">
+                <HeaderBar title="" lightTheme={true}>
                   <StyledLink
-                      href={userData.authenticated ? Routes.PORTFOLIO_DISPLAY : Routes.LOGIN}
+                    href={
+                      userData.authenticated
+                        ? Routes.PORTFOLIO_DISPLAY
+                        : Routes.LOGIN
+                    }
                   >
-                    <StyledLogin>Login</StyledLogin>
+                    <StyledLogin>{userData.authenticated ? "My Portfolio" : "Login" }</StyledLogin>
                   </StyledLink>
                 </HeaderBar>
               </HeaderDiv>
             </SiteHeader>
-            <LogoDiv>
-              <JinxLogo src={require("images/Logo_Main.png")} />
-            </LogoDiv>
-            <JinxName>Jinx</JinxName>
+
+            {/* Top Block */}
+
+            <JinxLogo src={require("images/Logo_Main.svg")} />
+            <JinxLogo src={require("images/Logo_Main_Text_Only_Black.svg")} />
             <CatchPhrase>Your portfolio, made simple</CatchPhrase>
             <StyledLink href="/signup">
               <PrimaryButton>JOIN TODAY</PrimaryButton>
             </StyledLink>
+            <Icon>
+              <ExpandMoreIcon />
+            </Icon>
           </TopBlockDiv>
 
-          <SiteLayout>
-            <SampleBody>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </SampleBody>
-          </SiteLayout>
-        </BodyDiv>
+          {/* How to section - Mostly implemented in HomeTemplates.tsx*/}
+
+          <StyledSiteLayout>
+            <Gap />
+            <HomeTemplates />
+            <StyledLink href="/signup">
+              <PrimaryButton>JOIN TODAY</PrimaryButton>
+            </StyledLink>
+          </StyledSiteLayout>
+          <Gap />
+
+          {/* Footer - Implemented in HomeFooter.tsx*/}
+
+          <HomeFooter />
       </ThemeProvider>
-    </div>
+    </>
   );
 };
 

@@ -1,55 +1,50 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, Typography } from "@material-ui/core";
 import styled from "styled-components";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
-  ErrorMessage,
   FormDiv,
-  FormEntry,
   PrimaryButton,
   AccountPageDiv,
   FormAlert,
   Routes,
   useUser,
-  DarkTheme,
+  LightTheme,
   HeaderBar,
+  FormOuterDiv,
+  LightTitleBGGrad,
+  FormBottomButtonsDiv,
 } from "jinxui";
 
-const StyledFormEntry = styled(FormEntry)`
-  // font-family: "Heebo", sans-serif;
-  width: 300px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-`;
-
-const FormTitle = styled.h2`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
-  font-weight: 300;
-`;
-
-const FormText = styled.h4`
-  font-family: "Heebo", sans-serif;
-  color: #eeeeee;
-  font-weight: 300;
-`;
-
-const StyledButton = styled(PrimaryButton)`
-  margin: auto;
-  margin-top: 30px;
-`;
-
-const StyledFormDiv = styled(FormDiv)`
-  margin-top: 100px;
-  height: 700px;
-`;
+import { TextField } from "formik-material-ui";
 
 const StyledLink = styled.a`
   text-decoration: none;
   position: relative;
+`;
+
+// Main container for fields.
+const FormSectionsDiv = styled.div`
+  margin: 30px;
+  display: grid;
+  grid-template-rows:
+    93px
+    93px
+    93px
+    93px
+    93px
+    93px
+    max-content
+    30px
+    10px
+`;
+
+// Extra white space at top.
+const FormTitleDiv = styled.div`
+  margin-top: 30px;
 `;
 
 // We'll need to ensure that this schema is more strict than Django's user sign up
@@ -81,7 +76,6 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Signup = () => {
-
   const { userData } = useUser();
 
   /** Due to how the router protection works, this is a bit hackey.
@@ -96,104 +90,148 @@ const Signup = () => {
   const { signup } = useUser();
 
   const onRegister = () => {
-    return <Redirect to={Routes.PORTFOLIO_EDIT} />
-  }
+    return <Redirect to={Routes.PORTFOLIO_EDIT} />;
+  };
 
   const [submittionError, setSubmittionError] = useState("");
 
   if (redirect) return onRegister();
   else
     return (
-      <ThemeProvider theme={DarkTheme}>
+      <ThemeProvider theme={LightTheme}>
         <CssBaseline />
         <AccountPageDiv>
-          <HeaderBar></HeaderBar>
-          <StyledFormDiv>
-            <FormTitle>Sign up for free!</FormTitle>
-            {submittionError ? (
-              <FormAlert severity="error">
-                Error logging in: {submittionError}.
-              </FormAlert>
-            ) : null}
-            <Formik
-              initialValues={{
-                firstName: "",
-                lastName: "",
-                username: "",
-                email: "",
-                password: "",
-                passwordConfirm: "",
-              }}
-              validationSchema={SignupSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                setSubmitting(true);
-
-                // Sign up *and* login the user
-                signup(values.username, values.email, values.password, values.firstName, values.lastName)
-                  .then(() => {
-                    setSubmitting(false);
-                    setRedirect(true);
-                  })
-                  .catch(function (error) {
-                    setSubmitting(false);
-                    setSubmittionError(error);
-                  });
-              }}
+          <HeaderBar title="Sign Up" lightTheme={true}></HeaderBar>
+          <FormOuterDiv>
+            <div />
+            <FormDiv
+              variant="elevation"
+              elevation={8}
+              style={{ background: LightTitleBGGrad}}
             >
-              {({ errors, touched, isSubmitting }) => (
-                <Form>
-                  <StyledFormEntry name="firstName" placeholder="First Name" />
-                  {errors.firstName && touched.firstName ? (
-                    <ErrorMessage>{errors.firstName}</ErrorMessage>
-                  ) : null}
+              <FormTitleDiv>
+                <Typography variant="h5">Sign up for free!</Typography>
+              </FormTitleDiv>
+              {submittionError ? (
+                <FormAlert severity="error">
+                  Error logging in: {submittionError}.
+                </FormAlert>
+              ) : null}
+              <Formik
+                initialValues={{
+                  firstName: "",
+                  lastName: "",
+                  username: "",
+                  email: "",
+                  password: "",
+                  passwordConfirm: "",
+                }}
+                validationSchema={SignupSchema}
+                onSubmit={(values, { setSubmitting }) => {
+                  setSubmitting(true);
 
-                  <StyledFormEntry name="lastName" placeholder="Last Name" />
-                  {errors.lastName && touched.lastName ? (
-                    <ErrorMessage>{errors.lastName}</ErrorMessage>
-                  ) : null}
+                  // Sign up *and* login the user
+                  signup(
+                    values.username,
+                    values.email,
+                    values.password,
+                    values.firstName,
+                    values.lastName
+                  )
+                    .then(() => {
+                      setSubmitting(false);
+                      setRedirect(true);
+                    })
+                    .catch(function (error) {
+                      setSubmitting(false);
+                      setSubmittionError(error);
+                    });
+                }}
+              >
+                {({ errors, touched, isSubmitting }) => (
+                  <Form>
+                    <FormSectionsDiv>
+                      {/* <div> */}
 
-                  <StyledFormEntry name="username" placeholder="Username" />
-                  {errors.username && touched.username ? (
-                    <ErrorMessage>{errors.username}</ErrorMessage>
-                  ) : null}
+                    <Field
+                      component={TextField}
+                      id="firstName"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      name="firstName"
+                      label="First Name"
+                      />
 
-                  <StyledFormEntry
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                  />
-                  {errors.email && touched.email ? (
-                    <ErrorMessage>{errors.email}</ErrorMessage>
-                  ) : null}
+                    <Field
+                      component={TextField}
+                      id="lastName"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth 
+                      name="lastName" 
+                      label="Last Name" />
 
-                  <StyledFormEntry
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                  />
-                  {errors.password && touched.password ? (
-                    <ErrorMessage>{errors.password}</ErrorMessage>
-                  ) : null}
+                    <Field
+                      component={TextField}
+                      id="username"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth 
+                      name="username" 
+                      label="Username" />
 
-                  <StyledFormEntry
-                    name="passwordConfirm"
-                    type="password"
-                    placeholder="Confirm Password"
-                  />
-                  {errors.passwordConfirm && touched.passwordConfirm ? (
-                    <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
-                  ) : null}
-                  <StyledButton
-                    type="submit"
-                    disabled={isSubmitting}>
-                    JOIN
-                </StyledButton>
+                    <Field
+                      component={TextField}
+                      id="email"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      name="email"
+                      type="email"
+                      label="Email"
+                    />
 
-                  <StyledLink href={Routes.LOGIN}><FormText>Already have an account? Log In</FormText></StyledLink>
-                </Form>
-              )}
-            </Formik>
-          </StyledFormDiv>
+                    <Field
+                      component={TextField}
+                      id="password"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      name="password"
+                      type="password"
+                      label="Password"
+                    />
+
+                    <Field
+                      component={TextField}
+                      id="passwordConfirm"
+                      variant="outlined"
+                      color="primary"
+                      fullWidth
+                      name="passwordConfirm"
+                      type="password"
+                      label="Confirm Password"
+                    />
+                    <FormBottomButtonsDiv>
+
+                    <PrimaryButton 
+                      type="submit" 
+                      disabled={isSubmitting}>
+                      JOIN
+                    </PrimaryButton>
+                      </FormBottomButtonsDiv>
+
+                    <StyledLink href={Routes.LOGIN}>
+                      <Typography variant="subtitle2">Already have an account? Log In</Typography>
+                    </StyledLink>
+                    </FormSectionsDiv>
+                  </Form>
+                )}
+              </Formik>
+              <div />
+            </FormDiv>
+          </FormOuterDiv>
         </AccountPageDiv>
       </ThemeProvider>
     );
