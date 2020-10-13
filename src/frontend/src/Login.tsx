@@ -99,7 +99,7 @@ const Login = () => {
                     .then((config: any) => {
                       setRedirect(true);
                     })
-                    .catch((error) => {
+                    .catch((error: any) => {
                       setSubmittionError(error);
                       setSubmitting(false);
                     });

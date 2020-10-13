@@ -25,6 +25,7 @@ import {
   ImageTextSectionInput,
   PortfolioNameSectionInput,
   Routes,
+  PrimaryColumnDiv,
 } from "jinxui";
 
 import {  
@@ -219,7 +220,7 @@ const Edit = () => {
             </Button>
           </HeaderBar>
           <CssBaseline />
-          <StyledFormDiv>
+            <PrimaryColumnDiv>
             <div></div>
             <div>
               <FormTitle>Enter your information</FormTitle>
@@ -368,7 +369,7 @@ const Edit = () => {
               </Formik>
             </div>
             <div></div>
-          </StyledFormDiv>
+            </PrimaryColumnDiv>
         </ThemeProvider>
       </>
     );
