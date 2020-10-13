@@ -3,24 +3,33 @@
    types defined within your file */
 
 export type TPortfolio = {
-  id: number;
-  owner: number;
-  name: string;
-  pages: number[];
+  id?: number,
+  owner?: number
+  name: string,
+  pages?: number[] 
 } | null;
 
 export type TPage = {
-  id: number;
-  name: string;
-  number: number;
-  sections: number[];
+  id: number,
+  name: string,
+  number: number,
+  sections?: number[]
 };
 
-export interface TSection extends TSectionData {
-  id?: number;
-  type: string;
-  number: number;
-}
+export interface TSection {
+  id: number,
+  name: string,
+  type: string,
+  number: number,
+  content: string,
+  media: string,
+  image: number,
+  path: string,
+};
+
+export interface TEditSection extends TSection {
+  uid: string
+}; 
 
 export type TPortfolioData = {
   name: string;

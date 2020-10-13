@@ -3,4 +3,5 @@ export type {
   TPage,
   TSection,
   TSectionData,
+  TEditSection,
 } from "./PortfolioTypes";

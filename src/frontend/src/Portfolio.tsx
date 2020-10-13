@@ -77,7 +77,8 @@ const Portfolio = () => {
       <CssBaseline />
       <AccountPageDiv>
         <HeaderBar
-          title={portfolio !== null ? portfolio.name : null}
+          title={portfolio === null ? "" : portfolio.name}
+          lightTheme
         ></HeaderBar>
         <PageDiv>
           <PageName>
