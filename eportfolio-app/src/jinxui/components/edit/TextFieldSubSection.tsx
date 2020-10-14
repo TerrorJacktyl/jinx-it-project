@@ -2,7 +2,7 @@ import React from "react"
 import { Field } from "formik"
 import { TextField } from "formik-material-ui"
 
-const TextFieldSubSection = (key: string, value:string, handleChange: any, rows: number) => {
+const TextFieldSubSection = (key: string, value: string, handleChange: any, rows: number) => {
   return (
     <Field
       component={TextField}

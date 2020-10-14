@@ -209,7 +209,7 @@ export const useUser = () => {
 
   // TODO: Fix types and refactor to try catch
   async function putPage(portfolioId: any, page: any) {
-    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages" + page.id
+    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + page.id
     const result = await API.put(path, page, state.config)
       .then((response: any) => response.data)
       .catch((error: any) => {

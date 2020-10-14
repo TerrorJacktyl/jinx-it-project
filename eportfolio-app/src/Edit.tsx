@@ -61,7 +61,7 @@ const BottomButtonsDiv = styled.div`
 `;
 
 const EditSchema = Yup.object().shape({
-  websiteName: Yup.string().max(50, "Too Long!").required("Required"),
+  portfolioName: Yup.string().max(50, "Too Long!").required("Required"),
   sections: Yup.array().of(
     Yup.object().shape(
       {
@@ -193,177 +193,181 @@ const Edit = () => {
     return onPublish();
   } else {
     return (
-      <>
-        <ThemeProvider theme={appliedTheme}>
-          <HeaderBar>
-            <Button
-              style={{ height: "100%", borderRadius: 0 }}
-              onClick={() => {
-                switchLightThemeMode();
-                setTheme(!theme);
-              }}
-              color="inherit"
-            >
-              <SettingsBrightness />
-            </Button>
-          </HeaderBar>
-          <CssBaseline />
-          <StyledFormDiv>
-            <div></div>
-            <div>
-              <FormTitle>Enter your information</FormTitle>
-              <Formik
-                // TODO: Add the initial case for a new portfolio, and add a check on props 
-                // Maybe be more helpful to use mapValuesToProps
-                // TEST: filter and reduce for sections now may be redundant as we are handling onChange manually
-                initialValues={
-                  sections.filter((section: any) => {
-                    return (section.type === "text" || section.type === "image_text");
-                  })
-                  .reduce((acc, currSection) => {
-                    const newPair = { [currSection.uid]: currSection.content };
-                    const newAcc = { ...acc, ...newPair };
-                    console.log(newAcc);
-                    return newAcc;
-                    // TODO: Initialise Accumulator with existing portfolio name
-                  }, portfolio === null ? { portfolioName: "" } : { portfolioName: portfolio.name })
-                }
-                // TODO: Redo EditSchema for dynamic sections
-                validationSchema={EditSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                  // TEST: This is purely a placeholder until onChange bug is solved
-                  const portfolio_data = {
-                    name: values.portfolioName
-                  }
-                  setSubmitting(true);
-                  // TEST: Test for type errors and that uid is removed before submission
-                  const noUidSections = unidentify(); 
-                  if (existingPortfolio) {
-                    putFullPortfolio(
-                      portfolio, 
-                      pages, 
-                      noUidSections
-                    )
-                  } else {
-                    postFullPortfolio(
-                      portfolio_data, 
-                      pages, 
-                      noUidSections
-                    ); 
-                  }
-                  setSubmitting(false);
-                  setRedirect(true);
+      // null check here to ensure the initialValues will be populated with the portfolio name.
+      portfolio !== null ? (
+        <>
+          <ThemeProvider theme={appliedTheme}>
+            <HeaderBar>
+              <Button
+                style={{ height: "100%", borderRadius: 0 }}
+                onClick={() => {
+                  switchLightThemeMode();
+                  setTheme(!theme);
                 }}
+                color="inherit"
               >
-                {({ errors, touched, isSubmitting }) => (
-                  <Form>
-                    { portfolio !== null ? 
-                      <PortfolioNameSectionInput
-                        title={"Portfolio Name*"}
-                        sectionName={"portfolioName"}
-                      >
-                        <Field
-                          component={TextField}
-                          name={"portfolioName"}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            var newPortfolio = portfolio
-                            newPortfolio.name = e.target.value
-                            setPortfolio(newPortfolio);
-                          }}
-                          id="standard-full-width"
-                          style={{ margin: 0 }}
-                          fullWidth
-                          color="secondary"
-                        />
-                        {console.log(portfolio.name)}
-                      </PortfolioNameSectionInput>
-                    : null}
-                    <BetweenSections />
-                    {(existingPortfolio && sections.length !== 0)
-                      ? sections.map((section: TEditSection) => {
-                        if (section.type === "text") {
-                          return (
-                            TextSectionInput(
-                              section.name,
-                              section.content,
-                              section.uid,
-                              handleChange
-                              // TODO: Fix implicit any type error coming from initial values, currently commented out
-                              /*touched={touched[section.uid]}
-                              errors={errors[section.uid]}*/
-                            )
-                          );
-                        } else if (section.type === "image") {
+                <SettingsBrightness />
+              </Button>
+            </HeaderBar>
+            <CssBaseline />
+            <StyledFormDiv>
+              <div></div>
+              <div>
+                <FormTitle>Enter your information</FormTitle>
+                <Formik
+                  // TODO: Add the initial case for a new portfolio, and add a check on props 
+                  // Maybe be more helpful to use mapValuesToProps
+                  // TEST: filter and reduce for sections now may be redundant as we are handling onChange manually
+                  initialValues={
+                    sections.filter((section: any) => {
+                      return (section.type === "text" || section.type === "image_text");
+                    })
+                    .reduce((acc, currSection) => {
+                      const newPair = { [currSection.uid]: currSection.content };
+                      const newAcc = { ...acc, ...newPair };
+                      console.log(newAcc);
+                      return newAcc;
+                      // TODO: Initialise Accumulator with existing portfolio name
+                    }, portfolio === null ? {portfolioName: "Is this really happening? IM STILL NULL!"} : {portfolioName: portfolio.name})
+                  }
+                  // TODO: Redo EditSchema for dynamic sections
+                  validationSchema={EditSchema}
+                  onSubmit={(values, { setSubmitting }) => {
+                    // TEST: That this actually sends the editted name
+                    // Rewrite portfolio.name here instead of calling setPortfolio() as it will get sent anyway
+                    var portfolioData = portfolio
+                    portfolioData.name = values.portfolioName
+                    console.log("Im Submitting!")
+                    setSubmitting(true);
+                    // TEST: Test for type errors and that uid is removed before submission
+                    const noUidSections = unidentify(); 
+                    if (existingPortfolio) {
+                      putFullPortfolio(
+                        portfolioData, 
+                        pages, 
+                        noUidSections
+                      )
+                    } else {
+                      postFullPortfolio(
+                        portfolioData, 
+                        pages, 
+                        noUidSections
+                      ); 
+                    }
+                    setSubmitting(false);
+                    setRedirect(true);
+                  }}
+                >
+                  {({ errors, touched, isSubmitting }) => (
+                    <Form>
+                      { portfolio !== null ? 
+                        <PortfolioNameSectionInput
+                          title={"Portfolio Name*"}
+                          sectionName={"portfolioName"}
+                        >
+                          <Field
+                            component={TextField}
+                            name={"portfolioName"}
+  //                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+  //                            var newPortfolio = portfolio
+  //                            newPortfolio.name = e.target.value
+  //                            setPortfolio(newPortfolio);
+  //                          }}
+                            id="standard-full-width"
+                            style={{ margin: 0 }}
+                            fullWidth
+                            color="secondary"
+                          />
+                          {console.log(portfolio.name)}
+                        </PortfolioNameSectionInput>
+                      : null}
+                      <BetweenSections />
+                      {(existingPortfolio && sections.length !== 0)
+                        ? sections.map((section: TEditSection) => {
+                          if (section.type === "text") {
                             return (
-                              ImageSectionInput(
+                              TextSectionInput(
                                 section.name,
+                                section.content,
                                 section.uid,
-                                section.path, 
-                                addImageResponse
+                                handleChange
+                                // TODO: Fix implicit any type error coming from initial values, currently commented out
+                                /*touched={touched[section.uid]}
+                                errors={errors[section.uid]}*/
                               )
                             );
-                        } else {
-                          return (
-                            ImageTextSectionInput(
-                              section.name,
-                              section.uid,
-                              section.content,
-                              section.path,
-                              handleChange,
-                              addImageResponse
-                              // TODO: Fix implicit any type error coming from initial values, currently commented out
-                              /*touched[section.uid],
-                              errors[section.uid]*/
-                            )
-                          );
-                        }
-                      }) : null
-                    }
-                      {/*{ImageTextSectionInput(
-                        "Biography",
-                        "biography",
-                        touched.biography,
-                      errors.biography,
-                      bioImageResponse,
-                      setBioImageResponse
-                    )}
-                    <BetweenSections />
-                    {errors.academicHistory && touched.academicHistory ? (
-                      <ErrorMessage>{errors.academicHistory}</ErrorMessage>
-                    ) : null}
-                    <TextSectionInput
-                      title="Academic History"
-                      sectionName="academicHistory"
-                      touched={touched.academicHistory}
-                      errors={errors.academicHistory}
-                    />
-                    <BetweenSections />
-                    {ImageSectionInput(
-                      "Awesome Image",
-                      "awesomeImage",
-                      awesomeImageResponse,
-                      setAwesomeImageResponse
-                    )}
-                    <BetweenSections />*/}
-                    <BottomButtonsDiv>
-                      <PrimaryButton type="submit">PUBLISH</PrimaryButton>
-                      <a href={Routes.HOME}>
-                        <SecondaryButton>Cancel</SecondaryButton>
-                      </a>
-                    </BottomButtonsDiv>
-                    {submittionError ? (
-                      <ErrorMessage>
-                        Error signing up. Please try again later.
-                      </ErrorMessage>
-                    ) : null}
-                  </Form>
-                )}
-              </Formik>
-            </div>
-            <div></div>
-          </StyledFormDiv>
-        </ThemeProvider>
-      </>
+                          } else if (section.type === "image") {
+                              return (
+                                ImageSectionInput(
+                                  section.name,
+                                  section.uid,
+                                  section.path, 
+                                  addImageResponse
+                                )
+                              );
+                          } else {
+                            return (
+                              ImageTextSectionInput(
+                                section.name,
+                                section.uid,
+                                section.content,
+                                section.path,
+                                handleChange,
+                                addImageResponse
+                                // TODO: Fix implicit any type error coming from initial values, currently commented out
+                                /*touched[section.uid],
+                                errors[section.uid]*/
+                              )
+                            );
+                          }
+                        }) : null
+                      }
+                        {/*{ImageTextSectionInput(
+                          "Biography",
+                          "biography",
+                          touched.biography,
+                        errors.biography,
+                        bioImageResponse,
+                        setBioImageResponse
+                      )}
+                      <BetweenSections />
+                      {errors.academicHistory && touched.academicHistory ? (
+                        <ErrorMessage>{errors.academicHistory}</ErrorMessage>
+                      ) : null}
+                      <TextSectionInput
+                        title="Academic History"
+                        sectionName="academicHistory"
+                        touched={touched.academicHistory}
+                        errors={errors.academicHistory}
+                      />
+                      <BetweenSections />
+                      {ImageSectionInput(
+                        "Awesome Image",
+                        "awesomeImage",
+                        awesomeImageResponse,
+                        setAwesomeImageResponse
+                      )}
+                      <BetweenSections />*/}
+                      <BottomButtonsDiv>
+                        <PrimaryButton type="submit">PUBLISH</PrimaryButton>
+                        <a href={Routes.HOME}>
+                          <SecondaryButton>Cancel</SecondaryButton>
+                        </a>
+                      </BottomButtonsDiv>
+                      {submittionError ? (
+                        <ErrorMessage>
+                          Error signing up. Please try again later.
+                        </ErrorMessage>
+                      ) : null}
+                    </Form>
+                  )}
+                </Formik>
+              </div>
+              <div></div>
+            </StyledFormDiv>
+          </ThemeProvider>
+        </>) 
+      : null
     );
   }
 };
