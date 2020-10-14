@@ -6,10 +6,10 @@ import { ThemeProvider } from "@material-ui/core/styles";
 
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
-  HeaderBar, Copyright, SectionGrid, BackgroundImage
+  HeaderBar, Copyright, SectionGrid, BackgroundImage,
 } from 'jinxui';
 
-interface PortfolioProps  {
+interface PortfolioProps {
   username: string;
 }
 
@@ -17,7 +17,7 @@ interface PortfolioProps  {
   At the moment only the first page of portfolio is displayed.
   TODO: primary portfolio redirection
  */
-const Portfolio = ({username}: PortfolioProps) => {
+const Portfolio = ({ username }: PortfolioProps) => {
   const {
     userData,
     getFullPortfolio,
@@ -49,6 +49,7 @@ const Portfolio = ({username}: PortfolioProps) => {
 
   // Used to show background image capability: derive from theme eventually
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+
 
   return (
     <>

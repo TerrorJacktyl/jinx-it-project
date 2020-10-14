@@ -56,9 +56,11 @@ export { default as PortfolioNameSectionInput } from "./components/edit/Portfoli
 export { default as TextSectionInput } from "./components/edit/TextSectionInput";
 export { default as ImageSectionInput } from "./components/edit/ImageSectionInput";
 export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput";
+
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
-export { Routes } from "./routes/Routes";
+export { PortfolioDisplay } from "./routes/PortfolioDisplay";
+export { Routes} from "./routes/Routes";
 
 /* Context */
 export {
