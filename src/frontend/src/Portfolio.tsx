@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
-  HeaderBar, Copyright, SectionGrid, BackgroundImage,
+  HeaderBar, Copyright, SectionGrid, BackgroundImage, HeaderBarSpacer,
 } from 'jinxui';
 
 interface PortfolioProps {
@@ -55,8 +55,9 @@ const Portfolio = ({ username }: PortfolioProps) => {
     <>
       <CssBaseline />
       <ThemeProvider theme={LightTheme}>
-        <HeaderBar />
+        <HeaderBar lightTheme={true}/>
         <BackgroundImage url={defaultBackgroundSrc}>
+          <HeaderBarSpacer />
           <Typography
             variant="h1"
             gutterBottom>

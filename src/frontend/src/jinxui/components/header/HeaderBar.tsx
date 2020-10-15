@@ -18,28 +18,33 @@ import {
 
 import styled from "styled-components";
 
+// Ensure that app bar sticks to top and sides
 const StyledAppBar = styled(AppBar)`
   margin: 0px;
 `;
 
+// Three columns, left middle and right
 const StyledDivOuter = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: minMax(46px, max-content);
 `;
 
+//Left items
 const StyledDivLeft = styled.div`
   padding-left: 0px;
   display: flex;
   align-items: center;
 `;
 
+// Center items
 const StyledDivCenter = styled.div`
   display: flex;
   justify-content: center;
   align-self: center;
 `;
 
+// Right items
 const StyledDivRight = styled.div`
   padding-right: 0px;
   display: flex;
@@ -47,39 +52,43 @@ const StyledDivRight = styled.div`
   align-items: center;
 `;
 
+type HeaderBarProps = {
+  title?: string;
+  lightTheme: boolean;
+  children?: React.ReactNode;
+}
 
-const HeaderBar = (props: any) => {
+const HeaderBar = (props: HeaderBarProps) => {
   const trigger = useScrollTrigger();
   const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad
   return (
     <StylesProvider injectFirst>
-      <Slide appear={false} direction="down" in={!trigger}>
-        <StyledAppBar
-          color="inherit"
-          elevation={4}
-          style={{
-            background: headerGrad
-          }}
-          position="sticky"
-        >
-          <StyledDivOuter>
-            <StyledDivLeft>
-              <HeaderButton
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </HeaderButton>
-              <Typography variant="h6">{props.title}</Typography>
-            </StyledDivLeft>
-            <StyledDivCenter></StyledDivCenter>
-            <StyledDivRight>
-              <UserAvatarDropdown />
-              {props.children}
-            </StyledDivRight>
-          </StyledDivOuter>
-        </StyledAppBar>
-      </Slide>
+        <Slide appear={false} direction="down" in={!trigger}>
+          <StyledAppBar 
+            color="inherit"
+            elevation={4}
+            style={{
+              background: headerGrad
+            }}
+          >
+            <StyledDivOuter>
+              <StyledDivLeft>
+                <HeaderButton
+                  color="inherit"
+                  aria-label="menu"
+                >
+                  <MenuIcon />
+                </HeaderButton>
+                <Typography variant="h6">{props.title ? props.title : ""}</Typography>
+              </StyledDivLeft>
+              <StyledDivCenter></StyledDivCenter>
+              <StyledDivRight>
+                <UserAvatarDropdown />
+                {props.children}
+              </StyledDivRight>
+            </StyledDivOuter>
+          </StyledAppBar>
+        </Slide>
     </StylesProvider>
   );
 };

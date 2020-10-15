@@ -43,9 +43,9 @@ const PrimaryButton = styled(StartPrimaryButton)`
   font-weight: 400;
   font-size: 16;
   text-transform: none;
-  background: ${props => LightPrimaryButtonGrad};
+  background: ${() => LightPrimaryButtonGrad};
   :hover {
-    background: ${props => LightPrimaryButtonGradHover};
+    background: ${() => LightPrimaryButtonGradHover};
   }
 `;
 

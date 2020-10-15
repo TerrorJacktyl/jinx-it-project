@@ -1,12 +1,18 @@
 import React from "react";
+import styled from "styled-components"
 import "./App.css";
 import Login from "./Login";
 import Signup from "./Signup";
 import Home from "./Home";
 import Edit from "./Edit";
 import Portfolio from "./Portfolio";
+
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, PortfolioDisplay, Routes } from "jinxui";
+
+const OverallDiv = styled.div`
+  overflow-x: hidden;
+`;
 
 function App() {
   const app = (
@@ -14,7 +20,7 @@ function App() {
     // data without passing it as props everywhere
     <UserContextProvider>
       <Router>
-        <div className="App">
+        <OverallDiv className="App">
           <Switch>
             <Route path={Routes.HOME} exact component={Home} />
             <Route path={Routes.LOGIN} exact component={Login} />
@@ -25,7 +31,7 @@ function App() {
               ({ match }: RouteComponentProps<{ username: string }>) => <Portfolio username={match.params.username} />
             } />
           </Switch>
-        </div>
+        </OverallDiv>
       </Router>
     </UserContextProvider>
   );
