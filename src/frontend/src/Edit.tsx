@@ -295,13 +295,10 @@ const Edit = () => {
                     ) : null}
                     <BetweenSections />
                     {existingPortfolio && sections.length !== 0
-                      ? sections.map((section: TEditSection, i) => {
+                      ? sections.map((section: TEditSection) => {
                             return <TextSectionInput
                               key={section.uid}
                               section={section}
-                              // key={section.uid}
-                              // title={section.name}
-                              // value={section.content}
                               handleChange={handleChange}
                               sections={sections}
                               setSections={setSections}
