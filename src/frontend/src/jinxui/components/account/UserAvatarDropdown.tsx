@@ -109,6 +109,11 @@ const UserAvatarDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
+            {/*
+
+            This currently commented out but is left here for future purposes incase
+            the other menu item functionality is to be implemented in the future
+
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <AccountBoxIcon fontSize="small" />
@@ -121,6 +126,8 @@ const UserAvatarDropdown = () => {
               </ListItemIcon>
               <ListItemText primary="Preferences" />
             </MenuItem>
+            
+            */}
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <ExitToAppIcon />

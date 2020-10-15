@@ -1,11 +1,8 @@
+import { LightTheme } from "jinxui/theme/GlobalTheme";
 import React from "react";
 import styled from "styled-components";
 
 const LogoDiv = styled.div`
-  position: absolute;
-  left: 0%;
-  top: 0%;
-  bottom: 0%;
   display: flex;
   z-index: 1;
 `;
@@ -13,6 +10,7 @@ const LogoDiv = styled.div`
 const HeaderLogo = styled.img`
   margin: 5px;
   margin-right: 10px;
+  max-height: 33px;
 `;
 
 const LogoText = styled(HeaderLogo)`
@@ -21,13 +19,17 @@ const LogoText = styled(HeaderLogo)`
   }
 `;
 
-const LogoLink = () => (
+const LogoLink = (props: any) => {
+
+  return(
   <a href="/">
     <LogoDiv>
       <HeaderLogo src={require("images/Logo_Small.svg")} />
-      <LogoText src={require("images/Logo_Text.svg")} />
+      {props.lightTheme ? <LogoText src={require("images/Logo_Text_Dark.svg")} /> : 
+      <LogoText src={require("images/Logo_Text.svg")} /> }
     </LogoDiv>
   </a>
-);
+  )
+};
 
 export default LogoLink;

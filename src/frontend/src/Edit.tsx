@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
+import CloseIcon from '@material-ui/icons/Close';
 
 import { TextField } from "formik-material-ui";
 
@@ -100,7 +101,6 @@ const Edit = () => {
   } = useUser();
   const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
-  // const classes = useStyles();
 
   const onPublish = () => {
     return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
@@ -124,6 +124,15 @@ const Edit = () => {
               <SettingsBrightness />
             </Button>
           </HeaderBar>
+          <Button
+              style={{ position: "absolute", top: 50, right: 0}}
+              onClick={() => {
+                setRedirect(true);
+              }}
+              color="inherit"
+            >
+              <CloseIcon style={{ fontSize: 40 }} />
+            </Button>
           <CssBaseline />
           <PrimaryColumnDiv>
             <div></div>
@@ -265,7 +274,7 @@ const Edit = () => {
                     <BetweenSections />
                     <BottomButtonsDiv>
                       <PrimaryButton type="submit">PUBLISH</PrimaryButton>
-                      <a href={Routes.HOME}>
+                      <a href={Routes.PORTFOLIO_DISPLAY}>
                         <SecondaryButton>Cancel</SecondaryButton>
                       </a>
                     </BottomButtonsDiv>

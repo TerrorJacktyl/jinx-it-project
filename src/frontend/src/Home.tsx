@@ -119,7 +119,7 @@ const Home = () => {
           >
             <SiteHeader>
               <HeaderDiv>
-                <HeaderBar title="" lightTheme={true}>
+                <HeaderBar hideLogo title="" lightTheme={true}>
                   <StyledLink
                     href={
                       userData.authenticated
