@@ -25,7 +25,6 @@ import {
   ImageTextSectionInput,
   PortfolioNameSectionInput,
   Routes,
-  PrimaryColumnDiv,
 } from "jinxui";
 
 import {  
@@ -33,9 +32,6 @@ import {
   TPage, 
   TSection, 
   TEditSection,
-  TPortfolioData,
-  TPageData,
-  TSectionData
 } from "jinxui/types"
 
 const FRONT_END_URL = "http://localhost:3000/";
@@ -166,7 +162,6 @@ const Edit = () => {
     );
     var newSections = sections;
     newSections[index].content = e.target.value;
-    console.log(newSections);
     setSections(newSections);
   };
 
