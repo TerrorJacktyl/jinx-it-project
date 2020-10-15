@@ -52,6 +52,7 @@ export const useUser = () => {
           username: username,
           firstName: accDetails.first_name,
           lastName: accDetails.last_name,
+          portfolioId: accDetails.primary_portfolio,
           token: response.data["auth_token"],
           authenticated: true,
           config: config,

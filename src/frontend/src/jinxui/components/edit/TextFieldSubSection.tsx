@@ -1,12 +1,11 @@
 import React from "react"
 import { Field } from "formik"
-import { TextField } from "formik-material-ui"
+import { TextField } from "@material-ui/core"
 
 const TextFieldSubSection = (key: string, value: string, handleChange: any, rows: number) => {
   return (
-    <Field
-      component={TextField}
-      name={key}
+    <TextField
+      key={key}
       defaultValue={value}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, key)}
       id="standard-full-width"
