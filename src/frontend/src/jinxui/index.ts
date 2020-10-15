@@ -78,7 +78,15 @@ export {
 
 /* Types */
 export type { IUserContext, IThemeContext } from "./contexts/index";
-export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
+export type { 
+  TPortfolio, 
+  TPage, 
+  TSection, 
+  TSectionData, 
+  TEditSection,
+  TPortfolioData,
+  TPageData
+} from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";

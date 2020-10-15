@@ -33,6 +33,9 @@ import {
   TPage, 
   TSection, 
   TEditSection,
+  TPortfolioData,
+  TPageData,
+  TSectionData
 } from "jinxui/types"
 
 const FRONT_END_URL = "http://localhost:3000/";
@@ -132,7 +135,7 @@ const Edit = () => {
     if (existingPortfolio) {
       fetchExistingPortfolio();
     } else {
-      const newPortfolio = { name: "" };
+      const newPortfolio = { name: "" } as TPortfolio;
       const newPage = [{ name: "home", number: 0 }] as TPage[];
       const newSection = [
         { name: "First", number: 0, content: "", type: "text", uid: uuidv4() },
@@ -235,7 +238,7 @@ const Edit = () => {
       portfolio !== null && pages.length !==0 && sections.length !== 0 ? (
         <>
           <ThemeProvider theme={appliedTheme}>
-            <HeaderBar title="title" lightTheme>
+            <HeaderBar title="Edit" lightTheme>
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {
