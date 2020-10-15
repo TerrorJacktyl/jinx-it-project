@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: src/backend/Dockerfile.backend
     command: >
-      bash -c "python manage.py runserver 0.0.0.0:8000"
+      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     # Sets environment varaibles from a file
     env_file:
       - src/backend/django_dev.env

@@ -38,10 +38,10 @@ DRF_DEFAULT_RENDERER_CLASSES = (
 )
 
 DRF_DEFAULT_AUTHENTICATION_CLASSES = (
-    # for session based authentication. Useful for the browsable API
-    'rest_framework.authentication.SessionAuthentication',
     # tokens to be used by djoser
     'rest_framework.authentication.TokenAuthentication',
+    # for session based authentication. Useful for the browsable API
+    'rest_framework.authentication.SessionAuthentication',
 )
 
 SWAGER_DJANGO_SESSIONS = True

@@ -89,10 +89,11 @@ const Edit = () => {
     id: null,
   });
   const {
+    userData,
     postPortfolio,
     postPage,
     postSection,
-    savePortfolioId,
+    setPrimaryPortfolio,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
@@ -100,7 +101,7 @@ const Edit = () => {
   // const classes = useStyles();
 
   const onPublish = () => {
-    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />;
   };
 
   if (redirect) {
@@ -205,7 +206,7 @@ const Edit = () => {
                           console.log(error);
                           setSubmitting(false);
                         });
-                      savePortfolioId(parseInt(portfolio_id));
+                      setPrimaryPortfolio(parseInt(portfolio_id));
                       setSubmitting(false);
                       setRedirect(true);
                     })

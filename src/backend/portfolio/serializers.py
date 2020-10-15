@@ -14,13 +14,13 @@ from . import validators
 class PortfolioInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Portfolio
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'private']
 
 
 class PortfolioOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Portfolio
-        fields = ['id', 'owner', 'name', 'pages']
+        fields = ['id', 'owner', 'name', 'pages', 'private']
 
 
 class PageInputSerializer(serializers.ModelSerializer):

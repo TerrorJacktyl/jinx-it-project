@@ -9,14 +9,20 @@ import {
   HeaderBar, Copyright, SectionGrid, BackgroundImage, HeaderBarSpacer,
 } from 'jinxui';
 
-/* At the moment displays portfolio with the hardcoded id, and only the first page
-   of said portfolio. Consider either passing the portfolio id as props, or having
-   the current portfolio provided by context. Regardless, we'll probably have to 
-   define a user's default portfolio that they'll be redirected to upon login and
-   initial portfolio creation */
-const Portfolio = () => {
-  const { userData, getFullPortfolio, getSavedPortfolioId } = useUser();
-  const portfolioId = getSavedPortfolioId();
+interface PortfolioProps {
+  username: string;
+}
+
+/*
+  At the moment only the first page of portfolio is displayed.
+  TODO: primary portfolio redirection
+ */
+const Portfolio = ({ username }: PortfolioProps) => {
+  const {
+    userData,
+    getFullPortfolio,
+    getAccountDetailsFromUsername,
+  } = useUser();
 
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
@@ -27,8 +33,11 @@ const Portfolio = () => {
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
+      const { primary_portfolio } = await getAccountDetailsFromUsername(
+        username
+      );
       const { portfolio, pages, sections } = await getFullPortfolio(
-        portfolioId
+        primary_portfolio
       );
       setPortfolio(portfolio);
       setPages(pages);
@@ -36,16 +45,17 @@ const Portfolio = () => {
       console.log(sections);
     };
     fetchPortfolio();
-  }, []); // Empty dependency array required to prevent infinite loop
+  }, [username]); // rendering a portfolio depends on the username
 
   // Used to show background image capability: derive from theme eventually
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+
 
   return (
     <>
       <CssBaseline />
       <ThemeProvider theme={LightTheme}>
-        <HeaderBar lightTheme={true}/>
+        <HeaderBar lightTheme={true} />
         <BackgroundImage url={defaultBackgroundSrc}>
           <HeaderBarSpacer />
           <Typography

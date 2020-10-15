@@ -8,4 +8,5 @@ export const Routes = {
   SIGNUP: "/signup",
   PORTFOLIO_EDIT: "/edit",
   PORTFOLIO_DISPLAY: "/portfolio",
+  PORTFOLIO_DISPLAY_BASE: "/u",
 }

@@ -66,7 +66,9 @@ export { default as HomeFooter } from "./components/home/HomeFooter";
 
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
+export { PortfolioDisplay } from "./routes/PortfolioDisplay";
 export { Routes } from "./routes/Routes";
+
 /* Context */
 export {
   UserContextProvider,
