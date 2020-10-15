@@ -138,12 +138,12 @@ const Edit = () => {
       );
       setPortfolio(portfolio);
       setPages(pages);
-      const IdSections = sections.map((section: TSection) => {
+      const IdSections = sections.map((section: TSection, i) => {
         const uidPair = { uid: uuidv4() };
         const newSection = { ...section, ...uidPair };
         return newSection;
       });
-      console.log(IdSections);
+      // console.log(IdSections);
       setSections(IdSections);
     };
 
@@ -171,6 +171,7 @@ const Edit = () => {
     setSections(newSections);
   };
 
+
   // Updates a section's content if it has been changed within the text field
   /* Maybe be better to do this through formik with .values as it was originally implemented
      but this works for now */
@@ -183,13 +184,13 @@ const Edit = () => {
     );
     var newSections = sections;
     newSections[index].content = e.target.value;
-    console.log(newSections);
+    // console.log(newSections);
     setSections(newSections);
   };
 
   // TEST: See if this works within formik's onSubmit, as onSubmit may be a custom hook
   const unidentify = () => {
-    var noUidSections = sections.map((section: TEditSection) => {
+    var noUidSections = sections.map((section: TEditSection, i) => {
       const newSection = section;
       delete newSection.uid;
       return newSection;
@@ -240,7 +241,7 @@ const Edit = () => {
                         [currSection.uid]: currSection.content,
                       };
                       const newAcc = { ...acc, ...newPair };
-                      console.log(newAcc);
+                      // console.log(newAcc);
                       return newAcc;
                       // TODO: Initialise Accumulator with existing portfolio name
                     },
@@ -289,70 +290,24 @@ const Edit = () => {
                           fullWidth
                           color="secondary"
                         />
-                        {console.log(portfolio.name)}
+                        {/* {console.log(portfolio.name)} */}
                       </PortfolioNameSectionInput>
                     ) : null}
                     <BetweenSections />
                     {existingPortfolio && sections.length !== 0
-                      ? sections.map((section: TEditSection) => {
-                          if (section.type === "text") {
-                            return TextSectionInput(
-                              section.name,
-                              section.content,
-                              section.uid,
-                              handleChange
-                              // TODO: Fix implicit any type error coming from initial values, currently commented out
-                              /*touched={touched[section.uid]}
-                              errors={errors[section.uid]}*/
-                            );
-                          } else if (section.type === "image") {
-                            return ImageSectionInput(
-                              section.name,
-                              section.uid,
-                              section.path,
-                              addImageResponse
-                            );
-                          } else {
-                            return ImageTextSectionInput(
-                              section.name,
-                              section.uid,
-                              section.content,
-                              section.path,
-                              handleChange,
-                              addImageResponse
-                              // TODO: Fix implicit any type error coming from initial values, currently commented out
-                              /*touched[section.uid],
-                              errors[section.uid]*/
-                            );
-                          }
-                        })
+                      ? sections.map((section: TEditSection, i) => {
+                            return <TextSectionInput
+                              key={section.uid}
+                              section={section}
+                              // key={section.uid}
+                              // title={section.name}
+                              // value={section.content}
+                              handleChange={handleChange}
+                              sections={sections}
+                              setSections={setSections}
+                            />
+                      })
                       : null}
-                    {/*{ImageTextSectionInput(
-                        "Biography",
-                        "biography",
-                        touched.biography,
-                      errors.biography,
-                      bioImageResponse,
-                      setBioImageResponse
-                    )}
-                    <BetweenSections />
-                    {errors.academicHistory && touched.academicHistory ? (
-                      <ErrorMessage>{errors.academicHistory}</ErrorMessage>
-                    ) : null}
-                    <TextSectionInput
-                      title="Academic History"
-                      sectionName="academicHistory"
-                      touched={touched.academicHistory}
-                      errors={errors.academicHistory}
-                    />
-                    <BetweenSections />
-                    {ImageSectionInput(
-                      "Awesome Image",
-                      "awesomeImage",
-                      awesomeImageResponse,
-                      setAwesomeImageResponse
-                    )}
-                    <BetweenSections />*/}
                     <BottomButtonsDiv>
                       <PrimaryButton type="submit">PUBLISH</PrimaryButton>
                       <a href={Routes.HOME}>

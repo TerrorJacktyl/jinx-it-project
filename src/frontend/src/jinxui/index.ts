@@ -58,6 +58,7 @@ export { default as TextSectionInput } from "./components/edit/TextSectionInput"
 export { default as ImageSectionInput } from "./components/edit/ImageSectionInput"
 export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
 export { default as UserImage } from "./components/edit/UserImage";
+export { default as DefaultSectionData } from "./components/edit/DefaultSectionData"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

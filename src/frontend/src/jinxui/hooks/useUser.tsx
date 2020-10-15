@@ -53,6 +53,7 @@ export const useUser = () => {
           firstName: accDetails.first_name,
           lastName: accDetails.last_name,
           token: response.data["auth_token"],
+          portfolioId: accDetails.primary_portfolio,
           authenticated: true,
           config: config,
         };
@@ -371,11 +372,11 @@ export const useUser = () => {
       const pages: TPage[] = await getPages(portfolio_id);
       // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
       const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
-      console.log(pages);
+      // console.log(pages);
       //        pages.forEach(async (page: any) => {
       //          sections.push(await getSections(portfolio_id, page.id))
       //        })
-      console.log(sections);
+      // console.log(sections);
       return { portfolio, pages, sections };
     } catch (e) {
       throw e;

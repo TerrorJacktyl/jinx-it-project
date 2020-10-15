@@ -85,7 +85,7 @@ const Portfolio = () => {
             {pages.length !== 0 ? pages[currPage].name : null}
           </PageName>
           {sections.length !== 0
-            ? sections.sort(compare).map((section: TSection) => {
+            ? sections.sort(compare).map((section: TSection, i) => {
               if (section.type === "text") {
                 return (
                   <TextSection

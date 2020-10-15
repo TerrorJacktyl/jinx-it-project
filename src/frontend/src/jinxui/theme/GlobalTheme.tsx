@@ -92,8 +92,8 @@ let LightTheme = createMuiTheme({
     "0px 19px 15px -6px rgba(" + LightShadowColour +  ", 0.3),0px 12px 33px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 38px 7px rgba(" + LightShadowColour + ", 0.04)",
     "0px 19px 15px -6px rgba(" + LightShadowColour +  ", 0.3),0px 13px 35px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 40px 7px rgba(" + LightShadowColour + ", 0.04)",
     "0px 19px 16px -6px rgba(" + LightShadowColour +  ", 0.3),0px 14px 37px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 42px 7px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 20px 16px -7px rgba(" + LightShadowColour +  " 0.3),0px 15px 38px 3px rgba( " +  LightShadowColour + " 0.06),0px 9px 44px 8px rgba(" + LightShadowColour + " 0.04)",
-    "0px 20px 18px -7px rgba(" + LightShadowColour +  " 0.3),0px 16px 40px 3px rgba( " +  LightShadowColour + " 0.06),0px 9px 46px 8px rgba(" + LightShadowColour + " 0.04)",
+    "0px 20px 16px -7px rgba(" + LightShadowColour +  " 0.3),0px 15px 38px 3px rgba( " +  LightShadowColour + ", 0.06),0px 9px 44px 8px rgba(" + LightShadowColour + ", 0.04)",
+    "0px 20px 18px -7px rgba(" + LightShadowColour +  " 0.3),0px 16px 40px 3px rgba( " +  LightShadowColour + ", 0.06),0px 9px 46px 8px rgba(" + LightShadowColour + ", 0.04)",
   ],
   shape: {
     borderRadius: 0
