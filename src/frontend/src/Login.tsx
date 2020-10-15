@@ -18,31 +18,24 @@ import {
   HeaderBar,
   FormOuterDiv,
   FormBottomButtonsDiv,
+  FormSectionsDiv,
 } from "jinxui";
 import styled from "styled-components";
 
 import { TextField } from "formik-material-ui";
 
+// Ensure enough white space on top of form
 const FormTitleDiv = styled.div`
   margin-top: 30px;
 `;
 
+// Ensure link isn't underlined
 const StyledLink = styled.a`
   text-decoration: none;
   position: relative;
 `;
 
-const FormSectionsDiv = styled.div`
-  margin: 30px;
-  display: grid;
-  grid-template-rows:
-    90px
-    90px
-    max-content
-    30px
-    10px;
-`;
-
+// Custom validation schema
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
     .min(2, "Too Short!")
@@ -89,7 +82,6 @@ const Login = () => {
               elevation={8}
               style={{ background: LightTitleBGGrad }}
             >
-              {/* <FormTitle>Enter Details</FormTitle> */}
               <FormTitleDiv>
                 <Typography variant="h5">Enter Details</Typography>
               </FormTitleDiv>
@@ -113,10 +105,11 @@ const Login = () => {
                     });
                 }}
               >
-                {({ errors, touched, isSubmitting }) => (
+                {({ isSubmitting }) => (
                   <Form>
                     <FormSectionsDiv>
-                      <div>
+                        {/* Note: Validation handled automatically 
+                            by Formik-Material-UI */}
                         <Field
                           component={TextField}
                           name="username"
@@ -126,8 +119,6 @@ const Login = () => {
                           color="primary"
                           fullWidth
                         />
-                      </div>
-                      <div>
                         <Field
                           component={TextField}
                           name="password"
@@ -138,21 +129,17 @@ const Login = () => {
                           color="primary"
                           fullWidth
                         />
-                      </div>
                       <FormBottomButtonsDiv>
                         <PrimaryButton type="submit" disabled={isSubmitting}>
                           LOGIN
                         </PrimaryButton>
                         <SecondaryButton>Reset Password</SecondaryButton>
                       </FormBottomButtonsDiv>
-                      <div>
                         <StyledLink href={Routes.SIGNUP}>
-                          {/* <FormText>Sign up for an account</FormText> */}
                           <Typography variant="button">
                             Sign up for an account
                           </Typography>
                         </StyledLink>
-                      </div>
                     </FormSectionsDiv>
                   </Form>
                 )}

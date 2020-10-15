@@ -5,15 +5,12 @@ import {
   UploadImageSubSection,
   TwoColumnSectionDiv,
   TextFieldSubSection,
-  ErrorMessage,
 } from "jinxui"
 
 
 function ImageTextSectionInput(
   title: string,
   sectionName: string,
-  touched: any,
-  errors: any,
   imageResponse: any,
   setImageResponse: any
 ) {
@@ -23,7 +20,6 @@ function ImageTextSectionInput(
         <TwoColumnSectionDiv>
           <div>
             {TextFieldSubSection(sectionName, 18)}
-            {errors && touched ? <ErrorMessage>{errors}</ErrorMessage> : null}
           </div>
           <div>
             {UploadImageSubSection(

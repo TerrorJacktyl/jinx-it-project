@@ -27,11 +27,8 @@ import {
   ImageTextSectionInput,
   PortfolioNameSectionInput,
   Routes,
+  TSection,
 } from "jinxui";
-
-import { TSection } from "./jinxui/types/PortfolioTypes"
-
-const FRONT_END_URL = "http://localhost:3000/";
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -84,11 +81,11 @@ const Edit = () => {
   const [redirect, setRedirect] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
   const [bioImageResponse, setBioImageResponse] = useState({
-    path: FRONT_END_URL + "blank_user.png",
+    path: "",
     id: null,
   });
   const [awesomeImageResponse, setAwesomeImageResponse] = useState({
-    path: FRONT_END_URL + "blank_user.png",
+    path: "",
     id: null,
   });
   const {
@@ -240,20 +237,13 @@ const Edit = () => {
                     {ImageTextSectionInput(
                       "Biography",
                       "biography",
-                      touched.biography,
-                      errors.biography,
                       bioImageResponse,
                       setBioImageResponse
                     )}
                     <BetweenSections />
-                    {errors.academicHistory && touched.academicHistory ? (
-                      <ErrorMessage>{errors.academicHistory}</ErrorMessage>
-                    ) : null}
                     <TextSectionInput
                       title="Academic History"
                       sectionName="academicHistory"
-                      touched={touched.academicHistory}
-                      errors={errors.academicHistory}
                     />
                     <BetweenSections />
                     {ImageSectionInput(
