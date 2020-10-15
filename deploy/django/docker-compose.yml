@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db:
     container_name: jinx_db
@@ -8,7 +8,7 @@ services:
     environment:
       # Denotes DB name to be created on image startup
       - POSTGRES_DB=jinx_db
-      # Create a user when the database is initialized. 
+      # Create a user when the database is initialized.
       # Not sure if root exists by default.
       - POSTGRES_USER=jinx
       # password will be read from environment vars
@@ -17,21 +17,21 @@ services:
       # store data in a location managed by docker
       - jinx_database:/var/lib/postgresql/data
     networks:
-      - br_internal 
+      - br_internal
     # Unless stopped manually, restart automatically
     restart: unless-stopped
   django:
     container_name: django
     build:
       context: ../../
-      dockerfile: Dockerfile.backend.deploy
+      dockerfile: src/backend/Dockerfile.backend.deploy
     environment:
       - DJANGO_SECRET_KEY
       - "DJANGO_DB_PASSWORD=${POSTGRES_PASSWORD}"
     depends_on:
       - db
     volumes:
-      - jinx_user_files:/srv/media
+      - /srv/media:/srv/media
     networks:
       - br_internal
       - br_django
@@ -47,4 +47,3 @@ networks:
       name: br_django
 volumes:
   jinx_database: {}
-  jinx_user_files: {}
