@@ -10,9 +10,20 @@ import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp"
 
 import { 
   PrimaryMenu,
+  DefaultSectionData
 } from "jinxui"
 
-const NewSectionMenu = () => {
+import {
+  TEditSection
+} from "jinxui/types"
+
+type TNewSectionMenu = {
+  section: any
+  sections: any
+  setSections: any
+}
+
+const NewSectionMenu = (props: TNewSectionMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,6 +32,34 @@ const NewSectionMenu = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleAddImageTextSection = () => {
+    addSection("image_text")
+  }
+
+  const handleAddTextSection = () => {
+    addSection("text")
+  }
+
+  const handleAddImageSection = () => {
+    addSection("image")
+  }
+
+  const addSection = (section_type: string) => {
+    setAnchorEl(null);
+    const index = props.sections.findIndex(
+      (p: TEditSection) => p.uid === props.section.uid
+    );
+    
+    const newSection = DefaultSectionData()
+    newSection.type = section_type
+
+    props.setSections([
+      ...props.sections.slice(0, index + 1),
+      newSection,
+      ...props.sections.slice(index + 1)
+    ]);
   };
 
   return (
@@ -35,19 +74,19 @@ const NewSectionMenu = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem>
+        <MenuItem onClick = {handleAddTextSection}>
           <ListItemIcon>
             <SubjectSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Text" />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick = {handleAddImageSection}>
           <ListItemIcon>
             <InsertPhotoSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Image" />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick = {handleAddImageTextSection}>
           <ListItemIcon>
             <VerticalSplitSharp fontSize="small" />
           </ListItemIcon>

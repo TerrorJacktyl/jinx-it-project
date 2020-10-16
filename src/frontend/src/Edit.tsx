@@ -12,46 +12,26 @@ import { TextField } from "formik-material-ui";
 
 import {
   ErrorMessage,
-  FormDiv,
   LightTheme,
   DarkTheme,
   useUser,
   HeaderBar,
   PrimaryButton,
   SecondaryButton,
-  NewSectionMenu,
   TextSectionInput,
   ImageSectionInput,
-  ImageTextSectionInput,
   PortfolioNameSectionInput,
   Routes,
   PrimaryColumnDiv,
+  ImageTextSectionInput,
 } from "jinxui";
 
-import {  
-  TPortfolio, 
-  TPage, 
-  TSection, 
-  TEditSection,
-} from "jinxui/types"
+import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
 
-const FRONT_END_URL = "http://localhost:3000/";
-
-const WideFormDiv = styled(FormDiv)`
-  width: 920px;
-`;
+const FRONT_END_URL = process.env.REACT_APP_FRONT_URL;
 
 const FormTitle = styled.h2`
   font-weight: 300;
-`;
-
-const StyledFormDiv = styled(WideFormDiv)`
-  margin-top: 70px;
-  height: auto;
-  margin-bottom: 100px;
-  width: 90%;
-  display: grid;
-  grid-template-columns: 1fr minMax(200px, 900px) 1fr;
 `;
 
 const BottomButtonsDiv = styled.div`
@@ -98,9 +78,9 @@ function PostSection(
   }
 }
 
-const BetweenSections = () => {
-  return <NewSectionMenu />;
-};
+// const BetweenSections = () => {
+//   return <NewSectionMenu />;
+// };
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
@@ -171,7 +151,6 @@ const Edit = () => {
     setSections(newSections);
   };
 
-
   // Updates a section's content if it has been changed within the text field
   /* Maybe be better to do this through formik with .values as it was originally implemented
      but this works for now */
@@ -221,7 +200,7 @@ const Edit = () => {
             </Button>
           </HeaderBar>
           <CssBaseline />
-            <PrimaryColumnDiv>
+          <PrimaryColumnDiv>
             <div></div>
             <div>
               <FormTitle>Enter your information</FormTitle>
@@ -293,17 +272,40 @@ const Edit = () => {
                         {/* {console.log(portfolio.name)} */}
                       </PortfolioNameSectionInput>
                     ) : null}
-                    <BetweenSections />
+                    {/* <BetweenSections /> */}
                     {existingPortfolio && sections.length !== 0
                       ? sections.map((section: TEditSection) => {
-                            return <TextSectionInput
-                              key={section.uid}
-                              section={section}
-                              handleChange={handleChange}
-                              sections={sections}
-                              setSections={setSections}
-                            />
-                      })
+                          if (section.type === "text") {
+                            return (
+                              <TextSectionInput
+                                key={section.uid}
+                                section={section}
+                                handleChange={handleChange}
+                                sections={sections}
+                                setSections={setSections}
+                              />
+                            );
+                          } else if (section.type === "image") {
+                            return (
+                              <ImageSectionInput
+                                key={section.uid}
+                                section={section}
+                                sections={sections}
+                                setSections={setSections}
+                              />
+                            );
+                          } else if (section.type === "image_text") {
+                            return (
+                              <ImageTextSectionInput
+                                key={section.uid}
+                                handleChange={handleChange}
+                                section={section}
+                                sections={sections}
+                                setSections={setSections}
+                              />
+                            );
+                          }
+                        })
                       : null}
                     <BottomButtonsDiv>
                       <PrimaryButton type="submit">PUBLISH</PrimaryButton>
@@ -321,7 +323,7 @@ const Edit = () => {
               </Formik>
             </div>
             <div></div>
-            </PrimaryColumnDiv>
+          </PrimaryColumnDiv>
         </ThemeProvider>
       </>
     );

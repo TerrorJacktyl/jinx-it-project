@@ -2,23 +2,35 @@ import React from "react"
 import { 
   PaperSection,
   OneColumnSectionDiv,
-  UploadImageSubSection
+  UploadImageSubSection,
+  NewSectionMenu,
  } from "jinxui"
+import { TEditSection } from "jinxui/types";
 
-
-function ImageSectionInput(
-  title: string,
+type TImageSection = {
   key: string,
-  path: any,
-  setImageResponse: any
-) {
+  section: TEditSection,
+  sections: any,
+  setSections: any,
+}
+
+const ImageSectionInput = (
+  props: TImageSection
+) => {
   return (
     <>
-      <PaperSection title={title}>
+      <PaperSection title={props.section.name}>
         <OneColumnSectionDiv>
-          {UploadImageSubSection(key, path, setImageResponse)}
+          <UploadImageSubSection
+            props={props.section} 
+            />
         </OneColumnSectionDiv>
       </PaperSection>
+      <NewSectionMenu 
+        section={props.section}
+        sections={props.sections}
+        setSections={props.setSections}
+      />
     </>
   );
 }

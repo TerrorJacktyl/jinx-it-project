@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
+
 
 const StyledInput = styled.input`
   display: none;
@@ -49,19 +50,17 @@ const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
   z-index: 2;
 `;
 
-function UploadImageSubSection(
-  key: string,
-  path: any,
-  setImageResponse: any
-) {
+const UploadImageSubSection = (
+  props: any
+) => {
   const { uploadImage } = useUser();
-  // const classes = useStyles();
+  const [imageResponse, setImageResponse] = useState({path: "", id: "0"})
   return (
     <>
-      <label htmlFor={key}>
+      <label htmlFor={props.uid}>
         <StyledInput
           accept="image/*"
-          id={key}
+          id={props.uid}
           multiple
           type="file"
           onChange={(event) => {
@@ -72,7 +71,7 @@ function UploadImageSubSection(
               )
                 .then((response) => {
                   console.log(response);
-                  setImageResponse(key, response.data);
+                  setImageResponse(response.data);
                 })
                 .catch((error) => {
                   console.log(error);
@@ -85,8 +84,8 @@ function UploadImageSubSection(
         <ImageGrid>
           <ImageGridMain>
             <UserImage 
-              src={path === "" ? image_path : path} 
-              style={path === "" ? {
+              src={imageResponse.path === "" ? image_path : imageResponse.path} 
+              style={imageResponse.path === "" ? {
                   opacity: "30%",
                   padding: "40%",
                 } : {
