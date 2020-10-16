@@ -14,6 +14,7 @@ const TextFieldSubSection = (
     <TextField
       name={props.section.uid}
       defaultValue={props.section.content}
+      placeholder={"Prover your creativity, write something interesting..."}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e, props.section.uid)}
       id="standard-full-width"
       style={{ margin: 0, marginBottom: 15 }}
@@ -21,7 +22,7 @@ const TextFieldSubSection = (
       multiline
       rows={props.rows}
       rowsMax={30}
-      // variant="filled"
+      variant="outlined"
       color="secondary"
     />
   );

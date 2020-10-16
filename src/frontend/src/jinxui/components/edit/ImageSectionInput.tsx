@@ -12,6 +12,7 @@ type TImageSection = {
   section: TEditSection;
   sections: any;
   setSections: any;
+  handleTitleChange: any;
 };
 
 const ImageSectionInput = (props: TImageSection) => {
@@ -32,6 +33,7 @@ const ImageSectionInput = (props: TImageSection) => {
         section={props.section}
         sections={props.sections}
         setSections={props.setSections}
+        handleTitleChange={props.handleTitleChange}
       >
         <OneColumnSectionDiv>
           <UploadImageSubSection section={props.section} />

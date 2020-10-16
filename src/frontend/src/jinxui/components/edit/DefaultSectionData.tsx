@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from "uuid";
 const DefaultSectionData: any = () => {
   const defaultSection: TEditSection = {
     id: 0,
-    name: "First",
+    name: "",
     number: 0,
-    content: "Write something...",
+    content: "",
     media: "",
     type: "text",
     path: "",

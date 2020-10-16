@@ -24,6 +24,8 @@ import {
   Routes,
   PrimaryColumnDiv,
   ImageTextSectionInput,
+  TwoColumnSectionDiv,
+  PaperSection,
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
@@ -147,35 +149,18 @@ const Edit = () => {
     setSections(newSections);
   };
 
-  const handleMoveUp = (key: string) => {
+  const handleTitleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: string
+  ) => {
     const index = sections.findIndex(
       (section: TEditSection) => section.uid === key
     );
-    if (index === 0) {
-      return;
-    }
-    var newSections = sections as TEditSection[]
-    const prevIndex = index - 1
-    newSections[index].number -= 1;
-    newSections[prevIndex].number += 1; 
-    [newSections[prevIndex], newSections[index]] = [newSections[index], newSections[prevIndex]];
-    setSections(newSections);
-  };
-
-  const handleMoveDown = (key: string) => {
-    const index = sections.findIndex(
-      (section: TEditSection) => section.uid === key
-    );
-    if (index === sections.length - 1) {
-      return;
-    }
-    var newSections = sections as TEditSection[]
-    const nextIndex = index + 1
-    newSections[index].number += 1;
-    newSections[nextIndex].number -= 1;
-    [newSections[index], newSections[nextIndex]] = [newSections[nextIndex], newSections[index]];
+    var newSections = sections;
+    newSections[index].name = e.target.value;
     setSections(newSections);
   }
+
 
   // Removes the uid field from each section. Used before data is sent to backend
   const unidentify = () => {
@@ -250,11 +235,13 @@ const Edit = () => {
                 <FormTitle>Enter your information</FormTitle>
                   <form>
                     <PortfolioNameSectionInput
-                      title={"Portfolio Name*"}
+                      title={""}
                       // sectionName={"portfolioName"}
                     >
+
                       <TextField
                         name={"portfolioName"}
+                        label={"Portfolio Name"}
                         defaultValue={portfolio.name}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           var newPortfolio = portfolio
@@ -262,18 +249,19 @@ const Edit = () => {
                           setPortfolio(newPortfolio);
                         }}
                         id="standard-full-width"
-                        style={{ margin: 0 }}
+                        // style={{ margin: 0, marginBottom: 15 }}
                         fullWidth
                         color="secondary"
-                      />
-                    </PortfolioNameSectionInput>
-                    <PortfolioNameSectionInput
+                        />
+                    {/* </PortfolioNameSectionInput> */}
+                    {/* <PortfolioNameSectionInput
                       title={"Page Name*"}
                       // sectionName={"pageName"}
-                    >
+                    > */}
                       <TextField
                         // TODO: Display and change the current page name when multiple pages are added 
                         name={"pageName"}
+                        label={"Page Name"}
                         defaultValue={pages[0].name}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           var newPages = pages
@@ -281,10 +269,10 @@ const Edit = () => {
                           setPages(newPages);
                         }}
                         id="standard-full-width"
-                        style={{ margin: 0 }}
+                        // style={{ margin: 0,  marginBottom: 15}}
                         fullWidth
                         color="secondary"
-                      />
+                        />
                       {console.log(portfolio.name)}
                     </PortfolioNameSectionInput>
                     {sections.map((section: TEditSection) => {
@@ -294,6 +282,7 @@ const Edit = () => {
                                 key={section.uid}
                                 section={section}
                                 handleChange={handleChange}
+                                handleTitleChange={handleTitleChange}
                                 sections={sections}
                                 setSections={setSections}
                               />
@@ -302,6 +291,7 @@ const Edit = () => {
                             return (
                               <ImageSectionInput
                                 key={section.uid}
+                                handleTitleChange={handleTitleChange}
                                 section={section}
                                 sections={sections}
                                 setSections={setSections}
@@ -312,6 +302,7 @@ const Edit = () => {
                               <ImageTextSectionInput
                                 key={section.uid}
                                 handleChange={handleChange}
+                                handleTitleChange={handleTitleChange}
                                 section={section}
                                 sections={sections}
                                 setSections={setSections}

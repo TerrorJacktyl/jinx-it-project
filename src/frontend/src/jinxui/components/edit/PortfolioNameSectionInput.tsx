@@ -1,12 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import { PaperSectionStatic } from "jinxui";
+import { PaperSectionStatic, TwoColumnSectionDiv } from "jinxui";
 
-const OneColumnThinSectionGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 30px;
-  margin-bottom: 10px;
+// const OneColumnThinSectionGrid = styled.div`
+//   display: grid;
+//   grid-template-columns: 1fr;
+//   margin: 30px;
+//   margin-bottom: 10px;
+// `;
+
+const StyledTwoColumnSectionDiv = styled(TwoColumnSectionDiv)`
+
 `;
 
 const SingleLineRequiredGrid = styled.div`
@@ -23,11 +27,11 @@ type TPortfolioNameSection = {
 const PortfolioNameSection = (props: TPortfolioNameSection) => {
   return (
       <PaperSectionStatic title={props.title}>
-        <OneColumnThinSectionGrid>
-          <SingleLineRequiredGrid>
+        <StyledTwoColumnSectionDiv>
+          {/* <SingleLineRequiredGrid> */}
             {props.children}
-          </SingleLineRequiredGrid>
-        </OneColumnThinSectionGrid>
+          {/* </SingleLineRequiredGrid> */}
+        </StyledTwoColumnSectionDiv>
       </PaperSectionStatic>
   );
 }

@@ -1,14 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { PaperSectionBase, PaperSectionDiv, PaperSectionTitle } from "jinxui";
 import { TEditSection } from "jinxui/types";
-import { LensOutlined } from "@material-ui/icons";
 
 const StyledDivOuter = styled.div`
   display: grid;
@@ -45,6 +43,7 @@ type TPaperSection = {
   setSections: any;
   children: any;
   hideEditButtons?: boolean;
+  handleTitleChange: any;
 };
 
 const PaperSection = (props: TPaperSection) => {
@@ -92,26 +91,18 @@ const PaperSection = (props: TPaperSection) => {
     props.setSections(top.concat(one_below, props.section, rest));
   }
 
-  // const handleMoveDown = (key: string) => {
-  //   if (index === props.sections.length - 1) {
-  //     return;
-  //   }
-  //   var newSections = sections as TEditSection[];
-  //   const nextIndex = index + 1;
-  //   newSections[index].number += 1;
-  //   newSections[nextIndex].number -= 1;
-  //   [newSections[index], newSections[nextIndex]] = [
-  //     newSections[nextIndex],
-  //     newSections[index],
-  //   ];
-  //   setSections(newSections);
-  // };
-
   return (
     <PaperSectionDiv>
       <StyledDivOuter>
         <StyledDivLeft>
-          <PaperSectionTitle>{props.section.name}</PaperSectionTitle>
+          {/* <PaperSectionTitle>{props.section.name}</PaperSectionTitle> */}
+          <TextField
+            name={props.section.uid}
+            defaultValue={props.section.name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleTitleChange(e, props.section.uid)}
+            placeholder = "Section Title"
+            InputProps={{ disableUnderline: true }}
+            />
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
         <StyledDivRight>

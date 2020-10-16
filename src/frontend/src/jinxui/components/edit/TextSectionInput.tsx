@@ -7,6 +7,7 @@ type TTextSectionProps = {
   key: string;
   section: TEditSection;
   handleChange: any;
+  handleTitleChange: any;
   sections: any;
   setSections: any;
 };
@@ -30,6 +31,7 @@ const TextSectionInput = (props: TTextSectionProps) => {
         section={props.section}
         sections={props.sections}
         setSections={props.setSections}
+        handleTitleChange={props.handleTitleChange}
       >
         <OneColumnSectionDiv>
           <TextFieldSubSection

@@ -30,7 +30,7 @@ const DarkTheme = createMuiTheme({
 const LightShadowColour = "20, 60, 126"
 const DarkShadowColour = "20, 60, 126"
 const LightHeaderGrad = "linear-gradient(90deg,#A6C9FF 0%, #99AFFF 100%)"
-const DarkHeaderGrad = "linear-gradient(90deg, #009ED0 0%, #0050C8 100%)"
+const DarkHeaderGrad = "linear-gradient(90deg, #377C92 0%, #355A91 100%)"
 const LightTitleBGGrad = "linear-gradient(0deg, #BBDEFF 0%, #C1D2FF 100%)"
 const DarkTitleBGGrad = "linear-gradient(0deg, #BBDEFF 0%, #C1D2FF 100%)"
 const LightPrimaryButtonGrad =
@@ -48,7 +48,7 @@ let LightTheme = createMuiTheme({
       contrastText: "#EEEEEE",
     },
     secondary: {
-      main: "#42f7d5",
+      main: "#40CFB1",
     },
     background: {
       default: "#E4ECFF",
