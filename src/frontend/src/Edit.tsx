@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
-import { Formik, Form, Field } from "formik";
+// import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 
-import { TextField } from "formik-material-ui";
+import { TextField } from "@material-ui/core";
 
 import {
   ErrorMessage,
@@ -34,6 +34,7 @@ const FormTitle = styled.h2`
   font-weight: 300;
 `;
 
+
 const BottomButtonsDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -44,8 +45,10 @@ const BottomButtonsDiv = styled.div`
   padding: 5px;
 `;
 
+/* Was used in formik, but is redundant now. Will leave in as a 
+   basis for touched and error checking if we implement it in the future */
 const EditSchema = Yup.object().shape({
-  websiteName: Yup.string().max(50, "Too Long!").required("Required"),
+  portfolioName: Yup.string().max(50, "Too Long!").required("Required"),
   sections: Yup.array().of(
     Yup.object().shape({
       content: Yup.string().required("Section must have content"),
@@ -53,6 +56,7 @@ const EditSchema = Yup.object().shape({
   ),
 });
 
+// Unutilised, but may come in handly later
 function sectionDataIsEmpty(data: any) {
   return (
     (data.type === "text" && data.content === "") ||
@@ -61,46 +65,22 @@ function sectionDataIsEmpty(data: any) {
   );
 }
 
-function PostSection(
-  postSection: any,
-  portfolio_id: string,
-  page_id: string,
-  data: any
-) {
-  if (!sectionDataIsEmpty(data)) {
-    postSection(portfolio_id, page_id, data)
-      .then(function (response: any) {
-        console.log(response);
-      })
-      .catch(function (error: any) {
-        console.log(error);
-      });
-  }
-}
-
-// const BetweenSections = () => {
-//   return <NewSectionMenu />;
-// };
-
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
   const blankImage = FRONT_END_URL + "blank_user.png";
-  const [redirect, setRedirect] = useState(false);
+  const [published, setPublished] = useState(false);
   const [submittionError, setSubmittionError] = useState(false);
   const blankImagePath = FRONT_END_URL + "blank_user.png";
   const {
     postFullPortfolio,
     putFullPortfolio,
-    putSections,
-    postPortfolio,
-    postPage,
-    postSection,
-    savePortfolioId,
     getFullPortfolio,
     getSavedPortfolioId,
+    userData,
+    setPrimaryPortfolio,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
@@ -108,29 +88,31 @@ const Edit = () => {
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TEditSection[]>([]);
-  // const classes = useStyles();
   // Call useEffect to fetch an existing portfolio's data
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
+      // OK to get saved portfolioId from context rather then fetching from backend
+      // as primary_portfolio is fetched upon login
       const portfolioId = await getSavedPortfolioId();
       const { portfolio, pages, sections } = await getFullPortfolio(
         portfolioId
       );
       setPortfolio(portfolio);
       setPages(pages);
-      const IdSections = sections.map((section: TSection, i) => {
+      // Assign each section a unique id so that they may be identified through in callback functions
+      const IdSections = sections.map((section: TSection) => {
         const uidPair = { uid: uuidv4() };
         const newSection = { ...section, ...uidPair };
         return newSection;
       });
-      // console.log(IdSections);
+      console.log(IdSections);
       setSections(IdSections);
     };
 
     if (existingPortfolio) {
       fetchExistingPortfolio();
     } else {
-      const newPortfolio = { name: "" };
+      const newPortfolio = { name: "" } as TPortfolio;
       const newPage = [{ name: "home", number: 0 }] as TPage[];
       const newSection = [
         { name: "First", number: 0, content: "", type: "text", uid: uuidv4() },
@@ -152,8 +134,6 @@ const Edit = () => {
   };
 
   // Updates a section's content if it has been changed within the text field
-  /* Maybe be better to do this through formik with .values as it was originally implemented
-     but this works for now */
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
@@ -163,119 +143,138 @@ const Edit = () => {
     );
     var newSections = sections;
     newSections[index].content = e.target.value;
-    // console.log(newSections);
     setSections(newSections);
   };
 
-  // TEST: See if this works within formik's onSubmit, as onSubmit may be a custom hook
+  const handleMoveUp = (key: string) => {
+    const index = sections.findIndex(
+      (section: TEditSection) => section.uid === key
+    );
+    if (index === 0) {
+      return;
+    }
+    var newSections = sections as TEditSection[]
+    const prevIndex = index - 1
+    newSections[index].number -= 1;
+    newSections[prevIndex].number += 1; 
+    [newSections[prevIndex], newSections[index]] = [newSections[index], newSections[prevIndex]];
+    setSections(newSections);
+  };
+
+  const handleMoveDown = (key: string) => {
+    const index = sections.findIndex(
+      (section: TEditSection) => section.uid === key
+    );
+    if (index === sections.length) {
+      return;
+    }
+    var newSections = sections as TEditSection[]
+    const nextIndex = index + 1
+    newSections[index].number += 1;
+    newSections[nextIndex].number -= 1;
+    [newSections[index], newSections[nextIndex]] = [newSections[nextIndex], newSections[index]];
+    setSections(newSections);
+  }
+
+  // Removes the uid field from each section. Used before data is sent to backend
   const unidentify = () => {
-    var noUidSections = sections.map((section: TEditSection, i) => {
+    var noUidSections = sections.map((section: TEditSection) => {
       const newSection = section;
+      // Fear not the linting error!
       delete newSection.uid;
       return newSection;
     });
     return noUidSections;
   };
 
-  const onPublish = async () => {
-    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
+  // Preps the data to be sent to backend, and redirects to display page
+  const onPublish = () => {
+    const noUidSections = unidentify();
+    // TODO: When multiple portoflio are implemented, 
+    // set the portfolioId in context to the portfolio being edited.
+    // In the case of a new portfolio, will need to wait until the POST response to set this
+    if (existingPortfolio) {
+      putFullPortfolio(
+        portfolio,
+        pages, 
+        noUidSections
+      )
+    } else {
+      postFullPortfolio(
+        portfolio,
+        pages, 
+        noUidSections
+      ); 
+    }
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />;
   };
 
-  if (redirect) {
+  if (published) {
     return onPublish();
   } else {
     return (
-      <>
-        <ThemeProvider theme={appliedTheme}>
-          <HeaderBar title="title" lightTheme>
-            <Button
-              style={{ height: "100%", borderRadius: 0 }}
-              onClick={() => {
-                switchLightThemeMode();
-                setTheme(!theme);
-              }}
-              color="inherit"
-            >
-              <SettingsBrightness />
-            </Button>
-          </HeaderBar>
-          <CssBaseline />
-          <PrimaryColumnDiv>
-            <div></div>
-            <div>
-              <FormTitle>Enter your information</FormTitle>
-              <Formik
-                // TODO: Add the initial case for a new portfolio, and add a check on props
-                // Maybe be more helpful to use mapValuesToProps
-                // TEST: filter and reduce for sections now may be redundant as we are handling onChange manually
-                initialValues={sections
-                  .filter((section: any) => {
-                    return (
-                      section.type === "text" || section.type === "image_text"
-                    );
-                  })
-                  .reduce(
-                    (acc, currSection) => {
-                      const newPair = {
-                        [currSection.uid]: currSection.content,
-                      };
-                      const newAcc = { ...acc, ...newPair };
-                      // console.log(newAcc);
-                      return newAcc;
-                      // TODO: Initialise Accumulator with existing portfolio name
-                    },
-                    portfolio === null
-                      ? { portfolioName: "" }
-                      : { portfolioName: portfolio.name }
-                  )}
-                // TODO: Redo EditSchema for dynamic sections
-                validationSchema={EditSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                  // TEST: This is purely a placeholder until onChange bug is solved
-                  const portfolio_data = {
-                    name: values.portfolioName,
-                  };
-                  setSubmitting(true);
-                  // TEST: Test for type errors and that uid is removed before submission
-                  const noUidSections = unidentify();
-                  if (existingPortfolio) {
-                    putFullPortfolio(portfolio, pages, noUidSections);
-                  } else {
-                    postFullPortfolio(portfolio_data, pages, noUidSections);
-                  }
-                  setSubmitting(false);
-                  setRedirect(true);
+      // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated 
+      portfolio !== null && pages.length !==0 && sections.length !== 0 ? (
+        <>
+          <ThemeProvider theme={appliedTheme}>
+            <HeaderBar title="Edit" lightTheme>
+              <Button
+                style={{ height: "100%", borderRadius: 0 }}
+                onClick={() => {
+                  switchLightThemeMode();
+                  setTheme(!theme);
                 }}
+                color="inherit"
               >
-                {({ errors, touched, isSubmitting }) => (
-                  <Form>
-                    {portfolio !== null ? (
-                      <PortfolioNameSectionInput
-                        title={"Portfolio Name*"}
-                        sectionName={"portfolioName"}
-                      >
-                        <Field
-                          component={TextField}
-                          name={"portfolioName"}
-                          onChange={(
-                            e: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            var newPortfolio = portfolio;
-                            newPortfolio.name = e.target.value;
-                            setPortfolio(newPortfolio);
-                          }}
-                          id="standard-full-width"
-                          style={{ margin: 0 }}
-                          fullWidth
-                          color="secondary"
-                        />
-                        {/* {console.log(portfolio.name)} */}
-                      </PortfolioNameSectionInput>
-                    ) : null}
-                    {/* <BetweenSections /> */}
-                    {existingPortfolio && sections.length !== 0
-                      ? sections.map((section: TEditSection) => {
-                          if (section.type === "text") {
+                <SettingsBrightness />
+              </Button>
+            </HeaderBar>
+            <CssBaseline />
+            <PrimaryColumnDiv>
+              <div></div>
+              <div>
+                <FormTitle>Enter your information</FormTitle>
+                  <form>
+                    <PortfolioNameSectionInput
+                      title={"Portfolio Name*"}
+                      sectionName={"portfolioName"}
+                    >
+                      <TextField
+                        name={"portfolioName"}
+                        defaultValue={portfolio.name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          var newPortfolio = portfolio
+                          newPortfolio.name = e.target.value
+                          setPortfolio(newPortfolio);
+                        }}
+                        id="standard-full-width"
+                        style={{ margin: 0 }}
+                        fullWidth
+                        color="secondary"
+                      />
+                    </PortfolioNameSectionInput>
+                    <PortfolioNameSectionInput
+                      title={"Page Name*"}
+                      sectionName={"pageName"}
+                    >
+                      <TextField
+                        // TODO: Display and change the current page name when multiple pages are added 
+                        name={"pageName"}
+                        defaultValue={pages[0].name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          var newPages = pages
+                          newPages[0].name = e.target.value
+                          setPages(newPages);
+                        }}
+                        id="standard-full-width"
+                        style={{ margin: 0 }}
+                        fullWidth
+                        color="secondary"
+                      />
+                      {console.log(portfolio.name)}
+                    </PortfolioNameSectionInput>
+                    {sections.map((section: TEditSection) => {
+                      if (section.type === "text") {
                             return (
                               <TextSectionInput
                                 key={section.uid}
@@ -305,10 +304,9 @@ const Edit = () => {
                               />
                             );
                           }
-                        })
-                      : null}
+                    })}
                     <BottomButtonsDiv>
-                      <PrimaryButton type="submit">PUBLISH</PrimaryButton>
+                      <PrimaryButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => setPublished(true)}>PUBLISH</PrimaryButton>
                       <a href={Routes.HOME}>
                         <SecondaryButton>Cancel</SecondaryButton>
                       </a>
@@ -318,14 +316,13 @@ const Edit = () => {
                         Error signing up. Please try again later.
                       </ErrorMessage>
                     ) : null}
-                  </Form>
-                )}
-              </Formik>
-            </div>
-            <div></div>
-          </PrimaryColumnDiv>
-        </ThemeProvider>
-      </>
+                  </form>
+                </div>
+              <div></div>
+              </PrimaryColumnDiv>
+          </ThemeProvider>
+        </>) 
+      : null
     );
   }
 };

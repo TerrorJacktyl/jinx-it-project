@@ -16,12 +16,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
     <>
       <PaperSection title={props.section.name}>
         <OneColumnSectionDiv>
-          {/* {TextFieldSubSection(
-            props.section.uid,
-            props.section.content,
-            props.handleChange,
-            15
-          )} */}
           <TextFieldSubSection
             section={props.section}
             handleChange={props.handleChange}

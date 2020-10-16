@@ -1,6 +1,5 @@
 import React from "react"
-import { Field } from "formik"
-import { TextField } from "formik-material-ui"
+import { TextField } from "@material-ui/core"
 
 type TTextFieldSubSection = {
   section: any,
@@ -13,8 +12,7 @@ const TextFieldSubSection = (
   props: TTextFieldSubSection
 ) => {
   return (
-    <Field
-      component={TextField}
+    <TextField
       name={props.section.uid}
       defaultValue={props.section.value}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e, props.section.uid)}

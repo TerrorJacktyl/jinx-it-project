@@ -5,5 +5,8 @@
 !.vscode/extensions.json
 *.code-workspace
 
+# Ignore locally stored media
+jinx_project/
+
 # Local History for Visual Studio Code
 .history/

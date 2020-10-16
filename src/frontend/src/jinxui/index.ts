@@ -67,7 +67,9 @@ export { default as HomeFooter } from "./components/home/HomeFooter";
 
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
+export { PortfolioDisplay } from "./routes/PortfolioDisplay";
 export { Routes } from "./routes/Routes";
+
 /* Context */
 export {
   UserContextProvider,
@@ -79,7 +81,15 @@ export {
 
 /* Types */
 export type { IUserContext, IThemeContext } from "./contexts/index";
-export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
+export type { 
+  TPortfolio, 
+  TPage, 
+  TSection, 
+  TSectionData, 
+  TEditSection,
+  TPortfolioData,
+  TPageData
+} from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";

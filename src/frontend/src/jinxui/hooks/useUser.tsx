@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "jinxui";
 import API from "../../API";
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { TPortfolio, TPage, TSection, TPortfolioData, TPageData, TSectionData } from "../types/PortfolioTypes";
 import { ValidationError } from "yup";
 
@@ -20,7 +20,7 @@ export const useUser = () => {
   const [state, updateState, resetState] = useContext(UserContext);
   const LOGIN_PATH = "auth/token/login";
   const LOGOUT_PATH = "auth/token/logout";
-  const ACCOUNT_PATH = "api/accounts/me";
+  const ACCOUNT_PATH = "api/accounts";
   const SIGNUP_PATH = "auth/users";
   const IMAGES_PATH = "api/images";
   const PORTFOLIOS_PATH = "api/portfolios";
@@ -52,8 +52,8 @@ export const useUser = () => {
           username: username,
           firstName: accDetails.first_name,
           lastName: accDetails.last_name,
-          token: response.data["auth_token"],
           portfolioId: accDetails.primary_portfolio,
+          token: response.data["auth_token"],
           authenticated: true,
           config: config,
         };
@@ -153,97 +153,113 @@ export const useUser = () => {
     return result;
   }
 
-  async function postPortfolio(data: any) {
-    const result = API.post(
-      PORTFOLIOS_PATH,
-      {
-        name: data.name,
-      },
-      state.config
-    )
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        throw error;
-      });
-    return result;
+  async function postPortfolio(data: TPortfolioData) {
+    if (!data) {
+      throw ("Portfolio data is null")
+    }
+    try {
+      const response = await API.post(
+        PORTFOLIOS_PATH,
+        {
+          name: data.name,
+        },
+        state.config
+      );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
   }
 
   async function postPage(portfolio_id: string, data: any) {
     const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
-    const result = API.post(
-      path,
-      {
-        name: data.name,
-        number: data.number,
-      },
-      state.config
-    )
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        throw error;
-      });
-    return result;
+    try {
+      const response = await API.post(
+        path,
+        {
+          name: data.name,
+          number: data.number,
+        },
+        state.config
+      );
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
   }
 
-  // Deprecated due to bulk section PUT request, but will leave in for now
-  async function postSection(portfolio_id: string, page_id: string, data: any) {
+  async function postSection(
+    portfolio_id: string,
+    page_id: string,
+    data: TSectionData
+  ) {
     const path =
       PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections";
-    const result = API.post(path, data, state.config)
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        throw error;
-      });
-    return result;
+    try {
+      const response = await API.post(path, data, state.config);
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
   }
 
-  // TODO: Fix types and refactor to try catch
+  // TODO: Fix types 
   async function putPortfolio(portfolio: any) {
     const path = PORTFOLIOS_PATH + "/" + portfolio.id;
-    const result = await API.put(path, portfolio, state.config)
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        throw error;
-      });
-    return result;
+    try {
+      const response = API.put(path, portfolio, state.config)
+      return response
+    } catch (e) {
+      throw e;
+    }
   }
 
-  // TODO: Fix types and refactor to try catch
+  // TODO: Fix types
   async function putPage(portfolioId: any, page: any) {
-    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages" + page.id;
-    const result = await API.put(path, page, state.config)
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        throw error;
-      });
-    return result;
+    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + page.id
+    try {
+      const response = await API.put(path, page, state.config)
+      return response
+    } catch (e) {
+      throw e;
+    }
   }
 
-  // TODO: Fix types and refactor to try catch
+  // TODO: Fix types
   async function putSections(portfolioId: any, pageId: any, sections: any) {
     const path =
       PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + pageId + "/sections";
-    const result = await API.put(path, sections, state.config);
+    try {
+      const response = await API.put(path, sections, state.config);
+      return response;
+    } catch (e) {
+      throw e;
+    }
   }
 
   /* Should only be used for CREATION of a new portfolio. Only handles the posting of a 
      new portfolio with a single page at the moment. Change sections type to TSections[][] 
      when multpile pages are accounted for */
-  // TODO: Fix the types and refactor to try catch
+  // TODO: Fix the types
   async function postFullPortfolio(
     portfolio: any,
     pages: any[],
     sections: any[]
   ) {
-    const portfolioResp = await postPortfolio(portfolio);
-    const pageResp = await postPage(portfolioResp.id, pages[0]);
-    const sectionResp = await putSections(
-      portfolioResp.id,
-      pageResp.id,
-      sections
-    );
-    // Assures redirection to the newly created portfolio
-    await savePortfolioId(parseInt(portfolioResp.id));
+    try {
+      const portfolioResp = await postPortfolio(portfolio);
+      const pageResp = await postPage(portfolioResp.id, pages[0]);
+      const sectionResp = await putSections(
+        portfolioResp.id,
+        pageResp.id,
+        sections
+      );
+      // Assures redirection to the newly created portfolio
+      await savePortfolioId(parseInt(portfolioResp.id));
+      return { portfolioResp, pageResp, sectionResp };
+    } catch (e) {
+      throw e;
+    }
   }
 
   /* Should only be used for UPDATING an existing portoflio. Only handles a single page
@@ -254,11 +270,14 @@ export const useUser = () => {
     pages: any[],
     sections: any[]
   ) {
-    const portfolioResp = await putPortfolio(portfolio);
-    const pageResp = await putPage(portfolio.id, pages[0]);
-    const sectionsResp = await putSections(portfolio.id, pages[0].id, sections);
-    // Possibly uncomment following line, don't think it will be needed for existing portofolios though as its id the current one
-    // await savePortfolioId(parseInt(portfolioId))
+    try {
+      const portfolioResp = await putPortfolio(portfolio);
+      const pageResp = await putPage(portfolio.id, pages[0]);
+      const sectionsResp = await putSections(portfolio.id, pages[0].id, sections);
+      return { portfolioResp, pageResp, sectionsResp };
+    } catch (e) {
+      throw e;
+    }
   }
 
   /**
@@ -273,7 +292,7 @@ export const useUser = () => {
     konfig: AxiosRequestConfig = state.config
   ) {
     const result = API.put(
-      ACCOUNT_PATH,
+      ACCOUNT_PATH + "/me",
       {
         first_name: first_name,
         last_name: last_name,
@@ -287,18 +306,20 @@ export const useUser = () => {
     return result;
   }
 
-  async function setPrimaryPortfolio(portfolio_id: number) {
-    const result = API.patch(
-      ACCOUNT_PATH,
-      {
-        primary_portfolio: portfolio_id,
-      },
-      state.config
-    )
-      .then((response: any) => response)
-      .catch((error: any) => {
-        throw error;
-      });
+  // this should probably be merged into setAccountDetails
+  async function setPrimaryPortfolio(id: number) {
+    try {
+      const result = await API.patch(
+        ACCOUNT_PATH + "/me",
+        {
+          primary_portfolio: id,
+        },
+        state.config
+      );
+      return result;
+    } catch (e) {
+      throw e;
+    }
   }
 
   function getSavedPortfolioId() {
@@ -343,7 +364,7 @@ export const useUser = () => {
 
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
     try {
-      const response = await API.get(ACCOUNT_PATH, konfig);
+      const response = await API.get(ACCOUNT_PATH + "/me", konfig);
       if ("first_name" in response.data) {
         return response.data;
       }
@@ -351,6 +372,20 @@ export const useUser = () => {
       throw handleError(error);
     }
   }
+
+  async function getAccountDetailsFromUsername(username: string): Promise<{
+    first_name: string,
+    last_name: string,
+    primary_portfolio: number,
+  }>{
+    try {
+      const response = await API.get(ACCOUNT_PATH + `?username=${username}`, state.config);
+      return response.data[0]
+    } catch (error) {
+      throw handleError(error);
+    }
+  }
+
   async function getSections(portfolio_id: number, page_id: number) {
     const path =
       PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections";
@@ -442,6 +477,7 @@ export const useUser = () => {
     logout,
     signup,
     setAccountDetails,
+    setPrimaryPortfolio,
     uploadImage,
     postPortfolio,
     postPage,
@@ -460,6 +496,7 @@ export const useUser = () => {
     getSavedLightThemeMode,
     getImage,
     getAccountDetails,
+    getAccountDetailsFromUsername,
     handleError,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).

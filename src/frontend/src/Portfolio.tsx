@@ -14,7 +14,7 @@ import {
   DarkTheme,
   HeaderBar,
 } from "jinxui";
-import { TPortfolio, TPage, TSection } from "./Types";
+import { TPortfolio, TPage, TSection } from "jinxui/types";
 
 const SectionContainer = styled.div`
   padding-left: 12px;
@@ -35,15 +35,23 @@ type ImageTextSectionProps = {
   name: string;
   path: string;
   content: string;
+};
+
+interface PortfolioProps {
+  username: string;
 }
 
-/* At the moment displays portfolio with the hardcoded id, and only the first page
-   of said portfolio. Consider either passing the portfolio id as props, or having
-   the current portfolio provided by context. Regardless, we'll probably have to 
-   define a user's home portfolio that they'll be redirected to upon login and
-   initial portfolio creation */
-const Portfolio = () => {
-  const { getFullPortfolio, getSavedPortfolioId } = useUser();
+/*
+  At the moment only the first page of portfolio is displayed.
+  TODO: primary portfolio redirection
+ */
+const Portfolio = ({ username }: PortfolioProps) => {
+  const {
+    userData,
+    getFullPortfolio,
+    getAccountDetailsFromUsername,
+  } = useUser();
+
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage] = useState<number>(0);
@@ -52,15 +60,18 @@ const Portfolio = () => {
 
   useEffect(() => {
     const fetchPortfolio = async () => {
-      const portfolioId = await getSavedPortfolioId();
-      console.log(portfolioId);
-      const { portfolio, pages, sections } = await getFullPortfolio(portfolioId);
+      const { primary_portfolio } = await getAccountDetailsFromUsername(
+        username
+      );
+      const { portfolio, pages, sections } = await getFullPortfolio(
+        primary_portfolio
+      );
       setPortfolio(portfolio);
       setPages(pages);
       setSections(sections);
     };
     fetchPortfolio();
-  }, []);
+  }, [username]); // rendering a portfolio depends on the username
 
   const compare = (s1: TSection, s2: TSection) => {
     if (s1.number < s2.number) {
@@ -86,23 +97,32 @@ const Portfolio = () => {
           </PageName>
           {sections.length !== 0
             ? sections.sort(compare).map((section: TSection, i) => {
-              if (section.type === "text") {
-                return (
-                  <TextSection
-                    name={section.name}
-                    content={section.content}
-                  />
-                );
-              } else if (section.type === "image") {
-                return <UserImage src={section.path} />;
-              } else if (section.type === "image_text") {
-                return <ImageTextSection name={section.name} path={section.path} content={section.content}  />
-              } else {
-                return (
-                  <MediaSection name={section.name} path={section.media} />
-                );
-              }
-            })
+                if (section.type === "text") {
+                  return (
+                    <TextSection
+                      name={section.name}
+                      content={section.content}
+                    />
+                  );
+                } else if (section.type === "image") {
+                  return <UserImage src={section.path} />;
+                } else if (section.type === "image_text") {
+                  return (
+                    <ImageTextSection
+                      name={section.name}
+                      path={section.path == undefined ? "" : section.path}
+                      content={section.content}
+                    />
+                  );
+                } else {
+                  return (
+                    <MediaSection
+                      name={section.name}
+                      path={section.media == undefined ? "" : section.media}
+                    />
+                  );
+                }
+              })
             : null}
         </PageDiv>
       </AccountPageDiv>
@@ -124,15 +144,15 @@ const MediaSection: React.FC<MediaSectionProps> = ({ name, path }) => (
   </SectionContainer>
 );
 
-const ImageTextSection: React.FC<ImageTextSectionProps> = ({ name, path, content }) => (
+const ImageTextSection: React.FC<ImageTextSectionProps> = ({
+  name,
+  path,
+  content,
+}) => (
   <>
     <UserImage src={path} />
-    <TextSection
-      name={name}
-      content={content}
-    />
+    <TextSection name={name} content={content} />
   </>
-
-)
+);
 
 export default Portfolio;

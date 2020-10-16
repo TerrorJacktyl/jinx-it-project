@@ -41,6 +41,8 @@ class Portfolio(models.Model):
     # Portfolio name e.g. professional, art
     name = models.CharField(max_length=100)
 
+    private = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 
@@ -60,6 +62,10 @@ class Page(models.Model):
     @property
     def owner(self):
         return self.portfolio.owner
+
+    @property
+    def private(self):
+        return self.portfolio.private
 
     class Meta:
         ordering = ['number']
@@ -83,13 +89,17 @@ class Section(models.Model):
         return self.page.owner
 
     @property
+    def private(self):
+        return self.page.private
+
+    @property
     def type(self):
         mapping = {
-            'TextSection': 'text', 
+            'TextSection': 'text',
             'MediaSection': 'media',
             'ImageSection': 'image',
             'ImageTextSection': 'image_text',
-            }
+        }
         return mapping[self.__class__.__name__]
 
     class Meta:
@@ -103,11 +113,11 @@ class TextSection(Section):
     content = models.TextField()
 
 
-
 class MediaSection(Section):
     # TODO: password protect files
     # https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
     media = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True)
+
 
 class Image(models.Model):
     #   Image upload tutorial
@@ -115,17 +125,16 @@ class Image(models.Model):
     def image_path(self, filename):
         _now = datetime.now()
         return 'images/{user}/{year}/{month}/{day}/{file}'.format(
-            user =  self.owner, 
-            file =  filename,
-            year =  _now.strftime('%Y'),
-            month = _now.strftime('%m'),
-            day =   _now.strftime('%d') )
+            user=self.owner,
+            file=filename,
+            year=_now.strftime('%Y'),
+            month=_now.strftime('%m'),
+            day=_now.strftime('%d'))
 
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='images')
-    name = models.CharField(max_length = 100)
-    path = models.ImageField(upload_to = image_path, null = True)
-
+    name = models.CharField(max_length=100)
+    path = models.ImageField(upload_to=image_path, null=True)
 
     # @property
     # def owner(self):
@@ -134,9 +143,12 @@ class Image(models.Model):
     def __str__(self):
         return self.name
 
+
 class ImageTextSection(Section):
-    image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
+    image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
     content = models.TextField(blank=True)
 
+
 class ImageSection(Section):
-    image = models.ForeignKey(Image, null = True, on_delete=models.SET_NULL)
+    image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
+
