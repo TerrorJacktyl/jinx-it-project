@@ -214,8 +214,8 @@ const Edit = () => {
   const onPublish = () => {
     const noUidSections = unidentify();
     // TODO: When multiple portoflio are implemented, 
-    // change this to setting saved portfolioId context rather than contacting backend
-    setPrimaryPortfolio(portfolioId);
+    // set the portfolioId in context to the portfolio being edited.
+    // In the case of a new portfolio, will need to wait until the POST response to set this
     if (existingPortfolio) {
       putFullPortfolio(
         portfolio,
