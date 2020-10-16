@@ -57,20 +57,55 @@ const PaperSection = (props: TPaperSection) => {
       ...props.sections.slice(index + 1),
     ]);
   };
-  let deleteDisabled = false
-  let upArrowDisabled = false
-  let downArrowDisabled = false
-  if(props.sections.length === 1) {
-    deleteDisabled=true
+  let deleteDisabled = false;
+  let upArrowDisabled = false;
+  let downArrowDisabled = false;
+  if (props.sections.length === 1) {
+    deleteDisabled = true;
   }
-  if(index === 0) {
-    upArrowDisabled = true
+  if (index === 0) {
+    upArrowDisabled = true;
   }
-  if(index === props.sections.length - 1) {
-    downArrowDisabled = true
+  if (index === props.sections.length - 1) {
+    downArrowDisabled = true;
   }
 
+  const handleMoveUp = () => {
+    if (index === 0) {
+      return;
+    }
+    const curr_sections = props.sections;
+    const top = curr_sections.slice(0, index-1);
+    const one_above=curr_sections.slice(index-1, index);
+    const rest = curr_sections.slice(index+1);
+    props.setSections(top.concat(props.section, one_above, rest));
+  };
 
+  const handleMoveDown = () => {
+    if (index === props.sections.length - 1) {
+      return;
+    }
+    const curr_sections = props.sections;
+    const top = curr_sections.slice(0, index);
+    const one_below=curr_sections.slice(index + 1, index + 2);
+    const rest = curr_sections.slice(index+2);
+    props.setSections(top.concat(one_below, props.section, rest));
+  }
+
+  // const handleMoveDown = (key: string) => {
+  //   if (index === props.sections.length - 1) {
+  //     return;
+  //   }
+  //   var newSections = sections as TEditSection[];
+  //   const nextIndex = index + 1;
+  //   newSections[index].number += 1;
+  //   newSections[nextIndex].number -= 1;
+  //   [newSections[index], newSections[nextIndex]] = [
+  //     newSections[nextIndex],
+  //     newSections[index],
+  //   ];
+  //   setSections(newSections);
+  // };
 
   return (
     <PaperSectionDiv>
@@ -80,17 +115,19 @@ const PaperSection = (props: TPaperSection) => {
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
         <StyledDivRight>
-          <StyledButton 
-            size="medium" 
+          <StyledButton
+            size="medium"
             style={{ minWidth: 40 }}
             disabled={upArrowDisabled}
+            onClick={handleMoveUp}
           >
             <ArrowUpwardIcon />
           </StyledButton>
-          <StyledButton 
-            size="medium" 
+          <StyledButton
+            size="medium"
             style={{ minWidth: 40 }}
             disabled={downArrowDisabled}
+            onClick={handleMoveDown}
           >
             <ArrowDownwardIcon />
           </StyledButton>

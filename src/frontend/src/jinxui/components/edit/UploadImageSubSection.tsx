@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
@@ -44,21 +44,26 @@ const StyledImageUploadOverlay = styled(Paper)`
   cursor: pointer;
 `;
 const FRONT_END_URL = process.env.REACT_APP_FRONT_URL;
-const image_path = FRONT_END_URL + "blank_image.svg";
-
 const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
   z-index: 2;
 `;
 
 type TUploadImageSubSection = {
-  section: TEditSection
-}
+  section: TEditSection;
+};
 
-const UploadImageSubSection = (
-  props: TUploadImageSubSection
-) => {
+const UploadImageSubSection = (props: TUploadImageSubSection) => {
+  const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
+  const [imageExists, setImageExists] = useState(false)
   const { uploadImage } = useUser();
-  const [imageResponse, setImageResponse] = useState({path: "", id: "0"})
+  const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
+
+  useEffect(() => {
+    if (props.section.path && props.section.path !== "") {
+      setImagePath(props.section.path);
+      setImageExists(true);
+    }
+  });
   return (
     <>
       <label htmlFor={props.section.uid}>
@@ -76,8 +81,8 @@ const UploadImageSubSection = (
                 .then((response) => {
                   console.log(response);
                   setImageResponse(response.data);
-                  props.section.path=response.data.path;
-                  props.section.image=response.data.id;
+                  props.section.path = response.data.path;
+                  props.section.image = response.data.id;
                 })
                 .catch((error) => {
                   console.log(error);
@@ -89,15 +94,20 @@ const UploadImageSubSection = (
         />
         <ImageGrid>
           <ImageGridMain>
-            <UserImage 
-              src={imageResponse.path === "" ? image_path : imageResponse.path} 
-              style={imageResponse.path === "" ? {
-                  opacity: "30%",
-                  padding: "40%",
-                } : {
-                  opacity: "100%",
-                  padding: 0,
-                }}/>
+            <UserImage
+              src={imageResponse.path === "" ? imagePath : imageResponse.path}
+              style={
+                imageExists
+                  ? {
+                      opacity: "100%",
+                      padding: 0,
+                    }
+                  : {
+                      opacity: "30%",
+                      padding: "40%",
+                    } 
+              }
+            />
           </ImageGridMain>
           <StyledImageUploadOverlay elevation={0} square>
             Upload Image
@@ -109,6 +119,6 @@ const UploadImageSubSection = (
       </label>
     </>
   );
-}
+};
 
 export default UploadImageSubSection;

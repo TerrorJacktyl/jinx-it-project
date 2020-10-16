@@ -82,9 +82,10 @@ const Edit = () => {
     userData,
     setPrimaryPortfolio,
     switchLightThemeMode,
+    getSavedLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
-  const appliedTheme = createMuiTheme(theme ? LightTheme : DarkTheme);
+  const appliedTheme = createMuiTheme(getSavedLightThemeMode() ? LightTheme : DarkTheme);
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TEditSection[]>([]);
@@ -165,7 +166,7 @@ const Edit = () => {
     const index = sections.findIndex(
       (section: TEditSection) => section.uid === key
     );
-    if (index === sections.length) {
+    if (index === sections.length - 1) {
       return;
     }
     var newSections = sections as TEditSection[]
@@ -209,6 +210,12 @@ const Edit = () => {
     return <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />;
   };
 
+  // const switchLightThemeMode = () => {
+  //   switchLightThemeMode().then((response) => {
+  //     setTheme(response)
+  //   })
+  // }
+
   if (published) {
     return onPublish();
   } else {
@@ -217,13 +224,20 @@ const Edit = () => {
       portfolio !== null && pages.length !==0 && sections.length !== 0 ? (
         <>
           <ThemeProvider theme={appliedTheme}>
-            <HeaderBar title="Edit" lightTheme>
+            <HeaderBar title="Edit" 
+              lightTheme={getSavedLightThemeMode()}>
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
+                // onClick={() => {
+                //   lightThemeMode =switchLightThemeMode();
+                //   setTheme(!theme);
+                // }}
                 onClick={() => {
-                  switchLightThemeMode();
-                  setTheme(!theme);
+                  switchLightThemeMode().then((response) => {
+                    setTheme(response)
+                  })
                 }}
+
                 color="inherit"
               >
                 <SettingsBrightness />
