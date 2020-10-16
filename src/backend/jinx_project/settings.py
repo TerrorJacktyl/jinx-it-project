@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     # our django apps
+    'common',
     'api',
     'account',
     'portfolio',

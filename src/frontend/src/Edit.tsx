@@ -102,6 +102,8 @@ const Edit = () => {
     putFullPortfolio,
     getFullPortfolio,
     getSavedPortfolioId,
+    userData,
+    setPrimaryPortfolio,
     switchLightThemeMode,
   } = useUser();
   const [theme, setTheme] = useState(true);
@@ -112,6 +114,8 @@ const Edit = () => {
   // Call useEffect to fetch an existing portfolio's data
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
+      // OK to get saved portfolioId from context rather then fetching from backend
+      // as primary_portfolio is fetched upon login
       const portfolioId = await getSavedPortfolioId();
       const { portfolio, pages, sections } = await getFullPortfolio(
         portfolioId
@@ -208,7 +212,10 @@ const Edit = () => {
 
   // Preps the data to be sent to backend, and redirects to display page
   const onPublish = () => {
-    const noUidSections = unidentify(); 
+    const noUidSections = unidentify();
+    // TODO: When multiple portoflio are implemented, 
+    // change this to setting saved portfolioId context rather than contacting backend
+    setPrimaryPortfolio(portfolioId);
     if (existingPortfolio) {
       putFullPortfolio(
         portfolio,
@@ -222,7 +229,7 @@ const Edit = () => {
         noUidSections
       ); 
     }
-    return <Redirect to={Routes.PORTFOLIO_DISPLAY} />;
+    return <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />;
   };
 
   if (published) {
