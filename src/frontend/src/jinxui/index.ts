@@ -59,6 +59,10 @@ export { default as ImageSectionInput } from "./components/edit/ImageSectionInpu
 export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
 export { default as UserImage } from "./components/edit/UserImage";
 export { default as DefaultSectionData } from "./components/edit/DefaultSectionData"
+export { default as PaperSectionStatic } from "./components/edit/PaperSectionStatic"
+export { default as PaperSectionBase } from "./components/edit/PaperSectionBase"
+export { default as PaperSectionDiv } from "./components/edit/PaperSectionDiv"
+export { default as PaperSectionTitle } from "./components/edit/PaperSectionTitle"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

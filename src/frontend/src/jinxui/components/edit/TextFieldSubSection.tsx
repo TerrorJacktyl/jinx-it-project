@@ -7,14 +7,13 @@ type TTextFieldSubSection = {
   rows: number,
 }
 
-// const TextFieldSubSection = (key: string, value:string, handleChange: any, rows: number) => {
 const TextFieldSubSection = (
   props: TTextFieldSubSection
 ) => {
   return (
     <TextField
       name={props.section.uid}
-      defaultValue={props.section.value}
+      defaultValue={props.section.content}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e, props.section.uid)}
       id="standard-full-width"
       style={{ margin: 0, marginBottom: 15 }}

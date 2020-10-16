@@ -12,9 +12,25 @@ type TTextSectionProps = {
 };
 
 const TextSectionInput = (props: TTextSectionProps) => {
+  const index = props.sections.findIndex(
+    (p: TEditSection) => p.uid === props.section.uid
+  );
+
   return (
     <>
-      <PaperSection title={props.section.name}>
+      {index === 0 && (
+        <NewSectionMenu
+          section={props.section}
+          sections={props.sections}
+          setSections={props.setSections}
+          placeAbove={true}
+        />
+      )}
+      <PaperSection
+        section={props.section}
+        sections={props.sections}
+        setSections={props.setSections}
+      >
         <OneColumnSectionDiv>
           <TextFieldSubSection
             section={props.section}

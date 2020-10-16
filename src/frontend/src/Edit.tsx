@@ -237,7 +237,7 @@ const Edit = () => {
                   <form>
                     <PortfolioNameSectionInput
                       title={"Portfolio Name*"}
-                      sectionName={"portfolioName"}
+                      // sectionName={"portfolioName"}
                     >
                       <TextField
                         name={"portfolioName"}
@@ -255,7 +255,7 @@ const Edit = () => {
                     </PortfolioNameSectionInput>
                     <PortfolioNameSectionInput
                       title={"Page Name*"}
-                      sectionName={"pageName"}
+                      // sectionName={"pageName"}
                     >
                       <TextField
                         // TODO: Display and change the current page name when multiple pages are added 

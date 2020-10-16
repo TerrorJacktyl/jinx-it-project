@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { PaperSection } from "jinxui";
+import { PaperSectionStatic } from "jinxui";
 
 const OneColumnThinSectionGrid = styled.div`
   display: grid;
@@ -15,15 +15,20 @@ const SingleLineRequiredGrid = styled.div`
   margin-bottom: -10px;
 `;
 
-const PortfolioNameSection = (props: any) => {
+type TPortfolioNameSection = {
+  title: string,
+  children: any,
+}
+
+const PortfolioNameSection = (props: TPortfolioNameSection) => {
   return (
-      <PaperSection title={props.title}>
+      <PaperSectionStatic title={props.title}>
         <OneColumnThinSectionGrid>
           <SingleLineRequiredGrid>
             {props.children}
           </SingleLineRequiredGrid>
         </OneColumnThinSectionGrid>
-      </PaperSection>
+      </PaperSectionStatic>
   );
 }
 

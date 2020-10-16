@@ -9,16 +9,6 @@ import {
 } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
-// function ImageTextSectionInput(
-//   title: string,
-//   key: string,
-//   value: string,
-// //  touched: any,
-// //  errors: any,
-//   path: any,
-//   handleChange: any,
-//   setImageResponse: any
-// ) {
 
 type TImageTextSectionInput = {
   key: string;
@@ -29,9 +19,25 @@ type TImageTextSectionInput = {
 };
 
 const ImageTextSectionInput = (props: TImageTextSectionInput) => {
+  const index = props.sections.findIndex(
+    (p: TEditSection) => p.uid === props.section.uid
+  );
+
   return (
     <>
-      <PaperSection title={props.section.name}>
+      {index === 0 && (
+        <NewSectionMenu
+          section={props.section}
+          sections={props.sections}
+          setSections={props.setSections}
+          placeAbove={true}
+        />
+      )}
+      <PaperSection
+        section={props.section}
+        sections={props.sections}
+        setSections={props.setSections}
+      >
         <TwoColumnSectionDiv>
 
             <TextFieldSubSection
@@ -42,7 +48,7 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
             <UploadImageSubSection 
               props={props.section} 
             />
-            
+
         </TwoColumnSectionDiv>
       </PaperSection>
       <NewSectionMenu

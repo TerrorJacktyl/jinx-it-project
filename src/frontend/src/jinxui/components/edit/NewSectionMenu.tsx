@@ -21,6 +21,7 @@ type TNewSectionMenu = {
   section: any
   sections: any
   setSections: any
+  placeAbove?: boolean
 }
 
 const NewSectionMenu = (props: TNewSectionMenu) => {
@@ -51,14 +52,16 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const index = props.sections.findIndex(
       (p: TEditSection) => p.uid === props.section.uid
     );
+
+    const target_index = props.placeAbove ? index : index + 1;
     
     const newSection = DefaultSectionData()
     newSection.type = section_type
 
     props.setSections([
-      ...props.sections.slice(0, index + 1),
+      ...props.sections.slice(0, target_index),
       newSection,
-      ...props.sections.slice(index + 1)
+      ...props.sections.slice(target_index)
     ]);
   };
 
