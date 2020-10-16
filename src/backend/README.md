@@ -79,7 +79,7 @@ For example, the following request would delete everything except for the first 
   8. Head over to `serializers.py`
   9. Same deal, copy paste the existing TextField and adjust as necessary. Also update the `get_serializer_map` section of `PolymorphSectionSerializer`.
   10. Head over to `views.py`
-  11. Here you need to update the `get_queryset` for `SectionList` in two places, on the line just above the return line and in the return line
+  11. Here you need to update the `get_queryset` for `SectionList`. Add the new section model to the `section_types` array.
   12. Repeat above step in `SectionDetail`
   13. You should now be good to go
 

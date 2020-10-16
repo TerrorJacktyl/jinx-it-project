@@ -12,27 +12,27 @@ urlpatterns = [
         name='portfolio_list',
     ),
     path(
-        'portfolios/<portfolio_id>',
+        'portfolios/<int:portfolio_id>',
         views.PortfolioDetail.as_view(),
         name='portfolio_detail',
     ),
     path(
-        'portfolios/<portfolio_id>/pages',
+        'portfolios/<int:portfolio_id>/pages',
         views.PageList.as_view(),
         name='page_list',
     ),
     path(
-        'portfolios/<portfolio_id>/pages/<page_id>',
+        'portfolios/<int:portfolio_id>/pages/<int:page_id>',
         views.PageDetail.as_view(),
         name='page_detail',
     ),
     path(
-        'portfolios/<portfolio_id>/pages/<page_id>/sections',
+        'portfolios/<int:portfolio_id>/pages/<int:page_id>/sections',
         views.SectionList.as_view(),
         name='section_list',
     ),
     path(
-        'portfolios/<portfolio_id>/pages/<page_id>/sections/<section_id>',
+        'portfolios/<int:portfolio_id>/pages/<int:page_id>/sections/<int:section_id>',
         views.SectionDetail.as_view(),
         name='section_detail',
     ),
@@ -42,7 +42,7 @@ urlpatterns = [
         name = 'image_list',
     ),
     path(
-        'images/<image_id>',
+        'images/<int:image_id>',
         views.ImageDetail.as_view(),
         name = 'image_list',
     ),
