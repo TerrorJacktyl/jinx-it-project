@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
-
+import { TEditSection } from "jinxui/types";
 
 const StyledInput = styled.input`
   display: none;
@@ -50,17 +50,21 @@ const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
   z-index: 2;
 `;
 
+type TUploadImageSubSection = {
+  section: TEditSection
+}
+
 const UploadImageSubSection = (
-  props: any
+  props: TUploadImageSubSection
 ) => {
   const { uploadImage } = useUser();
   const [imageResponse, setImageResponse] = useState({path: "", id: "0"})
   return (
     <>
-      <label htmlFor={props.uid}>
+      <label htmlFor={props.section.uid}>
         <StyledInput
           accept="image/*"
-          id={props.uid}
+          id={props.section.uid}
           multiple
           type="file"
           onChange={(event) => {
@@ -72,6 +76,8 @@ const UploadImageSubSection = (
                 .then((response) => {
                   console.log(response);
                   setImageResponse(response.data);
+                  props.section.path=response.data.path;
+                  props.section.image=response.data.id;
                 })
                 .catch((error) => {
                   console.log(error);

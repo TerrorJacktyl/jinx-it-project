@@ -34,7 +34,7 @@ const ImageSectionInput = (props: TImageSection) => {
         setSections={props.setSections}
       >
         <OneColumnSectionDiv>
-          <UploadImageSubSection props={props.section} />
+          <UploadImageSubSection section={props.section} />
         </OneColumnSectionDiv>
       </PaperSection>
       <NewSectionMenu

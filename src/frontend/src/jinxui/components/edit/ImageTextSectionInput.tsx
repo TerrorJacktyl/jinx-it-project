@@ -46,7 +46,7 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
               rows={15}
             />
             <UploadImageSubSection 
-              props={props.section} 
+              section={props.section} 
             />
 
         </TwoColumnSectionDiv>
