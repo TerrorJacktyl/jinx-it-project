@@ -106,6 +106,9 @@ export const Section = (data: TSectionData) => {
         height: "auto",
         objectFit: "contain",
       },
+      item: {
+        padding: "1em",
+      }
     })
   );
 
@@ -128,14 +131,14 @@ export const Section = (data: TSectionData) => {
         }
       >
         {data.content ? (
-          <Grid item xs={colsPerItem}>
+          <Grid item lg={colsPerItem} className={classes.item}>
             <Typography variant="body1">
               {data.content}
             </Typography>
           </Grid>
         ) : null}
         {data.path ? (
-          <Grid item xs={colsPerItem}>
+          <Grid item lg={colsPerItem} className={classes.item}>
             <img
               src={data.path == null ? "" : data.path}
               alt={data.alt}
