@@ -21,7 +21,6 @@ export function ScreenBlock({ transparent, children }: { transparent?: any, chil
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       screenPaper: {
-        width: "100%",
         minHeight: "100vh",
       }
     }),
@@ -63,7 +62,8 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
         color: theme.palette.common.white,
         // gridRow: '3',
         // gridColumn: '2',
-      }
+      },
+      textContainer: { padding: '3em' },
     })
   );
 
@@ -74,13 +74,14 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
   return (
     <BackgroundImage url={defaultBackgroundSrc}>
       <ScreenBlock transparent>
-        {/* <div className={classes.container}> */}
-        <Grid container className={classes.container}
+        <Grid container
+          className={classes.container}
           direction="row"
-          justify="space-around"
           alignItems="flex-end"
         >
-          <Grid item xs={8}>
+          <Grid item xs={10}
+            className={classes.textContainer}
+          >
             <Typography
               variant="h1"
               gutterBottom
@@ -93,12 +94,10 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
               className={classes.authorText}>
               {subtitle}
             </Typography>
-
           </Grid>
         </Grid>
-        {/* </div> */}
       </ScreenBlock>
-    </BackgroundImage>
+    </BackgroundImage >
   )
 }
 
@@ -166,7 +165,8 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       container: {
-        padding: "3em 3em 3em 3em",
+        paddingTop: '3em',
+        paddingBottom: '3em',
       },
     })
   );
@@ -182,7 +182,9 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     return (
       // Every odd section has no background
       <ScreenBlock transparent={index % 2 !== 0}>
-        <Container maxWidth="md" className={classes.container}>
+        <Container
+          maxWidth="md"
+          className={classes.container}>
           {component}
         </Container>
       </ScreenBlock >
