@@ -351,7 +351,7 @@ export const useUser = () => {
     first_name: string,
     last_name: string,
     primary_portfolio: number,
-  }>{
+  }> {
     try {
       const response = await API.get(ACCOUNT_PATH + `?username=${username}`, state.config);
       return response.data[0]

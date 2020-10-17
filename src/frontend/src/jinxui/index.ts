@@ -46,6 +46,8 @@ export {
   CentredGrid,
   BackgroundImage,
   Copyright,
+  ScreenBlock,
+  PortfolioHeader,
 } from "./components/display/MuiComponents";
 
 /* Edit */

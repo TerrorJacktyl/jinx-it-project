@@ -5,9 +5,66 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme, useTheme, withStyles } from "@material-ui/core/styles";
+import styled from 'styled-components';
+import clsx from 'clsx';
 
 import { TSectionData } from "jinxui";
+
+
+/* A block that takes up at minimum the height of the screen. Takes an optional */
+export function ScreenBlock({ transparent, children }: { transparent?: any, children?: any }) {
+
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      screenPaper: {
+        width: "100%",
+        minHeight: "100vh",
+      }
+    }),
+  );
+
+  const classes = useStyles();
+
+  const Elt = transparent ? Container : Paper;
+
+  return (
+    <Elt className={classes.screenPaper}>
+      {children}
+    </Elt>
+  )
+}
+
+export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      container: {
+        display: 'grid',
+        gridTemplateRows: '50% 20% 10% 10% 10%'
+      },
+    })
+  );
+
+  const classes = useStyles();
+
+  const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+
+  return (
+    <BackgroundImage url={defaultBackgroundSrc}>
+      <div className={classes.container}>
+        <div></div>
+        <ScreenBlock transparent>
+          <Typography
+            variant="h1"
+            gutterBottom>
+            {title ? title : "loading"}
+          </Typography>
+          <p>HELELASLDKJASLKDJ</p>
+        </ScreenBlock>
+      </div>
+    </BackgroundImage>
+  )
+}
 
 /**
  * Generic section component that accepts any of the section fields.
@@ -82,6 +139,10 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     return <Section {...data} />;
   };
 
+  const catBack = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+
+  const theme = useTheme();
+
   return (
     <>
       <Container maxWidth="md" className={classes.container}>
@@ -125,6 +186,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
 // Typing with children is weird, couldn't figure this out so left as any
 // Give me a `url` as props to get a background image
 export function BackgroundImage(props: any) {
+
   // Background styling
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -133,16 +195,16 @@ export function BackgroundImage(props: any) {
         backgroundColor: theme.palette.background.default,
         backgroundPosition: "center" /* Center the image */,
         backgroundRepeat: "no-repeat" /* Do not repeat the image */,
-        backgroundSize:
-          "cover" /* Resize the background image to cover the entire container */,
+        backgroundSize: "cover" /* Resize the background image to cover the entire container */,
+        // height: "100%",
       },
     })
   );
 
   const classes = useStyles();
-  
+
   // Background: image from style, default to regular background if no image found
-  
+
   return <Paper className={classes.background}>{props.children}</Paper>;
 }
 
