@@ -47,20 +47,22 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       container: {
-        display: 'grid',
-        gridTemplateRows: '70% 10% 20%',
-        gridTemplateColumns: '10% auto',
+        // display: 'grid',
+        // gridTemplateRows: '70% 10% 20%',
+        // gridTemplateColumns: '10% auto',
         height: '100vh',
       },
       titleText: {
         textAlign: 'left',
-        gridRow: '2',
-        gridColumn: '2',
+        color: theme.palette.common.white,
+        // gridRow: '2',
+        // gridColumn: '2',
       },
       authorText: {
         textAlign: 'left',
-        gridRow: '3',
-        gridColumn: '2',
+        color: theme.palette.common.white,
+        // gridRow: '3',
+        // gridColumn: '2',
       }
     })
   );
@@ -72,20 +74,29 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
   return (
     <BackgroundImage url={defaultBackgroundSrc}>
       <ScreenBlock transparent>
-        <div className={classes.container}>
-          <Typography
-            variant="h1"
-            gutterBottom
-            className={classes.titleText}>
-            {title}
-          </Typography>
-          <Typography
-            variant="h2"
-            gutterBottom
-            className={classes.authorText}>
-            {subtitle}
-          </Typography>
-        </div>
+        {/* <div className={classes.container}> */}
+        <Grid container className={classes.container}
+          direction="row"
+          justify="space-around"
+          alignItems="flex-end"
+        >
+          <Grid item xs={8}>
+            <Typography
+              variant="h1"
+              gutterBottom
+              className={classes.titleText}>
+              {title}
+            </Typography>
+            <Typography
+              variant="h2"
+              gutterBottom
+              className={classes.authorText}>
+              {subtitle}
+            </Typography>
+
+          </Grid>
+        </Grid>
+        {/* </div> */}
       </ScreenBlock>
     </BackgroundImage>
   )
@@ -132,7 +143,7 @@ export const Section = (data: TSectionData) => {
       >
         {data.content ? (
           <Grid item lg={colsPerItem} className={classes.item}>
-            <Typography variant="body1">
+            <Typography variant="h5">
               {data.content}
             </Typography>
           </Grid>
