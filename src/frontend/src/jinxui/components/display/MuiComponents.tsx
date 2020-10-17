@@ -196,7 +196,8 @@ export function BackgroundImage(props: any) {
         backgroundPosition: "center" /* Center the image */,
         backgroundRepeat: "no-repeat" /* Do not repeat the image */,
         backgroundSize: "cover" /* Resize the background image to cover the entire container */,
-        // height: "100%",
+        // If there are children, darken the image so text is not invisible
+        filter: `${props.children ? 'brightness(0.7)' : 'none'}`,
       },
     })
   );
@@ -205,7 +206,9 @@ export function BackgroundImage(props: any) {
 
   // Background: image from style, default to regular background if no image found
 
-  return <Paper className={classes.background}>{props.children}</Paper>;
+  return <Paper className={classes.background}>
+    {props.children}
+  </Paper>;
 }
 
 export function Copyright({ text }: { text: string }) {
