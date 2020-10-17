@@ -40,6 +40,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
       const { portfolio, pages, sections } = await getFullPortfolio(
         primary_portfolio
       );
+      setAuthor(`${first_name} ${last_name}`);
       setPortfolio(portfolio);
       setPages(pages);
       setSections(sections);

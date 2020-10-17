@@ -12,6 +12,9 @@ import clsx from 'clsx';
 import { TSectionData } from "jinxui";
 
 
+// Helper function for all you functional declarative lot
+export const compose = (...fns: Array<Function>) => (arg: any) => fns.reduceRight((acc, fn) => (fn ? fn(acc) : acc), arg)
+
 /* A block that takes up at minimum the height of the screen. Takes an optional */
 export function ScreenBlock({ transparent, children }: { transparent?: any, children?: any }) {
 
@@ -40,8 +43,20 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
     createStyles({
       container: {
         display: 'grid',
-        gridTemplateRows: '50% 20% 10% 10% 10%'
+        gridTemplateRows: '70% 10% 20%',
+        gridTemplateColumns: '10% auto',
+        height: '100vh',
       },
+      titleText: {
+        textAlign: 'left',
+        gridRow: '2',
+        gridColumn: '2',
+      },
+      authorText: {
+        textAlign: 'left',
+        gridRow: '3',
+        gridColumn: '2',
+      }
     })
   );
 
@@ -51,23 +66,28 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
 
   return (
     <BackgroundImage url={defaultBackgroundSrc}>
-      <div className={classes.container}>
-        <div></div>
-        <ScreenBlock transparent>
+      <ScreenBlock transparent>
+        <div className={classes.container}>
           <Typography
             variant="h1"
-            gutterBottom>
-            {title ? title : "loading"}
+            gutterBottom
+            className={classes.titleText}>
+            {title}
           </Typography>
-          <p>HELELASLDKJASLKDJ</p>
-        </ScreenBlock>
-      </div>
+          <Typography
+            variant="h2"
+            gutterBottom
+            className={classes.authorText}>
+            {subtitle}
+          </Typography>
+        </div>
+      </ScreenBlock>
     </BackgroundImage>
   )
 }
 
 /**
- * Generic section component that accepts any of the section fields.
+ * Generic section component that accepts any of the section fields and places their data (no background).
  * All section fields are optional. Empty sections become empty space.
  * 1. Text only => left aligned
  * 2. Image only => centre aligned
@@ -135,21 +155,28 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
   const classes = useStyles();
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
-  const dataToSection = (data: TSectionData) => {
+  const layoutData = (data: TSectionData) => {
     return <Section {...data} />;
   };
 
-  const catBack = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+  const applyAlternatingBackground = (component: JSX.Element, index: number) => {
+    return (
+      // Every odd section has no background
+      <ScreenBlock transparent={index % 2 !== 0}>
+        {component}
+      </ScreenBlock>
+    )
+  }
 
-  const theme = useTheme();
+  const dataToSection = compose(applyAlternatingBackground, layoutData)
 
   return (
     <>
-      <Container maxWidth="md" className={classes.container}>
-        <Paper>
-          <CentredGrid components={sections.map(dataToSection)} />
-        </Paper>
-      </Container>
+      {/* <Container maxWidth="md" className={classes.container}> */}
+      <Paper>
+        <CentredGrid components={sections.map(dataToSection)} />
+      </Paper>
+      {/* </Container> */}
     </>
   );
 };
