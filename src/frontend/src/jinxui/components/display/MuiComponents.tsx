@@ -29,13 +29,18 @@ export function ScreenBlock({ transparent, children }: { transparent?: any, chil
 
   const classes = useStyles();
 
-  const Elt = transparent ? Container : Paper;
-
-  return (
-    <Elt className={classes.screenPaper}>
+  if (transparent) {
+    return <Container className={classes.screenPaper}>
       {children}
-    </Elt>
-  )
+    </Container>
+  }
+  else {
+    return (
+      <Paper elevation={0} className={classes.screenPaper}>
+        {children}
+      </Paper>
+    )
+  }
 }
 
 export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
@@ -155,7 +160,7 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
   const classes = useStyles();
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
-  const layoutData = (data: TSectionData) => {
+  const layoutData = (data: TSectionData, index?: number) => {
     return <Section {...data} />;
   };
 
@@ -163,8 +168,10 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     return (
       // Every odd section has no background
       <ScreenBlock transparent={index % 2 !== 0}>
-        {component}
-      </ScreenBlock>
+        <Container maxWidth="md" className={classes.container}>
+          {component}
+        </Container>
+      </ScreenBlock >
     )
   }
 
@@ -172,11 +179,7 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
   return (
     <>
-      {/* <Container maxWidth="md" className={classes.container}> */}
-      <Paper>
-        <CentredGrid components={sections.map(dataToSection)} />
-      </Paper>
-      {/* </Container> */}
+      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(dataToSection(section), index))} />
     </>
   );
 };
@@ -190,7 +193,10 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
     createStyles({
       root: {
         flexGrow: 1,
-        padding: "2em 2em 2em 2em",
+        // padding: "2em 2em 2em 2em",
+      },
+      item: {
+        // padding: "0 0 5em 0"
       },
     })
   );
@@ -201,7 +207,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
     <div className={classes.root}>
       <Grid container spacing={3}>
         {components.map((component, index) => (
-          <Grid item xs={12} key={index} style={{ padding: "0 0 5em 0" }}>
+          <Grid item xs={12} key={index} className={classes.item}>
             {component}
           </Grid>
         ))}
@@ -239,12 +245,29 @@ export function BackgroundImage(props: any) {
 }
 
 export function Copyright({ text }: { text: string }) {
+
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      container: {
+        paddingTop: '2em',
+      },
+    })
+  );
+
+  const classes = useStyles();
+
+  return (
+    <Container maxWidth="sm" className={classes.container}>
+      <CopyrightText text={text} />
+    </Container>
+  )
+}
+
+export function CopyrightText({ text }: { text: string }) {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        {text}
-      </Link>{" "}
+      {text}{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
