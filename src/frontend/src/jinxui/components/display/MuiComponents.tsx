@@ -247,6 +247,7 @@ export function BackgroundImage(props: any) {
         backgroundSize: "cover" /* Resize the background image to cover the entire container */,
         // If there are children, darken the image so text is not invisible
         filter: `${props.children ? 'brightness(0.7)' : 'none'}`,
+        minHeight: "100vh"
       },
     })
   );

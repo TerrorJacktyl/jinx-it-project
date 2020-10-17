@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { TextField } from "@material-ui/core";
 
@@ -69,9 +70,11 @@ function sectionDataIsEmpty(data: any) {
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
+  const [redirect, setRedirect] = useState(false);
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
   const [published, setPublished] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
   const {
     postFullPortfolio,
     putFullPortfolio,
@@ -174,14 +177,16 @@ const Edit = () => {
     );
   };
 
-  // const switchLightThemeMode = () => {
-  //   switchLightThemeMode().then((response) => {
-  //     setTheme(response)
-  //   })
-  // }
+  const onCancel = () => {
+    return (
+      <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
+    );
+  }
 
   if (published) {
     return onPublish();
+  } else if (cancelled) {
+    return onCancel();
   } else {
     return (
       // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
@@ -199,6 +204,15 @@ const Edit = () => {
                 <SettingsBrightness />
               </Button>
             </HeaderBar>
+            <Button
+              style={{ position: "absolute", top: 50, right: 0 }}
+              onClick={() => {
+                setCancelled(true);
+              }}
+              color="inherit"
+            >
+              <CloseIcon style={{ fontSize: 40 }} />
+            </Button>
             <CssBaseline />
             <PrimaryColumnDiv>
               <div></div>

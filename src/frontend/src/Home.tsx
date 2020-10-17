@@ -37,10 +37,12 @@ const SiteHeader = styled.header`
 const HeaderDiv = styled.div`
   max-width: 90%;
   padding: 0.6rem 0.5rem 0.2rem;
+  margin: auto;
 `;
 
 // Used for potential modifications to login link
 const StyledLink = styled.a`
+  text-decoration: none;
 `;
 
 // Main top block div. Styled so that it takes up 100% of any screen
@@ -57,7 +59,6 @@ const TopBlockDiv = styled(Paper)`
   justify-items: center;
 `;
 
-// Main logo
 const JinxLogo = styled.img`
   height: 90%;
   width: 90%;
@@ -100,6 +101,7 @@ const StyledLogin = styled(SecondaryButton)`
   margin-left: 20px;
   margin-bottom: 0px;
   height: 30px;
+  width: 120px;
 `;
 
 // Nice big white space
@@ -119,7 +121,7 @@ const Home = () => {
           <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
             <SiteHeader>
               <HeaderDiv>
-                <HeaderBar title="" lightTheme={true}>
+                <HeaderBar hideLogo title="" lightTheme={true}>
                   <StyledLink
                     href={
                       userData.authenticated

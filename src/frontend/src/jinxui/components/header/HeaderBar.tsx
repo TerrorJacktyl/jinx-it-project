@@ -14,6 +14,7 @@ import {
   HeaderButton,
   LightHeaderGrad,
   DarkHeaderGrad,
+  LogoLink
 } from "jinxui";
 
 import styled from "styled-components";
@@ -48,7 +49,7 @@ const StyledDivCenter = styled.div`
 const StyledDivRight = styled.div`
   padding-right: 0px;
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
 `;
 
@@ -56,11 +57,13 @@ type HeaderBarProps = {
   title?: string;
   lightTheme: boolean;
   children?: React.ReactNode;
+  hideLogo?: boolean;
 }
 
 const HeaderBar = (props: HeaderBarProps) => {
   const trigger = useScrollTrigger();
-  const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad
+  const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad;
+
   return (
     <StylesProvider injectFirst>
         <Slide appear={false} direction="down" in={!trigger}>
@@ -70,6 +73,7 @@ const HeaderBar = (props: HeaderBarProps) => {
             style={{
               background: headerGrad
             }}
+            // position="sticky"
           >
             <StyledDivOuter>
               <StyledDivLeft>
@@ -81,7 +85,9 @@ const HeaderBar = (props: HeaderBarProps) => {
                 </HeaderButton>
                 <Typography variant="h6">{props.title ? props.title : ""}</Typography>
               </StyledDivLeft>
-              <StyledDivCenter></StyledDivCenter>
+              <StyledDivCenter>
+                { !props.hideLogo ? <LogoLink lightTheme={props.lightTheme}/> : null }
+              </StyledDivCenter>
               <StyledDivRight>
                 <UserAvatarDropdown />
                 {props.children}

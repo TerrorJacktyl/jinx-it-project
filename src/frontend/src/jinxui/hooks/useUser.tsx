@@ -407,7 +407,6 @@ export const useUser = () => {
       const pages: TPage[] = await getPages(portfolio_id);
       // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
       const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
-      // console.log(pages);
       //        pages.forEach(async (page: any) => {
       //          sections.push(await getSections(portfolio_id, page.id))
       //        })
