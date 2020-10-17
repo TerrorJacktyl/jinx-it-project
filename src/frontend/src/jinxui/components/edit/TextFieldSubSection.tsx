@@ -7,6 +7,13 @@ type TTextFieldSubSection = {
   rows: number,
 }
 
+// Material ui text field
+//  - variant="outlined" ensures that there is an outline that makes it easy 
+//      to see which field is selected
+//  - placeholder will disappear as soon as a user starts writing something
+//      preferrable to default value so the user doesn't have to erase
+//      text before starting to write something of their own.
+
 const TextFieldSubSection = (
   props: TTextFieldSubSection
 ) => {
@@ -14,7 +21,7 @@ const TextFieldSubSection = (
     <TextField
       name={props.section.uid}
       defaultValue={props.section.content}
-      placeholder={"Prover your creativity, write something interesting..."}
+      placeholder={"Prove you have some level of creativity, write something interesting..."}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleChange(e, props.section.uid)}
       id="standard-full-width"
       style={{ margin: 0, marginBottom: 15 }}

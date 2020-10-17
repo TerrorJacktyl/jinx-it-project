@@ -19,6 +19,8 @@ const TextSectionInput = (props: TTextSectionProps) => {
 
   return (
     <>
+      {/* Add another section menu above the section if at the top */}
+
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
@@ -27,6 +29,9 @@ const TextSectionInput = (props: TTextSectionProps) => {
           placeAbove={true}
         />
       )}
+
+      {/* Main content */}
+
       <PaperSection
         section={props.section}
         sections={props.sections}
@@ -41,6 +46,9 @@ const TextSectionInput = (props: TTextSectionProps) => {
           />
         </OneColumnSectionDiv>
       </PaperSection>
+
+      {/* Add section menu */}
+
       <NewSectionMenu
         section={props.section}
         sections={props.sections}

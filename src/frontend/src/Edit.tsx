@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
-// import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
@@ -11,7 +9,6 @@ import { SettingsBrightness } from "@material-ui/icons";
 import { TextField } from "@material-ui/core";
 
 import {
-  ErrorMessage,
   LightTheme,
   DarkTheme,
   useUser,
@@ -24,18 +21,13 @@ import {
   Routes,
   PrimaryColumnDiv,
   ImageTextSectionInput,
-  TwoColumnSectionDiv,
-  PaperSection,
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
 
-const FRONT_END_URL = process.env.REACT_APP_FRONT_URL;
-
 const FormTitle = styled.h2`
   font-weight: 300;
 `;
-
 
 const BottomButtonsDiv = styled.div`
   display: flex;
@@ -47,8 +39,11 @@ const BottomButtonsDiv = styled.div`
   padding: 5px;
 `;
 
-/* Was used in formik, but is redundant now. Will leave in as a 
-   basis for touched and error checking if we implement it in the future */
+/*  Was used in formik, but is redundant now. Will leave in as a 
+    basis for touched and error checking if we implement it in the future 
+    (commented out to prevent linting warnings 
+*/
+/*
 const EditSchema = Yup.object().shape({
   portfolioName: Yup.string().max(50, "Too Long!").required("Required"),
   sections: Yup.array().of(
@@ -57,8 +52,11 @@ const EditSchema = Yup.object().shape({
     })
   ),
 });
+*/
 
 // Unutilised, but may come in handly later
+// (commented out to prevent linting warnings)
+/*
 function sectionDataIsEmpty(data: any) {
   return (
     (data.type === "text" && data.content === "") ||
@@ -66,28 +64,27 @@ function sectionDataIsEmpty(data: any) {
     (data.type === "image_text" && data.image === 0 && data.content === "")
   );
 }
+*/
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
-  const blankImage = FRONT_END_URL + "blank_user.png";
   const [published, setPublished] = useState(false);
-  const [submittionError, setSubmittionError] = useState(false);
-  const blankImagePath = FRONT_END_URL + "blank_user.png";
   const {
     postFullPortfolio,
     putFullPortfolio,
     getFullPortfolio,
     getSavedPortfolioId,
     userData,
-    setPrimaryPortfolio,
     switchLightThemeMode,
     getSavedLightThemeMode,
   } = useUser();
-  const [theme, setTheme] = useState(true);
-  const appliedTheme = createMuiTheme(getSavedLightThemeMode() ? LightTheme : DarkTheme);
+  // const [theme, setTheme] = useState(true);
+  const appliedTheme = createMuiTheme(
+    getSavedLightThemeMode() ? LightTheme : DarkTheme
+  );
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TEditSection[]>([]);
@@ -108,7 +105,6 @@ const Edit = () => {
         const newSection = { ...section, ...uidPair };
         return newSection;
       });
-      console.log(IdSections);
       setSections(IdSections);
     };
 
@@ -125,16 +121,6 @@ const Edit = () => {
       setSections(newSection);
     }
   }, []);
-
-  // Changes the path of an existing image section to an uploaded image
-  const addImageResponse = (key: any, response: any) => {
-    const index = sections.findIndex(
-      (section: TEditSection) => section.uid === key
-    );
-    var newSections = sections;
-    newSections[index].path = response.path;
-    setSections(newSections);
-  };
 
   // Updates a section's content if it has been changed within the text field
   const handleChange = (
@@ -159,8 +145,7 @@ const Edit = () => {
     var newSections = sections;
     newSections[index].name = e.target.value;
     setSections(newSections);
-  }
-
+  };
 
   // Removes the uid field from each section. Used before data is sent to backend
   const unidentify = () => {
@@ -176,23 +161,17 @@ const Edit = () => {
   // Preps the data to be sent to backend, and redirects to display page
   const onPublish = () => {
     const noUidSections = unidentify();
-    // TODO: When multiple portoflio are implemented, 
+    // TODO: When multiple portoflio are implemented,
     // set the portfolioId in context to the portfolio being edited.
     // In the case of a new portfolio, will need to wait until the POST response to set this
     if (existingPortfolio) {
-      putFullPortfolio(
-        portfolio,
-        pages, 
-        noUidSections
-      )
+      putFullPortfolio(portfolio, pages, noUidSections);
     } else {
-      postFullPortfolio(
-        portfolio,
-        pages, 
-        noUidSections
-      ); 
+      postFullPortfolio(portfolio, pages, noUidSections);
     }
-    return <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />;
+    return (
+      <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
+    );
   };
 
   // const switchLightThemeMode = () => {
@@ -205,24 +184,16 @@ const Edit = () => {
     return onPublish();
   } else {
     return (
-      // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated 
-      portfolio !== null && pages.length !==0 && sections.length !== 0 ? (
+      // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
+      portfolio !== null && pages.length !== 0 && sections.length !== 0 ? (
         <>
           <ThemeProvider theme={appliedTheme}>
-            <HeaderBar title="Edit" 
-              lightTheme={getSavedLightThemeMode()}>
+            <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()}>
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
-                // onClick={() => {
-                //   lightThemeMode =switchLightThemeMode();
-                //   setTheme(!theme);
-                // }}
                 onClick={() => {
-                  switchLightThemeMode().then((response) => {
-                    setTheme(response)
-                  })
+                  switchLightThemeMode().then((response) => {});
                 }}
-
                 color="inherit"
               >
                 <SettingsBrightness />
@@ -233,101 +204,94 @@ const Edit = () => {
               <div></div>
               <div>
                 <FormTitle>Enter your information</FormTitle>
-                  <form>
-                    <PortfolioNameSectionInput
-                      title={""}
-                      // sectionName={"portfolioName"}
+                <form>
+                  <PortfolioNameSectionInput
+                    title={""} // A title here would be confusing
+                  >
+                    <TextField
+                      name={"portfolioName"}
+                      label={"Portfolio Name"}
+                      defaultValue={portfolio.name}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        var newPortfolio = portfolio;
+                        newPortfolio.name = e.target.value;
+                        setPortfolio(newPortfolio);
+                      }}
+                      id="standard-full-width"
+                      fullWidth
+                      color="secondary"
+                    />
+                    <TextField
+                      // TODO: Display and change the current page name when multiple pages are added
+                      name={"pageName"}
+                      label={"Page Name"}
+                      defaultValue={pages[0].name}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        var newPages = pages;
+                        newPages[0].name = e.target.value;
+                        setPages(newPages);
+                      }}
+                      id="standard-full-width"
+                      fullWidth
+                      color="secondary"
+                    />
+                  </PortfolioNameSectionInput>
+                  {sections.map((section: TEditSection) => {
+                    if (section.type === "text") {
+                      return (
+                        <TextSectionInput
+                          key={section.uid}
+                          section={section}
+                          handleChange={handleChange}
+                          handleTitleChange={handleTitleChange}
+                          sections={sections}
+                          setSections={setSections}
+                        />
+                      );
+                    } else if (section.type === "image") {
+                      return (
+                        <ImageSectionInput
+                          key={section.uid}
+                          handleTitleChange={handleTitleChange}
+                          section={section}
+                          sections={sections}
+                          setSections={setSections}
+                        />
+                      );
+                    } else if (section.type === "image_text") {
+                      return (
+                        <ImageTextSectionInput
+                          key={section.uid}
+                          handleChange={handleChange}
+                          handleTitleChange={handleTitleChange}
+                          section={section}
+                          sections={sections}
+                          setSections={setSections}
+                        />
+                      );
+                    } else {
+                      return <></>;
+                    }
+                  })}
+                  <BottomButtonsDiv>
+                    <PrimaryButton
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                        setPublished(true)
+                      }
                     >
-
-                      <TextField
-                        name={"portfolioName"}
-                        label={"Portfolio Name"}
-                        defaultValue={portfolio.name}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          var newPortfolio = portfolio
-                          newPortfolio.name = e.target.value
-                          setPortfolio(newPortfolio);
-                        }}
-                        id="standard-full-width"
-                        // style={{ margin: 0, marginBottom: 15 }}
-                        fullWidth
-                        color="secondary"
-                        />
-                    {/* </PortfolioNameSectionInput> */}
-                    {/* <PortfolioNameSectionInput
-                      title={"Page Name*"}
-                      // sectionName={"pageName"}
-                    > */}
-                      <TextField
-                        // TODO: Display and change the current page name when multiple pages are added 
-                        name={"pageName"}
-                        label={"Page Name"}
-                        defaultValue={pages[0].name}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          var newPages = pages
-                          newPages[0].name = e.target.value
-                          setPages(newPages);
-                        }}
-                        id="standard-full-width"
-                        // style={{ margin: 0,  marginBottom: 15}}
-                        fullWidth
-                        color="secondary"
-                        />
-                      {console.log(portfolio.name)}
-                    </PortfolioNameSectionInput>
-                    {sections.map((section: TEditSection) => {
-                      if (section.type === "text") {
-                            return (
-                              <TextSectionInput
-                                key={section.uid}
-                                section={section}
-                                handleChange={handleChange}
-                                handleTitleChange={handleTitleChange}
-                                sections={sections}
-                                setSections={setSections}
-                              />
-                            );
-                          } else if (section.type === "image") {
-                            return (
-                              <ImageSectionInput
-                                key={section.uid}
-                                handleTitleChange={handleTitleChange}
-                                section={section}
-                                sections={sections}
-                                setSections={setSections}
-                              />
-                            );
-                          } else if (section.type === "image_text") {
-                            return (
-                              <ImageTextSectionInput
-                                key={section.uid}
-                                handleChange={handleChange}
-                                handleTitleChange={handleTitleChange}
-                                section={section}
-                                sections={sections}
-                                setSections={setSections}
-                              />
-                            );
-                          }
-                    })}
-                    <BottomButtonsDiv>
-                      <PrimaryButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => setPublished(true)}>PUBLISH</PrimaryButton>
-                      <a href={Routes.HOME}>
-                        <SecondaryButton>Cancel</SecondaryButton>
-                      </a>
-                    </BottomButtonsDiv>
-                    {submittionError ? (
-                      <ErrorMessage>
-                        Error signing up. Please try again later.
-                      </ErrorMessage>
-                    ) : null}
-                  </form>
-                </div>
+                      PUBLISH
+                    </PrimaryButton>
+                    <a href={Routes.HOME}>
+                      <SecondaryButton>Cancel</SecondaryButton>
+                    </a>
+                  </BottomButtonsDiv>
+                </form>
+              </div>
               <div></div>
-              </PrimaryColumnDiv>
+            </PrimaryColumnDiv>
           </ThemeProvider>
-        </>) 
-      : null
+        </>
+      ) : null
     );
   }
 };

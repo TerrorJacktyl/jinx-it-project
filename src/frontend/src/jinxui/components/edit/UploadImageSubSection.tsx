@@ -54,7 +54,7 @@ type TUploadImageSubSection = {
 
 const UploadImageSubSection = (props: TUploadImageSubSection) => {
   const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
-  const [imageExists, setImageExists] = useState(false)
+  const [imageExists, setImageExists] = useState(false);
   const { uploadImage } = useUser();
   const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
 
@@ -66,6 +66,9 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
   });
   return (
     <>
+      {/* Make a hidden upload image button here that we will use a 
+          further button to ensure provide interaction
+          This button is notoriously difficult to style */}
       <label htmlFor={props.section.uid}>
         <StyledInput
           accept="image/*"
@@ -92,6 +95,9 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
             }
           }}
         />
+
+        {/* Use CSS grid to ensure upload image icon stays in the correct 
+            relative to the image*/}
         <ImageGrid>
           <ImageGridMain>
             <UserImage
@@ -105,7 +111,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
                   : {
                       opacity: "30%",
                       padding: "40%",
-                    } 
+                    }
               }
             />
           </ImageGridMain>

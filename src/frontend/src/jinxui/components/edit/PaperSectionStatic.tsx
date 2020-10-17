@@ -1,6 +1,8 @@
-import { AnyNaptrRecord } from "dns";
 import React from "react";
 import { PaperSectionDiv, PaperSectionBase, PaperSectionTitle } from "jinxui";
+
+// This is used for sections that should not be dynamic (i.e. sections
+// that shouldn't allow the user to move or delete them)
 
 type TPaperSectionStatic = {
   children: any;

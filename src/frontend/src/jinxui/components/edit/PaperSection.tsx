@@ -95,7 +95,9 @@ const PaperSection = (props: TPaperSection) => {
     <PaperSectionDiv>
       <StyledDivOuter>
         <StyledDivLeft>
-          {/* <PaperSectionTitle>{props.section.name}</PaperSectionTitle> */}
+
+        {/* Title */}
+
           <TextField
             name={props.section.uid}
             defaultValue={props.section.name}
@@ -105,6 +107,9 @@ const PaperSection = (props: TPaperSection) => {
             />
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
+
+        {/* Modify section list buttons */}
+
         <StyledDivRight>
           <StyledButton
             size="medium"
