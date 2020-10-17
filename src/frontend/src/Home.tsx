@@ -47,7 +47,7 @@ const StyledLink = styled.a`
 const TopBlockDiv = styled(Paper)`
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
-  height: 100%;
+  height: 100vh;
   display: grid;
   grid-template-rows:
     minmax(80px,1fr) minmax(50px,400px) minmax(50px,1fr) 
@@ -115,51 +115,51 @@ const Home = () => {
     <>
       <ThemeProvider theme={currentTheme}>
         {/* CSSBaseline required for setting background colour */}
-        <CSSBaseline />
-        <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
-          <SiteHeader>
-            <HeaderDiv>
-              <HeaderBar title="" lightTheme={true}>
-                <StyledLink
-                  href={
-                    userData.authenticated
-                      ? (Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username)
-                      : Routes.LOGIN
-                  }
-                >
-                  <StyledLogin>{userData.authenticated ? "My Portfolio" : "Login"}</StyledLogin>
-                </StyledLink>
-              </HeaderBar>
-            </HeaderDiv>
-          </SiteHeader>
+        <CSSBaseline/>
+          <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
+            <SiteHeader>
+              <HeaderDiv>
+                <HeaderBar title="" lightTheme={true}>
+                  <StyledLink
+                    href={
+                      userData.authenticated
+                        ? (Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username)
+                        : Routes.LOGIN
+                    }
+                  >
+                    <StyledLogin>{userData.authenticated ? "My Portfolio" : "Login" }</StyledLogin>
+                  </StyledLink>
+                </HeaderBar>
+              </HeaderDiv>
+            </SiteHeader>
 
-          {/* Top Block */}
+            {/* Top Block */}
 
-          <JinxLogo src={require("images/Logo_Main.svg")} />
-          <JinxLogo src={require("images/Logo_Main_Text_Only_Black.svg")} />
-          <CatchPhrase>Your portfolio, made simple</CatchPhrase>
-          <StyledLink href="/signup">
-            <PrimaryButton>JOIN TODAY</PrimaryButton>
-          </StyledLink>
-          <Icon>
-            <ExpandMoreIcon />
-          </Icon>
-        </TopBlockDiv>
+            <JinxLogo src={require("images/Logo_Main.svg")} />
+            <JinxLogo src={require("images/Logo_Main_Text_Only_Black.svg")} />
+            <CatchPhrase>Your portfolio, made simple</CatchPhrase>
+            <StyledLink href="/signup">
+              <PrimaryButton>JOIN TODAY</PrimaryButton>
+            </StyledLink>
+            <Icon>
+              <ExpandMoreIcon />
+            </Icon>
+          </TopBlockDiv>
 
-        {/* How to section - Mostly implemented in HomeTemplates.tsx*/}
+          {/* How to section - Mostly implemented in HomeTemplates.tsx*/}
 
-        <StyledSiteLayout>
+          <StyledSiteLayout>
+            <Gap />
+            <HomeTemplates />
+            <StyledLink href="/signup">
+              <PrimaryButton>JOIN TODAY</PrimaryButton>
+            </StyledLink>
+          </StyledSiteLayout>
           <Gap />
-          <HomeTemplates />
-          <StyledLink href="/signup">
-            <PrimaryButton>JOIN TODAY</PrimaryButton>
-          </StyledLink>
-        </StyledSiteLayout>
-        <Gap />
 
-        {/* Footer - Implemented in HomeFooter.tsx*/}
+          {/* Footer - Implemented in HomeFooter.tsx*/}
 
-        <HomeFooter />
+          <HomeFooter />
       </ThemeProvider>
     </>
   );
