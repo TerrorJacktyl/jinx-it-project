@@ -148,7 +148,7 @@ export const Section = (data: TSectionData) => {
           </Grid>
         ) : null}
         {data.path ? (
-          <Grid item lg={colsPerItem} className={classes.item}>
+          <Grid item xs={12} lg={colsPerItem} className={classes.item}>
             <img
               src={data.path == null ? "" : data.path}
               alt={data.alt}
