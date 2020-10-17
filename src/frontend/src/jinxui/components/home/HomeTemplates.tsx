@@ -18,6 +18,7 @@ const OuterDiv = styled.div`
 const BGImage = styled.img`
   opacity: 70%;
   object-fit: scale-down;
+  max-width: 110vw;
 `;
 
 // Icon to be displayed for various steps
@@ -25,6 +26,7 @@ const StyledIcon = styled(SvgIcon)`
   width: 250px;
   height: 250px;
   max-width: 90%;
+  max-width: 50vw;
   color: ${() => LightTheme.palette.info.main}; ;
 `;
 
@@ -38,26 +40,30 @@ const HowWorkDiv = styled.div`
 
 // Place the bg number for step one
 const NumberOneBGDiv = styled.div`
-  grid-row: 4/7;
+  grid-row: 4/8;
   grid-column: 4/11;
+  align-self: center;
+
 `;
 
 // Place the bg number for step two
 const NumberTwoBGDiv = styled.div`
   grid-row: 13/16;
   grid-column: 2/9;
+  align-self: center;
 `;
 
 // Place the bg number for step three
 const NumberThreeBGDiv = styled.div`
   grid-row: 24/28;
   grid-column: 4/11;
+  align-self: cecnter;
 `;
 
 // Place the icon for step one
 const NumberOneIconDiv = styled.div`
   grid-row: 5/8;
-  grid-column: 8/13;
+  grid-column: 5/13;
   z-index: 8;
   min-width: 300px;
   padding: 30px;
@@ -66,7 +72,7 @@ const NumberOneIconDiv = styled.div`
 // Place the icon for step two
 const NumberThreeIconDiv = styled.div`
   grid-row: 24/27;
-  grid-column: 8/13;
+  grid-column: 5/13;
   z-index: 8;
   min-width: 300px;
   padding: 30px;
@@ -172,7 +178,7 @@ const HomeTemplates = () => {
         <NumberOneBGDiv>
           <BGImage
             src={require("images/circle_1.svg")}
-            style={{ transform: `translateY(${offset * 0.2 - 280}px)` }}
+            style={{ transform: `translateY(${offset * 0.2 - 180}px)` }}
           />
         </NumberOneBGDiv>
         <NumberOneIconDiv>
@@ -191,7 +197,7 @@ const HomeTemplates = () => {
         <NumberTwoBGDiv>
           <BGImage 
             src={require("images/circle_2.svg")} 
-            style={{ transform: `translateY(${offset * 0.13 - 300}px)` }}
+            style={{ transform: `translateY(${offset * 0.13 - 100}px)` }}
           />
         </NumberTwoBGDiv>
         <NumberTwoTextDiv>
