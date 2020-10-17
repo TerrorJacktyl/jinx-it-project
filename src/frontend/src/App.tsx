@@ -6,9 +6,10 @@ import Signup from "./Signup";
 import Home from "./Home";
 import Edit from "./Edit";
 import Portfolio from "./Portfolio";
-
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, PortfolioDisplay, Routes } from "jinxui";
+
+import Test from "./Test";
 
 const OverallDiv = styled.div`
   overflow-x: hidden;
@@ -30,6 +31,7 @@ function App() {
             <Route path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"} exact render={
               ({ match }: RouteComponentProps<{ username: string }>) => <Portfolio username={match.params.username} />
             } />
+            <Route path={"/test"} exact component={Test} />
           </Switch>
         </OverallDiv>
       </Router>

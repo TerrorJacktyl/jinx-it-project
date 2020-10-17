@@ -7,6 +7,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
   HeaderBar, Copyright, SectionGrid, BackgroundImage, HeaderBarSpacer,
+  PortfolioHeader,
 } from 'jinxui';
 
 interface PortfolioProps {
@@ -24,6 +25,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
     getAccountDetailsFromUsername,
   } = useUser();
 
+  const [author, setAuthor] = useState<string>('');
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [currPage] = useState<number>(0);
@@ -33,12 +35,13 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
-      const { primary_portfolio } = await getAccountDetailsFromUsername(
+      const { primary_portfolio, first_name, last_name } = await getAccountDetailsFromUsername(
         username
       );
       const { portfolio, pages, sections } = await getFullPortfolio(
         primary_portfolio
       );
+      setAuthor(`${first_name} ${last_name}`);
       setPortfolio(portfolio);
       setPages(pages);
       setSections(sections);
@@ -55,19 +58,15 @@ const Portfolio = ({ username }: PortfolioProps) => {
     <>
       <CssBaseline />
       <ThemeProvider theme={LightTheme}>
-        <HeaderBar lightTheme={true}/>
-        <BackgroundImage url={defaultBackgroundSrc}>
-          <HeaderBarSpacer />
-          <Typography
-            variant="h1"
-            gutterBottom>
-            {portfolio ? portfolio.name : "loading"}
-          </Typography>
-          <SectionGrid sections={sections} />
-          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
-            <Copyright text={userData.firstName} />
-          </Container>
-        </BackgroundImage>
+        <HeaderBar lightTheme={true} />
+        <PortfolioHeader
+          title={portfolio?.name}
+          subtitle={author}
+        ></PortfolioHeader>
+        <SectionGrid sections={sections} />
+        <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
+          <Copyright text={userData.firstName} />
+        </Container>
       </ThemeProvider>
     </>
   );
