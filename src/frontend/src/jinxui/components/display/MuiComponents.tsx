@@ -13,31 +13,8 @@ import { TSectionData } from "jinxui";
 export const compose = (...fns: Array<Function>) => (arg: any) => fns.reduceRight((acc, fn) => (fn ? fn(acc) : acc), arg)
 
 /* A block that takes up at minimum the height of the screen. Takes an optional */
-export function ScreenBlock({ transparent, children }: { transparent?: any, children?: any }) {
+export function ScreenBlock(props: any) {
 
-  if (transparent) {
-    return (
-      <Box
-        minHeight="100vh">
-        <Container>
-          {children}
-        </Container>
-      </Box>
-    )
-  }
-  else {
-    return (
-      <Box
-        minHeight="100vh"
-        clone
-      >
-        <Paper elevation={0} children={children} />
-      </Box>
-    )
-  }
-}
-
-function SBlock(props: any) {
   return (
     <Box
       minHeight="100vh" clone>
@@ -47,39 +24,13 @@ function SBlock(props: any) {
 }
 
 export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      container: {
-        // display: 'grid',
-        // gridTemplateRows: '70% 10% 20%',
-        // gridTemplateColumns: '10% auto',
-        height: '100vh',
-      },
-      titleText: {
-        textAlign: 'left',
-        color: theme.palette.common.white,
-        // gridRow: '2',
-        // gridColumn: '2',
-      },
-      authorText: {
-        textAlign: 'left',
-        color: theme.palette.common.white,
-        // gridRow: '3',
-        // gridColumn: '2',
-      },
-      textContainer: { padding: '3em' },
-    })
-  );
-
-  const classes = useStyles();
 
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
   return (
     <BackgroundImage url={defaultBackgroundSrc}>
-      <SBlock>
+      <ScreenBlock>
         <Grid container
-          className={classes.container}
           direction="row"
           alignItems="flex-end"
         >
@@ -100,7 +51,7 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
             </Box>
           </Grid>
         </Grid>
-      </SBlock>
+      </ScreenBlock>
     </BackgroundImage >
   )
 }
@@ -133,7 +84,7 @@ export const Section = (data: TSectionData) => {
 
   return (
     // Text alignment hard coded - unsure how to put inside theme
-    <Box textAlign="left">
+    <Box textAlign="left" paddingTop="3em" paddingBottom="3em">
       <Typography variant="h3">
         {data.name}
       </Typography>
@@ -184,14 +135,14 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
   const applyAlternatingBackground = (component: JSX.Element, index: number) => {
     return (
-      // Every odd section has no background
-      <ScreenBlock transparent={index % 2 !== 0}>
-        <Container
-          maxWidth="md"
-          className={classes.container}>
+      // Every odd section has no background (index starts at zero)
+      <Box
+        bgcolor={index % 2 === 0 ? 'background.paper' : 'none'}>
+
+        <Container>
           {component}
         </Container>
-      </ScreenBlock >
+      </Box>
     )
   }
 
