@@ -191,11 +191,9 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     )
   }
 
-  const dataToSection = compose(applyAlternatingBackground, layoutData)
-
   return (
     <>
-      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(dataToSection(section), index))} />
+      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(layoutData(section), index))} />
     </>
   );
 };
@@ -221,7 +219,9 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
+      <Grid container
+        spacing={3}
+      >
         {components.map((component, index) => (
           <Grid item xs={12} key={index} className={classes.item}>
             {component}
