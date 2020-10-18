@@ -116,16 +116,8 @@ export const Section = (data: TSectionData) => {
 };
 
 export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      container: {
-        paddingTop: '3em',
-        paddingBottom: '3em',
-      },
-    })
-  );
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
   const layoutData = (data: TSectionData, index?: number) => {
@@ -133,10 +125,15 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
   };
 
   const applyAlternatingBackground = (component: JSX.Element, index: number) => {
+
+    const color = index % 2 === 0 ? 'primary' : 'secondary';
+    const type = theme.palette.type;
+
     return (
-      // Every odd section has no background (index starts at zero)
       <Box
-        bgcolor={index % 2 === 0 ? 'background.paper' : 'none'}>
+        bgcolor={`${color}.${type}`}
+        color={`${color}.contrastText`}
+      >
         <Container>
           {component}
         </Container>

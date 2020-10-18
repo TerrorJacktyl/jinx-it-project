@@ -6,6 +6,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
   HeaderBar, Copyright, SectionGrid, PortfolioHeader,
+  MagmaTheme
 } from 'jinxui';
 
 interface PortfolioProps {
@@ -55,17 +56,21 @@ const Portfolio = ({ username }: PortfolioProps) => {
   return (
     <>
       <CssBaseline />
+      {/* Site main theme */}
       <ThemeProvider theme={LightTheme}>
         <HeaderBar lightTheme={true} />
-        {/* Enables child components to list themselves as snappable */}
-        <PortfolioHeader
-          title={portfolio?.name}
-          subtitle={author}
-        ></PortfolioHeader>
-        <SectionGrid sections={sections} />
-        <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
-          <Copyright text={userData.name} />
-        </Container>
+        {/* Portfolio theme */}
+        <ThemeProvider theme={MagmaTheme}>
+          {/* Enables child components to list themselves as snappable */}
+          <PortfolioHeader
+            title={portfolio?.name}
+            subtitle={author}
+          ></PortfolioHeader>
+          <SectionGrid sections={sections} />
+          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
+            <Copyright text={userData.name} />
+          </Container>
+        </ThemeProvider>
       </ThemeProvider>
     </>
   );

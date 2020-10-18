@@ -81,8 +81,7 @@ export {
 } from "./contexts/index";
 
 /* Types */
-export type { IUserContext, IThemeContext } from "./contexts/index";
-export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
+export type { TPortfolio, TPage, TSection, TSectionData, IUserContext, IThemeContext } from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";
@@ -102,3 +101,6 @@ export {
   DarkPrimaryButtonGrad,
   BlueIconGrad,
 } from "./theme/GlobalTheme";
+
+/* Portfolio themes */
+export { MagmaTheme } from "./theme/index";
