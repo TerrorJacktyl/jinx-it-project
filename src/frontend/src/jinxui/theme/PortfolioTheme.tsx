@@ -26,7 +26,7 @@ export const MagmaTheme: Theme = createTheme({
             "main": "#b71c1c",
         },
         secondary: {
-            "main": "#373538",
+            "main": "#4e342e",
         },
     },
     typography: {
@@ -41,6 +41,11 @@ export const MagmaTheme: Theme = createTheme({
         },
         h5: {
             "fontFamily": "open sans"
+        }
+    },
+    portfolio: {
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1561211950-8b1eb6114d6a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80',
         }
     }
 })

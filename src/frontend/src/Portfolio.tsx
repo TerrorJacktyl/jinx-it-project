@@ -61,7 +61,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
         <HeaderBar lightTheme={true} />
         {/* Portfolio theme */}
         <ThemeProvider theme={MagmaTheme}>
-          {/* Enables child components to list themselves as snappable */}
           <PortfolioHeader
             title={portfolio?.name}
             subtitle={author}

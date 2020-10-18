@@ -6,9 +6,5 @@ export type {
 } from "./PortfolioTypes";
 
 export type {
-  IThemeContext
-} from "./IThemeContext";
-
-export type {
   IUserContext
 } from "./IUserContext";

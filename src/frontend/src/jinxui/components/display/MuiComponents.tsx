@@ -24,10 +24,12 @@ export function ScreenBlock(props: any) {
 
 export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
 
-  const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+  const theme = useTheme();
 
   return (
-    <BackgroundImage url={defaultBackgroundSrc}>
+    <BackgroundImage url={
+      theme.portfolio.headerBackground.src
+    }>
       <ScreenBlock>
         <Grid container
           direction="row"
