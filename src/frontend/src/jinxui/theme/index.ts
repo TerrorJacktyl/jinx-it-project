@@ -1,1 +1,1 @@
-export { MagmaTheme } from "./PortfolioTheme";
+export { PortfolioThemes } from "./PortfolioTheme";

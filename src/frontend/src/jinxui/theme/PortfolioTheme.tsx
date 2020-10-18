@@ -1,9 +1,3 @@
-import React from "react";
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-
-const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
-
 /**
  * Theme creation guide
  * 1. Pick a nice primary and secondary colour: https://material.io/resources/color/
@@ -19,7 +13,15 @@ const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
  * Happy theming!
  */
 
-export const MagmaTheme: Theme = createTheme({
+import React from "react";
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+
+const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
+
+
+const magma: Theme = createTheme({
+
     palette: {
         type: "dark",
         primary: {
@@ -45,7 +47,86 @@ export const MagmaTheme: Theme = createTheme({
     },
     portfolio: {
         headerBackground: {
-            src: 'https://images.unsplash.com/photo-1561211950-8b1eb6114d6a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80',
+            src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         }
     }
-})
+});
+
+const sunset: Theme = createTheme({
+    palette: {
+        type: "light",
+        primary: {
+            "main": "#ff8a65",
+        },
+        secondary: {
+            "main": "#ffff8d",
+        },
+    },
+    portfolio: {
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1536890274788-51861e124205?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+        }
+    }
+});
+
+const lilypad: Theme = createTheme({
+    palette: {
+        type: "light",
+        primary: {
+            "main": "#7da7a3",
+        },
+        secondary: {
+            "main": "#7fa56a",
+        },
+    },
+    portfolio: {
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1542478080-8c03409bbf22?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1265&q=80',
+        }
+    }
+});
+
+const autumn: Theme = createTheme({
+    palette: {
+        type: "light",
+        primary: {
+            "main": "#76767e",
+        },
+        secondary: {
+            "main": "#724637",
+        },
+    },
+    portfolio: {
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1509838174235-432f709c7bfd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+        }
+    }
+});
+
+const cityscape: Theme = createTheme({
+    palette: {
+        type: "light",
+        primary: {
+            "main": "#1D1717",
+        },
+        secondary: {
+            "main": "#BA8458",
+        },
+    },
+    portfolio: {
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1519010470956-6d877008eaa4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=935&q=80',
+        }
+    }
+});
+
+
+// Register your theme in here - this is the object you'll access it from
+
+export const PortfolioThemes = {
+    magma: magma,
+    sunset: sunset,
+    lilypad: lilypad,
+    autumn: autumn,
+    cityscape: cityscape,
+}

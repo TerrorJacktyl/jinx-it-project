@@ -19,9 +19,3 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     },
   }
 }
-
-// import { Theme, ThemeOptions } from '@material-ui/core/styles';
-
-// export function createPortfolioTheme(options: ThemeOptions) {
-
-// }

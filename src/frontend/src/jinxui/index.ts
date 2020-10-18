@@ -103,4 +103,4 @@ export {
 } from "./theme/GlobalTheme";
 
 /* Portfolio themes */
-export { MagmaTheme } from "./theme/index";
+export { PortfolioThemes } from "./theme/index";
