@@ -3,11 +3,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import { makeStyles, createStyles, Theme, useTheme, withStyles } from "@material-ui/core/styles";
-import styled from 'styled-components';
-import clsx from 'clsx';
 
 import { TSectionData } from "jinxui";
 
@@ -18,28 +15,35 @@ export const compose = (...fns: Array<Function>) => (arg: any) => fns.reduceRigh
 /* A block that takes up at minimum the height of the screen. Takes an optional */
 export function ScreenBlock({ transparent, children }: { transparent?: any, children?: any }) {
 
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      screenPaper: {
-        minHeight: "100vh",
-      }
-    }),
-  );
-
-  const classes = useStyles();
-
   if (transparent) {
-    return <Container className={classes.screenPaper}>
-      {children}
-    </Container>
+    return (
+      <Box
+        minHeight="100vh">
+        <Container>
+          {children}
+        </Container>
+      </Box>
+    )
   }
   else {
     return (
-      <Paper elevation={0} className={classes.screenPaper}>
-        {children}
-      </Paper>
+      <Box
+        minHeight="100vh"
+        clone
+      >
+        <Paper elevation={0} children={children} />
+      </Box>
     )
   }
+}
+
+function SBlock(props: any) {
+  return (
+    <Box
+      minHeight="100vh" clone>
+      {props.children}
+    </Box>
+  )
 }
 
 export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
@@ -73,30 +77,30 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
 
   return (
     <BackgroundImage url={defaultBackgroundSrc}>
-      <ScreenBlock transparent>
+      <SBlock>
         <Grid container
           className={classes.container}
           direction="row"
           alignItems="flex-end"
         >
-          <Grid item xs={10}
-            className={classes.textContainer}
-          >
-            <Typography
-              variant="h1"
-              gutterBottom
-              className={classes.titleText}>
-              {title}
-            </Typography>
-            <Typography
-              variant="h2"
-              gutterBottom
-              className={classes.authorText}>
-              {subtitle}
-            </Typography>
+          <Grid item xs={12}>
+            <Box p="10%" color="common.white">
+              <Typography align="left">
+                <Typography variant="h1" gutterBottom>
+                  <Box fontWeight="fontWeightMedium">
+                    {title}
+                  </Box>
+                </Typography>
+                <Typography variant="h2">
+                  <Box fontWeight="fontWeightMedium">
+                    {subtitle}
+                  </Box>
+                </Typography>
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
-      </ScreenBlock>
+      </SBlock>
     </BackgroundImage >
   )
 }
@@ -241,13 +245,16 @@ export function BackgroundImage(props: any) {
     createStyles({
       background: {
         backgroundImage: `url(${props.url})`,
+        // background: "linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(karina-vorozheeva-rW-I87aPY5Y-unsplash)",
         backgroundColor: theme.palette.background.default,
         backgroundPosition: "center" /* Center the image */,
         backgroundRepeat: "no-repeat" /* Do not repeat the image */,
         backgroundSize: "cover" /* Resize the background image to cover the entire container */,
-        // If there are children, darken the image so text is not invisible
-        filter: `${props.children ? 'brightness(0.7)' : 'none'}`,
       },
+      foreground: {
+        // If there are children, darken the image so text is not invisible
+        backgroundColor: `${props.children ? 'rgba(0,0,0,0.3)' : 'none'}`,
+      }
     })
   );
 
@@ -255,9 +262,15 @@ export function BackgroundImage(props: any) {
 
   // Background: image from style, default to regular background if no image found
 
-  return <Paper className={classes.background}>
-    {props.children}
-  </Paper>;
+  return (
+    <>
+      <Paper className={classes.background}>
+        <Box className={classes.foreground}>
+          {props.children}
+        </Box>
+      </Paper>
+    </>
+  )
 }
 
 export function Copyright({ text }: { text: string }) {
