@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import EditIcon from "@material-ui/icons/Edit";
-import { Button } from "@material-ui/core";
 
 import {
   LightTheme,
@@ -79,8 +76,9 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <>
         <CssBaseline />
         <ThemeProvider theme={LightTheme}>
-          <HeaderBar lightTheme={true}>
-          </HeaderBar>
+          {userData.authenticated ? (
+            <HeaderBar lightTheme={true} />
+            ) : null}
           <PortfolioHeader title={portfolio?.name} subtitle={author} />
           <SectionGrid sections={sections} />
           <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>

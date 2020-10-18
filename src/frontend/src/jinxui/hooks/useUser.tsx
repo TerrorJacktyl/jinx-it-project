@@ -428,6 +428,34 @@ export const useUser = () => {
     return result;
   }
 
+  async function makePortfolioPublic(portfolio_id: number) {
+    return changePortfolioPrivacy(portfolio_id, false);
+  }
+
+  async function makePortfolioPrivate(portfolio_id: number) {
+    return changePortfolioPrivacy(portfolio_id, true);
+  }
+
+  async function changePortfolioPrivacy(portfolio_id: number, privacy: boolean) {
+    const path = PORTFOLIOS_PATH + "/" + portfolio_id
+    API.get(path, state.config )
+      .then((response: any) => {
+        const result = API.put(path, {
+          name: response.data.name,
+          private: privacy
+        }, state.config )
+        .catch((error: any) => {
+          console.log(error)
+          throw error
+        });
+        return result;
+      })
+      .catch((error: any) => {
+        console.log(error);
+        throw error;
+      });
+  }
+
   /**
    * Extract the error message from various hook functions.
    * If we come up with a standard error response format, this function will become much smaller.
@@ -497,6 +525,8 @@ export const useUser = () => {
     getAccountDetails,
     getAccountDetailsFromUsername,
     handleError,
+    makePortfolioPublic,
+    makePortfolioPrivate,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)

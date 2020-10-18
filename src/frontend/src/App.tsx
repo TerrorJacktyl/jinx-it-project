@@ -28,6 +28,7 @@ function App() {
             <Route path={Routes.SIGNUP} exact component={Signup} />
             <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
             <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={PortfolioDisplay} />
+            {/* <Route path={Routes.PORTFOLIO_DISPLAY} exact component={PortfolioDisplay} /> */}
             <Route path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"} exact render={
               ({ match }: RouteComponentProps<{ username: string }>) => <Portfolio username={match.params.username} />
             } />

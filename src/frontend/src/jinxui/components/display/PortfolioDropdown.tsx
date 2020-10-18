@@ -4,7 +4,6 @@ import styled from "styled-components";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
 import Collapse from "@material-ui/core/Collapse";
 import MenuItem from "@material-ui/core/MenuItem";
 import EditIcon from "@material-ui/icons/Edit";
@@ -14,6 +13,9 @@ import PersonalVideoIcon from "@material-ui/icons/PersonalVideo";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import PaletteIcon from '@material-ui/icons/Palette';
 
 import {
   HeaderButton,
@@ -40,21 +42,19 @@ const StyledInnerName = styled.div`
   }
 `;
 
-const styles = {
-  nested: {
-    paddingLeft: "10%",
-  },
-  nestedSecondLevel: {
-    paddingLeft: "20%",
-  },
-};
 
 const PortfolioDropdown = () => {
   const [open, setOpen] = React.useState(false);
   const [themeOpen, themeSetOpen] = React.useState(false);
+  const [isPrivate, setIsPrivate] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
-  const { userData } = useUser();
+  const {
+    userData,
+    makePortfolioPublic,
+    makePortfolioPrivate,
+    getPortfolio,
+  } = useUser();
   const [editRedirect, setEditRedirect] = useState(false);
   const [viewRedirect, setViewRedirect] = useState(false);
 
@@ -118,6 +118,36 @@ const PortfolioDropdown = () => {
     );
   };
 
+  React.useEffect(() => {
+    const fetchPrivacy = async () => {
+      const portfolio = await getPortfolio(userData.portfolioId);
+      setIsPrivate(portfolio.private);
+    };
+    fetchPrivacy();
+  });
+
+  const handleMakePublic = () => {
+    setOpen(false)
+    makePortfolioPublic(userData.portfolioId)
+      .then((response: any) => {
+        setIsPrivate(response.data.private);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  };
+
+  const handleMakePrivate = () => {
+    setOpen(false)
+    makePortfolioPrivate(userData.portfolioId)
+      .then((response: any) => {
+        setIsPrivate(response.data.private);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  };
+
   if (editRedirect) {
     return onEdit();
   } else if (viewRedirect) {
@@ -176,9 +206,18 @@ const PortfolioDropdown = () => {
             </MenuItem>
             <Collapse in={themeOpen} timeout="auto" unmountOnExit>
               <MenuItem>
-                <ListItemText primary="Desert" />
+              <ListItemIcon style={{paddingLeft: 20}}>
+                <PaletteIcon color="primary" />
+              </ListItemIcon>
+                <ListItemText primary="Magma" />
               </MenuItem>
             </Collapse>
+            <MenuItem onClick={isPrivate ? handleMakePublic : handleMakePrivate}>
+              <ListItemIcon >
+                {isPrivate ? <LockIcon /> : <LockOpenIcon />}
+              </ListItemIcon>
+              <ListItemText primary={isPrivate ? "Make Public" : "Make Private"} />
+            </MenuItem>
           </PrimaryMenu>
         </ClickAwayListener>
       </DivWrapper>

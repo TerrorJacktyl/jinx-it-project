@@ -86,7 +86,6 @@ const HeaderBar = (props: HeaderBarProps) => {
           style={{
             background: headerGrad,
           }}
-          // position="sticky"
         >
           <StyledDivOuter>
             <StyledDivLeft>
