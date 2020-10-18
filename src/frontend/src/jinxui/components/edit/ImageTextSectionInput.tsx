@@ -15,6 +15,7 @@ type TImageTextSectionInput = {
   section: TEditSection;
   handleChange: any;
   handleTitleChange: any;
+  handlePublish: any;
   sections: any;
   setSections: any;
 };
@@ -39,6 +40,7 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
         sections={props.sections}
         setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
+        handlePublish={props.handlePublish}
       >
         <TwoColumnSectionDiv>
 

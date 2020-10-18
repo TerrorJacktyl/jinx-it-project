@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import SaveSharpIcon from '@material-ui/icons/SaveSharp';
 import { PaperSectionBase, PaperSectionDiv, PaperSectionTitle } from "jinxui";
 import { TEditSection } from "jinxui/types";
 
@@ -44,6 +45,7 @@ type TPaperSection = {
   children: any;
   hideEditButtons?: boolean;
   handleTitleChange: any;
+  handlePublish: any;
 };
 
 const PaperSection = (props: TPaperSection) => {
@@ -104,13 +106,21 @@ const PaperSection = (props: TPaperSection) => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleTitleChange(e, props.section.uid)}
             placeholder = "Section Title"
             InputProps={{ disableUnderline: true }}
-            />
+          />
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
 
         {/* Modify section list buttons */}
 
         <StyledDivRight>
+          <StyledButton
+            size="medium"
+            style={{ minWidth: 40 }}
+            // disabled={upArrowDisabled}
+            onClick={props.handlePublish}
+          >
+            <SaveSharpIcon />
+          </StyledButton>
           <StyledButton
             size="medium"
             style={{ minWidth: 40 }}

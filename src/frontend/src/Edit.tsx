@@ -25,12 +25,13 @@ import {
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
+import { truncate } from "fs";
 
 const FormTitle = styled.h2`
   font-weight: 300;
 `;
 
-const BottomButtonsDiv = styled.div`
+const PublishCancelDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row-reverse;
@@ -152,17 +153,30 @@ const Edit = () => {
 
   // Removes the uid field from each section. Used before data is sent to backend
   const unidentify = () => {
-    var noUidSections = sections.map((section: TEditSection) => {
-      const newSection = section;
-      // Fear not the linting error!
-      delete newSection.uid;
-      return newSection;
+    const sectionsCopy = JSON.parse(JSON.stringify(sections))
+    var noUidSections = sectionsCopy.map((section: TEditSection) => {
+        const newSection = section;
+        // Fear not the linting error!
+        delete newSection.uid;
+        return newSection;
     });
-    return noUidSections;
+    // return noUidSections;
+    return noUidSections.filter(sectionIsNotBlank);
   };
 
-  // Preps the data to be sent to backend, and redirects to display page
-  const onPublish = () => {
+  const sectionIsNotBlank = (section: TEditSection) => {
+    if (section.type === "text") {
+      return section.name !== "" || section.content !== ""
+    } else if (section.type === "image") {
+      return section.name !== "" || section.path !== ""
+    } else if (section.type === "image_text") {
+      return section.name !== "" || section.path !== "" || section.content !== ""
+    } else {
+      return true
+    }
+  }
+
+  const handlePublish = () => {
     const noUidSections = unidentify();
     // TODO: When multiple portoflio are implemented,
     // set the portfolioId in context to the portfolio being edited.
@@ -172,6 +186,11 @@ const Edit = () => {
     } else {
       postFullPortfolio(portfolio, pages, noUidSections);
     }
+  };
+
+  // Preps the data to be sent to backend, and redirects to display page
+  const onPublishAndRedirect = () => {
+    handlePublish();
     return (
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
@@ -181,10 +200,10 @@ const Edit = () => {
     return (
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
-  }
+  };
 
   if (published) {
-    return onPublish();
+    return onPublishAndRedirect();
   } else if (cancelled) {
     return onCancel();
   } else {
@@ -249,6 +268,7 @@ const Edit = () => {
                       fullWidth
                       color="secondary"
                     />
+                    
                   </PortfolioNameSectionInput>
                   {sections.map((section: TEditSection) => {
                     if (section.type === "text") {
@@ -258,6 +278,7 @@ const Edit = () => {
                           section={section}
                           handleChange={handleChange}
                           handleTitleChange={handleTitleChange}
+                          handlePublish={handlePublish}
                           sections={sections}
                           setSections={setSections}
                         />
@@ -267,6 +288,7 @@ const Edit = () => {
                         <ImageSectionInput
                           key={section.uid}
                           handleTitleChange={handleTitleChange}
+                          handlePublish={handlePublish}
                           section={section}
                           sections={sections}
                           setSections={setSections}
@@ -278,6 +300,7 @@ const Edit = () => {
                           key={section.uid}
                           handleChange={handleChange}
                           handleTitleChange={handleTitleChange}
+                          handlePublish={handlePublish}
                           section={section}
                           sections={sections}
                           setSections={setSections}
@@ -287,18 +310,18 @@ const Edit = () => {
                       return <></>;
                     }
                   })}
-                  <BottomButtonsDiv>
+                  <PublishCancelDiv>
                     <PrimaryButton
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                      onClick={() => (
                         setPublished(true)
-                      }
+                      )}
                     >
                       PUBLISH
                     </PrimaryButton>
                     <a href={Routes.HOME}>
                       <SecondaryButton>Cancel</SecondaryButton>
                     </a>
-                  </BottomButtonsDiv>
+                  </PublishCancelDiv>
                 </form>
               </div>
               <div></div>

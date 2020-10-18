@@ -13,6 +13,7 @@ type TImageSection = {
   sections: any;
   setSections: any;
   handleTitleChange: any;
+  handlePublish: any;
 };
 
 const ImageSectionInput = (props: TImageSection) => {
@@ -34,6 +35,7 @@ const ImageSectionInput = (props: TImageSection) => {
         sections={props.sections}
         setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
+        handlePublish={props.handlePublish}
       >
         <OneColumnSectionDiv>
           <UploadImageSubSection section={props.section} />
