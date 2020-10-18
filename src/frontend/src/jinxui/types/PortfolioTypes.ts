@@ -7,6 +7,8 @@ export type TPortfolio = {
   owner: number;
   name: string;
   pages: number[];
+  theme: string;
+  background: string;
 } | null;
 
 export type TPage = {
