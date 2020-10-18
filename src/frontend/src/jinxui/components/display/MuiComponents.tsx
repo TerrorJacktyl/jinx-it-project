@@ -5,8 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { makeStyles, createStyles, Theme, useTheme, withStyles } from "@material-ui/core/styles";
-
-import { TSectionData } from "jinxui";
+import { TSectionData, ScrollContainer, ScrollChild } from "jinxui";
 
 
 // Helper function for all you functional declarative lot
@@ -28,31 +27,33 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
   return (
-    <BackgroundImage url={defaultBackgroundSrc}>
-      <ScreenBlock>
-        <Grid container
-          direction="row"
-          alignItems="flex-end"
-        >
-          <Grid item xs={12}>
-            <Box p="10%" color="common.white">
-              <Typography align="left">
-                <Typography variant="h1" gutterBottom>
-                  <Box fontWeight="fontWeightMedium">
-                    {title}
-                  </Box>
+    <ScrollChild>
+      <BackgroundImage url={defaultBackgroundSrc}>
+        <ScreenBlock>
+          <Grid container
+            direction="row"
+            alignItems="flex-end"
+          >
+            <Grid item xs={12}>
+              <Box p="10%" color="common.white">
+                <Typography align="left">
+                  <Typography variant="h1" gutterBottom>
+                    <Box fontWeight="fontWeightMedium">
+                      {title}
+                    </Box>
+                  </Typography>
+                  <Typography variant="h2">
+                    <Box fontWeight="fontWeightMedium">
+                      {subtitle}
+                    </Box>
+                  </Typography>
                 </Typography>
-                <Typography variant="h2">
-                  <Box fontWeight="fontWeightMedium">
-                    {subtitle}
-                  </Box>
-                </Typography>
-              </Typography>
-            </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </ScreenBlock>
-    </BackgroundImage >
+        </ScreenBlock>
+      </BackgroundImage >
+    </ScrollChild>
   )
 }
 
@@ -146,16 +147,19 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     )
   }
 
+  const snapScroll = (component: JSX.Element) => {
+    return <ScrollChild>{component}</ScrollChild>
+  }
+
   return (
     <>
-      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(layoutData(section), index))} />
+      <CentredGrid components={sections.map((section, index) => snapScroll(applyAlternatingBackground(layoutData(section), index)))} />
     </>
   );
 };
 
 /**
  * Given a list of components as props, render them in a centred grid.
- * Note that if you don't pass the components as props, you will burn.
  */
 export function CentredGrid({ components }: { components: JSX.Element[] }) {
   return (

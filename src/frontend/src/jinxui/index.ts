@@ -66,6 +66,9 @@ export { default as HomeTemplates } from "./components/home/HomeTemplates";
 export { UploadIcon, FormIcon, LogoTextIcon } from "./components/home/HomeIcons";
 export { default as HomeFooter } from "./components/home/HomeFooter";
 
+/* Scroll snapping */
+export {ScrollContainer, ScrollChild} from "./components/display/SnapScroll";
+
 /* Routes */
 export { LoggedInRoute, LoggedOutRoute } from "./routes/ProtectedRoutes.js";
 export { PortfolioDisplay } from "./routes/PortfolioDisplay";
