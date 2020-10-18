@@ -6,6 +6,7 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import CloseIcon from "@material-ui/icons/Close";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { TextField } from "@material-ui/core";
 
@@ -71,11 +72,9 @@ function sectionDataIsEmpty(data: any) {
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
-  const [redirect, setRedirect] = useState(false);
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
   const [published, setPublished] = useState(false);
-  const [cancelled, setCancelled] = useState(false);
   const {
     postFullPortfolio,
     putFullPortfolio,
@@ -153,12 +152,12 @@ const Edit = () => {
 
   // Removes the uid field from each section. Used before data is sent to backend
   const unidentify = () => {
-    const sectionsCopy = JSON.parse(JSON.stringify(sections))
+    const sectionsCopy = JSON.parse(JSON.stringify(sections));
     var noUidSections = sectionsCopy.map((section: TEditSection) => {
-        const newSection = section;
-        // Fear not the linting error!
-        delete newSection.uid;
-        return newSection;
+      const newSection = section;
+      // Fear not the linting error!
+      delete newSection.uid;
+      return newSection;
     });
     // return noUidSections;
     return noUidSections.filter(sectionIsNotBlank);
@@ -166,15 +165,17 @@ const Edit = () => {
 
   const sectionIsNotBlank = (section: TEditSection) => {
     if (section.type === "text") {
-      return section.name !== "" || section.content !== ""
+      return section.name !== "" || section.content !== "";
     } else if (section.type === "image") {
-      return section.name !== "" || section.path !== ""
+      return section.name !== "" || section.path !== "";
     } else if (section.type === "image_text") {
-      return section.name !== "" || section.path !== "" || section.content !== ""
+      return (
+        section.name !== "" || section.path !== "" || section.content !== ""
+      );
     } else {
-      return true
+      return true;
     }
-  }
+  };
 
   const handlePublish = () => {
     const noUidSections = unidentify();
@@ -195,17 +196,63 @@ const Edit = () => {
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
   };
-
-  const onCancel = () => {
+  
+  const DisplaySections = () => {
+    if (sections.length == 0) {
+      return (
+        <>
+          <CircularProgress />
+        </>
+      );
+    }
     return (
-      <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
+      <>
+        {sections.map((section: TEditSection) => {
+          if (section.type === "text") {
+            return (
+              <TextSectionInput
+                key={section.uid}
+                section={section}
+                handleChange={handleChange}
+                handleTitleChange={handleTitleChange}
+                handlePublish={handlePublish}
+                sections={sections}
+                setSections={setSections}
+              />
+            );
+          } else if (section.type === "image") {
+            return (
+              <ImageSectionInput
+                key={section.uid}
+                handleTitleChange={handleTitleChange}
+                handlePublish={handlePublish}
+                section={section}
+                sections={sections}
+                setSections={setSections}
+              />
+            );
+          } else if (section.type === "image_text") {
+            return (
+              <ImageTextSectionInput
+                key={section.uid}
+                handleChange={handleChange}
+                handleTitleChange={handleTitleChange}
+                handlePublish={handlePublish}
+                section={section}
+                sections={sections}
+                setSections={setSections}
+              />
+            );
+          } else {
+            return <></>;
+          }
+        })}
+      </>
     );
   };
 
   if (published) {
     return onPublishAndRedirect();
-  } else if (cancelled) {
-    return onCancel();
   } else {
     return (
       // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
@@ -223,15 +270,6 @@ const Edit = () => {
                 <SettingsBrightness />
               </Button>
             </HeaderBar>
-            <Button
-              style={{ position: "absolute", top: 50, right: 0 }}
-              onClick={() => {
-                setCancelled(true);
-              }}
-              color="inherit"
-            >
-              <CloseIcon style={{ fontSize: 40 }} />
-            </Button>
             <CssBaseline />
             <PrimaryColumnDiv>
               <div></div>
@@ -268,54 +306,10 @@ const Edit = () => {
                       fullWidth
                       color="secondary"
                     />
-                    
                   </PortfolioNameSectionInput>
-                  {sections.map((section: TEditSection) => {
-                    if (section.type === "text") {
-                      return (
-                        <TextSectionInput
-                          key={section.uid}
-                          section={section}
-                          handleChange={handleChange}
-                          handleTitleChange={handleTitleChange}
-                          handlePublish={handlePublish}
-                          sections={sections}
-                          setSections={setSections}
-                        />
-                      );
-                    } else if (section.type === "image") {
-                      return (
-                        <ImageSectionInput
-                          key={section.uid}
-                          handleTitleChange={handleTitleChange}
-                          handlePublish={handlePublish}
-                          section={section}
-                          sections={sections}
-                          setSections={setSections}
-                        />
-                      );
-                    } else if (section.type === "image_text") {
-                      return (
-                        <ImageTextSectionInput
-                          key={section.uid}
-                          handleChange={handleChange}
-                          handleTitleChange={handleTitleChange}
-                          handlePublish={handlePublish}
-                          section={section}
-                          sections={sections}
-                          setSections={setSections}
-                        />
-                      );
-                    } else {
-                      return <></>;
-                    }
-                  })}
+                  <DisplaySections />
                   <PublishCancelDiv>
-                    <PrimaryButton
-                      onClick={() => (
-                        setPublished(true)
-                      )}
-                    >
+                    <PrimaryButton onClick={() => setPublished(true)}>
                       PUBLISH
                     </PrimaryButton>
                     <a href={Routes.HOME}>

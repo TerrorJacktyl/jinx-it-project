@@ -16,7 +16,6 @@ import {
   HeaderBar,
   Copyright,
   SectionGrid,
-  BackgroundImage,
   Routes,
   PortfolioHeader,
 } from "jinxui";
@@ -81,15 +80,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
         <CssBaseline />
         <ThemeProvider theme={LightTheme}>
           <HeaderBar lightTheme={true}>
-            <Button
-              style={{ position: "absolute", top: 50, right: 0 }}
-              onClick={() => {
-                setEditRedirect(true);
-              }}
-              color="inherit"
-            >
-              <EditIcon style={{ fontSize: 40 }} />
-            </Button>
           </HeaderBar>
           <PortfolioHeader title={portfolio?.name} subtitle={author} />
           <SectionGrid sections={sections} />

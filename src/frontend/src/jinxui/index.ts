@@ -23,7 +23,8 @@ export { default as HeaderDiv } from "./components/header/HeaderDiv";
 export { default as SiteHeader } from "./components/header/SiteHeader";
 export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
-export { default as HeaderBar } from "./components/header/HeaderBar";
+export { HeaderBar as HeaderBar } from "./components/header/HeaderBar";
+export { HeaderMediaWidth as HeaderMediaWidth} from "./components/header/HeaderBar"
 export { default as HeaderButton } from "./components/header/HeaderButton";
 export { default as HeaderBarSpacer } from "./components/header/HeaderBarSpacer";
 
@@ -38,6 +39,7 @@ export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
+export { default as PortfolioDropdown } from "./components/display/PortfolioDropdown"
 
 /* Display Mui*/
 export {

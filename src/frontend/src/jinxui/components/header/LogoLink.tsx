@@ -20,16 +20,18 @@ const LogoText = styled(HeaderLogo)`
 `;
 
 const LogoLink = (props: any) => {
-
-  return(
-  <a href="/">
-    <LogoDiv>
-      <HeaderLogo src={require("images/Logo_Small.svg")} />
-      {props.lightTheme ? <LogoText src={require("images/Logo_Text_Dark.svg")} /> : 
-      <LogoText src={require("images/Logo_Text.svg")} /> }
-    </LogoDiv>
-  </a>
-  )
+  return (
+    <a href="/">
+      <LogoDiv>
+        <HeaderLogo src={require("images/Logo_Small.svg")} />
+        {props.lightTheme ? (
+          <LogoText src={require("images/Logo_Text_Dark.svg")} />
+        ) : (
+          <LogoText src={require("images/Logo_Text.svg")} />
+        )}
+      </LogoDiv>
+    </a>
+  );
 };
 
 export default LogoLink;

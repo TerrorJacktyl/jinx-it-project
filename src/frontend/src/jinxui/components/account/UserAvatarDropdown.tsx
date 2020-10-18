@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { useUser, PrimaryMenu, HeaderButton, Routes } from "jinxui";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -11,21 +10,30 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { Redirect } from "react-router-dom";
+import { 
+  useUser, 
+  PrimaryMenu, 
+  HeaderButton, 
+  Routes,
+  HeaderMediaWidth, 
+} from "jinxui";
+
+// const HEADER_MEDIA_WIDTH = "500px";
 
 const StyledName = styled(HeaderButton)`
   font-size: 20px;
   text-transform: none;
-  padding: 0px;
+  padding: 0px 10px;
 `;
 
 const StyledInnerName = styled.div`
-  @media (max-width: 500px) {
+  @media (max-width: ${() => HeaderMediaWidth()}) {
     display: none;
   }
 `;
 
 const DivWrapper = styled.div`
-  padding-right: 10px;
+  height: 100%;
 `
 
 const UserAvatarDropdown = () => {

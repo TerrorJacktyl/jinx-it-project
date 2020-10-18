@@ -14,10 +14,16 @@ import {
   HeaderButton,
   LightHeaderGrad,
   DarkHeaderGrad,
-  LogoLink
+  LogoLink,
+  PortfolioDropdown,
 } from "jinxui";
 
 import styled from "styled-components";
+
+
+const HeaderMediaWidth = () => {
+  return "600px"
+};
 
 // Ensure that app bar sticks to top and sides
 const StyledAppBar = styled(AppBar)`
@@ -27,13 +33,13 @@ const StyledAppBar = styled(AppBar)`
 // Three columns, left middle and right
 const StyledDivOuter = styled.div`
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr max-content 1fr;
   grid-template-rows: minMax(46px, max-content);
 `;
 
 //Left items
 const StyledDivLeft = styled.div`
-  padding-left: 0px;
+  padding-left: 15px;
   display: flex;
   align-items: center;
 `;
@@ -53,50 +59,61 @@ const StyledDivRight = styled.div`
   align-items: center;
 `;
 
+const StyledDivTitle = styled.div`
+  @media (max-width: ${() => HeaderMediaWidth()}) {
+    display: none;
+  }
+`;
+
 type HeaderBarProps = {
   title?: string;
   lightTheme: boolean;
   children?: React.ReactNode;
   hideLogo?: boolean;
-}
+};
 
 const HeaderBar = (props: HeaderBarProps) => {
   const trigger = useScrollTrigger();
-  const headerGrad = props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad;
+  const headerGrad =
+    props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad;
 
   return (
     <StylesProvider injectFirst>
-        <Slide appear={false} direction="down" in={!trigger}>
-          <StyledAppBar 
-            color="inherit"
-            elevation={4}
-            style={{
-              background: headerGrad
-            }}
-            // position="sticky"
-          >
-            <StyledDivOuter>
-              <StyledDivLeft>
-                <HeaderButton
-                  color="inherit"
-                  aria-label="menu"
-                >
-                  <MenuIcon />
-                </HeaderButton>
-                <Typography variant="h6">{props.title ? props.title : ""}</Typography>
-              </StyledDivLeft>
-              <StyledDivCenter>
-                { !props.hideLogo ? <LogoLink lightTheme={props.lightTheme}/> : null }
-              </StyledDivCenter>
-              <StyledDivRight>
-                <UserAvatarDropdown />
-                {props.children}
-              </StyledDivRight>
-            </StyledDivOuter>
-          </StyledAppBar>
-        </Slide>
+      <Slide appear={false} direction="down" in={!trigger}>
+        <StyledAppBar
+          color="inherit"
+          elevation={4}
+          style={{
+            background: headerGrad,
+          }}
+          // position="sticky"
+        >
+          <StyledDivOuter>
+            <StyledDivLeft>
+              {!props.hideLogo ? (
+                <LogoLink lightTheme={props.lightTheme} />
+              ) : null}
+            </StyledDivLeft>
+            <StyledDivCenter>
+              <StyledDivTitle>
+                <Typography variant="h6">
+                  {props.title ? props.title : ""}
+                </Typography>
+              </StyledDivTitle>
+            </StyledDivCenter>
+            <StyledDivRight>
+              {props.children}
+              <UserAvatarDropdown />
+              <PortfolioDropdown />
+            </StyledDivRight>
+          </StyledDivOuter>
+        </StyledAppBar>
+      </Slide>
     </StylesProvider>
   );
 };
 
-export default HeaderBar;
+export {
+  HeaderBar,
+  HeaderMediaWidth,
+};
