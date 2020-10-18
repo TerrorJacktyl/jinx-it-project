@@ -121,7 +121,7 @@ export const Section = (data: TSectionData) => {
         objectFit: "contain",
       },
       item: {
-        padding: "1em",
+        paddingTop: "1em",
       }
     })
   );
@@ -207,32 +207,16 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
  * Note that if you don't pass the components as props, you will burn.
  */
 export function CentredGrid({ components }: { components: JSX.Element[] }) {
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      root: {
-        flexGrow: 1,
-        // padding: "2em 2em 2em 2em",
-      },
-      item: {
-        // padding: "0 0 5em 0"
-      },
-    })
-  );
-
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <Grid container
-        spacing={3}
-      >
-        {components.map((component, index) => (
-          <Grid item xs={12} key={index} className={classes.item}>
-            {component}
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+    <Grid container
+    // spacing={3}
+    >
+      {components.map((component, index) => (
+        <Grid item xs={12} key={index}>
+          {component}
+        </Grid>
+      ))}
+    </Grid>
   );
 }
 
