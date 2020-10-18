@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import { CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from "@material-ui/core/styles";
 
 import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
   HeaderBar, Copyright, SectionGrid, PortfolioHeader,
-  ScrollContainer,
 } from 'jinxui';
 
 interface PortfolioProps {
@@ -60,16 +58,14 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <ThemeProvider theme={LightTheme}>
         <HeaderBar lightTheme={true} />
         {/* Enables child components to list themselves as snappable */}
-        <ScrollContainer>
-          <PortfolioHeader
-            title={portfolio?.name}
-            subtitle={author}
-          ></PortfolioHeader>
-          <SectionGrid sections={sections} />
-          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
-            <Copyright text={userData.name} />
-          </Container>
-        </ScrollContainer>
+        <PortfolioHeader
+          title={portfolio?.name}
+          subtitle={author}
+        ></PortfolioHeader>
+        <SectionGrid sections={sections} />
+        <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
+          <Copyright text={userData.name} />
+        </Container>
       </ThemeProvider>
     </>
   );

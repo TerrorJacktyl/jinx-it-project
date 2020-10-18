@@ -24,6 +24,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-smooth-scrolling": "^1.0.2",
     "styled-components": "^5.2.0",
     "typescript": "^3.9.7",
     "yup": "^0.29.3"
