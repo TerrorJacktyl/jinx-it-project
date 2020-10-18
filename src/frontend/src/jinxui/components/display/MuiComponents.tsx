@@ -210,6 +210,7 @@ export function Copyright({ text }: { text: string }) {
     createStyles({
       container: {
         paddingTop: '2em',
+        paddingBottom: '1em',
       },
     })
   );
@@ -225,7 +226,7 @@ export function Copyright({ text }: { text: string }) {
 
 export function CopyrightText({ text }: { text: string }) {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="h6" align="center">
       {"Copyright © "}
       {text}{" "}
       {new Date().getFullYear()}

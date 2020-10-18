@@ -66,10 +66,8 @@ const Portfolio = ({ username }: PortfolioProps) => {
             subtitle={author}
           ></PortfolioHeader>
           <SectionGrid sections={sections} />
-          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
-            <Copyright text={userData.name} />
-          </Container>
         </ThemeProvider>
+          <Copyright text={userData.name} />
       </ThemeProvider>
     </>
   );
