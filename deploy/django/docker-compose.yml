@@ -1,0 +1,49 @@
+version: "3"
+services:
+  db:
+    container_name: jinx_db
+    # set the version as we don't want the production database to get
+    # messed up by a postgres update
+    image: postgres:12.4-alpine
+    environment:
+      # Denotes DB name to be created on image startup
+      - POSTGRES_DB=jinx_db
+      # Create a user when the database is initialized.
+      # Not sure if root exists by default.
+      - POSTGRES_USER=jinx
+      # password will be read from environment vars
+      - POSTGRES_PASSWORD
+    volumes:
+      # store data in a location managed by docker
+      - jinx_database:/var/lib/postgresql/data
+    networks:
+      - br_internal
+    # Unless stopped manually, restart automatically
+    restart: unless-stopped
+  django:
+    container_name: django
+    build:
+      context: ../../
+      dockerfile: src/backend/Dockerfile.backend.deploy
+    environment:
+      - DJANGO_SECRET_KEY
+      - "DJANGO_DB_PASSWORD=${POSTGRES_PASSWORD}"
+    depends_on:
+      - db
+    volumes:
+      - /srv/media:/srv/media
+    networks:
+      - br_internal
+      - br_django
+    restart: unless-stopped
+networks:
+  # interal private communication between database and django
+  br_internal:
+    driver: bridge
+    internal: true
+  # to connect to nginx
+  br_django:
+    external:
+      name: br_django
+volumes:
+  jinx_database: {}

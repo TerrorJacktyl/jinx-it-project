@@ -1,0 +1,39 @@
+asgiref==3.2.10
+Django==3.1
+django-cors-headers==3.4.0
+djangorestframework==3.11.1
+psycopg2-binary>=2.8
+pytz==2020.1
+coverage==5.2.1
+
+# djoser
+django-templated-mail==1.1.1
+djoser==2.0.5
+
+# hypothesis
+sortedcontainers==2.2.2
+attrs==20.2.0
+hypothesis==5.33.1
+
+## Swagger integration components
+certifi==2020.6.20
+chardet==3.0.4
+coreapi==2.3.3
+coreschema==0.0.4
+drf-yasg==1.17.1
+idna==2.10
+inflection==0.5.1
+itypes==1.2.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+packaging==20.4
+pyparsing==2.4.7
+requests==2.24.0
+ruamel.yaml==0.16.12
+ruamel.yaml.clib==0.2.2
+six==1.15.0
+uritemplate==3.0.1
+urllib3==1.25.10
+
+## Image processing
+Pillow==7.2.0

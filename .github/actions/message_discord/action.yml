@@ -1,0 +1,20 @@
+# If message is left blank, the default github event message is sent
+
+name: 'Message Discord'
+description: 'Sends a message to Discord'
+inputs:
+  message:
+    description: 'Message to send'
+    required: false
+  webhook:
+    description: 'Discord webhook URL'
+    required: true
+
+runs:
+  using: "composite"
+  steps: 
+    - run: ${{ github.action_path }}/message_discord.sh
+      shell: bash
+      env: 
+        DISCORD_WEBHOOK: ${{ inputs.webhook }}
+        MESSAGE: ${{ inputs.message }}

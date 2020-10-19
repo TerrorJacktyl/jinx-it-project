@@ -1,0 +1,25 @@
+# Indicates that we are basing our image off a python 3 image. Allows us 
+# to avoid manually installing python3, pip, etc.
+FROM python:3
+
+# This has to do with std.in/std.out
+ENV PYTHONUNBUFFERED 1
+# At this point our container if filled with default python packages. Therefore make
+# a directory for our code to be copied to
+RUN mkdir /backend
+# Set this new directory in our container as our work directory. All subsequent
+# RUN, CMD, COPY, or ADD instructions will be executed here
+WORKDIR /backend
+
+# Install our python package dependencies with pip, so Django, rest-api-framework etc.
+# Each step of the build process is cached so if requirements are added first
+# then this pip install can be skipped if only the code changes
+COPY ./src/backend/requirements.txt /backend
+RUN pip install -r requirements.txt
+
+# Copy all our Django code to our newly initialised work directory
+COPY ./src/backend /backend/
+
+# Commented out because it was moved to the docker-compose.yml to enable testing first (which depends on the db)
+# Start server
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -5,6 +5,7 @@
 !.vscode/extensions.json
 *.code-workspace
 
+<<<<<<< HEAD
 # Ignore locally stored media
 jinx_project/
 
@@ -14,3 +15,7 @@ jinx_project/
 src/
 
 eportfolio-app/
+=======
+# Local History for Visual Studio Code
+.history/
+>>>>>>> master
