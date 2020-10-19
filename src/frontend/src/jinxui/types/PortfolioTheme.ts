@@ -7,7 +7,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     portfolio: {
       headerBackground: {
         src: string
-      }
+      },
+      theme: {
+        name: string
+      },
     }
   }
   // allow configuration using `createMuiTheme`
@@ -15,7 +18,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     portfolio: {
       headerBackground?: {
         src?: string
-      }
+      },
+      theme?: {
+        name?: string
+      },
     },
   }
 }

@@ -19,9 +19,11 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
 
+interface TPortfolioTheme extends Theme {
+    // name: string;
+} 
 
-const magma: Theme = createTheme({
-
+const magma: TPortfolioTheme = createTheme({
     palette: {
         type: "dark",
         primary: {
@@ -46,13 +48,16 @@ const magma: Theme = createTheme({
         }
     },
     portfolio: {
+        theme: {
+            name: "Magma",
+        },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         }
-    }
+    },
 });
 
-const sunset: Theme = createTheme({
+const sunset: TPortfolioTheme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -63,13 +68,17 @@ const sunset: Theme = createTheme({
         },
     },
     portfolio: {
+        theme: {
+            name: "Sunset",
+        },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1536890274788-51861e124205?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
         }
-    }
+    },
+
 });
 
-const lilypad: Theme = createTheme({
+const lilypad: TPortfolioTheme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -80,13 +89,16 @@ const lilypad: Theme = createTheme({
         },
     },
     portfolio: {
+        theme: {
+            name: "Lily Pad",
+        },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1542478080-8c03409bbf22?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1265&q=80',
         }
-    }
+    },
 });
 
-const autumn: Theme = createTheme({
+const autumn: TPortfolioTheme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -97,13 +109,16 @@ const autumn: Theme = createTheme({
         },
     },
     portfolio: {
+        theme: {
+            name: "Autumn",
+        },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1509838174235-432f709c7bfd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
         }
-    }
+    },
 });
 
-const cityscape: Theme = createTheme({
+const cityscape: TPortfolioTheme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -114,10 +129,13 @@ const cityscape: Theme = createTheme({
         },
     },
     portfolio: {
+        theme: {
+            name: "Cityscape",
+        },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1519010470956-6d877008eaa4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=935&q=80',
         }
-    }
+    },
 });
 
 

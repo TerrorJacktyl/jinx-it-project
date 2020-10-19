@@ -2,7 +2,14 @@ import { useContext } from "react";
 import { UserContext } from "jinxui";
 import API from "../../API";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { TPortfolio, TPage, TSection, TPortfolioData, TPageData, TSectionData } from "../types/PortfolioTypes";
+import {
+  TPortfolio,
+  TPage,
+  TSection,
+  TPortfolioData,
+  TPageData,
+  TSectionData,
+} from "../types/PortfolioTypes";
 import { ValidationError } from "yup";
 
 /**
@@ -53,6 +60,7 @@ export const useUser = () => {
           firstName: accDetails.first_name,
           lastName: accDetails.last_name,
           portfolioId: accDetails.primary_portfolio,
+          theme: accDetails.theme,
           token: response.data["auth_token"],
           authenticated: true,
           config: config,
@@ -155,7 +163,7 @@ export const useUser = () => {
 
   async function postPortfolio(data: TPortfolioData) {
     if (!data) {
-      throw ("Portfolio data is null")
+      throw "Portfolio data is null";
     }
     try {
       const response = await API.post(
@@ -203,12 +211,12 @@ export const useUser = () => {
     }
   }
 
-  // TODO: Fix types 
+  // TODO: Fix types
   async function putPortfolio(portfolio: any) {
     const path = PORTFOLIOS_PATH + "/" + portfolio.id;
     try {
-      const response = API.put(path, portfolio, state.config)
-      return response
+      const response = API.put(path, portfolio, state.config);
+      return response;
     } catch (e) {
       throw e;
     }
@@ -216,10 +224,10 @@ export const useUser = () => {
 
   // TODO: Fix types
   async function putPage(portfolioId: any, page: any) {
-    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + page.id
+    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + page.id;
     try {
-      const response = await API.put(path, page, state.config)
-      return response
+      const response = await API.put(path, page, state.config);
+      return response;
     } catch (e) {
       throw e;
     }
@@ -273,7 +281,11 @@ export const useUser = () => {
     try {
       const portfolioResp = await putPortfolio(portfolio);
       const pageResp = await putPage(portfolio.id, pages[0]);
-      const sectionsResp = await putSections(portfolio.id, pages[0].id, sections);
+      const sectionsResp = await putSections(
+        portfolio.id,
+        pages[0].id,
+        sections
+      );
       return { portfolioResp, pageResp, sectionsResp };
     } catch (e) {
       throw e;
@@ -373,14 +385,19 @@ export const useUser = () => {
     }
   }
 
-  async function getAccountDetailsFromUsername(username: string): Promise<{
-    first_name: string,
-    last_name: string,
-    primary_portfolio: number,
+  async function getAccountDetailsFromUsername(
+    username: string
+  ): Promise<{
+    first_name: string;
+    last_name: string;
+    primary_portfolio: number;
   }> {
     try {
-      const response = await API.get(ACCOUNT_PATH + `?username=${username}`, state.config);
-      return response.data[0]
+      const response = await API.get(
+        ACCOUNT_PATH + `?username=${username}`,
+        state.config
+      );
+      return response.data[0];
     } catch (error) {
       throw handleError(error);
     }
@@ -428,6 +445,43 @@ export const useUser = () => {
     return result;
   }
 
+  async function setTheme(portfolio_id: number, theme_name: string) {
+    async function savePortfolioTheme(theme: string) {
+      try {
+        await updateState({
+          ...state,
+          theme: theme,
+        });
+      } catch (e) {
+        throw e;
+      }
+    }
+
+    const path = PORTFOLIOS_PATH + "/" + portfolio_id;
+    API.get(path, state.config)
+      .then((response: any) => {
+        const result = API.put(
+          path,
+          {
+            name: response.data.name,
+            theme: theme_name,
+          },
+          state.config
+        ).then((response: any) => {
+          console.log(response)
+          savePortfolioTheme(response.data.theme)
+        }).catch((error: any) => {
+          console.log(error);
+          throw error;
+        });
+        return result;
+      })
+      .catch((error: any) => {
+        console.log(error);
+        throw error;
+      });
+  }
+
   async function makePortfolioPublic(portfolio_id: number) {
     return changePortfolioPrivacy(portfolio_id, false);
   }
@@ -436,17 +490,23 @@ export const useUser = () => {
     return changePortfolioPrivacy(portfolio_id, true);
   }
 
-  async function changePortfolioPrivacy(portfolio_id: number, privacy: boolean) {
-    const path = PORTFOLIOS_PATH + "/" + portfolio_id
-    API.get(path, state.config )
+  async function changePortfolioPrivacy(
+    portfolio_id: number,
+    privacy: boolean
+  ) {
+    const path = PORTFOLIOS_PATH + "/" + portfolio_id;
+    API.get(path, state.config)
       .then((response: any) => {
-        const result = API.put(path, {
-          name: response.data.name,
-          private: privacy
-        }, state.config )
-        .catch((error: any) => {
-          console.log(error)
-          throw error
+        const result = API.put(
+          path,
+          {
+            name: response.data.name,
+            private: privacy,
+          },
+          state.config
+        ).catch((error: any) => {
+          console.log(error);
+          throw error;
         });
         return result;
       })
@@ -527,6 +587,7 @@ export const useUser = () => {
     handleError,
     makePortfolioPublic,
     makePortfolioPrivate,
+    setTheme,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)

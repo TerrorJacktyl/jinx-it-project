@@ -8,7 +8,7 @@ import Edit from "./Edit";
 import Portfolio from "./Portfolio";
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, PortfolioDisplay, Routes } from "jinxui";
-import { SmoothProvider } from 'react-smooth-scrolling'
+// import { SmoothProvider } from 'react-smooth-scrolling'
 import Test from "./Test";
 
 const OverallDiv = styled.div`

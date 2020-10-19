@@ -22,6 +22,18 @@ interface PortfolioProps {
   username: string;
 }
 
+
+const getTheme = (props: any) => {
+  const themes_list = Object.values(PortfolioThemes)
+  const current_theme = themes_list.filter(
+    (value) => value.portfolio.theme.name === props.theme)
+  if (current_theme.length === 1) {
+    return current_theme[0]
+  } else {
+    return themes_list[0]
+  }
+}
+
 /*
   At the moment only the first page of portfolio is displayed.
   TODO: primary portfolio redirection
@@ -73,7 +85,8 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <ThemeProvider theme={LightTheme}>
         {userData.authenticated ? <HeaderBar lightTheme={true} /> : null}
         {/* Portfolio theme */}
-        <ThemeProvider theme={PortfolioThemes.cityscape}>
+        <ThemeProvider theme={getTheme(userData)}>
+        {/* <ThemeProvider theme={PortfolioThemes.magma}> */}
           <PortfolioHeader
             title={portfolio?.name}
             subtitle={author}

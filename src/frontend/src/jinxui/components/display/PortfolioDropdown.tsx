@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -15,7 +16,7 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import PaletteIcon from '@material-ui/icons/Palette';
+import PaletteIcon from "@material-ui/icons/Palette";
 
 import {
   HeaderButton,
@@ -23,6 +24,7 @@ import {
   HeaderMediaWidth,
   PrimaryMenu,
   Routes,
+  PortfolioThemes,
 } from "jinxui";
 
 const DivWrapper = styled.div`
@@ -42,6 +44,25 @@ const StyledInnerName = styled.div`
   }
 `;
 
+type TThemeMenu = {
+  theme: Theme
+}
+const ThemeMenuItem = (props: TThemeMenu) => {
+  const { setTheme, userData } = useUser();
+  return (
+    <MenuItem onClick={() => {
+      setTheme(userData.portfolioId, props.theme.portfolio.theme.name)
+      }}>
+      <ListItemIcon style={{ paddingLeft: 20 }}>
+        {props.theme.portfolio.theme.name === userData.theme 
+        ? <PaletteIcon color="secondary"/>
+        : <PaletteIcon />
+      }
+      </ListItemIcon>
+      <ListItemText primary={props.theme.portfolio.theme.name} />
+    </MenuItem>
+  );
+};
 
 const PortfolioDropdown = () => {
   const [open, setOpen] = React.useState(false);
@@ -127,7 +148,7 @@ const PortfolioDropdown = () => {
   });
 
   const handleMakePublic = () => {
-    setOpen(false)
+    setOpen(false);
     makePortfolioPublic(userData.portfolioId)
       .then((response: any) => {
         setIsPrivate(response.data.private);
@@ -138,7 +159,7 @@ const PortfolioDropdown = () => {
   };
 
   const handleMakePrivate = () => {
-    setOpen(false)
+    setOpen(false);
     makePortfolioPrivate(userData.portfolioId)
       .then((response: any) => {
         setIsPrivate(response.data.private);
@@ -205,18 +226,19 @@ const PortfolioDropdown = () => {
               {themeOpen ? <ExpandLess /> : <ExpandMore />}
             </MenuItem>
             <Collapse in={themeOpen} timeout="auto" unmountOnExit>
-              <MenuItem>
-              <ListItemIcon style={{paddingLeft: 20}}>
-                <PaletteIcon color="primary" />
-              </ListItemIcon>
-                <ListItemText primary="Magma" />
-              </MenuItem>
+              {Object.values(PortfolioThemes).map((theme: Theme) => (
+                <ThemeMenuItem theme={theme} />
+              ))}
             </Collapse>
-            <MenuItem onClick={isPrivate ? handleMakePublic : handleMakePrivate}>
-              <ListItemIcon >
+            <MenuItem
+              onClick={isPrivate ? handleMakePublic : handleMakePrivate}
+            >
+              <ListItemIcon>
                 {isPrivate ? <LockIcon /> : <LockOpenIcon />}
               </ListItemIcon>
-              <ListItemText primary={isPrivate ? "Make Public" : "Make Private"} />
+              <ListItemText
+                primary={isPrivate ? "Make Public" : "Make Private"}
+              />
             </MenuItem>
           </PrimaryMenu>
         </ClickAwayListener>
