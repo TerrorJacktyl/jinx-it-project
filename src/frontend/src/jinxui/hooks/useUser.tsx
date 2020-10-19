@@ -415,6 +415,10 @@ export const useUser = () => {
     return result;
   }
 
+  function getPortfolioPath(portfolio_id: number) {
+    return PORTFOLIOS_PATH + "/" + portfolio_id;
+  }
+
   /* Will retrieve a portoflio, all of its pages, and the first page's sections. 
      Tried to incorporate functionality to fetch all sections corresponding to all pages,
      but ran into a very lame bug with nested list indexing :'( */
@@ -587,6 +591,7 @@ export const useUser = () => {
     handleError,
     makePortfolioPublic,
     makePortfolioPrivate,
+    getPortfolioPath,
     setTheme,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).

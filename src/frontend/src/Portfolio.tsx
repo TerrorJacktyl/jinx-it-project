@@ -23,10 +23,10 @@ interface PortfolioProps {
 }
 
 
-const getTheme = (props: any) => {
+const getTheme = (theme_name: string) => {
   const themes_list = Object.values(PortfolioThemes)
   const current_theme = themes_list.filter(
-    (value) => value.portfolio.theme.name === props.theme)
+    (value) => value.portfolio.theme.name === theme_name)
   if (current_theme.length === 1) {
     return current_theme[0]
   } else {
@@ -73,7 +73,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
       setPortfolio(portfolio);
       setPages(pages);
       setSections(sections);
-      console.log(sections);
+      console.log(portfolio? portfolio.theme : null);
     };
     fetchPortfolio();
   }, [username]); // rendering a portfolio depends on the username
@@ -85,8 +85,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <ThemeProvider theme={LightTheme}>
         {userData.authenticated ? <HeaderBar lightTheme={true} /> : null}
         {/* Portfolio theme */}
-        <ThemeProvider theme={getTheme(userData)}>
-        {/* <ThemeProvider theme={PortfolioThemes.magma}> */}
+        <ThemeProvider theme={getTheme(portfolio ? portfolio.theme : "")}>
           <PortfolioHeader
             title={portfolio?.name}
             subtitle={author}

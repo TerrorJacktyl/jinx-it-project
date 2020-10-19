@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,6 +17,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import PaletteIcon from "@material-ui/icons/Palette";
+import ShareIcon from "@material-ui/icons/Share";
 
 import {
   HeaderButton,
@@ -45,23 +46,32 @@ const StyledInnerName = styled.div`
 `;
 
 type TThemeMenu = {
-  theme: Theme
-}
+  theme: Theme;
+  setOpen: any;
+};
 const ThemeMenuItem = (props: TThemeMenu) => {
   const { setTheme, userData } = useUser();
-  return (
-    <MenuItem onClick={() => {
-      setTheme(userData.portfolioId, props.theme.portfolio.theme.name)
-      }}>
-      <ListItemIcon style={{ paddingLeft: 20 }}>
-        {props.theme.portfolio.theme.name === userData.theme 
-        ? <PaletteIcon color="secondary"/>
-        : <PaletteIcon />
-      }
-      </ListItemIcon>
-      <ListItemText primary={props.theme.portfolio.theme.name} />
-    </MenuItem>
-  );
+  if (props.theme.portfolio.theme.name !== "Loading") {
+    return (
+      <MenuItem
+        onClick={() => {
+          props.setOpen(false);
+          setTheme(userData.portfolioId, props.theme.portfolio.theme.name);
+        }}
+      >
+        <ListItemIcon style={{ paddingLeft: 20 }}>
+          {props.theme.portfolio.theme.name === userData.theme ? (
+            <PaletteIcon color="secondary" />
+          ) : (
+            <PaletteIcon />
+          )}
+        </ListItemIcon>
+        <ListItemText primary={props.theme.portfolio.theme.name} />
+      </MenuItem>
+    );
+  } else {
+    return null
+  }
 };
 
 const PortfolioDropdown = () => {
@@ -75,6 +85,7 @@ const PortfolioDropdown = () => {
     makePortfolioPublic,
     makePortfolioPrivate,
     getPortfolio,
+    getPortfolioPath,
   } = useUser();
   const [editRedirect, setEditRedirect] = useState(false);
   const [viewRedirect, setViewRedirect] = useState(false);
@@ -140,11 +151,13 @@ const PortfolioDropdown = () => {
   };
 
   React.useEffect(() => {
-    const fetchPrivacy = async () => {
-      const portfolio = await getPortfolio(userData.portfolioId);
-      setIsPrivate(portfolio.private);
-    };
-    fetchPrivacy();
+    if (userData.authenticated) {
+      const fetchPrivacy = async () => {
+        const portfolio = await getPortfolio(userData.portfolioId);
+        setIsPrivate(portfolio.private);
+      };
+      fetchPrivacy();
+    }
   });
 
   const handleMakePublic = () => {
@@ -167,6 +180,12 @@ const PortfolioDropdown = () => {
       .catch((error: any) => {
         console.log(error);
       });
+  };
+
+  const handleShareLink = () => {
+    setOpen(false);
+    const path = process.env.REACT_APP_FRONT_URL + "u/" + userData.username;
+    navigator.clipboard.writeText(path);
   };
 
   if (editRedirect) {
@@ -227,9 +246,15 @@ const PortfolioDropdown = () => {
             </MenuItem>
             <Collapse in={themeOpen} timeout="auto" unmountOnExit>
               {Object.values(PortfolioThemes).map((theme: Theme) => (
-                <ThemeMenuItem theme={theme} />
+                <ThemeMenuItem theme={theme} setOpen={setOpen} />
               ))}
             </Collapse>
+            <MenuItem onClick={handleShareLink}>
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              <ListItemText primary="Copy Link" />
+            </MenuItem>
             <MenuItem
               onClick={isPrivate ? handleMakePublic : handleMakePrivate}
             >

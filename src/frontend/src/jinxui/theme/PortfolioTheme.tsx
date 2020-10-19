@@ -16,14 +16,22 @@
 import React from "react";
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
 
-interface TPortfolioTheme extends Theme {
-    // name: string;
-} 
+const loading: Theme = createTheme({
+    portfolio: {
+        theme: {
+            name: "Loading"
+        },
+        headerBackground: {
+            src: 'https://media1.giphy.com/media/ycfHiJV6WZnQDFjSWH/giphy.gif'
+        }
+    }
+})
 
-const magma: TPortfolioTheme = createTheme({
+const magma: Theme = createTheme({
     palette: {
         type: "dark",
         primary: {
@@ -57,7 +65,7 @@ const magma: TPortfolioTheme = createTheme({
     },
 });
 
-const sunset: TPortfolioTheme = createTheme({
+const sunset: Theme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -78,7 +86,7 @@ const sunset: TPortfolioTheme = createTheme({
 
 });
 
-const lilypad: TPortfolioTheme = createTheme({
+const lilypad: Theme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -98,7 +106,7 @@ const lilypad: TPortfolioTheme = createTheme({
     },
 });
 
-const autumn: TPortfolioTheme = createTheme({
+const autumn: Theme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -118,7 +126,7 @@ const autumn: TPortfolioTheme = createTheme({
     },
 });
 
-const cityscape: TPortfolioTheme = createTheme({
+const cityscape: Theme = createTheme({
     palette: {
         type: "light",
         primary: {
@@ -142,6 +150,7 @@ const cityscape: TPortfolioTheme = createTheme({
 // Register your theme in here - this is the object you'll access it from
 
 export const PortfolioThemes = {
+    loading: loading,
     magma: magma,
     sunset: sunset,
     lilypad: lilypad,
