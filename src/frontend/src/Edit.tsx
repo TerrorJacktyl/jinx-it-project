@@ -73,7 +73,7 @@ function sectionDataIsEmpty(data: any) {
 const Edit = () => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
-  const [published, setPublished] = useState(false);
+  const [redirect, setRedirect] = useState(false);
   const {
     postFullPortfolio,
     putFullPortfolio,
@@ -149,18 +149,56 @@ const Edit = () => {
     setSections(newSections);
   };
 
-  // Removes the uid field from each section. Used before data is sent to backend
-  const unidentify = () => {
+  /**
+   * Prepare section data for sending to backend.
+   * 1. Remove unique identifiers
+   * 2. Override section numbers
+   * 3. Remove empty sections entirely
+   */
+  const cleanedSections = () => {
+    // Deep copy sections
     const sectionsCopy = JSON.parse(JSON.stringify(sections));
-    var noUidSections = sectionsCopy.map((section: TEditSection) => {
+
+    var cleanSections = sectionsCopy.map((section: TEditSection, index: number) => {
       const newSection = section;
-      // Fear not the linting error!
+      // Delete uid field: fear not the linting error!
       delete newSection.uid;
+      // Overwrite the section order number
+      newSection.number = index;
       return newSection;
     });
-    // return noUidSections;
-    return noUidSections.filter(sectionIsNotBlank);
+    // Remove empty sections
+    // TO DO: make this happen in a single pass (i.e. above) with a for loop instead of map
+    return cleanSections.filter(sectionIsNotBlank);
   };
+
+  /** Some shocking repeated code because of the gridlock imposed by:
+   * 1. handlePublish can't be made async without pulling it out of the Edit component
+   * 2. functions that are not components cannot call hooks
+   * TODO: burn it and refactor `publish` into a hook method so it can be made async
+  */
+
+  /** Save the currently edited page to the backend without redirecting. */
+  const handlePublish = () => {
+    const sections = cleanedSections();
+    if (existingPortfolio) {
+      putFullPortfolio(portfolio, pages, sections)
+    } else {
+      postFullPortfolio(portfolio, pages, sections)
+    }
+  }
+
+  /** Save the currently edited page to the backend and redirect to display page. */
+  const handlePublishAndRedirect = () => {
+    const sections = cleanedSections();
+    if (existingPortfolio) {
+      putFullPortfolio(portfolio, pages, sections)
+        .then(() => setRedirect(true))
+    } else {
+      postFullPortfolio(portfolio, pages, sections)
+        .then(() => setRedirect(true))
+    }
+  }
 
   const sectionIsNotBlank = (section: TEditSection) => {
     if (section.type === "text") {
@@ -176,26 +214,6 @@ const Edit = () => {
     }
   };
 
-  const handlePublish = () => {
-    const noUidSections = unidentify();
-    // TODO: When multiple portoflio are implemented,
-    // set the portfolioId in context to the portfolio being edited.
-    // In the case of a new portfolio, will need to wait until the POST response to set this
-    if (existingPortfolio) {
-      putFullPortfolio(portfolio, pages, noUidSections);
-    } else {
-      postFullPortfolio(portfolio, pages, noUidSections);
-    }
-  };
-
-  // Preps the data to be sent to backend, and redirects to display page
-  const onPublishAndRedirect = () => {
-    handlePublish();
-    return (
-      <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
-    );
-  };
-  
   const DisplaySections = () => {
     if (sections.length == 0) {
       return (
@@ -250,8 +268,10 @@ const Edit = () => {
     );
   };
 
-  if (published) {
-    return onPublishAndRedirect();
+  if (redirect) {
+    return (
+      <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
+    );
   } else {
     return (
       // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
@@ -262,7 +282,7 @@ const Edit = () => {
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {
-                  switchLightThemeMode().then((response) => {});
+                  switchLightThemeMode().then((response) => { });
                 }}
                 color="inherit"
               >
@@ -308,7 +328,9 @@ const Edit = () => {
                   </PortfolioNameSectionInput>
                   <DisplaySections />
                   <PublishCancelDiv>
-                    <PrimaryButton onClick={() => setPublished(true)}>
+                    <PrimaryButton onClick={() => {
+                      handlePublishAndRedirect()
+                    }}>
                       PUBLISH
                     </PrimaryButton>
                     <a href={Routes.HOME}>
@@ -325,4 +347,5 @@ const Edit = () => {
     );
   }
 };
+
 export default Edit;
