@@ -1,3 +1,5 @@
+import { Theme } from "@material-ui/core/styles/createMuiTheme";
+
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 const LightShadowColour = "20, 60, 126"
@@ -71,6 +73,9 @@ const DarkTheme = createMuiTheme({
   shape: {
     borderRadius: 0
   },
+  portfolio: {
+
+  }
 });
 
 let LightTheme = createMuiTheme({
@@ -131,6 +136,9 @@ let LightTheme = createMuiTheme({
   ],
   shape: {
     borderRadius: 0
+  },
+  portfolio: {
+
   }
 });
 

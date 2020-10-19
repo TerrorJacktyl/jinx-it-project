@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom"
 import Container from "@material-ui/core/Container";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -13,8 +13,9 @@ import {
   HeaderBar,
   Copyright,
   SectionGrid,
-  Routes,
   PortfolioHeader,
+  PortfolioThemes,
+  Routes,
 } from "jinxui";
 
 interface PortfolioProps {
@@ -65,29 +66,24 @@ const Portfolio = ({ username }: PortfolioProps) => {
     fetchPortfolio();
   }, [username]); // rendering a portfolio depends on the username
 
-  // Used to show background image capability: derive from theme eventually
-  const defaultBackgroundSrc =
-    "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
-
-  if (editRedirect) {
-    return onEdit();
-  } else {
-    return (
-      <>
-        <CssBaseline />
-        <ThemeProvider theme={LightTheme}>
-          {userData.authenticated ? (
-            <HeaderBar lightTheme={true} />
-            ) : null}
-          <PortfolioHeader title={portfolio?.name} subtitle={author} />
+  return (
+    <>
+      <CssBaseline />
+      {/* Site main theme */}
+      <ThemeProvider theme={LightTheme}>
+        {userData.authenticated ? <HeaderBar lightTheme={true} /> : null}
+        {/* Portfolio theme */}
+        <ThemeProvider theme={PortfolioThemes.cityscape}>
+          <PortfolioHeader
+            title={portfolio?.name}
+            subtitle={author}
+          ></PortfolioHeader>
           <SectionGrid sections={sections} />
-          <Container maxWidth="sm" style={{ padding: "0 2em 2em 2em" }}>
-            <Copyright text={userData.firstName} />
-          </Container>
         </ThemeProvider>
-      </>
-    );
-  }
+        <Copyright text={userData.firstName} />
+      </ThemeProvider>
+    </>
+  );
 };
 
 export default Portfolio;

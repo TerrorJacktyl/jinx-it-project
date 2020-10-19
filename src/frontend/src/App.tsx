@@ -8,7 +8,7 @@ import Edit from "./Edit";
 import Portfolio from "./Portfolio";
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, PortfolioDisplay, Routes } from "jinxui";
-
+import { SmoothProvider } from 'react-smooth-scrolling'
 import Test from "./Test";
 
 const OverallDiv = styled.div`
@@ -17,6 +17,9 @@ const OverallDiv = styled.div`
 
 function App() {
   const app = (
+    // Smooth scrolling causes pages to overflow (i.e. you can scroll past the end of the page)
+    // <SmoothProvider skew={false}>
+
     // Wrap the whole app in the UserContext so they can all access the user
     // data without passing it as props everywhere
     <UserContextProvider>
@@ -28,7 +31,6 @@ function App() {
             <Route path={Routes.SIGNUP} exact component={Signup} />
             <LoggedInRoute path={Routes.PORTFOLIO_EDIT} exact component={Edit} />
             <LoggedInRoute path={Routes.PORTFOLIO_DISPLAY} exact component={PortfolioDisplay} />
-            {/* <Route path={Routes.PORTFOLIO_DISPLAY} exact component={PortfolioDisplay} /> */}
             <Route path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"} exact render={
               ({ match }: RouteComponentProps<{ username: string }>) => <Portfolio username={match.params.username} />
             } />
@@ -37,6 +39,7 @@ function App() {
         </OverallDiv>
       </Router>
     </UserContextProvider>
+    // </SmoothProvider >
   );
   return app;
 }

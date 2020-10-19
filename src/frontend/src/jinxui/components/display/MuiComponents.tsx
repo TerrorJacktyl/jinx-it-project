@@ -3,12 +3,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import { makeStyles, createStyles, Theme, useTheme, withStyles } from "@material-ui/core/styles";
-import styled from 'styled-components';
-import clsx from 'clsx';
-
 import { TSectionData } from "jinxui";
 
 
@@ -16,84 +12,44 @@ import { TSectionData } from "jinxui";
 export const compose = (...fns: Array<Function>) => (arg: any) => fns.reduceRight((acc, fn) => (fn ? fn(acc) : acc), arg)
 
 /* A block that takes up at minimum the height of the screen. Takes an optional */
-export function ScreenBlock({ transparent, children }: { transparent?: any, children?: any }) {
+export function ScreenBlock(props: any) {
 
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      screenPaper: {
-        minHeight: "100vh",
-      }
-    }),
-  );
-
-  const classes = useStyles();
-
-  if (transparent) {
-    return <Container className={classes.screenPaper}>
-      {children}
-    </Container>
-  }
-  else {
-    return (
-      <Paper elevation={0} className={classes.screenPaper}>
-        {children}
-      </Paper>
-    )
-  }
+  return (
+    <Box
+      minHeight="100vh" clone>
+      {props.children}
+    </Box>
+  )
 }
 
 export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      container: {
-        // display: 'grid',
-        // gridTemplateRows: '70% 10% 20%',
-        // gridTemplateColumns: '10% auto',
-        height: '100vh',
-      },
-      titleText: {
-        textAlign: 'left',
-        color: theme.palette.common.white,
-        // gridRow: '2',
-        // gridColumn: '2',
-      },
-      authorText: {
-        textAlign: 'left',
-        color: theme.palette.common.white,
-        // gridRow: '3',
-        // gridColumn: '2',
-      },
-      textContainer: { padding: '3em' },
-    })
-  );
 
-  const classes = useStyles();
-
-  const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+  const theme = useTheme();
 
   return (
-    <BackgroundImage url={defaultBackgroundSrc}>
-      <ScreenBlock transparent>
+    <BackgroundImage url={
+      theme.portfolio.headerBackground.src
+    }>
+      <ScreenBlock>
         <Grid container
-          className={classes.container}
           direction="row"
           alignItems="flex-end"
         >
-          <Grid item xs={10}
-            className={classes.textContainer}
-          >
-            <Typography
-              variant="h1"
-              gutterBottom
-              className={classes.titleText}>
-              {title}
-            </Typography>
-            <Typography
-              variant="h2"
-              gutterBottom
-              className={classes.authorText}>
-              {subtitle}
-            </Typography>
+          <Grid item xs={12}>
+            <Box p="10%" color="common.white">
+              <Typography align="left">
+                <Typography variant="h1" gutterBottom>
+                  <Box fontWeight="fontWeightMedium">
+                    {title}
+                  </Box>
+                </Typography>
+                <Typography variant="h2">
+                  <Box fontWeight="fontWeightMedium">
+                    {subtitle}
+                  </Box>
+                </Typography>
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
       </ScreenBlock>
@@ -117,7 +73,7 @@ export const Section = (data: TSectionData) => {
         objectFit: "contain"
       },
       item: {
-        padding: "1em",
+        paddingTop: "1em",
       }
     })
   );
@@ -129,7 +85,7 @@ export const Section = (data: TSectionData) => {
 
   return (
     // Text alignment hard coded - unsure how to put inside theme
-    <Box textAlign="left">
+    <Box textAlign="left" paddingTop="3em" paddingBottom="3em">
       <Typography variant="h3">
         {data.name}
       </Typography>
@@ -162,16 +118,8 @@ export const Section = (data: TSectionData) => {
 };
 
 export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      container: {
-        paddingTop: '3em',
-        paddingBottom: '3em',
-      },
-    })
-  );
 
-  const classes = useStyles();
+  const theme = useTheme();
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
   const layoutData = (data: TSectionData, index?: number) => {
@@ -179,56 +127,43 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
   };
 
   const applyAlternatingBackground = (component: JSX.Element, index: number) => {
+
+    const color = index % 2 === 0 ? 'primary' : 'secondary';
+    const type = theme.palette.type;
+
     return (
-      // Every odd section has no background
-      <ScreenBlock transparent={index % 2 !== 0}>
-        <Container
-          maxWidth="md"
-          className={classes.container}>
+      <Box
+        bgcolor={`${color}.${type}`}
+        color={`${color}.contrastText`}
+      >
+        <Container>
           {component}
         </Container>
-      </ScreenBlock >
+      </Box>
     )
   }
 
-  const dataToSection = compose(applyAlternatingBackground, layoutData)
-
   return (
     <>
-      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(dataToSection(section), index))} />
+      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(layoutData(section), index))} />
     </>
   );
 };
 
 /**
  * Given a list of components as props, render them in a centred grid.
- * Note that if you don't pass the components as props, you will burn.
  */
 export function CentredGrid({ components }: { components: JSX.Element[] }) {
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      root: {
-        flexGrow: 1,
-        // padding: "2em 2em 2em 2em",
-      },
-      item: {
-        // padding: "0 0 5em 0"
-      },
-    })
-  );
-
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3}>
-        {components.map((component, index) => (
-          <Grid item xs={12} key={index} className={classes.item}>
-            {component}
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+    <Grid container
+    // spacing={3}
+    >
+      {components.map((component, index) => (
+        <Grid item xs={12} key={index}>
+          {component}
+        </Grid>
+      ))}
+    </Grid>
   );
 }
 
@@ -241,14 +176,16 @@ export function BackgroundImage(props: any) {
     createStyles({
       background: {
         backgroundImage: `url(${props.url})`,
+        // background: "linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(karina-vorozheeva-rW-I87aPY5Y-unsplash)",
         backgroundColor: theme.palette.background.default,
         backgroundPosition: "center" /* Center the image */,
         backgroundRepeat: "no-repeat" /* Do not repeat the image */,
         backgroundSize: "cover" /* Resize the background image to cover the entire container */,
-        // If there are children, darken the image so text is not invisible
-        filter: `${props.children ? 'brightness(0.7)' : 'none'}`,
-        minHeight: "100vh"
       },
+      foreground: {
+        // If there are children, darken the image so text is not invisible
+        backgroundColor: `${props.children ? 'rgba(0,0,0,0.3)' : 'none'}`,
+      }
     })
   );
 
@@ -256,9 +193,15 @@ export function BackgroundImage(props: any) {
 
   // Background: image from style, default to regular background if no image found
 
-  return <Paper className={classes.background}>
-    {props.children}
-  </Paper>;
+  return (
+    <>
+      <Paper className={classes.background}>
+        <Box className={classes.foreground}>
+          {props.children}
+        </Box>
+      </Paper>
+    </>
+  )
 }
 
 export function Copyright({ text }: { text: string }) {
@@ -267,6 +210,7 @@ export function Copyright({ text }: { text: string }) {
     createStyles({
       container: {
         paddingTop: '2em',
+        paddingBottom: '1em',
       },
     })
   );
@@ -282,7 +226,7 @@ export function Copyright({ text }: { text: string }) {
 
 export function CopyrightText({ text }: { text: string }) {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="h6" align="center">
       {"Copyright © "}
       {text}{" "}
       {new Date().getFullYear()}

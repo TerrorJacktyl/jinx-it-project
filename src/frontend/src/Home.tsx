@@ -70,7 +70,7 @@ const JinxLogo = styled.img`
   @media (max-height: ${() => MAX_HEIGHT}) {
     width: 70%;
   }
-  )align-self: center;
+  align-self: center;
   justify-self: center;
 `;
 

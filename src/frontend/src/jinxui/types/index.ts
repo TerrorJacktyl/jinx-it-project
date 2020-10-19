@@ -7,3 +7,7 @@ export type {
   TPortfolioData,
   TPageData,
 } from "./PortfolioTypes";
+
+export type {
+  IUserContext
+} from "./IUserContext";
