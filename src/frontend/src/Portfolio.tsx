@@ -36,6 +36,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
+      setError(false)
       try {
         const { primary_portfolio } = await getAccountDetailsFromUsername(
           username
