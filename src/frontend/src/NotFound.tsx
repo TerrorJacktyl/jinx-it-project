@@ -27,7 +27,7 @@ const NotFound = ({ title, message }: NotFoundProps) => {
   const history = useHistory();
 
   if (title === undefined) {
-    title = "The requested resource could not be found.";
+    title = "The requested page could not be found.";
   }
   if (message === undefined) {
     message = "Check the URL, or press the back button to go back.";
