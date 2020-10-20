@@ -53,7 +53,7 @@ const TopBlockDiv = styled(Paper)`
   display: grid;
   grid-template-rows:
     minmax(80px, 1fr) minmax(50px, 400px) minmax(50px, 1fr)
-    minmax(max-content, 1.2fr) minmax(100px, 0.7fr) 40px;
+    minmax(max-content, 1fr) minmax(100px, 1fr) 40px;
   justify-content: center;
   align-content: center;
   justify-items: center;
@@ -94,15 +94,6 @@ const CatchPhrase = styled.h3`
   justify-self: center;
 `;
 
-// Call to action button
-const StyledLogin = styled(SecondaryButton)`
-  margin-top: 0px;
-  margin-right: 30px;
-  margin-left: 20px;
-  margin-bottom: 0px;
-  height: 30px;
-  width: 120px;
-`;
 
 // Nice big white space
 const Gap = styled.div`
@@ -121,23 +112,7 @@ const Home = () => {
         <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
           <SiteHeader>
             <HeaderDiv>
-              <HeaderBar hideLogo title="" lightTheme={true}>
-                {userData.authenticated ? null : (
-                  <StyledLink
-                    href={
-                      userData.authenticated
-                        ? Routes.PORTFOLIO_DISPLAY_BASE +
-                          "/" +
-                          userData.username
-                        : Routes.LOGIN
-                    }
-                  >
-                    <StyledLogin>
-                      {userData.authenticated ? "My Portfolio" : "Login"}
-                    </StyledLogin>
-                  </StyledLink>
-                )}
-              </HeaderBar>
+              <HeaderBar hideLogo title="" lightTheme={true}/>
             </HeaderDiv>
           </SiteHeader>
 

@@ -16,13 +16,15 @@ import {
   DarkHeaderGrad,
   LogoLink,
   PortfolioDropdown,
+  useUser,
+  SecondaryButton,
+  Routes,
 } from "jinxui";
 
 import styled from "styled-components";
 
-
 const HeaderMediaWidth = () => {
-  return "600px"
+  return "600px";
 };
 
 // Ensure that app bar sticks to top and sides
@@ -65,14 +67,30 @@ const StyledDivTitle = styled.div`
   }
 `;
 
+const StyledLogin = styled(SecondaryButton)`
+  margin-top: 0px;
+  margin-right: 30px;
+  margin-left: 20px;
+  margin-bottom: 0px;
+  height: 30px;
+  width: 120px;
+`;
+
+const StyledLink = styled.a`
+  text-decoration: none;
+`;
+
 type HeaderBarProps = {
   title?: string;
   lightTheme: boolean;
   children?: React.ReactNode;
   hideLogo?: boolean;
+  hideLogin? : boolean;
+  hideBGLoggedOut? : boolean;
 };
 
 const HeaderBar = (props: HeaderBarProps) => {
+  const { userData } = useUser();
   const trigger = useScrollTrigger();
   const headerGrad =
     props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad;
@@ -81,12 +99,9 @@ const HeaderBar = (props: HeaderBarProps) => {
     <StylesProvider injectFirst>
       <Slide appear={false} direction="down" in={!trigger}>
         <StyledAppBar
-          color="inherit"
-          elevation={4}
-          style={{
-            background: headerGrad,
-          }}
-        >
+          color={userData.authenticated || props.hideBGLoggedOut !== true ? "inherit" : "transparent"}
+          elevation={userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0}
+          style={userData.authenticated || props.hideBGLoggedOut !== true ? {background: headerGrad} : {}}>
           <StyledDivOuter>
             <StyledDivLeft>
               {!props.hideLogo ? (
@@ -102,6 +117,17 @@ const HeaderBar = (props: HeaderBarProps) => {
             </StyledDivCenter>
             <StyledDivRight>
               {props.children}
+              {userData.authenticated || props.hideLogin ? null : (
+                <StyledLink
+                  href={
+                    userData.authenticated
+                      ? Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username
+                      : Routes.LOGIN
+                  }
+                >
+                  <StyledLogin>Login</StyledLogin>
+                </StyledLink>
+              )}
               <UserAvatarDropdown />
               <PortfolioDropdown />
             </StyledDivRight>
@@ -112,7 +138,4 @@ const HeaderBar = (props: HeaderBarProps) => {
   );
 };
 
-export {
-  HeaderBar,
-  HeaderMediaWidth,
-};
+export { HeaderBar, HeaderMediaWidth };

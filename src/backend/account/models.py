@@ -25,6 +25,12 @@ class Account(models.Model):
         blank=True,
         null=True
     )
+    # theme = models.OneToOneField(
+    #     Portfolio,
+    #     on_delete=models.SET_NULL,
+    #     blank=True,
+    #     null=True,
+    # )
 
     def _str_(self):
         return self.user.first_name

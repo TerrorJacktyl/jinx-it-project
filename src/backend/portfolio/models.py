@@ -28,7 +28,8 @@ def create_default_portfolio(sender, **kwargs):
         number='0',
         content=
             'Welcome to Jinx\'s portfolio creation software! '
-            'This is a default portfolio, feel free to modify or delete.'
+            'This is a default portfolio, feel free to modify or delete.',
+        them="Magma"
     )
     account.primary_portfolio = portfolio
     account.save()

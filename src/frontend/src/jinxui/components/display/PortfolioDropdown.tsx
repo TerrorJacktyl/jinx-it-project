@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Link from '@material-ui/core/Link';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
@@ -50,7 +51,21 @@ type TThemeMenu = {
   setOpen: any;
 };
 const ThemeMenuItem = (props: TThemeMenu) => {
-  const { setTheme, userData } = useUser();
+  const { setTheme, userData, getPortfolio } = useUser();
+  const [currTheme, setCurrTheme] = React.useState("")
+  if(!userData.theme){
+    getPortfolio(userData.portfolioId)
+      .then((response: any) => {
+        console.log(response)
+        // setTheme(userData.portfolioId, response.theme)
+        setCurrTheme(response.theme)
+      }).catch((error: any) => {
+        console.log(error)
+      })
+  } else {
+    setCurrTheme(userData.theme)
+  }
+
   if (props.theme.portfolio.theme.name !== "Loading") {
     return (
       <MenuItem
@@ -60,7 +75,7 @@ const ThemeMenuItem = (props: TThemeMenu) => {
         }}
       >
         <ListItemIcon style={{ paddingLeft: 20 }}>
-          {props.theme.portfolio.theme.name === userData.theme ? (
+          {props.theme.portfolio.theme.name === currTheme ? (
             <PaletteIcon color="secondary" />
           ) : (
             <PaletteIcon />
@@ -70,7 +85,7 @@ const ThemeMenuItem = (props: TThemeMenu) => {
       </MenuItem>
     );
   } else {
-    return null
+    return null;
   }
 };
 
@@ -140,11 +155,19 @@ const PortfolioDropdown = () => {
   }, [themeOpen]);
 
   const onEdit = () => {
+    // setOpen(false)
     // At the moment, this fails if a portfolio hasn't been created yet.
-    return <Redirect to={Routes.PORTFOLIO_EDIT} />;
+    return (
+      <>
+        <Redirect to={Routes.PORTFOLIO_EDIT} />
+        {/* {setEditRedirect(false)} */}
+      </>
+    );
   };
 
   const onView = () => {
+    setOpen(false);
+    setViewRedirect(false);
     return (
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
@@ -195,7 +218,7 @@ const PortfolioDropdown = () => {
   } else {
     return (
       <DivWrapper>
-        {userData.authenticated ? (
+        {userData.username ? (
           <StyledName
             ref={anchorRef}
             aria-controls={open ? "menu-list-grow" : undefined}
@@ -217,26 +240,28 @@ const PortfolioDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
-            <MenuItem
-              onClick={() => {
-                setEditRedirect(true);
-              }}
+            <Link color="inherit" underline="none" 
+              href={Routes.PORTFOLIO_EDIT}
             >
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              <ListItemText primary="Edit" />
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setViewRedirect(true);
-              }}
+              {/* <MenuItem onClick={() => {setEditRedirect(true);}}> */}
+              <MenuItem>
+                <ListItemIcon>
+                  <EditIcon />
+                </ListItemIcon>
+                <ListItemText primary="Edit" />
+              </MenuItem>
+            </Link>
+            <Link color="inherit" underline="none"
+              href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
             >
-              <ListItemIcon>
-                <VisibilityIcon />
-              </ListItemIcon>
-              <ListItemText primary="View" />
-            </MenuItem>
+              {/* <MenuItem onClick={() => {setViewRedirect(true);}}> */}
+              <MenuItem>
+                <ListItemIcon>
+                  <VisibilityIcon />
+                </ListItemIcon>
+                <ListItemText primary="View" />
+              </MenuItem>
+            </Link>
             <MenuItem onClick={handleThemeToggle}>
               <ListItemIcon>
                 <InvertColorsIcon />

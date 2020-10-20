@@ -82,7 +82,6 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
                 event.currentTarget.files[0].name
               )
                 .then((response) => {
-                  console.log(response);
                   setImageResponse(response.data);
                   props.section.path = response.data.path;
                   props.section.image = response.data.id;

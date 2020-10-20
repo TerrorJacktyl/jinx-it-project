@@ -60,11 +60,14 @@ export const useUser = () => {
           firstName: accDetails.first_name,
           lastName: accDetails.last_name,
           portfolioId: accDetails.primary_portfolio,
+          // theme: accDetails.theme,
           theme: accDetails.theme,
           token: response.data["auth_token"],
           authenticated: true,
           config: config,
         };
+        console.log("STATE CHANGES")
+        console.log(stateChanges)
         // Update context (react) state and local (browser) state
         await updateState(stateChanges);
         return config;
@@ -472,7 +475,6 @@ export const useUser = () => {
           },
           state.config
         ).then((response: any) => {
-          console.log(response)
           savePortfolioTheme(response.data.theme)
         }).catch((error: any) => {
           console.log(error);

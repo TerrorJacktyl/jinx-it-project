@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom"
+import { Redirect } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -18,20 +18,25 @@ import {
   Routes,
 } from "jinxui";
 
+const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
+  const theme_name = 
+    userData.authenticated && userData.theme && thisPageUser === userData.username
+    ? userData.theme
+    : portfolio ? portfolio.theme : "";
+
+  const themes_list = Object.values(PortfolioThemes);
+  const current_theme = themes_list.filter(
+    (value) => value.portfolio.theme.name === theme_name
+  );
+  if (current_theme.length === 1) {
+    return current_theme[0];
+  } else {
+    return themes_list[0];
+  }
+};
+
 interface PortfolioProps {
   username: string;
-}
-
-
-const getTheme = (theme_name: string) => {
-  const themes_list = Object.values(PortfolioThemes)
-  const current_theme = themes_list.filter(
-    (value) => value.portfolio.theme.name === theme_name)
-  if (current_theme.length === 1) {
-    return current_theme[0]
-  } else {
-    return themes_list[0]
-  }
 }
 
 /*
@@ -73,7 +78,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
       setPortfolio(portfolio);
       setPages(pages);
       setSections(sections);
-      console.log(portfolio? portfolio.theme : null);
     };
     fetchPortfolio();
   }, [username]); // rendering a portfolio depends on the username
@@ -83,9 +87,10 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <CssBaseline />
       {/* Site main theme */}
       <ThemeProvider theme={LightTheme}>
-        {userData.authenticated ? <HeaderBar lightTheme={true} /> : null}
+        {/* {userData.authenticated ? <HeaderBar lightTheme={true} /> : null} */}
+        <HeaderBar lightTheme={true} hideBGLoggedOut={true}/>
         {/* Portfolio theme */}
-        <ThemeProvider theme={getTheme(portfolio ? portfolio.theme : "")}>
+        <ThemeProvider theme={getTheme(portfolio, userData, username)}>
           <PortfolioHeader
             title={portfolio?.name}
             subtitle={author}
