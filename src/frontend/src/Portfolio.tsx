@@ -8,6 +8,7 @@ import {
   LightTheme, useUser, TPortfolio, TPage, TSection,
   HeaderBar, Copyright, SectionGrid, BackgroundImage, HeaderBarSpacer,
 } from 'jinxui';
+import NotFound from "./NotFound";
 
 interface PortfolioProps {
   username: string;
@@ -57,7 +58,12 @@ const Portfolio = ({ username }: PortfolioProps) => {
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
   if (error) {
-    return <p>The requested portfolio could not be found</p>
+    return (
+      <NotFound
+        title="This portfolio could not be found"
+        message="If you were given a link, the owner may not have set the portfolio as public."
+      />
+    );
   }
 
   return (
