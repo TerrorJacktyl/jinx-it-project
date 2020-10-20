@@ -51,20 +51,7 @@ type TThemeMenu = {
   setOpen: any;
 };
 const ThemeMenuItem = (props: TThemeMenu) => {
-  const { setTheme, userData, getPortfolio } = useUser();
-  const [currTheme, setCurrTheme] = React.useState("")
-  if(!userData.theme){
-    getPortfolio(userData.portfolioId)
-      .then((response: any) => {
-        console.log(response)
-        // setTheme(userData.portfolioId, response.theme)
-        setCurrTheme(response.theme)
-      }).catch((error: any) => {
-        console.log(error)
-      })
-  } else {
-    setCurrTheme(userData.theme)
-  }
+  const { setTheme, userData } = useUser();
 
   if (props.theme.portfolio.theme.name !== "Loading") {
     return (
@@ -75,7 +62,7 @@ const ThemeMenuItem = (props: TThemeMenu) => {
         }}
       >
         <ListItemIcon style={{ paddingLeft: 20 }}>
-          {props.theme.portfolio.theme.name === currTheme ? (
+          {props.theme.portfolio.theme.name === userData.theme ? (
             <PaletteIcon color="secondary" />
           ) : (
             <PaletteIcon />
