@@ -87,7 +87,6 @@ const PortfolioDropdown = () => {
     makePortfolioPublic,
     makePortfolioPrivate,
     getPortfolio,
-    getPortfolioPath,
   } = useUser();
   const [editRedirect, setEditRedirect] = useState(false);
   const [viewRedirect, setViewRedirect] = useState(false);
@@ -230,6 +229,9 @@ const PortfolioDropdown = () => {
             <Link color="inherit" underline="none" 
               href={Routes.PORTFOLIO_EDIT}
             >
+              {/* Ideally use redirect instead of href if we can solve 
+                  'menu disappearing' issue (#45)
+              */}
               {/* <MenuItem onClick={() => {setEditRedirect(true);}}> */}
               <MenuItem>
                 <ListItemIcon>

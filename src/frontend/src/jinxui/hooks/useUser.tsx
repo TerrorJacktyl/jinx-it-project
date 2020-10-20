@@ -66,8 +66,6 @@ export const useUser = () => {
           authenticated: true,
           config: config,
         };
-        console.log("STATE CHANGES")
-        console.log(stateChanges)
         // Update context (react) state and local (browser) state
         await updateState(stateChanges);
         return config;
