@@ -9,7 +9,7 @@ import {
 } from "jinxui";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Layout = styled(SiteLayout)`
@@ -24,13 +24,11 @@ interface NotFoundProps {
 }
 
 const NotFound = ({ title, message }: NotFoundProps) => {
-  const history = useHistory();
-
   if (title === undefined) {
     title = "The requested page could not be found.";
   }
   if (message === undefined) {
-    message = "Check the URL, or press the back button to go back.";
+    message = "Check the URL if you typed it in manually.";
   }
   return (
     <>
@@ -45,9 +43,9 @@ const NotFound = ({ title, message }: NotFoundProps) => {
           <Typography variant="body1" gutterBottom>
             {message}
           </Typography>
-          <SecondaryButton onClick={() => history.goBack()}>
-            Go Back
-          </SecondaryButton>
+          <Link to="/">
+            <SecondaryButton>Home Page</SecondaryButton>
+          </Link>
         </Layout>
       </ThemeProvider>
     </>
