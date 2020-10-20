@@ -30,19 +30,25 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
 
+  const [error, setError] = useState<boolean>(false);
+
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
-      const { primary_portfolio } = await getAccountDetailsFromUsername(
-        username
-      );
-      const { portfolio, pages, sections } = await getFullPortfolio(
-        primary_portfolio
-      );
-      setPortfolio(portfolio);
-      setPages(pages);
-      setSections(sections);
-      console.log(sections);
+      try {
+        const { primary_portfolio } = await getAccountDetailsFromUsername(
+          username
+        );
+        const { portfolio, pages, sections } = await getFullPortfolio(
+          primary_portfolio
+        );
+        setPortfolio(portfolio);
+        setPages(pages);
+        setSections(sections);
+        console.log(sections);
+      } catch (e) {
+        setError(true);
+      }
     };
     fetchPortfolio();
   }, [username]); // rendering a portfolio depends on the username
@@ -50,6 +56,9 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Used to show background image capability: derive from theme eventually
   const defaultBackgroundSrc = "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
+  if (error) {
+    return <p>The requested portfolio could not be found</p>
+  }
 
   return (
     <>
