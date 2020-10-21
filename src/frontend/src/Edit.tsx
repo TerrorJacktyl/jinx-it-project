@@ -192,7 +192,7 @@ const Edit = () => {
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {
-                  switchLightThemeMode().then((response) => {});
+                  switchLightThemeMode().then((response) => { });
                 }}
                 color="inherit"
               >
