@@ -6,6 +6,8 @@ import Signup from "./Signup";
 import Home from "./Home";
 import Edit from "./Edit";
 import Portfolio from "./Portfolio";
+import NotFound from "./NotFound";
+
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, PortfolioDisplay, Routes } from "jinxui";
 // import { SmoothProvider } from 'react-smooth-scrolling'
@@ -34,7 +36,8 @@ function App() {
             <Route path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"} exact render={
               ({ match }: RouteComponentProps<{ username: string }>) => <Portfolio username={match.params.username} />
             } />
-            <Route path={"/test"} exact component={Test} />
+            {/* if none of the other routes match, the route below would be matched */}
+            <Route component={NotFound} />
           </Switch>
         </OverallDiv>
       </Router>

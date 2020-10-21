@@ -17,12 +17,16 @@ import {
   PortfolioThemes,
   Routes,
 } from "jinxui";
-
+import NotFound from "./NotFound";
 const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
-  const theme_name = 
-    userData.authenticated && userData.theme && thisPageUser === userData.username
-    ? userData.theme
-    : portfolio ? portfolio.theme : "";
+  const theme_name =
+    userData.authenticated &&
+    userData.theme &&
+    thisPageUser === userData.username
+      ? userData.theme
+      : portfolio
+      ? portfolio.theme
+      : "";
 
   const themes_list = Object.values(PortfolioThemes);
   const current_theme = themes_list.filter(
@@ -58,29 +62,44 @@ const Portfolio = ({ username }: PortfolioProps) => {
   const [sections, setSections] = useState<TSection[]>([]);
   const [editRedirect, setEditRedirect] = useState(false);
 
-  const onEdit = () => {
-    // At the moment, this fails if a portfolio hasn't been created yet.
-    return <Redirect to={Routes.PORTFOLIO_EDIT} />;
-  };
+  const [error, setError] = useState<boolean>(false);
 
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
-      const {
-        primary_portfolio,
-        first_name,
-        last_name,
-      } = await getAccountDetailsFromUsername(username);
-      const { portfolio, pages, sections } = await getFullPortfolio(
-        primary_portfolio
-      );
-      setAuthor(`${first_name} ${last_name}`);
-      setPortfolio(portfolio);
-      setPages(pages);
-      setSections(sections);
+      setError(false);
+      try {
+        const {
+          primary_portfolio,
+          first_name,
+          last_name,
+        } = await getAccountDetailsFromUsername(username);
+        const { portfolio, pages, sections } = await getFullPortfolio(
+          primary_portfolio
+        );
+        setAuthor(`${first_name} ${last_name}`);
+        setPortfolio(portfolio);
+        setPages(pages);
+        setSections(sections);
+      } catch (e) {
+        setError(true);
+      }
     };
     fetchPortfolio();
   }, [username]); // rendering a portfolio depends on the username
+
+  // Used to show background image capability: derive from theme eventually
+  const defaultBackgroundSrc =
+    "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
+
+  if (error) {
+    return (
+      <NotFound
+        title="This portfolio could not be found"
+        message="It either does not exist or the owner has not made it public."
+      />
+    );
+  }
 
   return (
     <>
@@ -88,7 +107,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
       {/* Site main theme */}
       <ThemeProvider theme={LightTheme}>
         {/* {userData.authenticated ? <HeaderBar lightTheme={true} /> : null} */}
-        <HeaderBar lightTheme={true} hideBGLoggedOut={true}/>
+        <HeaderBar lightTheme={true} hideBGLoggedOut={true} />
         {/* Portfolio theme */}
         <ThemeProvider theme={getTheme(portfolio, userData, username)}>
           <PortfolioHeader
