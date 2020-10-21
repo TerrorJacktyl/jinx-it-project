@@ -8,7 +8,7 @@ import SubjectSharp from "@material-ui/icons/SubjectSharp"
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp"
 import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp"
 
-import { 
+import {
   PrimaryMenu,
   DefaultSectionData
 } from "jinxui"
@@ -54,14 +54,14 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     );
 
     const target_index = props.placeAbove ? index : index + 1;
-    
+
     const newSection = DefaultSectionData()
     newSection.type = section_type
 
-    props.setSections([
-      ...props.sections.slice(0, target_index),
+    props.setSections((sections: any) => [
+      ...sections.slice(0, target_index),
       newSection,
-      ...props.sections.slice(target_index)
+      ...sections.slice(target_index)
     ]);
   };
 
@@ -77,19 +77,19 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick = {handleAddTextSection}>
+        <MenuItem onClick={handleAddTextSection}>
           <ListItemIcon>
             <SubjectSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Text" />
         </MenuItem>
-        <MenuItem onClick = {handleAddImageSection}>
+        <MenuItem onClick={handleAddImageSection}>
           <ListItemIcon>
             <InsertPhotoSharp fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Image" />
         </MenuItem>
-        <MenuItem onClick = {handleAddImageTextSection}>
+        <MenuItem onClick={handleAddImageTextSection}>
           <ListItemIcon>
             <VerticalSplitSharp fontSize="small" />
           </ListItemIcon>
