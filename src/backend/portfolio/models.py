@@ -50,12 +50,6 @@ class Portfolio(models.Model):
     def __str__(self):
         return self.name
 
-# class Theme(models.Model):
-#     owner = models.ForeignKey(
-#         Portfolio, on_delete=models.CASCADE, related_name='themes')
-#     name = models.CharField(max_length=100)
-#     background = models.CharField(max_length=300)
-
 class Page(models.Model):
     portfolio = models.ForeignKey(
         Portfolio, on_delete=models.CASCADE, related_name='pages')

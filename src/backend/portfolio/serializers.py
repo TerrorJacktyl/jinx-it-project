@@ -14,7 +14,7 @@ from . import validators
 class PortfolioInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Portfolio
-        fields = ['id', 'name', 'private']
+        fields = ['id', 'name', 'private', 'theme', 'background']
 
 
 class PortfolioOutputSerializer(serializers.ModelSerializer):
@@ -22,15 +22,6 @@ class PortfolioOutputSerializer(serializers.ModelSerializer):
         model = models.Portfolio
         fields = ['id', 'owner', 'name', 'pages', 'private', 'theme', 'background']
 
-# class ThemeInputSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.Theme
-#         fields = ['name', 'background']
-
-# class ThemeOutputSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.Theme
-#         fields = ['name', 'portfolio_id', 'background']
 
 class PageInputSerializer(serializers.ModelSerializer):
     class Meta:

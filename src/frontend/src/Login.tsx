@@ -74,10 +74,8 @@ const Login = () => {
         <ThemeProvider theme={LightTheme}>
           <CssBaseline />
           <AccountPageDiv>
-            <ThemeProvider theme={LightTheme}>
               <HeaderBar title="Login" lightTheme={true} hideLogin={true} />
               <FormOuterDiv>
-                <ThemeProvider theme={LightTheme}>
                   <div />
                   <FormDiv
                     variant="elevation"
@@ -151,9 +149,7 @@ const Login = () => {
                     </Formik>
                   </FormDiv>
                   <div />
-                </ThemeProvider>
               </FormOuterDiv>
-            </ThemeProvider>
           </AccountPageDiv>
         </ThemeProvider>
       </>
