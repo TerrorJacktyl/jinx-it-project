@@ -52,13 +52,7 @@ const TopBlockDiv = styled(Paper)`
   height: 100vh;
   display: grid;
   grid-template-rows:
-<<<<<<< HEAD
-    minmax(80px, 1fr) minmax(50px, 400px) minmax(50px, 1fr)
-    minmax(max-content, 1fr) minmax(100px, 1fr) 40px;
-=======
-    minmax(80px,1fr) minmax(50px,400px) minmax(50px,1fr) 
-    minmax(max-content,2.1fr) 40px;
->>>>>>> kevin/refactor_edit
+    minmax(80px,1.2fr) minmax(50px,400px) minmax(50px,1.9fr) max-content 1.3fr;
   justify-content: center;
   align-content: center;
   justify-items: center;
