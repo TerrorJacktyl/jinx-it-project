@@ -70,10 +70,6 @@ class PortfolioDetail(generics.RetrieveUpdateDestroyAPIView):
 
     swagger_schema = swagger.PortfolioAutoSchema
 
-# class ThemeDetail(generics.RetrieveUpdateDestroyAPIView):
-#     def get_serializers_class(self):
-#         if self.request.method in ['PUT', 'PATCH']:
-
 
 class PageList(generics.ListCreateAPIView):
     def get_serializer_class(self):
