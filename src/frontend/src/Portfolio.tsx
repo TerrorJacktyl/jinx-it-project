@@ -62,7 +62,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
     return (
       <NotFound
         title="This portfolio could not be found"
-        message="If you were given a link, the owner may not have set the portfolio as public."
+        message="It either does not exist or the owner has not made it public."
       />
     );
   }
