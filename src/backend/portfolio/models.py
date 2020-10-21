@@ -16,6 +16,7 @@ def create_default_portfolio(sender, **kwargs):
     portfolio = Portfolio.objects.create(
         owner=account.user,
         name='My Portfolio',
+        theme="Magma",
     )
     page = Page.objects.create(
         portfolio=portfolio,
@@ -29,7 +30,6 @@ def create_default_portfolio(sender, **kwargs):
         content=
             'Welcome to Jinx\'s portfolio creation software! '
             'This is a default portfolio, feel free to modify or delete.',
-        them="Magma"
     )
     account.primary_portfolio = portfolio
     account.save()

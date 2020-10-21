@@ -14,7 +14,7 @@ from . import validators
 class PortfolioInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Portfolio
-        fields = ['id', 'name', 'private', 'theme', 'background']
+        fields = ['id', 'name', 'private']
 
 
 class PortfolioOutputSerializer(serializers.ModelSerializer):

@@ -82,6 +82,7 @@ const Edit = () => {
     userData,
     switchLightThemeMode,
     getSavedLightThemeMode,
+    makePortfolioPublic,
   } = useUser();
   // const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(
@@ -179,7 +180,7 @@ const Edit = () => {
   */
 
   /** Save the currently edited page to the backend without redirecting. */
-  const handlePublish = () => {
+  const handleSave = () => {
     const sections = cleanedSections();
     if (existingPortfolio) {
       putFullPortfolio(portfolio, pages, sections)
@@ -188,8 +189,16 @@ const Edit = () => {
     }
   }
 
+  const handleMakePublic = () => {
+    makePortfolioPublic(userData.portfolioId)
+      .catch((error: any) => {
+        console.log(error);
+      })
+  }
+
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
+    handleMakePublic();
     const sections = cleanedSections();
     if (existingPortfolio) {
       putFullPortfolio(portfolio, pages, sections)
@@ -232,7 +241,7 @@ const Edit = () => {
                 section={section}
                 handleChange={handleChange}
                 handleTitleChange={handleTitleChange}
-                handlePublish={handlePublish}
+                handlePublish={handleSave}
                 sections={sections}
                 setSections={setSections}
               />
@@ -242,7 +251,7 @@ const Edit = () => {
               <ImageSectionInput
                 key={section.uid}
                 handleTitleChange={handleTitleChange}
-                handlePublish={handlePublish}
+                handlePublish={handleSave}
                 section={section}
                 sections={sections}
                 setSections={setSections}
@@ -254,7 +263,7 @@ const Edit = () => {
                 key={section.uid}
                 handleChange={handleChange}
                 handleTitleChange={handleTitleChange}
-                handlePublish={handlePublish}
+                handlePublish={handleSave}
                 section={section}
                 sections={sections}
                 setSections={setSections}
