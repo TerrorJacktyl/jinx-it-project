@@ -94,7 +94,7 @@ const PaperSection = (props: TPaperSection) => {
   }
 
   return (
-    <PaperSectionDiv>
+    <PaperSectionDiv id={props.section.uid}>
       <StyledDivOuter>
         <StyledDivLeft>
 

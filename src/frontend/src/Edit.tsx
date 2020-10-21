@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -68,9 +68,12 @@ function sectionDataIsEmpty(data: any) {
 }
 */
 
+// const scrollToRef = (ref: any) => window.scrollTo({top: 100})
+
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
+  const myRef = useRef<HTMLDivElement>(document.createElement("div"));
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
   const [redirect, setRedirect] = useState(false);
@@ -160,14 +163,16 @@ const Edit = () => {
     // Deep copy sections
     const sectionsCopy = JSON.parse(JSON.stringify(sections));
 
-    var cleanSections = sectionsCopy.map((section: TEditSection, index: number) => {
-      const newSection = section;
-      // Delete uid field: fear not the linting error!
-      delete newSection.uid;
-      // Overwrite the section order number
-      newSection.number = index;
-      return newSection;
-    });
+    var cleanSections = sectionsCopy.map(
+      (section: TEditSection, index: number) => {
+        const newSection = section;
+        // Delete uid field: fear not the linting error!
+        delete newSection.uid;
+        // Overwrite the section order number
+        newSection.number = index;
+        return newSection;
+      }
+    );
     // Remove empty sections
     // TO DO: make this happen in a single pass (i.e. above) with a for loop instead of map
     return cleanSections.filter(sectionIsNotBlank);
@@ -177,37 +182,38 @@ const Edit = () => {
    * 1. handlePublish can't be made async without pulling it out of the Edit component
    * 2. functions that are not components cannot call hooks
    * TODO: burn it and refactor `publish` into a hook method so it can be made async
-  */
+   */
 
   /** Save the currently edited page to the backend without redirecting. */
   const handleSave = () => {
     const sections = cleanedSections();
     if (existingPortfolio) {
-      putFullPortfolio(portfolio, pages, sections)
+      putFullPortfolio(portfolio, pages, sections);
     } else {
-      postFullPortfolio(portfolio, pages, sections)
+      postFullPortfolio(portfolio, pages, sections);
     }
-  }
+  };
 
   const handleMakePublic = () => {
-    makePortfolioPublic(userData.portfolioId)
-      .catch((error: any) => {
-        console.log(error);
-      })
-  }
+    makePortfolioPublic(userData.portfolioId).catch((error: any) => {
+      console.log(error);
+    });
+  };
 
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
     handleMakePublic();
     const sections = cleanedSections();
     if (existingPortfolio) {
-      putFullPortfolio(portfolio, pages, sections)
-        .then(() => setRedirect(true))
+      putFullPortfolio(portfolio, pages, sections).then(() =>
+        setRedirect(true)
+      );
     } else {
-      postFullPortfolio(portfolio, pages, sections)
-        .then(() => setRedirect(true))
+      postFullPortfolio(portfolio, pages, sections).then(() =>
+        setRedirect(true)
+      );
     }
-  }
+  };
 
   const sectionIsNotBlank = (section: TEditSection) => {
     if (section.type === "text") {
@@ -273,6 +279,10 @@ const Edit = () => {
             return <></>;
           }
         })}
+
+        {() => (
+          window.scrollTo({top: 3000, behavior: "smooth"}))
+        }
       </>
     );
   };
@@ -291,7 +301,7 @@ const Edit = () => {
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {
-                  switchLightThemeMode().then((response) => { });
+                  switchLightThemeMode().then((response) => {});
                 }}
                 color="inherit"
               >
@@ -336,10 +346,13 @@ const Edit = () => {
                     />
                   </PortfolioNameSectionInput>
                   <DisplaySections />
+
                   <PublishCancelDiv>
-                    <PrimaryButton onClick={() => {
-                      handlePublishAndRedirect()
-                    }}>
+                    <PrimaryButton
+                      onClick={() => {
+                        handlePublishAndRedirect();
+                      }}
+                    >
                       PUBLISH
                     </PrimaryButton>
                     <a href={Routes.HOME}>
