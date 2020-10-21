@@ -22,7 +22,7 @@ type TNewSectionMenu = {
 const HandleScroll = (isNew: any, setIsNew: any, newUid: any) => {
   const scrollTo = document.getElementById(newUid);
 
-  if (!!scrollTo) {
+  if (isNew && scrollTo !== null) {
     window.scrollTo({ 
       top: scrollTo.offsetHeight,
       behavior: "smooth",
