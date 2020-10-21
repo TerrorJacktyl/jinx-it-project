@@ -52,7 +52,8 @@ const TopBlockDiv = styled(Paper)`
   height: 100vh;
   display: grid;
   grid-template-rows:
-    minmax(80px,1.2fr) minmax(50px,400px) minmax(50px,1.9fr) max-content 1.3fr;
+    minmax(80px,1.2fr) minmax(50px, 3fr) minmax(40px, 1fr) minmax(10px,0.8fr) 
+    max-content 1.3fr;
   justify-content: center;
   align-content: center;
   justify-items: center;
@@ -116,9 +117,9 @@ const Home = () => {
           </SiteHeader>
 
           {/* Top Block */}
-
           <JinxLogo src={require("images/Logo_Main.svg")} />
           <JinxLogo src={require("images/Logo_Main_Text_Only_Black.svg")} />
+          <div />
           <CatchPhrase>Your portfolio, made simple</CatchPhrase>
           <StyledLink href="/signup">
             <PrimaryButton>JOIN TODAY</PrimaryButton>
