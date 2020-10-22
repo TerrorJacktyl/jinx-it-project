@@ -11,10 +11,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       theme: {
         name: string
       },
-      section: {
-        colors: any
+      section?: {
+        colors?: any
         // Specify custom css in this sort of object
-        css: any
+        css?: any
       }
     }
   }

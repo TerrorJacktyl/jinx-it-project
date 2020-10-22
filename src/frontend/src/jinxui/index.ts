@@ -120,4 +120,4 @@ export {
 } from "./theme/GlobalTheme";
 
 /* Portfolio themes */
-export { default as PortfolioThemes } from "./theme/PortfolioThemes";
+export { PortfolioThemes, defaultColors } from "./theme/index";

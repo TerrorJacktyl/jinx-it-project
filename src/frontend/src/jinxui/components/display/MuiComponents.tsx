@@ -5,7 +5,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import { makeStyles, createStyles, Theme, useTheme } from "@material-ui/core/styles";
-import { TSectionData } from "jinxui";
+import { TSectionData, defaultColors } from "jinxui";
 
 
 // Helper function for all you functional declarative lot
@@ -127,13 +127,16 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     return <Section {...data} />;
   };
 
-  const applyBackground = (component: JSX.Element, index: number) => {
-    const [backgroundColor, textColor] = theme.portfolio.section.colors({ theme: theme, index: index });
+
+  const applyColors = (component: JSX.Element, index: number) => {
+    const colors = theme.portfolio?.section?.colors || null;
+    const [backgroundColor, textColor] = colors ? colors({ theme: theme, index: index }) : [`rgba(0,0,0,0)`, theme.palette.primary.contrastText];
+    const customCss = theme.portfolio?.section?.css || {};
 
     return (
       <Box
         style={{
-          ...theme.portfolio.section.css,
+          ...customCss,
           background: backgroundColor,
           color: textColor,
         }}
@@ -147,7 +150,12 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
   return (
     <>
-      <CentredGrid components={sections.map((section, index) => applyBackground(layoutData(section), index))} />
+      <Box
+        style={{
+          background: defaultColors({ theme: theme, index: 0 })[0]
+        }}>
+        <CentredGrid components={sections.map((section, index) => applyColors(layoutData(section), index))} />
+      </Box>
     </>
   );
 };

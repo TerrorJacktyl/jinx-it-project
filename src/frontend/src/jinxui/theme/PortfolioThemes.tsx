@@ -15,7 +15,7 @@
 
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import BackgroundColor from "./BackgroundColor";
+import BackgroundColor from "./ThemeColors";
 
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
@@ -178,7 +178,7 @@ const presentation: Theme = createTheme({
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
         section: {
-            colors: BackgroundColor.alternatingGradient,
+            colors: BackgroundColor.gradient,
             css: {
                 minHeight: '100vh'
             }
