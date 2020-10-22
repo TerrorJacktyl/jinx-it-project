@@ -21,12 +21,12 @@ services:
     # Denotes where to find the instructions for how to build our container, i.e. the Dockerfile
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: src/backend/Dockerfile.backend
     command: >
-      bash -c "python manage.py runserver 0.0.0.0:8000"
+      bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     # Sets environment varaibles from a file
     env_file:
-      - django_dev.env
+      - src/backend/django_dev.env
     environment:
       - DJANGO_DB_PASSWORD=jinx
     # Maps a volume from our local location to /backend in our container.
@@ -34,7 +34,7 @@ services:
     # Whenever we make a change in our source code, it'll automatically be mapped
     # to our docker container without having to rebuild it
     volumes:
-      - ./jinx_project:/backend
+      - ./src/backend:/backend
     # Do not use port 8000 in production - warning by https://docs.docker.com/compose/django/
     ports:
       - "8080:8000"
@@ -48,9 +48,9 @@ services:
     stdin_open: true
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: src/frontend/Dockerfile.frontend
     volumes:
       - /frontend/node_modules
-      - ./eportfolio-app:/frontend
+      - ./src/frontend:/frontend
     ports:
       - "3000:3000"
