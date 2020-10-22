@@ -24,11 +24,11 @@ SESSION_COOKIE_SECURE = False
 
 # User uploaded files
 # Use django defaults
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = Path(__file__).resolve(strict=True).parent.parent / 'media'
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = Path(__file__).resolve(strict=True).parent.parent / 'media'
+
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # enable the browsable api in dev

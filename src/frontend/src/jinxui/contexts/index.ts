@@ -1,5 +1,3 @@
-/* Interface */
-export type { IUserContext } from "./IUserContext";
 
 export {
   UserContextProvider,
@@ -8,5 +6,3 @@ export {
   storeUserData,
   retrieveUserData,
 } from "./UserContext";
-
-export type { IThemeContext } from "./IThemeContext"

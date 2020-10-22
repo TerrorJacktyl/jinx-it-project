@@ -7,6 +7,8 @@ export type TPortfolio = {
   owner: number;
   name: string;
   pages: number[];
+  theme: string;
+  background: string;
 } | null;
 
 export type TPage = {
@@ -21,6 +23,9 @@ export interface TSection extends TSectionData {
   type: string;
   number: number;
 }
+export interface TEditSection extends TSection {
+  uid: string
+};
 
 export type TPortfolioData = {
   name: string;
@@ -33,8 +38,8 @@ export type TPageData = {
 };
 
 export type TSectionData = {
-  name?: string;
-  content?: string;
+  name: string;
+  content: string;
   media?: string;
   image?: number | null;
   path?: string;
