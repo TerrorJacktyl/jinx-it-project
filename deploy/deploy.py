@@ -25,12 +25,12 @@ def main():
         return
 
     # build and deploy react front end
-    logging.info('Building and deploying frontend')
-    subprocess.run(
-        ['docker-compose', 'up', '--build'],
-        cwd=curr_dir / 'react',
-        check=True
-        )
+    # logging.info('Building and deploying frontend')
+    # subprocess.run(
+    #     ['docker-compose', 'up', '--build'],
+    #     cwd=curr_dir / 'react',
+    #     check=True
+    #     )
 
     # check to see if environments file exists
     env_file_path = curr_dir / 'django' / '.env'
