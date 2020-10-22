@@ -11,6 +11,9 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       theme: {
         name: string
       },
+      section?: {
+        applyBackground: any
+      }
     }
   }
   // allow configuration using `createMuiTheme`
@@ -22,6 +25,9 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       theme?: {
         name?: string
       },
+      section?: {
+        applyBackground: any
+      }
     },
   }
 }

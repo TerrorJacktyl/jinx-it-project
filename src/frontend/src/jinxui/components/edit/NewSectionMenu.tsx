@@ -70,18 +70,6 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     newSection.type = section_type;
     setNewUid(newSection.uid);
 
-    // const newSection = DefaultSectionData();
-    const newSection: TEditSection = {
-      id: 0,
-      name: "",
-      number: 0,
-      content: "",
-      media: "",
-      type: "text",
-      path: "",
-      image: 0,
-      uid: uuidv4(),
-    };
     props.setSections((sections: any) => [
       ...sections.slice(0, target_index),
       newSection,

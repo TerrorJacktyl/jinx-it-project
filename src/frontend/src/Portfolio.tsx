@@ -21,12 +21,12 @@ import NotFound from "./NotFound";
 const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
   const theme_name =
     userData.authenticated &&
-    userData.theme &&
-    thisPageUser === userData.username
+      userData.theme &&
+      thisPageUser === userData.username
       ? userData.theme
       : portfolio
-      ? portfolio.theme
-      : "";
+        ? portfolio.theme
+        : "";
 
   const themes_list = Object.values(PortfolioThemes);
   const current_theme = themes_list.filter(
@@ -87,10 +87,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
     };
     fetchPortfolio();
   }, [username]); // rendering a portfolio depends on the username
-
-  // Used to show background image capability: derive from theme eventually
-  const defaultBackgroundSrc =
-    "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60";
 
   if (error) {
     return (
