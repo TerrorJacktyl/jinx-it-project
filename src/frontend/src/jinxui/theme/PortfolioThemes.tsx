@@ -15,7 +15,7 @@
 
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import { alternatingGradientBackground } from "./BackgroundColor";
+import BackgroundColor from "./BackgroundColor";
 
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
@@ -178,7 +178,24 @@ const presentation: Theme = createTheme({
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
         section: {
-            colors: alternatingGradientBackground,
+            colors: BackgroundColor.alternatingGradient,
+            css: {
+                minHeight: '100vh'
+            }
+        }
+    }
+});
+
+const rainbow: Theme = createTheme({
+    portfolio: {
+        theme: {
+            name: "Rainbow",
+        },
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+        },
+        section: {
+            colors: BackgroundColor.rainbowPastel,
         }
     }
 });
@@ -187,8 +204,7 @@ const presentation: Theme = createTheme({
 
 
 // Register your theme in here - this is the object you'll access it from
-
-export const PortfolioThemes = {
+const PortfolioThemes = {
     loading: loading,
     magma: magma,
     sunset: sunset,
@@ -196,4 +212,7 @@ export const PortfolioThemes = {
     autumn: autumn,
     cityscape: cityscape,
     presentation: presentation,
+    rainbow: rainbow,
 }
+
+export default PortfolioThemes;

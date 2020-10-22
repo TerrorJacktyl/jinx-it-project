@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
-import { makeStyles, createStyles, Theme, useTheme, withStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme, useTheme } from "@material-ui/core/styles";
 import { TSectionData } from "jinxui";
 
 
@@ -128,21 +128,12 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
   };
 
   const applyBackground = (component: JSX.Element, index: number) => {
-
-    const type = theme.palette.type;
-    const [first, last] = index % 2 === 0 ? ['primary', 'secondary'] : ['secondary', 'primary'];
-    // Typescript doesn't like indexing by strings - it'll be okay :')
-    // @ts-ignore
-    const [firstColor, lastColor] = [theme.palette[first][type], theme.palette[last][type]]
-    // const bggrad = `linear-gradient(${firstColor} 0%, ${lastColor} 100%)`;
-    const colors = theme.portfolio.section.colors({ theme: theme, index: index });
-
-    const [backgroundColor, textColor] = [...colors]
+    const [backgroundColor, textColor] = theme.portfolio.section.colors({ theme: theme, index: index });
 
     return (
       <Box
         style={{
-          minHeight: "100vh",
+          ...theme.portfolio.section.css,
           background: backgroundColor,
           color: textColor,
         }}
