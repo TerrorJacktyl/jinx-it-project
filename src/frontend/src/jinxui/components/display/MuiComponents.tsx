@@ -96,6 +96,7 @@ export const Section = (data: TSectionData) => {
         justify={
           data.content ? (data.path ? "space-between" : "flex-start") : "center"
         }
+        spacing={2}
       >
         {data.content ? (
           <Grid item lg={colsPerItem} className={classes.item}>

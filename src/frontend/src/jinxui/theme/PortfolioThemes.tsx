@@ -178,7 +178,6 @@ const presentation: Theme = createTheme({
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
         section: {
-            colors: BackgroundColor.gradient,
             css: {
                 minHeight: '100vh'
             }
