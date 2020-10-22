@@ -249,8 +249,8 @@ const Edit = () => {
         <ThemeProvider theme={appliedTheme}>
           <CssBaseline />
           <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()} />
-          <Box paddingTop="5em">
-            <Container maxWidth="lg">
+          <Box maxWidth="90%">
+            <Container >
               <Grid container spacing={5} direction="row">
                 <Grid container item direction="column">
                   <Skeleton width="40%" height="4em" />

@@ -146,6 +146,40 @@ const cityscape: Theme = createTheme({
     },
 });
 
+const presentation: Theme = createTheme({
+    palette: {
+        type: "light",
+        primary: {
+            "main": "#399aff",
+        },
+        secondary: {
+            "main": "#3aecdb",
+        },
+    },
+    typography: {
+        h1: {
+            "fontFamily": "Computer Modern Bright"
+        },
+        h2: {
+            "fontFamily": "Computer Modern Sans"
+        },
+        h3: {
+            "fontFamily": "Computer Modern Sans"
+        },
+        h5: {
+            "fontFamily": "Computer Modern Sans"
+        }
+    },
+    portfolio: {
+        theme: {
+            name: "Presentation",
+        },
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+        }
+    },
+});
+
 
 // Register your theme in here - this is the object you'll access it from
 
@@ -156,4 +190,5 @@ export const PortfolioThemes = {
     lilypad: lilypad,
     autumn: autumn,
     cityscape: cityscape,
+    presentation: presentation,
 }

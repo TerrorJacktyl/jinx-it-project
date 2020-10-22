@@ -136,6 +136,7 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
       <Box
         bgcolor={`${color}.${type}`}
         color={`${color}.contrastText`}
+        minHeight="100vh"
       >
         <Container>
           {component}
