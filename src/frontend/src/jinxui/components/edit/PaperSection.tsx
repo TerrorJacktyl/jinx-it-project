@@ -1,17 +1,13 @@
-import React from "react"
-import styled from "styled-components"
-import Paper from "@material-ui/core/Paper"
-import IconButton from "@material-ui/core/IconButton"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined"
-
-const SectionDiv = styled.div`
-  margin-top: 0px;
-  margin-bottom: 30px;
-  display: grid;
-  grid-template-rows: 100px, 1fr;
-`;
+import React from "react";
+import styled from "styled-components";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import SaveSharpIcon from '@material-ui/icons/SaveSharp';
+import { PaperSectionBase, PaperSectionDiv, PaperSectionTitle } from "jinxui";
+import { TEditSection } from "jinxui/types";
 
 const StyledDivOuter = styled.div`
   display: grid;
@@ -38,49 +34,123 @@ const StyledDivRight = styled.div`
   align-items: center;
 `;
 
-const StyledFieldTitle = styled.h3`
-  font-weight: 300;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  margin-top: 0px;
-  text-align: left;
-  font-size: 20px;
+const StyledButton = styled(Button)`
+  width: 10px;
 `;
 
-const StyledPaper = styled(Paper)`
-  padding: 10px;
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  :hover {
-    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.3);
+type TPaperSection = {
+  section: any;
+  sections: any;
+  setSections: any;
+  children: any;
+  hideEditButtons?: boolean;
+  handleTitleChange: any;
+  handlePublish: any;
+};
+
+const PaperSection = (props: TPaperSection) => {
+  const index = props.sections.findIndex(
+    (p: TEditSection) => p.uid === props.section.uid
+  );
+  const handleDelete = () => {
+    props.setSections([
+      ...props.sections.slice(0, index),
+      ...props.sections.slice(index + 1),
+    ]);
+  };
+  let deleteDisabled = false;
+  let upArrowDisabled = false;
+  let downArrowDisabled = false;
+  if (props.sections.length === 1) {
+    deleteDisabled = true;
   }
-`;
+  if (index === 0) {
+    upArrowDisabled = true;
+  }
+  if (index === props.sections.length - 1) {
+    downArrowDisabled = true;
+  }
 
-const PaperSection = (props: any) => {
+  const handleMoveUp = () => {
+    if (index === 0) {
+      return;
+    }
+    const curr_sections = props.sections;
+    const top = curr_sections.slice(0, index-1);
+    const one_above=curr_sections.slice(index-1, index);
+    const rest = curr_sections.slice(index+1);
+    props.setSections(top.concat(props.section, one_above, rest));
+  };
+
+  const handleMoveDown = () => {
+    if (index === props.sections.length - 1) {
+      return;
+    }
+    const curr_sections = props.sections;
+    const top = curr_sections.slice(0, index);
+    const one_below=curr_sections.slice(index + 1, index + 2);
+    const rest = curr_sections.slice(index+2);
+    props.setSections(top.concat(one_below, props.section, rest));
+  }
+
   return (
-    <SectionDiv>
+    <PaperSectionDiv id={props.section.uid}>
       <StyledDivOuter>
         <StyledDivLeft>
-          <StyledFieldTitle>{props.title}</StyledFieldTitle>
+
+        {/* Title */}
+
+          <TextField
+            name={props.section.uid}
+            defaultValue={props.section.name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleTitleChange(e, props.section.uid)}
+            placeholder = "Section Title"
+            InputProps={{ disableUnderline: true }}
+          />
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
+
+        {/* Modify section list buttons */}
+
         <StyledDivRight>
-          <IconButton size="small">
+          <StyledButton
+            size="medium"
+            style={{ minWidth: 40 }}
+            onClick={props.handlePublish}
+          >
+            <SaveSharpIcon />
+          </StyledButton>
+          <StyledButton
+            size="medium"
+            style={{ minWidth: 40 }}
+            disabled={upArrowDisabled}
+            onClick={handleMoveUp}
+          >
             <ArrowUpwardIcon />
-          </IconButton>
-          <IconButton size="small">
+          </StyledButton>
+          <StyledButton
+            size="medium"
+            style={{ minWidth: 40 }}
+            disabled={downArrowDisabled}
+            onClick={handleMoveDown}
+          >
             <ArrowDownwardIcon />
-          </IconButton>
-          <IconButton size="small">
+          </StyledButton>
+          <StyledButton
+            size="medium"
+            style={{ minWidth: 40 }}
+            onClick={handleDelete}
+            disabled={deleteDisabled}
+          >
             <DeleteOutlinedIcon />
-          </IconButton>
+          </StyledButton>
         </StyledDivRight>
       </StyledDivOuter>
-      <StyledPaper elevation={3} variant="outlined" square>
+      <PaperSectionBase elevation={3} variant="outlined" square>
         {props.children}
-      </StyledPaper>
-    </SectionDiv>
+      </PaperSectionBase>
+    </PaperSectionDiv>
   );
 };
 
-export default PaperSection
+export default PaperSection;

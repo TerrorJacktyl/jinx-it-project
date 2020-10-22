@@ -5,7 +5,9 @@ const UserImage = styled.img`
   margin-left: 0px;
   height: auto;
   margin-top: 0px;
-border: 1px solid gray;
+  border: 1px solid gray;
+  // min-width: 400px;
+  // padding: 100px;
   width: 100%;
 `;
 

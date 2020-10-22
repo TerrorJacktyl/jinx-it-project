@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
+import { TEditSection } from "jinxui/types";
+import { v4 as uuidv4 } from "uuid";
 
 const StyledInput = styled.input`
   display: none;
@@ -43,25 +45,37 @@ const StyledImageUploadOverlay = styled(Paper)`
   cursor: pointer;
 `;
 const FRONT_END_URL = process.env.REACT_APP_FRONT_URL;
-const image_path = FRONT_END_URL + "blank_image.svg";
-
 const StyledImageUploadButton = styled(AddPhotoAlternateOutlined)`
   z-index: 2;
 `;
 
-function UploadImageSubSection(
-  uploadButtonLabel: string,
-  imageResponse: any,
-  setImageResponse: any
-) {
+type TUploadImageSubSection = {
+  section: TEditSection;
+};
+
+
+
+const UploadImageSubSection = (props: TUploadImageSubSection) => {
+  const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
+  const [imageExists, setImageExists] = useState(false);
   const { uploadImage } = useUser();
-  // const classes = useStyles();
+  const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
+  const input_id = uuidv4();
+  useEffect(() => {
+    if (props.section.path && props.section.path !== "") {
+      setImagePath(props.section.path);
+      setImageExists(true);
+    }
+  });
   return (
     <>
-      <label htmlFor={uploadButtonLabel}>
+      {/* Make a hidden upload image button here that we will use a 
+          further button to ensure provide interaction
+          This button is notoriously difficult to style */}
+      <label htmlFor={input_id}>
         <StyledInput
           accept="image/*"
-          id={uploadButtonLabel}
+          id={input_id}
           multiple
           type="file"
           onChange={(event) => {
@@ -71,8 +85,9 @@ function UploadImageSubSection(
                 event.currentTarget.files[0].name
               )
                 .then((response) => {
-                  console.log(response);
                   setImageResponse(response.data);
+                  props.section.path = response.data.path;
+                  props.section.image = response.data.id;
                 })
                 .catch((error) => {
                   console.log(error);
@@ -82,17 +97,25 @@ function UploadImageSubSection(
             }
           }}
         />
+
+        {/* Use CSS grid to ensure upload image icon stays in the correct 
+            relative to the image*/}
         <ImageGrid>
           <ImageGridMain>
-            <UserImage 
-              src={imageResponse.path === "" ? image_path : imageResponse.path} 
-              style={imageResponse.path === "" ? {
-                  opacity: "30%",
-                  padding: "40%",
-                } : {
-                  opacity: "100%",
-                  padding: 0,
-                }}/>
+            <UserImage
+              src={imageResponse.path === "" ? imagePath : imageResponse.path}
+              style={
+                imageExists
+                  ? {
+                      opacity: "100%",
+                      padding: 0,
+                    }
+                  : {
+                      opacity: "30%",
+                      padding: "40%",
+                    }
+              }
+            />
           </ImageGridMain>
           <StyledImageUploadOverlay elevation={0} square>
             Upload Image
@@ -104,6 +127,6 @@ function UploadImageSubSection(
       </label>
     </>
   );
-}
+};
 
 export default UploadImageSubSection;
