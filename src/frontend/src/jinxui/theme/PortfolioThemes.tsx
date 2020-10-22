@@ -194,11 +194,24 @@ const rainbow: Theme = createTheme({
             src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
         section: {
-            colors: BackgroundColor.rainbowPastel,
+            colors: BackgroundColor.rainbowStep,
         }
     }
 });
 
+const rainbowSmooth: Theme = createTheme({
+    portfolio: {
+        theme: {
+            name: "Rainbow smooth",
+        },
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+        },
+        section: {
+            colors: BackgroundColor.rainbowGradient,
+        }
+    }
+});
 
 
 
@@ -210,8 +223,9 @@ const PortfolioThemes = {
     lilypad: lilypad,
     autumn: autumn,
     cityscape: cityscape,
-    presentation: presentation,
     rainbow: rainbow,
+    rainbowSmooth: rainbowSmooth,
+    presentation: presentation,
 }
 
 export default PortfolioThemes;
