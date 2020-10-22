@@ -127,27 +127,36 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     return <Section {...data} />;
   };
 
-  const applyAlternatingBackground = (component: JSX.Element, index: number) => {
+  const applyBackground = (component: JSX.Element, index: number) => {
 
-    const color = index % 2 === 0 ? 'primary' : 'secondary';
     const type = theme.palette.type;
+    const [first, last] = index % 2 === 0 ? ['primary', 'secondary'] : ['secondary', 'primary'];
+    // Typescript doesn't like indexing by strings - it'll be okay :')
+    // @ts-ignore
+    const [firstColor, lastColor] = [theme.palette[first][type], theme.palette[last][type]]
+    // const bggrad = `linear-gradient(${firstColor} 0%, ${lastColor} 100%)`;
+    const colors = theme.portfolio.section.colors({ theme: theme, index: index });
+
+    const [backgroundColor, textColor] = [...colors]
 
     return (
       <Box
-        bgcolor={`${color}.${type}`}
-        color={`${color}.contrastText`}
-        minHeight="100vh"
+        style={{
+          minHeight: "100vh",
+          background: backgroundColor,
+          color: textColor,
+        }}
       >
         <Container>
           {component}
         </Container>
-      </Box>
+      </Box >
     )
   }
 
   return (
     <>
-      <CentredGrid components={sections.map((section, index) => applyAlternatingBackground(layoutData(section), index))} />
+      <CentredGrid components={sections.map((section, index) => applyBackground(layoutData(section), index))} />
     </>
   );
 };

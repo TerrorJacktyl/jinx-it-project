@@ -13,10 +13,10 @@
  * Happy theming!
  */
 
-import React from "react";
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { alternatingGradientBackground } from "./BackgroundColor";
+
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
 
@@ -27,7 +27,7 @@ const loading: Theme = createTheme({
         },
         headerBackground: {
             src: 'https://media1.giphy.com/media/ycfHiJV6WZnQDFjSWH/giphy.gif'
-        }
+        },
     }
 })
 
@@ -61,7 +61,7 @@ const magma: Theme = createTheme({
         },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
-        }
+        },
     },
 });
 
@@ -150,10 +150,10 @@ const presentation: Theme = createTheme({
     palette: {
         type: "light",
         primary: {
-            "main": "#399aff",
+            "main": "#acb6e5",
         },
         secondary: {
-            "main": "#3aecdb",
+            "main": "#86fde8",
         },
     },
     typography: {
@@ -176,9 +176,14 @@ const presentation: Theme = createTheme({
         },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+        },
+        section: {
+            colors: alternatingGradientBackground,
         }
-    },
+    }
 });
+
+
 
 
 // Register your theme in here - this is the object you'll access it from
