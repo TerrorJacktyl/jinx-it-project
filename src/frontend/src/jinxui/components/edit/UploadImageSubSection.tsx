@@ -4,6 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
 import { TEditSection } from "jinxui/types";
+import { v4 as uuidv4 } from "uuid";
 
 const StyledInput = styled.input`
   display: none;
@@ -52,12 +53,14 @@ type TUploadImageSubSection = {
   section: TEditSection;
 };
 
+
+
 const UploadImageSubSection = (props: TUploadImageSubSection) => {
   const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
   const [imageExists, setImageExists] = useState(false);
   const { uploadImage } = useUser();
   const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
-
+  const input_id = uuidv4();
   useEffect(() => {
     if (props.section.path && props.section.path !== "") {
       setImagePath(props.section.path);
@@ -69,10 +72,10 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
       {/* Make a hidden upload image button here that we will use a 
           further button to ensure provide interaction
           This button is notoriously difficult to style */}
-      <label htmlFor={props.section.uid}>
+      <label htmlFor={input_id}>
         <StyledInput
           accept="image/*"
-          id={props.section.uid}
+          id={input_id}
           multiple
           type="file"
           onChange={(event) => {
