@@ -18,13 +18,13 @@ const OverallDiv = styled.div`
 `;
 
 function App() {
-  const app = (
-    // Smooth scrolling causes pages to overflow (i.e. you can scroll past the end of the page)
-    // <SmoothProvider skew={false}>
 
-    // Wrap the whole app in the UserContext so they can all access the user
-    // data without passing it as props everywhere
-    <UserContextProvider>
+  // Smooth scrolling causes pages to overflow (i.e. you can scroll past the end of the page)
+  // <SmoothProvider skew={false}>
+  const app = (
+    < UserContextProvider >
+      {/** Wrap the whole app in the UserContext so they can all access the user
+    data without passing it as props everywhere */}
       <Router>
         <OverallDiv className="App">
           <Switch>
@@ -41,7 +41,7 @@ function App() {
           </Switch>
         </OverallDiv>
       </Router>
-    </UserContextProvider>
+    </UserContextProvider >
     // </SmoothProvider >
   );
   return app;

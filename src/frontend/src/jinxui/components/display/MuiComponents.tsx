@@ -83,9 +83,10 @@ export const Section = (data: TSectionData) => {
   // Cols per item when we want the text/media to fit on one row
   const colsPerItem = data.content && data.path ? 6 : 12;
 
+  /** Text alignment hard coded
+  * TODO: put inside theme later */
   return (
-    // Text alignment hard coded - unsure how to put inside theme
-    <Box textAlign="left" paddingTop="3em" paddingBottom="3em">
+    < Box textAlign="left" paddingTop="3em" paddingBottom="3em" >
       <Typography variant="h3">
         {data.name}
       </Typography>
@@ -113,7 +114,7 @@ export const Section = (data: TSectionData) => {
           </Grid>
         ) : null}
       </Grid>
-    </Box>
+    </Box >
   );
 };
 

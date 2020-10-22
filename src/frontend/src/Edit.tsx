@@ -6,8 +6,11 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
-import { TextField } from "@material-ui/core";
+import Skeleton from '@material-ui/lab/Skeleton';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import TextField from "@material-ui/core/TextField";
 
 import {
   LightTheme,
@@ -22,10 +25,12 @@ import {
   Routes,
   PrimaryColumnDiv,
   ImageTextSectionInput,
+  CentredGrid,
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
 import { truncate } from "fs";
+import NotFound from "NotFound";
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -229,6 +234,47 @@ const Edit = () => {
     }
   };
 
+  const LoadingSections = (props: any) => {
+
+    const LoadingText = ({ rows }: { rows: number }) => {
+      return (
+        <>
+          {[...Array(rows)].map((item: any, index: number) => <Skeleton />)}
+        </>
+      )
+    }
+
+    return (
+      <>
+        <ThemeProvider theme={appliedTheme}>
+          <CssBaseline />
+          <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()} />
+          <Box paddingTop="5em">
+            <Container maxWidth="lg">
+              <Grid container spacing={5} direction="row">
+                <Grid container item direction="column">
+                  <Skeleton width="40%" height="4em" />
+                  <LoadingText rows={5} />
+                </Grid>
+                <Grid container item>
+                  <Skeleton width="40%" height="4em" />
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} spacing={2}>
+                      <LoadingText rows={10} />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Skeleton variant="rect" height="20em" />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Container>
+          </Box>
+        </ThemeProvider>
+      </>
+    )
+  }
+
   const DisplaySections = () => {
     if (sections.length == 0) {
       return (
@@ -281,27 +327,29 @@ const Edit = () => {
         })}
 
         {() => (
-          window.scrollTo({top: 3000, behavior: "smooth"}))
+          window.scrollTo({ top: 3000, behavior: "smooth" }))
         }
       </>
     );
   };
 
+
   if (redirect) {
     return (
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
-  } else {
+    // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
+  } else if (
+    portfolio !== null && pages.length !== 0 && sections.length !== 0) {
     return (
-      // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
-      portfolio !== null && pages.length !== 0 && sections.length !== 0 ? (
+      (
         <>
           <ThemeProvider theme={appliedTheme}>
             <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()}>
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {
-                  switchLightThemeMode().then((response) => {});
+                  switchLightThemeMode().then((response) => { });
                 }}
                 color="inherit"
               >
@@ -354,7 +402,7 @@ const Edit = () => {
                       }}
                     >
                       PUBLISH
-                    </PrimaryButton>
+                      </PrimaryButton>
                     <a href={Routes.HOME}>
                       <SecondaryButton>Cancel</SecondaryButton>
                     </a>
@@ -365,9 +413,12 @@ const Edit = () => {
             </PrimaryColumnDiv>
           </ThemeProvider>
         </>
-      ) : null
+      )
     );
+  } else {
+    return <LoadingSections />;
   }
 };
+
 
 export default Edit;
