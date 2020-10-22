@@ -116,7 +116,6 @@ const PaperSection = (props: TPaperSection) => {
           <StyledButton
             size="medium"
             style={{ minWidth: 40 }}
-            // disabled={upArrowDisabled}
             onClick={props.handlePublish}
           >
             <SaveSharpIcon />
