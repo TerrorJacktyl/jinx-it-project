@@ -7,7 +7,6 @@ margin: auto;
 margin-top: 70px;
 margin-bottom: 100px;
 display: block;
-overflow: auto;
 width: 90%;
 display: grid;
 grid-template-columns: 1fr minMax(200px, 900px) 1fr;

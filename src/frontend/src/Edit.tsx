@@ -244,32 +244,49 @@ const Edit = () => {
       )
     }
 
+    const LoadingTitle = () => <Skeleton width="40%" height="4em" />;
+
+    const LoadingMedia = () => <Skeleton variant="rect" height="20em" />;
+
+    const LoadingTextSection = () => (
+      <Grid container direction="column">
+        <LoadingTitle />
+        <LoadingText rows={5} />
+      </Grid>
+    )
+
+    const LoadingMediaSection = () => (
+      <Grid container>
+        <LoadingTitle />
+        <Grid container spacing={2}>
+          <Grid item xs={6} spacing={2}>
+            <LoadingText rows={10} />
+          </Grid>
+          <Grid item xs={6}>
+            <LoadingMedia />
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+
     return (
       <>
         <ThemeProvider theme={appliedTheme}>
           <CssBaseline />
           <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()} />
-          <Box maxWidth="90%">
-            <Container >
-              <Grid container spacing={5} direction="row">
-                <Grid container item direction="column">
-                  <Skeleton width="40%" height="4em" />
-                  <LoadingText rows={5} />
-                </Grid>
-                <Grid container item>
-                  <Skeleton width="40%" height="4em" />
-                  <Grid container spacing={2}>
-                    <Grid item xs={6} spacing={2}>
-                      <LoadingText rows={10} />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Skeleton variant="rect" height="20em" />
-                    </Grid>
+          <PrimaryColumnDiv>
+            <div />
+            <Container maxWidth='lg'>
+              <Grid container spacing={5} direction="column" justify="space-evenly">
+                {[...Array(4)].map((item: any, index: number) =>
+                  <Grid item>
+                    {index % 2 === 0 ? <LoadingTextSection /> : <LoadingMediaSection />}
                   </Grid>
-                </Grid>
+                )}
               </Grid>
+              <div />
             </Container>
-          </Box>
+          </PrimaryColumnDiv>
         </ThemeProvider>
       </>
     )
