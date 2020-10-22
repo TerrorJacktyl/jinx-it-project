@@ -7,6 +7,7 @@ import Container from "@material-ui/core/Container";
 import { makeStyles, createStyles, Theme, useTheme } from "@material-ui/core/styles";
 import { TSectionData, defaultColors } from "jinxui";
 
+import ReactMarkdown from 'react-markdown';
 
 // Helper function for all you functional declarative lot
 export const compose = (...fns: Array<Function>) => (arg: any) => fns.reduceRight((acc, fn) => (fn ? fn(acc) : acc), arg)
@@ -101,7 +102,9 @@ export const Section = (data: TSectionData) => {
         {data.content ? (
           <Grid item lg={colsPerItem} className={classes.item}>
             <Typography variant="h5">
-              {data.content}
+              <ReactMarkdown>
+                {data.content}
+              </ReactMarkdown>
             </Typography>
           </Grid>
         ) : null}
