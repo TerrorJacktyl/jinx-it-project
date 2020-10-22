@@ -29,6 +29,7 @@ export const rainbowPastel = ({ theme, index }: { theme: Theme, index: number })
     ]
 }
 
+/** The original function. Looks like a self-hosted website from 2004. */
 const alternatingColors = ({ theme, index }: { theme: Theme, index: number }) => {
     const color = index % 2 === 0 ? 'primary' : 'secondary';
     const type = theme.palette.type;
@@ -46,6 +47,7 @@ const BackgroundColor = {
     rainbowPastel: rainbowPastel,
 }
 
+/** The default color function to use for the full page background. */
 export const defaultColors = gradient;
 
 export default BackgroundColor;
