@@ -64,15 +64,15 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     );
 
     const target_index = props.placeAbove ? index : index + 1;
+    const newSection = DefaultSectionData();
+    newSection.type = section_type;
+    setNewUid(newSection.uid);
 
     props.setSections((sections: any) => [
       ...sections.slice(0, target_index),
       newSection,
       ...sections.slice(target_index),
     ]);
-    const newSection = DefaultSectionData();
-    newSection.type = section_type;
-    setNewUid(newSection.uid);
 
     setIsNew(true);
 
