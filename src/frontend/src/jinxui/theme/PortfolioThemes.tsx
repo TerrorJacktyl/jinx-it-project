@@ -191,7 +191,7 @@ const rainbow: Theme = createTheme({
             name: "Rainbow",
         },
         headerBackground: {
-            src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+            src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
         section: {
             colors: BackgroundColor.rainbowPastel,

@@ -1,5 +1,5 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { red, orange, yellow, lime, cyan, lightBlue, deepPurple, purple } from '@material-ui/core/colors';
+import { red, orange, yellow, green, cyan, lightBlue, deepPurple, purple } from '@material-ui/core/colors';
 
 /** Oscillate between theme colours in the background of sections. */
 const gradient = ({ theme, index }: { theme: Theme, index: number }) => {
@@ -20,7 +20,7 @@ const gradient = ({ theme, index }: { theme: Theme, index: number }) => {
 /** Rainbow step function. The more sections, the more rainbow. */
 export const rainbowPastel = ({ theme, index }: { theme: Theme, index: number }) => {
 
-    const hues = [red, orange, yellow, lime, cyan, lightBlue, deepPurple, purple];
+    const hues = [red, orange, yellow, green, cyan, lightBlue, deepPurple, purple];
     const backgroundColor = hues[index % hues.length]['A100'];
     const textColor = '#000';
     return [
