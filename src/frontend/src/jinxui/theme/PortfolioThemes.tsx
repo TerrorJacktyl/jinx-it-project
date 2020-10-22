@@ -161,13 +161,13 @@ const presentation: Theme = createTheme({
             "fontFamily": "Computer Modern Bright"
         },
         h2: {
-            "fontFamily": "Computer Modern Sans"
+            "fontFamily": "Computer Modern Serif"
         },
         h3: {
-            "fontFamily": "Computer Modern Sans"
+            "fontFamily": "Computer Modern Serif"
         },
         h5: {
-            "fontFamily": "Computer Modern Sans"
+            "fontFamily": "Computer Modern Serif"
         }
     },
     portfolio: {
