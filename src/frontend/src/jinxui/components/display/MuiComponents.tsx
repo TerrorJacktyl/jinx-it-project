@@ -7,7 +7,11 @@ import Container from "@material-ui/core/Container";
 import { makeStyles, createStyles, Theme, useTheme } from "@material-ui/core/styles";
 import { TSectionData, defaultColors } from "jinxui";
 
+// Markdown
 import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 // Helper function for all you functional declarative lot
 export const compose = (...fns: Array<Function>) => (arg: any) => fns.reduceRight((acc, fn) => (fn ? fn(acc) : acc), arg)
@@ -84,6 +88,13 @@ export const Section = (data: TSectionData) => {
   // Cols per item when we want the text/media to fit on one row
   const colsPerItem = data.content && data.path ? 6 : 12;
 
+  // Markdown syntax highlighting
+  const renderers = {
+    code: ({ language, value }: { language: string, value: string }) => {
+      return <SyntaxHighlighter style={vscDarkPlus} language={language} children={value} />
+    }
+  }
+
   /** Text alignment hard coded
   * TODO: put inside theme later */
   return (
@@ -102,7 +113,7 @@ export const Section = (data: TSectionData) => {
         {data.content ? (
           <Grid item lg={colsPerItem} className={classes.item}>
             <Typography variant="h5">
-              <ReactMarkdown>
+              <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                 {data.content}
               </ReactMarkdown>
             </Typography>
