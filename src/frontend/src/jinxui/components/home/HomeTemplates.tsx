@@ -23,10 +23,10 @@ const BGImage = styled.img`
 
 // Icon to be displayed for various steps
 const StyledIcon = styled(SvgIcon)`
-  width: 250px;
-  height: 250px;
-  max-width: 90%;
-  max-width: 50vw;
+  transform: scale(12);
+  @media (max-width: 630px){
+    transform: scale(8);
+  }
   color: ${() => LightTheme.palette.info.main}; ;
 `;
 
@@ -62,7 +62,7 @@ const NumberThreeBGDiv = styled.div`
 
 // Place the icon for step one
 const NumberOneIconDiv = styled.div`
-  grid-row: 5/8;
+  grid-row: 6/9;
   grid-column: 5/13;
   z-index: 8;
   min-width: 300px;
@@ -71,7 +71,7 @@ const NumberOneIconDiv = styled.div`
 
 // Place the icon for step two
 const NumberThreeIconDiv = styled.div`
-  grid-row: 24/27;
+  grid-row: 25/28;
   grid-column: 5/13;
   z-index: 8;
   min-width: 300px;
@@ -224,8 +224,14 @@ const HomeTemplates = () => {
             style={{ transform: `translateY(${offset * 0.2 - 700}px)` }} />
         </NumberThreeBGDiv>
         <NumberThreeIconDiv>
-          <StyledIcon color="inherit">
+          {/* <StyledIcon color="inherit">
             <UploadIcon />
+          </StyledIcon> */}
+          <StyledIcon viewBox='0 0 200 200'>
+            {/* <SvgIcon> */}
+              <UploadIcon />
+              {/* <IconImage src={require("images/upload_icon.svg")}/> */}
+            {/* </SvgIcon> */}
           </StyledIcon>
         </NumberThreeIconDiv>
         <NumberThreeTextDiv>
