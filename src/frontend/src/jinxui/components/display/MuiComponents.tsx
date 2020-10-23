@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
-import { makeStyles, createStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme, useTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { TSectionData, defaultColors } from "jinxui";
 
 // Markdown
@@ -29,7 +29,18 @@ export function ScreenBlock(props: any) {
 
 export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?: string }) {
 
-  const theme = useTheme();
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      h1: {
+        [theme.breakpoints.down('xs')]: {
+          fontSize: '50px'
+        }
+      }
+    })
+  );
+
+  const theme = responsiveFontSizes(useTheme());
+  const classes = useStyles(theme);
 
   return (
     <BackgroundImage url={
@@ -43,7 +54,7 @@ export function PortfolioHeader({ title, subtitle }: { title?: string, subtitle?
           <Grid item xs={12}>
             <Box p="10%" color="common.white">
               <Typography align="left">
-                <Typography variant="h1" gutterBottom>
+                <Typography variant="h1" gutterBottom className={classes.h1}>
                   <Box fontWeight="fontWeightMedium">
                     {title}
                   </Box>
@@ -79,7 +90,7 @@ export const Section = (data: TSectionData) => {
       },
       item: {
         paddingTop: "1em",
-      }
+      },
     })
   );
 
@@ -111,7 +122,7 @@ export const Section = (data: TSectionData) => {
         spacing={2}
       >
         {data.content ? (
-          <Grid item lg={colsPerItem} className={classes.item}>
+          <Grid item xs={12} lg={colsPerItem} className={classes.item}>
             <Typography variant="h5">
               <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                 {data.content}
