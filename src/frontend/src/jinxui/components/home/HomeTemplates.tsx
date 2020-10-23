@@ -224,14 +224,8 @@ const HomeTemplates = () => {
             style={{ transform: `translateY(${offset * 0.2 - 700}px)` }} />
         </NumberThreeBGDiv>
         <NumberThreeIconDiv>
-          {/* <StyledIcon color="inherit">
+          <StyledIcon>
             <UploadIcon />
-          </StyledIcon> */}
-          <StyledIcon viewBox='0 0 200 200'>
-            {/* <SvgIcon> */}
-              <UploadIcon />
-              {/* <IconImage src={require("images/upload_icon.svg")}/> */}
-            {/* </SvgIcon> */}
           </StyledIcon>
         </NumberThreeIconDiv>
         <NumberThreeTextDiv>
