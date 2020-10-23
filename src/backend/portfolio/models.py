@@ -16,6 +16,7 @@ def create_default_portfolio(sender, **kwargs):
     portfolio = Portfolio.objects.create(
         owner=account.user,
         name='My Portfolio',
+        theme="Magma",
     )
     page = Page.objects.create(
         portfolio=portfolio,
@@ -28,7 +29,7 @@ def create_default_portfolio(sender, **kwargs):
         number='0',
         content=
             'Welcome to Jinx\'s portfolio creation software! '
-            'This is a default portfolio, feel free to modify or delete.'
+            'This is a default portfolio, feel free to modify or delete.',
     )
     account.primary_portfolio = portfolio
     account.save()
@@ -43,9 +44,11 @@ class Portfolio(models.Model):
 
     private = models.BooleanField(default=True)
 
+    theme = models.CharField(max_length=100, null=True, blank=True)
+    background = models.CharField(max_length=300, null=True, blank=True)
+
     def __str__(self):
         return self.name
-
 
 class Page(models.Model):
     portfolio = models.ForeignKey(
@@ -151,3 +154,4 @@ class ImageTextSection(Section):
 
 class ImageSection(Section):
     image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
+

@@ -23,7 +23,8 @@ export { default as HeaderDiv } from "./components/header/HeaderDiv";
 export { default as SiteHeader } from "./components/header/SiteHeader";
 export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
-export { default as HeaderBar } from "./components/header/HeaderBar";
+export { HeaderBar as HeaderBar } from "./components/header/HeaderBar";
+export { HeaderMediaWidth as HeaderMediaWidth} from "./components/header/HeaderBar"
 export { default as HeaderButton } from "./components/header/HeaderButton";
 export { default as HeaderBarSpacer } from "./components/header/HeaderBarSpacer";
 
@@ -38,6 +39,7 @@ export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
+export { default as PortfolioDropdown } from "./components/display/PortfolioDropdown"
 
 /* Display Mui*/
 export {
@@ -46,6 +48,8 @@ export {
   CentredGrid,
   BackgroundImage,
   Copyright,
+  ScreenBlock,
+  PortfolioHeader,
 } from "./components/display/MuiComponents";
 
 /* Edit */
@@ -58,6 +62,11 @@ export { default as TextSectionInput } from "./components/edit/TextSectionInput"
 export { default as ImageSectionInput } from "./components/edit/ImageSectionInput"
 export { default as ImageTextSectionInput } from "./components/edit/ImageTextSectionInput"
 export { default as UserImage } from "./components/edit/UserImage";
+export { default as DefaultSectionData } from "./components/edit/DefaultSectionData"
+export { default as PaperSectionStatic } from "./components/edit/PaperSectionStatic"
+export { default as PaperSectionBase } from "./components/edit/PaperSectionBase"
+export { default as PaperSectionDiv } from "./components/edit/PaperSectionDiv"
+export { default as PaperSectionTitle } from "./components/edit/PaperSectionTitle"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";
@@ -79,8 +88,17 @@ export {
 } from "./contexts/index";
 
 /* Types */
-export type { IUserContext, IThemeContext } from "./contexts/index";
-export type { TPortfolio, TPage, TSection, TSectionData } from "./types/index";
+
+export type { 
+  TPortfolio, 
+  TPage, 
+  TSection, 
+  TSectionData, 
+  TEditSection,
+  TPortfolioData,
+  TPageData,
+  IUserContext,
+} from "./types/index";
 
 /* Hook */
 export { useUser } from "./hooks/useUser";
@@ -100,3 +118,6 @@ export {
   DarkPrimaryButtonGrad,
   BlueIconGrad,
 } from "./theme/GlobalTheme";
+
+/* Portfolio themes */
+export { PortfolioThemes } from "./theme/index";

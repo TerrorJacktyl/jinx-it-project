@@ -37,10 +37,12 @@ const SiteHeader = styled.header`
 const HeaderDiv = styled.div`
   max-width: 90%;
   padding: 0.6rem 0.5rem 0.2rem;
+  margin: auto;
 `;
 
 // Used for potential modifications to login link
 const StyledLink = styled.a`
+  text-decoration: none;
 `;
 
 // Main top block div. Styled so that it takes up 100% of any screen
@@ -50,14 +52,13 @@ const TopBlockDiv = styled(Paper)`
   height: 100vh;
   display: grid;
   grid-template-rows:
-    minmax(80px,1fr) minmax(50px,400px) minmax(50px,1fr) 
-    minmax(max-content,1.2fr) minmax(100px,0.7fr) 40px;
+    minmax(80px,1.2fr) minmax(50px, 3fr) minmax(40px, 1fr) minmax(10px,0.8fr) 
+    max-content 1.3fr;
   justify-content: center;
   align-content: center;
   justify-items: center;
 `;
 
-// Main logo
 const JinxLogo = styled.img`
   height: 90%;
   width: 90%;
@@ -69,7 +70,7 @@ const JinxLogo = styled.img`
   @media (max-height: ${() => MAX_HEIGHT}) {
     width: 70%;
   }
-  )align-self: center;
+  align-self: center;
   justify-self: center;
 `;
 
@@ -93,14 +94,6 @@ const CatchPhrase = styled.h3`
   justify-self: center;
 `;
 
-// Call to action button
-const StyledLogin = styled(SecondaryButton)`
-  margin-top: 0px;
-  margin-right: 30px;
-  margin-left: 20px;
-  margin-bottom: 0px;
-  height: 30px;
-`;
 
 // Nice big white space
 const Gap = styled.div`
@@ -115,51 +108,41 @@ const Home = () => {
     <>
       <ThemeProvider theme={currentTheme}>
         {/* CSSBaseline required for setting background colour */}
-        <CSSBaseline/>
-          <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
-            <SiteHeader>
-              <HeaderDiv>
-                <HeaderBar title="" lightTheme={true}>
-                  <StyledLink
-                    href={
-                      userData.authenticated
-                        ? (Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username)
-                        : Routes.LOGIN
-                    }
-                  >
-                    <StyledLogin>{userData.authenticated ? "My Portfolio" : "Login" }</StyledLogin>
-                  </StyledLink>
-                </HeaderBar>
-              </HeaderDiv>
-            </SiteHeader>
+        <CSSBaseline />
+        <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
+          <SiteHeader>
+            <HeaderDiv>
+              <HeaderBar hideLogo title="" lightTheme={true} />
+            </HeaderDiv>
+          </SiteHeader>
 
-            {/* Top Block */}
+          {/* Top Block */}
+          <JinxLogo src={require("images/Logo_Main.svg")} />
+          <JinxLogo src={require("images/Logo_Main_Text_Only_Black.svg")} />
+          <div />
+          <CatchPhrase>Your portfolio, made simple</CatchPhrase>
+          <StyledLink href="/signup">
+            <PrimaryButton>JOIN TODAY</PrimaryButton>
+          </StyledLink>
+          <Icon>
+            <ExpandMoreIcon />
+          </Icon>
+        </TopBlockDiv>
 
-            <JinxLogo src={require("images/Logo_Main.svg")} />
-            <JinxLogo src={require("images/Logo_Main_Text_Only_Black.svg")} />
-            <CatchPhrase>Your portfolio, made simple</CatchPhrase>
-            <StyledLink href="/signup">
-              <PrimaryButton>JOIN TODAY</PrimaryButton>
-            </StyledLink>
-            <Icon>
-              <ExpandMoreIcon />
-            </Icon>
-          </TopBlockDiv>
+        {/* How to section - Mostly implemented in HomeTemplates.tsx*/}
 
-          {/* How to section - Mostly implemented in HomeTemplates.tsx*/}
-
-          <StyledSiteLayout>
-            <Gap />
-            <HomeTemplates />
-            <StyledLink href="/signup">
-              <PrimaryButton>JOIN TODAY</PrimaryButton>
-            </StyledLink>
-          </StyledSiteLayout>
+        <StyledSiteLayout>
           <Gap />
+          <HomeTemplates />
+          <StyledLink href="/signup">
+            <PrimaryButton>JOIN TODAY</PrimaryButton>
+          </StyledLink>
+        </StyledSiteLayout>
+        <Gap />
 
-          {/* Footer - Implemented in HomeFooter.tsx*/}
+        {/* Footer - Implemented in HomeFooter.tsx*/}
 
-          <HomeFooter />
+        <HomeFooter />
       </ThemeProvider>
     </>
   );

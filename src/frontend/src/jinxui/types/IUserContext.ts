@@ -10,6 +10,6 @@ export interface IUserContext {
   authenticated: boolean;
   lightThemeMode: boolean;
   portfolioId: number;
-  theme: "lightTheme" | "darkTheme";
+  theme: string; 
   config: AxiosRequestConfig;
 }

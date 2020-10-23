@@ -1,34 +1,49 @@
 import React from "react";
 import styled from "styled-components";
-import { useUser, PrimaryMenu, HeaderButton, Routes } from "jinxui";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
+import Link from '@material-ui/core/Link';
+import { ThemeProvider } from "@material-ui/core/styles";
 import { Person } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { Redirect } from "react-router-dom";
+import { 
+  useUser, 
+  PrimaryMenu, 
+  HeaderButton, 
+  Routes,
+  HeaderMediaWidth,
+  LightTheme
+} from "jinxui";
+
+// const HEADER_MEDIA_WIDTH = "500px";
 
 const StyledName = styled(HeaderButton)`
   font-size: 20px;
   text-transform: none;
-  padding: 0px;
+  padding: 0px 10px;
 `;
 
 const StyledInnerName = styled.div`
-  @media (max-width: 500px) {
+  @media (max-width: ${() => HeaderMediaWidth()}) {
     display: none;
   }
 `;
+
+const DivWrapper = styled.div`
+  height: 100%;
+`
 
 const UserAvatarDropdown = () => {
   const [open, setOpen] = React.useState(false);
   const [logoutRedirect, setLogoutRedirect] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const { userData, logout } = useUser();
+  const { userData, logout, getPortfolio } = useUser();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -64,6 +79,8 @@ const UserAvatarDropdown = () => {
     } catch {}
   }, [open]);
 
+
+
   const handleLogout = () => {
     logout()
       .then(() => {
@@ -76,14 +93,15 @@ const UserAvatarDropdown = () => {
   };
 
   const onLogout = () => {
-    return <Redirect to={Routes.LOGIN} />
+    return <Redirect to={Routes.LOGIN} />  
   }
 
   if (logoutRedirect) return onLogout();
   else
     return (
-      <>
-        {userData.firstName ? (
+      <DivWrapper>
+
+        {userData.username ? (
           <StyledName
             ref={anchorRef}
             aria-controls={open ? "menu-list-grow" : undefined}
@@ -105,6 +123,11 @@ const UserAvatarDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
+            {/*
+
+            This currently commented out but is left here for future purposes incase
+            the other menu item functionality is to be implemented in the future
+
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <AccountBoxIcon fontSize="small" />
@@ -117,15 +140,20 @@ const UserAvatarDropdown = () => {
               </ListItemIcon>
               <ListItemText primary="Preferences" />
             </MenuItem>
+            
+            */}
+            {/* <Link href={Routes.LOGIN} color="inherit" underline="none"> */}
+
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText primary="Logout" />
             </MenuItem>
+            {/* </Link> */}
           </PrimaryMenu>
         </ClickAwayListener>
-      </>
+      </DivWrapper>
     );
 };
 

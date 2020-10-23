@@ -1,29 +1,18 @@
 import React from "react";
-import styled from "styled-components";
-import { PaperSection } from "jinxui";
+import { PaperSectionStatic, TwoColumnSectionDiv } from "jinxui";
 
-const OneColumnThinSectionGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 30px;
-  margin-bottom: 10px;
-`;
+type TPortfolioNameSection = {
+  title: string,
+  children: any,
+}
 
-const SingleLineRequiredGrid = styled.div`
-  display: grid;
-  grid-template-rows: 50px;
-  margin-bottom: -10px;
-`;
-
-const PortfolioNameSection = (props: any) => {
+const PortfolioNameSection = (props: TPortfolioNameSection) => {
   return (
-      <PaperSection title={props.title}>
-        <OneColumnThinSectionGrid>
-          <SingleLineRequiredGrid>
+      <PaperSectionStatic title={props.title}>
+        <TwoColumnSectionDiv>
             {props.children}
-          </SingleLineRequiredGrid>
-        </OneColumnThinSectionGrid>
-      </PaperSection>
+        </TwoColumnSectionDiv>
+      </PaperSectionStatic>
   );
 }
 
