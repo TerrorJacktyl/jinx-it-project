@@ -212,7 +212,7 @@ const PortfolioDropdown = () => {
             onClick={handleToggle}
           >
             <PersonalVideoIcon />
-            <StyledInnerName>Portfolio</StyledInnerName>
+            <StyledInnerName>My Portfolio</StyledInnerName>
             <ExpandMoreIcon fontSize="small" />
           </StyledName>
         ) : null}
