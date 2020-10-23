@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Link from '@material-ui/core/Link';
+import Link from "@material-ui/core/Link";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
@@ -226,9 +226,7 @@ const PortfolioDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
-            <Link color="inherit" underline="none" 
-              href={Routes.PORTFOLIO_EDIT}
-            >
+            <Link color="inherit" underline="none" href={Routes.PORTFOLIO_EDIT}>
               {/* Ideally use redirect instead of href if we can solve 
                   'menu disappearing' issue (#45)
               */}
@@ -240,7 +238,9 @@ const PortfolioDropdown = () => {
                 <ListItemText primary="Edit" />
               </MenuItem>
             </Link>
-            <Link color="inherit" underline="none"
+            <Link
+              color="inherit"
+              underline="none"
               href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
             >
               {/* <MenuItem onClick={() => {setViewRedirect(true);}}> */}
@@ -260,7 +260,11 @@ const PortfolioDropdown = () => {
             </MenuItem>
             <Collapse in={themeOpen} timeout="auto" unmountOnExit>
               {Object.values(PortfolioThemes).map((theme: Theme) => (
-                <ThemeMenuItem theme={theme} setOpen={setOpen} />
+                <ThemeMenuItem
+                  key={theme.portfolio.theme.name}
+                  theme={theme}
+                  setOpen={setOpen}
+                />
               ))}
             </Collapse>
             <MenuItem onClick={handleShareLink}>
