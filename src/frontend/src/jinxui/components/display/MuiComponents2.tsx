@@ -111,7 +111,9 @@ export function PortfolioHeader2({
 
   const isDark = headerBG.isDark ? true : false;
 
-  if (!["Arch", "Mountains", "Wave"].includes(theme.portfolio.theme.name)) {
+  if (
+    !["Arch", "Mountains", "Wave", "Magma", "Rainbow smooth"].includes(theme.portfolio.theme.name)
+  ) {
     return <PortfolioHeader title={title} subtitle={subtitle} />;
   } else {
     return (
@@ -122,12 +124,18 @@ export function PortfolioHeader2({
               <Grid
                 direction="row"
                 container
+                spacing={0}
                 alignItems={verticalAlign}
                 justify={horizontalAlign}
               >
                 <Box
+                  padding={
+                    theme.portfolio.section?.borderPadding?.toString() + "px"
+                  }
                   marginBottom={marginBottom}
-                  style={isDark ? { color: "#FFFFFF" } : {}}
+                  style={
+                    isDark ? { color: "#FFFFFF" } : {}
+                  }
                 >
                   <Typography
                     variant="h1"
@@ -136,10 +144,14 @@ export function PortfolioHeader2({
                     style={
                       header?.allCaps ? { textTransform: "uppercase" } : {}
                     }
-                  >
+                  > 
                     {title}
                   </Typography>
-                  <Typography variant="h3" color="secondary" align={textAlign}>
+                  <Typography
+                    variant="h3"
+                    style={header?.useSecondaryForSubtitle ? {color: theme.palette.secondary.main} : {color: "inherit"}}
+                    align={textAlign}
+                  >
                     {subtitle}
                   </Typography>
                 </Box>
@@ -152,10 +164,20 @@ export function PortfolioHeader2({
   }
 }
 
+const themeColors = (theme: Theme, index: number) => {
+  const colors = theme.portfolio?.section?.colors || null;
+  const [backgroundColor, textColor] = colors
+    ? colors({ theme: theme, index: index })
+    : defaultColors({ theme: theme, index: index });
+  return [backgroundColor, textColor];
+};
+
 export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
   const theme = useTheme();
 
-  if (!["Arch", "Mountains", "Wave"].includes(theme.portfolio.theme.name)) {
+  if (
+    !["Arch", "Mountains", "Wave", "Magma", "Rainbow smooth"].includes(theme.portfolio.theme.name)
+  ) {
     return <SectionGrid sections={sections} />;
   }
 
@@ -165,11 +187,7 @@ export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
   };
 
   const applyColors = (component: JSX.Element, index: number) => {
-    const colors = theme.portfolio?.section?.colors || null;
-
-    const [backgroundColor, textColor] = colors
-      ? colors({ theme: theme, index: index })
-      : [`rgba(0,0,0,0)`, theme.palette.primary.contrastText];
+    const [backgroundColor, textColor] = themeColors(theme, index);
     const customCss = theme.portfolio?.section?.css || {};
 
     return (
@@ -186,13 +204,12 @@ export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
               color: textColor,
             }}
           >
-            <Container>{component}</Container>
+            <Container disableGutters>{component}</Container>
           </Box>
         </Container>
       </Box>
     );
   };
-
 
   return (
     <>
@@ -210,31 +227,13 @@ export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
  */
 export function CentredGrid2({ components }: { components: JSX.Element[] }) {
   return (
-      <Grid container>
-        {components.map((component, index) => {
-          if (index % 2 === 0) {
-            return (
-              <Grid item xs={12} key={index}>
-                {component}
-              </Grid>
-            );
-          } else {
-            return (
-              <>
-              {/* <Container
-                style={{ width: "100%", maxWidth: "100%", padding: 0 }}
-              > */}
-                <Paper elevation={0} style={{padding: 0}}>
-                  <Grid item xs={12} key={index}>
-                    {component}
-                  </Grid>
-                </Paper>
-              {/* </Container> */}
-              </>
-            );
-          }
-        })}
-      </Grid>
+    <Grid container spacing={0}>
+      {components.map((component, index) => (
+        <Grid item xs={12} key={index} spacing={0}>
+          {component}
+        </Grid>
+      ))}
+    </Grid>
   );
 }
 
@@ -258,7 +257,7 @@ export const Section2 = (data: TSection) => {
       },
       paper: {
         background: "rgba(255, 255, 255, 0.0)",
-        // padding: 45,
+        padding: theme.portfolio.section?.borderPadding,
         border: "1px solid " + theme.palette.secondary.main,
       },
     })
@@ -314,54 +313,48 @@ export const Section2 = (data: TSection) => {
       border = false;
   }
 
-  /** Text alignment hard coded
-   * TODO: put inside theme later */
+  const [backgroundColor, textColor] = themeColors(theme, data.number);
+
   return (
     <>
-      <Box
-        textAlign="left"
-        paddingTop={sectionGap}
-        paddingBottom={sectionGap}
-        // style={
-        //   // sectionTheme?.paperIsDark ? { color: theme.palette.common.white } : {}
-        //   {color: "#FFFFFF"}
-        // }
-      >
+      <Box textAlign="left" paddingTop={sectionGap} paddingBottom={sectionGap}>
         <Paper
           elevation={0}
           square
           variant="outlined"
           className={classes.paper}
-          style={border ? {} : { border: "none" }}
+          style={
+            border ? { color: textColor } : { color: textColor, border: "none" }
+          }
         >
-        <Typography variant="h2" gutterBottom>
-          {data.name}
-        </Typography>
-        <Grid
-          container
-          direction="row-reverse"
-          style={{ marginTop: titleGap }}
-          spacing={spacing}
-        >
-          {data.path ? (
-            <Grid item xs={12} sm={colsPerItem}>
-              <img
-                src={data.path == null ? "" : data.path}
-                alt={data.alt}
-                className={classes.img}
-              />
-            </Grid>
-          ) : null}
-          {data.content ? (
-            <Grid item xs={12} sm={colsPerItem}>
-              <Typography variant="body1" style={{ marginTop: "-25px" }}>
-                <ReactMarkdown plugins={[gfm]} renderers={renderers}>
-                  {data.content}
-                </ReactMarkdown>
-              </Typography>
-            </Grid>
-          ) : null}
-        </Grid>
+          <Typography variant="h2" gutterBottom>
+            {data.name}
+          </Typography>
+          <Grid
+            container
+            direction="row-reverse"
+            style={{ marginTop: titleGap }}
+            spacing={spacing}
+          >
+            {data.path ? (
+              <Grid item xs={12} sm={colsPerItem}>
+                <img
+                  src={data.path == null ? "" : data.path}
+                  alt={data.alt}
+                  className={classes.img}
+                />
+              </Grid>
+            ) : null}
+            {data.content ? (
+              <Grid item xs={12} sm={colsPerItem}>
+                <Typography variant="body1" style={{ marginTop: "-25px" }}>
+                  <ReactMarkdown plugins={[gfm]} renderers={renderers}>
+                    {data.content}
+                  </ReactMarkdown>
+                </Typography>
+              </Grid>
+            ) : null}
+          </Grid>
         </Paper>
       </Box>
     </>

@@ -17,6 +17,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         textAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify' 
         marginBottom?: any
         allCaps?: boolean
+        useSecondaryForSubtitle?: boolean
       }
       theme: {
         name: string
@@ -29,7 +30,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         sectionGap?: any
         spacing?: 0 | 1 | 10 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | undefined
         border?: "first" | "odds" | "evens" | "all" | undefined
-        borderPadding?: any
+        borderPadding?: number
         paperIsDark?: boolean
       }
     }
@@ -49,6 +50,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         textAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify'
         marginBottom?: any
         allCaps?: boolean
+        useSecondaryForSubtitle?: boolean
       }
       theme?: {
         name?: string
@@ -60,7 +62,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         sectionGap?: any
         spacing?: 0 | 1 | 10 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | undefined
         border?: "first" | "odds" | "evens" | "all" | undefined
-        borderPadding?: any
+        borderPadding?: number
         paperIsDark?: boolean
       }
     },

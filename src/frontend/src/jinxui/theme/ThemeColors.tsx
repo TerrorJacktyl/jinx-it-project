@@ -44,15 +44,40 @@ export const rainbowGradient = ({ index }: { index: number }) => {
 
 /** The original function. Looks like a self-hosted website from 2004. */
 const alternatingColors = ({ theme, index }: { theme: Theme, index: number }) => {
-    
-    const color = index % 2 === 1 ? 'primary' : 'secondary';
-    const type = theme.palette.type;
+    return pickColorsBasedOnPrimarySecondary(theme, index % 2);
+}
+
+const alternatingBackgroundColors = ({ theme, index }: { theme: Theme, index: number }) => {
+    return pickColorsBasedOnBackground(theme, index % 2)
+}
+
+const secondPaperColor = ({ theme, index }: {theme: Theme, index: number}) => {
+    const colorIndex = index === 1 ? 1 : 0;
+    return pickColorsBasedOnBackground(theme, colorIndex);
+}
+
+const secondPrimaryColor = ({ theme, index }: {theme: Theme, index: number}) => {
+    const colorIndex = index === 1 ? 1 : 0;
+    return pickColorsBasedOnPrimarySecondary(theme, colorIndex);
+}
+
+const pickColorsBasedOnBackground = (theme: Theme, colorIndex: number) => {
+    const color = colorIndex === 0 ? 'default' : 'paper';
+    const backgroundColor = theme.palette.background[color];
+    const textColor = theme.palette.text.primary;
+    return [backgroundColor, textColor];
+};
+
+const pickColorsBasedOnPrimarySecondary = (theme: Theme, colorIndex: number) => {
+    const color = colorIndex === 0 ? 'secondary' : 'primary'
     // @ts-ignore
-    const backgroundColor = theme.palette[color][type];
+    const backgroundColor = theme.palette[color].main;
     // @ts-ignore
     const textColor = theme.palette[color].contrastText;
     return [backgroundColor, textColor]
 }
+
+
 
 // Export your background function here
 
@@ -61,6 +86,9 @@ const BackgroundColor = {
     rainbowStep: rainbowStep,
     rainbowGradient: rainbowGradient,
     alternatingColors: alternatingColors,
+    alternatingBackgroundColors: alternatingBackgroundColors,
+    secondPaperColor: secondPaperColor,
+    secondPrimaryColor: secondPrimaryColor,
 }
 
 /** The default color function to use for the full page background. */

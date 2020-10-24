@@ -193,7 +193,6 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 export function CentredGrid({ components }: { components: JSX.Element[] }) {
   return (
     <Grid container
-    // spacing={3}
     >
       {components.map((component, index) => (
         <Grid item xs={12} key={index}>

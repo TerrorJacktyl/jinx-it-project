@@ -205,6 +205,7 @@ const rainbowSmooth: Theme = createTheme({
             name: "Rainbow smooth",
         },
         headerBackground: {
+            isDark: true,
             src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
         section: {
@@ -236,9 +237,10 @@ const arch: Theme = createTheme({
         },
         text: {
             primary: "#748598",
+            secondary: "#B7A0B2"
         },
         background: {
-            paper: "#F0E8EB",
+            paper: "#EBDCE2",
             default: "#F6F1F1",
         }
     },
@@ -279,12 +281,15 @@ const arch: Theme = createTheme({
             verticalAlign: "flex-end",
             horizontalAlign: "flex-start",
             textAlign: "left",
-            marginBottom: "10%"
+            marginBottom: "10%",
+            useSecondaryForSubtitle: true,
         },
         section: {
             titleGap: 50,
             sectionGap: "9em",
             spacing: 7,
+            borderPadding: 30,
+            colors: BackgroundColor.secondPaperColor,
         }
     }
 })
@@ -339,12 +344,14 @@ const mountains: Theme = createTheme({
             verticalAlign: "center",
             horizontalAlign: "center",
             textAlign: "center",
+            useSecondaryForSubtitle: true,
         },
         section: {
             titleGap: 20,
             spacing: 7,
             border: "first",
-            borderPadding: "60px", // Not quite workin yet 
+            borderPadding: 30,
+            colors: BackgroundColor.alternatingBackgroundColors,
         }
     },
 });
@@ -353,14 +360,14 @@ const wave: Theme = createTheme({
     palette: {
         type: "dark",
         primary: {
-            main: "#13141C",
+            main: "#000000",
         },
         secondary: {
             main: "#FFFFFF",
             dark: "#FFFFFF",
         },
         background: {
-            default: "#13141C",
+            default: "#1D1E22",
             paper: "#13141C",
         },
     },
@@ -409,7 +416,9 @@ const wave: Theme = createTheme({
         },
         section: {
             solid: true,
-            colors: BackgroundColor.alternatingColors
+            spacing: 7,
+            titleGap: -30,
+            colors: BackgroundColor.secondPrimaryColor
         }
     }
 })
