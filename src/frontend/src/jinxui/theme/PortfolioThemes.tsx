@@ -351,18 +351,42 @@ const mountains: Theme = createTheme({
 
 const wave: Theme = createTheme({
     palette: {
+        type: "dark",
+        primary: {
+            main: "#13141C",
+        },
         secondary: {
-            main: "#424E88",
+            main: "#FFFFFF",
+            dark: "#FFFFFF",
         },
         background: {
-            paper: "#424E88",
+            default: "#13141C",
+            paper: "#13141C",
         },
     },
     typography: {
+        fontFamily: "Lora, sans-serif",
         h1: {
-            fontFamily: 'Work Sans, sans-serif',
+            fontFamily: "Poppins, sans-serif",
             fontWeight: 700,
+            fontSize: "4.2rem",
+            letterSpacing: "0.25rem",
+            lineHeight: 1.2,
         },
+        h2: {
+            fontFamily: "Poppins, sans-serif",
+            fontWeight: 600,
+            fontSize: "3.3rem",
+        },
+        h3: {
+            fontWeight: 300,
+            fontSize: "1.6rem",
+            lineHeight: 2,
+        },
+        body1: {
+            fontSize: "1.3rem",
+            lineHeight: 1.5,
+        }
     },
     shape: {
         borderRadius: 0,
@@ -372,15 +396,21 @@ const wave: Theme = createTheme({
             name: "Wave"
         },
         headerBackground: {
-            src: require("images/backgrounds/wave_01.svg"),
-            maxHeight: "900px",
-            overlayColor: "0, 0, 0, 0",
+            src: require("images/backgrounds/black_sand.jpg"),
+            maxHeight: "100vh",
+            overlayColor: "46, 54, 84, 0.22",
+            isDark: true,
         },
         header: {
             verticalAlign: "center",
-            horizontalAlign: "center",
-            textAlign: "center",
+            horizontalAlign: "flex-start",
+            textAlign: "left",
+            allCaps: "true",
         },
+        section: {
+            solid: true,
+            colors: BackgroundColor.alternatingColors
+        }
     }
 })
 

@@ -1,5 +1,6 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { red, orange, yellow, green, cyan, lightBlue, deepPurple, purple } from '@material-ui/core/colors';
+import { colors } from '@material-ui/core';
 
 /** Oscillate between theme colours in the background of sections. */
 const gradient = ({ theme, index }: { theme: Theme, index: number }) => {
@@ -43,7 +44,8 @@ export const rainbowGradient = ({ index }: { index: number }) => {
 
 /** The original function. Looks like a self-hosted website from 2004. */
 const alternatingColors = ({ theme, index }: { theme: Theme, index: number }) => {
-    const color = index % 2 === 0 ? 'primary' : 'secondary';
+    
+    const color = index % 2 === 1 ? 'primary' : 'secondary';
     const type = theme.palette.type;
     // @ts-ignore
     const backgroundColor = theme.palette[color][type];
@@ -58,6 +60,7 @@ const BackgroundColor = {
     gradient: gradient,
     rainbowStep: rainbowStep,
     rainbowGradient: rainbowGradient,
+    alternatingColors: alternatingColors,
 }
 
 /** The default color function to use for the full page background. */

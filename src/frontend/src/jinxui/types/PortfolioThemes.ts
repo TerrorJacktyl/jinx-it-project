@@ -9,12 +9,14 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         src: string
         overlayColor?: string
         maxHeight?: number
+        isDark?: boolean
       },
       header?: {
         verticalAlign?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline' | undefined
         horizontalAlign?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly' | undefined
         textAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify' 
         marginBottom?: any
+        allCaps?: boolean
       }
       theme: {
         name: string
@@ -28,6 +30,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         spacing?: 0 | 1 | 10 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | undefined
         border?: "first" | "odds" | "evens" | "all" | undefined
         borderPadding?: any
+        paperIsDark?: boolean
       }
     }
   }
@@ -38,12 +41,14 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         src?: string
         overlayColor?: string
         maxHeight?: number
+        isDark?: boolean
       },
       header?: {
         verticalAlign?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline' | undefined
         horizontalAlign?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly' | undefined
         textAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify'
         marginBottom?: any
+        allCaps?: boolean
       }
       theme?: {
         name?: string
@@ -56,6 +61,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         spacing?: 0 | 1 | 10 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | undefined
         border?: "first" | "odds" | "evens" | "all" | undefined
         borderPadding?: any
+        paperIsDark?: boolean
       }
     },
   }

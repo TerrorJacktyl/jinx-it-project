@@ -24,6 +24,7 @@ import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { colors } from "@material-ui/core";
 
 /* A block that takes up at minimum the height of the screen. Takes an optional */
 export function ScreenBlock2(props: any) {
@@ -32,7 +33,6 @@ export function ScreenBlock2(props: any) {
     theme.portfolio.headerBackground.maxHeight !== undefined
       ? theme.portfolio.headerBackground.maxHeight
       : "100vh";
-  console.log(maxHeight);
   return (
     // <Box minHeight={`min(100vh, ${maxHeight}px)`} clone>
     <Box minHeight={`min(100vh, ${maxHeight})`} clone>
@@ -93,26 +93,23 @@ export function PortfolioHeader2({
 
   // Set default values if not defined (probably not the cleanest way of
   // doing this)
+  const header = theme.portfolio.header;
+  const headerBG = theme.portfolio.headerBackground;
 
   const verticalAlign =
-    theme.portfolio.header?.verticalAlign !== undefined
-      ? theme.portfolio.header.verticalAlign
-      : "flex-end";
+    header?.verticalAlign !== undefined ? header.verticalAlign : "flex-end";
 
   const horizontalAlign =
-    theme.portfolio.header?.horizontalAlign !== undefined
-      ? theme.portfolio.header.horizontalAlign
+    header?.horizontalAlign !== undefined
+      ? header.horizontalAlign
       : "flex-start";
 
-  const textAlign =
-    theme.portfolio.header?.textAlign !== undefined
-      ? theme.portfolio.header.textAlign
-      : "left";
+  const textAlign = header?.textAlign !== undefined ? header.textAlign : "left";
 
   const marginBottom =
-    theme.portfolio.header?.marginBottom !== undefined
-      ? theme.portfolio.header.marginBottom
-      : "10%";
+    header?.marginBottom !== undefined ? header.marginBottom : "10%";
+
+  const isDark = headerBG.isDark ? true : false;
 
   if (!["Arch", "Mountains", "Wave"].includes(theme.portfolio.theme.name)) {
     return <PortfolioHeader title={title} subtitle={subtitle} />;
@@ -128,8 +125,18 @@ export function PortfolioHeader2({
                 alignItems={verticalAlign}
                 justify={horizontalAlign}
               >
-                <Box marginBottom={marginBottom}>
-                  <Typography variant="h1" align={textAlign}>
+                <Box
+                  marginBottom={marginBottom}
+                  style={isDark ? { color: "#FFFFFF" } : {}}
+                >
+                  <Typography
+                    variant="h1"
+                    align={textAlign}
+                    color="inherit"
+                    style={
+                      header?.allCaps ? { textTransform: "uppercase" } : {}
+                    }
+                  >
                     {title}
                   </Typography>
                   <Typography variant="h3" color="secondary" align={textAlign}>
@@ -153,16 +160,46 @@ export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
   }
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
-  const layoutData = (data: TSection, index: number) => {
-    return <Section2 {...(data)} />;
+  const layoutData = (data: TSection, index?: number) => {
+    return <Section2 {...data} />;
   };
+
+  const applyColors = (component: JSX.Element, index: number) => {
+    const colors = theme.portfolio?.section?.colors || null;
+
+    const [backgroundColor, textColor] = colors
+      ? colors({ theme: theme, index: index })
+      : [`rgba(0,0,0,0)`, theme.palette.primary.contrastText];
+    const customCss = theme.portfolio?.section?.css || {};
+
+    return (
+      <Box
+        style={{
+          background: backgroundColor,
+        }}
+      >
+        <Container maxWidth="md">
+          <Box
+            style={{
+              ...customCss,
+              background: backgroundColor,
+              color: textColor,
+            }}
+          >
+            <Container>{component}</Container>
+          </Box>
+        </Container>
+      </Box>
+    );
+  };
+
 
   return (
     <>
       <CentredGrid2
-        components={sections.map((section, index) => (
-          <Container maxWidth="md">{layoutData(section, index)}</Container>
-        ))}
+        components={sections.map((section, index) =>
+          applyColors(layoutData(section), index)
+        )}
       />
     </>
   );
@@ -173,28 +210,31 @@ export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
  */
 export function CentredGrid2({ components }: { components: JSX.Element[] }) {
   return (
-    // <Paper style={{ backgroundColor: "#748598" }}>
-    <Grid container>
-      {components.map((component, index) => {
-        if (index % 2 === 0) {
-          return (
-            <Grid item xs={12} key={index}>
-              {component}
-            </Grid>
-          );
-        } else {
-          return (
-            <Container style={{ width: "100%", maxWidth: "100%", padding: 0 }}>
-              <Paper elevation={0}>
-                <Grid item xs={12} key={index}>
-                  {component}
-                </Grid>
-              </Paper>
-            </Container>
-          );
-        }
-      })}
-    </Grid>
+      <Grid container>
+        {components.map((component, index) => {
+          if (index % 2 === 0) {
+            return (
+              <Grid item xs={12} key={index}>
+                {component}
+              </Grid>
+            );
+          } else {
+            return (
+              <>
+              {/* <Container
+                style={{ width: "100%", maxWidth: "100%", padding: 0 }}
+              > */}
+                <Paper elevation={0} style={{padding: 0}}>
+                  <Grid item xs={12} key={index}>
+                    {component}
+                  </Grid>
+                </Paper>
+              {/* </Container> */}
+              </>
+            );
+          }
+        })}
+      </Grid>
   );
 }
 
@@ -218,7 +258,7 @@ export const Section2 = (data: TSection) => {
       },
       paper: {
         background: "rgba(255, 255, 255, 0.0)",
-        padding: 45,
+        // padding: 45,
         border: "1px solid " + theme.palette.secondary.main,
       },
     })
@@ -242,40 +282,33 @@ export const Section2 = (data: TSection) => {
     },
   };
 
-  console.log(data)
-
   const theme = useTheme();
 
   // Set defaults for various variables
+  const sectionTheme = theme.portfolio.section;
 
   const titleGap =
-    theme.portfolio.section?.titleGap !== undefined
-      ? theme.portfolio.section.titleGap
-      : 50;
+    sectionTheme?.titleGap !== undefined ? sectionTheme.titleGap : 50;
 
   const sectionGap =
-    theme.portfolio.section?.sectionGap !== undefined
-      ? theme.portfolio.section.sectionGap
-      : "10em";
+    sectionTheme?.sectionGap !== undefined ? sectionTheme.sectionGap : "10em";
 
   const spacing =
-    theme.portfolio.section?.spacing !== undefined
-      ? theme.portfolio.section.spacing
-      : 4;
-  
-  var border = false
-  switch (theme.portfolio.section?.border) {
+    sectionTheme?.spacing !== undefined ? sectionTheme.spacing : 4;
+
+  var border = false;
+  switch (sectionTheme?.border) {
     case "first":
-      border = data.number === 0
+      border = data.number === 0;
       break;
     case "odds":
-      border = data.number % 2 === 1
+      border = data.number % 2 === 1;
       break;
     case "evens":
-      border = data.number % 2 === 0
+      border = data.number % 2 === 0;
       break;
     case "all":
-      border = true
+      border = true;
       break;
     default:
       border = false;
@@ -285,7 +318,15 @@ export const Section2 = (data: TSection) => {
    * TODO: put inside theme later */
   return (
     <>
-      <Box textAlign="left" paddingTop={sectionGap} paddingBottom={sectionGap}>
+      <Box
+        textAlign="left"
+        paddingTop={sectionGap}
+        paddingBottom={sectionGap}
+        // style={
+        //   // sectionTheme?.paperIsDark ? { color: theme.palette.common.white } : {}
+        //   {color: "#FFFFFF"}
+        // }
+      >
         <Paper
           elevation={0}
           square
@@ -293,34 +334,34 @@ export const Section2 = (data: TSection) => {
           className={classes.paper}
           style={border ? {} : { border: "none" }}
         >
-          <Typography variant="h2" gutterBottom>
-            {data.name}
-          </Typography>
-          <Grid
-            container
-            direction="row-reverse"
-            style={{ marginTop: titleGap }}
-            spacing={spacing}
-          >
-            {data.path ? (
-              <Grid item xs={12} sm={colsPerItem}>
-                <img
-                  src={data.path == null ? "" : data.path}
-                  alt={data.alt}
-                  className={classes.img}
-                />
-              </Grid>
-            ) : null}
-            {data.content ? (
-              <Grid item xs={12} sm={colsPerItem}>
-                <Typography variant="body1" style={{ marginTop: "-25px" }}>
-                  <ReactMarkdown plugins={[gfm]} renderers={renderers}>
-                    {data.content}
-                  </ReactMarkdown>
-                </Typography>
-              </Grid>
-            ) : null}
-          </Grid>
+        <Typography variant="h2" gutterBottom>
+          {data.name}
+        </Typography>
+        <Grid
+          container
+          direction="row-reverse"
+          style={{ marginTop: titleGap }}
+          spacing={spacing}
+        >
+          {data.path ? (
+            <Grid item xs={12} sm={colsPerItem}>
+              <img
+                src={data.path == null ? "" : data.path}
+                alt={data.alt}
+                className={classes.img}
+              />
+            </Grid>
+          ) : null}
+          {data.content ? (
+            <Grid item xs={12} sm={colsPerItem}>
+              <Typography variant="body1" style={{ marginTop: "-25px" }}>
+                <ReactMarkdown plugins={[gfm]} renderers={renderers}>
+                  {data.content}
+                </ReactMarkdown>
+              </Typography>
+            </Grid>
+          ) : null}
+        </Grid>
         </Paper>
       </Box>
     </>
