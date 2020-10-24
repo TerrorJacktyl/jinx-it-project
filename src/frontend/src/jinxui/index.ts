@@ -52,6 +52,13 @@ export {
   PortfolioHeader,
 } from "./components/display/MuiComponents";
 
+/* Display Mui */
+export {
+  PortfolioHeader2,
+  SectionGrid2,
+} from "./components/display/MuiComponents2"
+
+
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection"
 export { default as NewSectionMenu } from "./components/edit/NewSectionMenu"

@@ -12,11 +12,12 @@ import {
   TSection,
   HeaderBar,
   Copyright,
-  SectionGrid,
-  PortfolioHeader,
+  SectionGrid2,
+  PortfolioHeader2,
   PortfolioThemes,
   Routes,
 } from "jinxui";
+
 import NotFound from "./NotFound";
 const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
   const theme_name =
@@ -97,6 +98,8 @@ const Portfolio = ({ username }: PortfolioProps) => {
     );
   }
 
+  const thisTheme = getTheme(portfolio, userData, username);
+
   return (
     <>
       <CssBaseline />
@@ -105,12 +108,13 @@ const Portfolio = ({ username }: PortfolioProps) => {
         {/* {userData.authenticated ? <HeaderBar lightTheme={true} /> : null} */}
         <HeaderBar lightTheme={true} hideBGLoggedOut={true} />
         {/* Portfolio theme */}
-        <ThemeProvider theme={getTheme(portfolio, userData, username)}>
-          <PortfolioHeader
+        <ThemeProvider theme={thisTheme}>
+          <CssBaseline />
+          <PortfolioHeader2
             title={portfolio?.name}
             subtitle={author}
-          ></PortfolioHeader>
-          <SectionGrid sections={sections} />
+          ></PortfolioHeader2>
+          <SectionGrid2 sections={sections} />
         </ThemeProvider>
         <Copyright text={userData.firstName} />
       </ThemeProvider>
