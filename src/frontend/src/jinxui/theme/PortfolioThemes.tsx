@@ -255,12 +255,14 @@ const presentation: Theme = createTheme({
             fontFamily: "Computer Modern Bright"
         },
         h2: {
-            fontFamily: "Computer Modern Serif"
+            fontFamily: "Computer Modern Serif",
+            fontWeight: 700,
         },
         h3: {
             fontFamily: "Computer Modern Serif"
         },
         body1: {
+            fontSize: 22,
             fontFamily: "Computer Modern Serif, sans-serif"
         }
     },
