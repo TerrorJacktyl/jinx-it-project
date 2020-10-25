@@ -73,7 +73,7 @@ const magma: Theme = createTheme({
     portfolio: {
         theme: {
             name: "Magma",
-        },        
+        },
         headerBackground: {
             src: require("images/backgrounds/magma_01.webp"),
         },
@@ -355,7 +355,7 @@ const arch: Theme = createTheme({
             xl: 1920,
         }
     },
-    palette:{
+    palette: {
         common: {
             black: "#4F4F4F",
             white: "#F6F1F1",
