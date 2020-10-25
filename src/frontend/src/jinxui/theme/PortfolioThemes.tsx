@@ -37,6 +37,8 @@ const magma: Theme = createTheme({
             xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -50,10 +52,11 @@ const magma: Theme = createTheme({
     },
     typography: {
         fontFamily: "Lora, serif",
-        fontSize: 24,
+        // fontSize: 24,
         h1: {
             fontFamily: "Kaushan Script, sans-serif",
             lineHeight: 1.5,
+            fontSize: "6rem",
         },
         h2: {
             fontFamily: "Kaushan Script, sans-serif"
@@ -69,7 +72,7 @@ const magma: Theme = createTheme({
     portfolio: {
         theme: {
             name: "Magma",
-        },
+        },        
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
@@ -87,6 +90,8 @@ const sunset: Theme = createTheme({
             xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -124,6 +129,8 @@ const lilypad: Theme = createTheme({
             xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -154,8 +161,11 @@ const lilypad: Theme = createTheme({
 const autumn: Theme = createTheme({
     breakpoints: {
         values: {
+            xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -186,8 +196,11 @@ const autumn: Theme = createTheme({
 const cityscape: Theme = createTheme({
     breakpoints: {
         values: {
+            xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -200,9 +213,8 @@ const cityscape: Theme = createTheme({
         },
     },
     typography: {
-        fontSize: 22,
         body1: {
-            fontSize: "1.5rem"
+            fontSize: "1.8rem"
         }
     },
     portfolio: {
@@ -221,8 +233,11 @@ const cityscape: Theme = createTheme({
 const presentation: Theme = createTheme({
     breakpoints: {
         values: {
+            xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1200,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -268,8 +283,11 @@ const presentation: Theme = createTheme({
 const rainbow: Theme = createTheme({
     breakpoints: {
         values: {
+            xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {
@@ -297,8 +315,11 @@ const rainbow: Theme = createTheme({
 const rainbowSmooth: Theme = createTheme({
     breakpoints: {
         values: {
+            xs: 0,
             sm: 700,    // One column / two column breakpoint
             md: 1100,   // Section width
+            lg: 1280,   // Required for text breakpoints
+            xl: 1920,   // Required for text breakpoints
         }
     },
     palette: {

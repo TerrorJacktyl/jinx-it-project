@@ -39,9 +39,9 @@ export function ScreenBlock(props: any) {
 // Give me a `url` as props to get a background image
 export function BackgroundImage(props: any) {
   // Background styling
-  const outerTheme = useTheme();
-  const backgroundColor = outerTheme.portfolio.headerBackground.overlayColor
-    ? outerTheme.portfolio.headerBackground.overlayColor
+  const theme = responsiveFontSizes(useTheme());
+  const backgroundColor = theme.portfolio.headerBackground.overlayColor
+    ? theme.portfolio.headerBackground.overlayColor
     : "0, 0, 0, 0.3";
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
