@@ -1,11 +1,11 @@
-# Ji.nx React Coding Conventions
+# Jinx React Coding Conventions
 
 
 ## Styled Components
 
 [https://styled-components.com/](https://styled-components.com/)
 
-#### Why to use this?
+#### Why use this?
 Having to add classes to tags or components and creating separate ```.css``` files can get very confusing and complicated. Using styled components can make CSS styling very concise, clean and readable as well as promoting re-usability and malleability.
 
 E.g. we can create a reusable component, then create another reusable component with slightly different properties but inheriting all the properties without the need to rewrite them all.
