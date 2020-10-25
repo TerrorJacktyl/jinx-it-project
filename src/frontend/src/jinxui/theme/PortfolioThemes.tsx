@@ -447,7 +447,7 @@ const mountains: Theme = createTheme({
         },
         headerBackground: {
             src: require("images/backgrounds/mountains_03.jpg"),
-            maxHeight: "800px",
+            maxHeight: "1000px",
             overlayColor: "48, 41, 77, 0.41",
         },
         header: {

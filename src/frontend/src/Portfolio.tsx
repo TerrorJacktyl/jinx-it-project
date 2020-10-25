@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
-import Container from "@material-ui/core/Container";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 
@@ -12,10 +10,9 @@ import {
   TSection,
   HeaderBar,
   Copyright,
-  SectionGrid2,
-  PortfolioHeader2,
+  SectionGrid,
+  PortfolioHeader,
   PortfolioThemes,
-  Routes,
 } from "jinxui";
 
 import NotFound from "./NotFound";
@@ -105,16 +102,15 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <CssBaseline />
       {/* Site main theme */}
       <ThemeProvider theme={LightTheme}>
-        {/* {userData.authenticated ? <HeaderBar lightTheme={true} /> : null} */}
         <HeaderBar lightTheme={true} hideBGLoggedOut={true} />
         {/* Portfolio theme */}
         <ThemeProvider theme={thisTheme}>
           <CssBaseline />
-          <PortfolioHeader2
+          <PortfolioHeader
             title={portfolio?.name}
             subtitle={author}
-          ></PortfolioHeader2>
-          <SectionGrid2 sections={sections} />
+          ></PortfolioHeader>
+          <SectionGrid sections={sections} />
         </ThemeProvider>
         <Copyright text={author} />
       </ThemeProvider>

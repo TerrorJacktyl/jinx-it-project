@@ -12,7 +12,8 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         overlayColor?: string
         // Header height will be minimum of this number and 100% view height
         maxHeight?: number
-        // Display light colored text
+        // If not set, header test will inherit, otherwise it will be white
+        // or black according to this setting
         isDark?: boolean
       },
       header?: {

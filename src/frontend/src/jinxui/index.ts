@@ -52,11 +52,6 @@ export {
   PortfolioHeader,
 } from "./components/display/MuiComponents";
 
-/* Display Mui */
-export {
-  PortfolioHeader2,
-  SectionGrid2,
-} from "./components/display/MuiComponents2";
 
 
 
