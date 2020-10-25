@@ -24,7 +24,7 @@ export { default as SiteHeader } from "./components/header/SiteHeader";
 export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
 export { HeaderBar as HeaderBar } from "./components/header/HeaderBar";
-export { HeaderMediaWidth as HeaderMediaWidth} from "./components/header/HeaderBar"
+export { HeaderMediaWidth as HeaderMediaWidth } from "./components/header/HeaderBar"
 export { default as HeaderButton } from "./components/header/HeaderButton";
 export { default as HeaderBarSpacer } from "./components/header/HeaderBarSpacer";
 
@@ -89,11 +89,11 @@ export {
 
 /* Types */
 
-export type { 
-  TPortfolio, 
-  TPage, 
-  TSection, 
-  TSectionData, 
+export type {
+  TPortfolio,
+  TPage,
+  TSection,
+  TSectionData,
   TEditSection,
   TPortfolioData,
   TPageData,
@@ -120,4 +120,4 @@ export {
 } from "./theme/GlobalTheme";
 
 /* Portfolio themes */
-export { PortfolioThemes } from "./theme/index";
+export { PortfolioThemes, defaultColors } from "./theme/index";

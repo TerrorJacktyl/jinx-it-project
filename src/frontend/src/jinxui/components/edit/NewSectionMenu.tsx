@@ -12,6 +12,8 @@ import { PrimaryMenu, DefaultSectionData } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
 
+import { v4 as uuidv4 } from "uuid";
+
 type TNewSectionMenu = {
   section: any;
   sections: any;
@@ -23,7 +25,7 @@ const HandleScroll = (isNew: any, setIsNew: any, newUid: any) => {
   const scrollTo = document.getElementById(newUid);
 
   if (isNew && scrollTo !== null) {
-    window.scrollTo({ 
+    window.scrollTo({
       top: scrollTo.offsetHeight,
       behavior: "smooth",
     });

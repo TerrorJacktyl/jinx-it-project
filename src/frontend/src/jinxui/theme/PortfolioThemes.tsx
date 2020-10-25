@@ -13,10 +13,10 @@
  * Happy theming!
  */
 
-import React from "react";
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import BackgroundColor from "./ThemeColors";
+
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
 
@@ -27,7 +27,7 @@ const loading: Theme = createTheme({
         },
         headerBackground: {
             src: 'https://media1.giphy.com/media/ycfHiJV6WZnQDFjSWH/giphy.gif'
-        }
+        },
     }
 })
 
@@ -61,7 +61,7 @@ const magma: Theme = createTheme({
         },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
-        }
+        },
     },
 });
 
@@ -146,14 +146,86 @@ const cityscape: Theme = createTheme({
     },
 });
 
+const presentation: Theme = createTheme({
+    palette: {
+        type: "light",
+        primary: {
+            "main": "#acb6e5",
+        },
+        secondary: {
+            "main": "#86fde8",
+        },
+    },
+    typography: {
+        h1: {
+            "fontFamily": "Computer Modern Bright"
+        },
+        h2: {
+            "fontFamily": "Computer Modern Serif"
+        },
+        h3: {
+            "fontFamily": "Computer Modern Serif"
+        },
+        h5: {
+            "fontFamily": "Computer Modern Serif"
+        }
+    },
+    portfolio: {
+        theme: {
+            name: "Presentation",
+        },
+        headerBackground: {
+            src: 'https://i.imgur.com/V2aY72s.png',
+        },
+        section: {
+            css: {
+                minHeight: '100vh'
+            }
+        }
+    }
+});
+
+const rainbow: Theme = createTheme({
+    portfolio: {
+        theme: {
+            name: "Rainbow",
+        },
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+        },
+        section: {
+            colors: BackgroundColor.rainbowStep,
+        }
+    }
+});
+
+const rainbowSmooth: Theme = createTheme({
+    portfolio: {
+        theme: {
+            name: "Rainbow smooth",
+        },
+        headerBackground: {
+            src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+        },
+        section: {
+            colors: BackgroundColor.rainbowGradient,
+        }
+    }
+});
+
+
 
 // Register your theme in here - this is the object you'll access it from
-
-export const PortfolioThemes = {
+const PortfolioThemes = {
     loading: loading,
     magma: magma,
     sunset: sunset,
     lilypad: lilypad,
     autumn: autumn,
     cityscape: cityscape,
+    rainbow: rainbow,
+    rainbowSmooth: rainbowSmooth,
+    presentation: presentation,
 }
+
+export default PortfolioThemes;

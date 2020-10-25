@@ -11,6 +11,11 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       theme: {
         name: string
       },
+      section?: {
+        colors?: any
+        // Specify custom css in this sort of object
+        css?: any
+      }
     }
   }
   // allow configuration using `createMuiTheme`
@@ -22,6 +27,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       theme?: {
         name?: string
       },
+      section?: {
+        colors?: any
+        css?: any
+      }
     },
   }
 }
