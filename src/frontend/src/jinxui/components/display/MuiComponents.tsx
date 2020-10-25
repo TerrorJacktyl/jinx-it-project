@@ -157,7 +157,9 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
 
   const applyColors = (component: JSX.Element, index: number) => {
     const colors = theme.portfolio?.section?.colors || null;
-    const [backgroundColor, textColor] = colors ? colors({ theme: theme, index: index }) : [`rgba(0,0,0,0)`, theme.palette.primary.contrastText];
+    const [backgroundColor, textColor] = colors 
+    ? colors({ theme: theme, index: index }) 
+    : [`rgba(0,0,0,0)`, theme.palette.primary.contrastText];
     const customCss = theme.portfolio?.section?.css || {};
 
     return (
@@ -179,7 +181,7 @@ export const SectionGrid = ({ sections }: { sections: TSectionData[] }) => {
     <>
       <Box
         style={{
-          background: defaultColors({ theme: theme, index: 0 })[0]
+          // background: defaultColors({ theme: theme, index: 0 })[0]
         }}>
         <CentredGrid components={sections.map((section, index) => applyColors(layoutData(section), index))} />
       </Box>

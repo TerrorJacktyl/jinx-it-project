@@ -116,7 +116,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
           ></PortfolioHeader2>
           <SectionGrid2 sections={sections} />
         </ThemeProvider>
-        <Copyright text={userData.firstName} />
+        <Copyright text={author} />
       </ThemeProvider>
     </>
   );

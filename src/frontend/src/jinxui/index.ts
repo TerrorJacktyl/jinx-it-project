@@ -56,7 +56,8 @@ export {
 export {
   PortfolioHeader2,
   SectionGrid2,
-} from "./components/display/MuiComponents2"
+} from "./components/display/MuiComponents2";
+
 
 
 /* Edit */

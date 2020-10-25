@@ -15,7 +15,7 @@
 
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
-import BackgroundColor from "./ThemeColors";
+import BackgroundColor from "./ThemeColors"
 
 
 const createTheme = (theme: any) => responsiveFontSizes(createMuiTheme(theme));
@@ -32,27 +32,38 @@ const loading: Theme = createTheme({
 })
 
 const magma: Theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
     palette: {
         type: "dark",
         primary: {
-            "main": "#b71c1c",
+            "main": "#801313",
         },
         secondary: {
-            "main": "#4e342e",
+            "main": "#362420",
         },
     },
     typography: {
+        fontFamily: "Lora, serif",
+        fontSize: 24,
         h1: {
-            "fontFamily": "Kaushan Script"
+            fontFamily: "Kaushan Script, sans-serif",
+            lineHeight: 1.5,
         },
         h2: {
-            "fontFamily": "Kaushan Script"
+            fontFamily: "Kaushan Script, sans-serif"
         },
         h3: {
-            "fontFamily": "Kaushan Script"
+            fontFamily: "Kaushan Script, sans-serif",
+            lineHeight: 2.5,
         },
-        h5: {
-            "fontFamily": "open sans"
+        body1: {
+            "fontFamily": "Lora, serif"
         }
     },
     portfolio: {
@@ -62,17 +73,34 @@ const magma: Theme = createTheme({
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
         },
+        section: {
+            sectionGap: "4em",
+            titleGap: "0em",
+            colors: BackgroundColor.gradient,
+        }
     },
 });
 
 const sunset: Theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
     palette: {
         type: "light",
         primary: {
-            "main": "#ff8a65",
+            "main": "#ffa183",
         },
         secondary: {
-            "main": "#ffff8d",
+            "main": "#ffffa3",
+        },
+    },
+    typography: {
+        body1: {
+            fontSize: 22,
         },
     },
     portfolio: {
@@ -80,20 +108,36 @@ const sunset: Theme = createTheme({
             name: "Sunset",
         },
         headerBackground: {
+            isDark: true,
             src: 'https://images.unsplash.com/photo-1536890274788-51861e124205?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+        },
+        section: {
+            colors: BackgroundColor.gradient,
         }
     },
 
 });
 
 const lilypad: Theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
     palette: {
-        type: "light",
+        type: "dark",
         primary: {
-            "main": "#7da7a3",
+            "main": "#97b8b5",
         },
         secondary: {
-            "main": "#7fa56a",
+            "main": "#98b787",
+        },
+    },
+    typography: {
+        body1: {
+            fontSize: 22,
         },
     },
     portfolio: {
@@ -101,19 +145,31 @@ const lilypad: Theme = createTheme({
             name: "Lily Pad",
         },
         headerBackground: {
+            colors: BackgroundColor.gradient,
             src: 'https://images.unsplash.com/photo-1542478080-8c03409bbf22?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1265&q=80',
         }
     },
 });
 
 const autumn: Theme = createTheme({
+    breakpoints: {
+        values: {
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
     palette: {
-        type: "light",
+        type: "dark",
         primary: {
-            "main": "#76767e",
+            "main": "#919196",
         },
         secondary: {
-            "main": "#724637",
+            "main": "#8e6b5f",
+        },
+    },
+    typography: {
+        body1: {
+            fontSize: 22,
         },
     },
     portfolio: {
@@ -121,20 +177,33 @@ const autumn: Theme = createTheme({
             name: "Autumn",
         },
         headerBackground: {
+            colors: BackgroundColor.gradient,
             src: 'https://images.unsplash.com/photo-1509838174235-432f709c7bfd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
         }
     },
 });
 
 const cityscape: Theme = createTheme({
+    breakpoints: {
+        values: {
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
     palette: {
-        type: "light",
+        type: "dark",
         primary: {
-            "main": "#1D1717",
+            "main": "#4a4545",
         },
         secondary: {
-            "main": "#BA8458",
+            "main": "#c79c79",
         },
+    },
+    typography: {
+        fontSize: 22,
+        body1: {
+            fontSize: "1.5rem"
+        }
     },
     portfolio: {
         theme: {
@@ -142,32 +211,42 @@ const cityscape: Theme = createTheme({
         },
         headerBackground: {
             src: 'https://images.unsplash.com/photo-1519010470956-6d877008eaa4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=935&q=80',
+        },
+        section: {
+            colors: BackgroundColor.gradient,
         }
     },
 });
 
 const presentation: Theme = createTheme({
+    breakpoints: {
+        values: {
+            sm: 700,    // One column / two column breakpoint
+            md: 1200,   // Section width
+        }
+    },
     palette: {
-        type: "light",
+        type: "dark",
         primary: {
-            "main": "#acb6e5",
+            "main": "#bcc4ea",
         },
         secondary: {
-            "main": "#86fde8",
+            "main": "#9efdec",
         },
     },
     typography: {
+        fontSize: 22,
         h1: {
-            "fontFamily": "Computer Modern Bright"
+            fontFamily: "Computer Modern Bright"
         },
         h2: {
-            "fontFamily": "Computer Modern Serif"
+            fontFamily: "Computer Modern Serif"
         },
         h3: {
-            "fontFamily": "Computer Modern Serif"
+            fontFamily: "Computer Modern Serif"
         },
-        h5: {
-            "fontFamily": "Computer Modern Serif"
+        body1: {
+            fontFamily: "Computer Modern Serif, sans-serif"
         }
     },
     portfolio: {
@@ -175,17 +254,33 @@ const presentation: Theme = createTheme({
             name: "Presentation",
         },
         headerBackground: {
-            src: 'https://i.imgur.com/V2aY72s.png',
+            isDark: true,
+            overlayColor: "0, 0, 0, 0.0",
+            src: require("images/backgrounds/jinx_logo_bg.svg")
         },
         section: {
-            css: {
-                minHeight: '100vh'
-            }
+            sectionGap: "20rem",
+            colors: BackgroundColor.gradient,
         }
     }
 });
 
 const rainbow: Theme = createTheme({
+    breakpoints: {
+        values: {
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
+    palette: {
+        type: "dark"
+    },
+    typography: {
+        fontSize: 22,
+        body1: {
+            fontSize: "1.5rem"
+        }
+    },
     portfolio: {
         theme: {
             name: "Rainbow",
@@ -200,6 +295,21 @@ const rainbow: Theme = createTheme({
 });
 
 const rainbowSmooth: Theme = createTheme({
+    breakpoints: {
+        values: {
+            sm: 700,    // One column / two column breakpoint
+            md: 1100,   // Section width
+        }
+    },
+    palette: {
+        type: "dark"
+    },
+    typography: {
+        fontSize: 22,
+        body1: {
+            fontSize: "1.5rem"
+        }
+    },
     portfolio: {
         theme: {
             name: "Rainbow smooth",
@@ -345,6 +455,7 @@ const mountains: Theme = createTheme({
             horizontalAlign: "center",
             textAlign: "center",
             useSecondaryForSubtitle: true,
+            disableSubtitleGap: true,
         },
         section: {
             titleGap: 20,
@@ -415,7 +526,6 @@ const wave: Theme = createTheme({
             allCaps: "true",
         },
         section: {
-            solid: true,
             spacing: 7,
             titleGap: -30,
             colors: BackgroundColor.secondPrimaryColor

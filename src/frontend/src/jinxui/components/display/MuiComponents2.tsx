@@ -11,13 +11,7 @@ import {
   useTheme,
   responsiveFontSizes,
 } from "@material-ui/core/styles";
-import {
-  TSectionData,
-  TSection,
-  defaultColors,
-  SectionGrid,
-  PortfolioHeader,
-} from "jinxui";
+import { TSection, defaultColors, SectionGrid, PortfolioHeader } from "jinxui";
 
 // Markdown
 import ReactMarkdown from "react-markdown";
@@ -111,75 +105,69 @@ export function PortfolioHeader2({
 
   const isDark = headerBG.isDark ? true : false;
 
-  if (
-    !["Arch", "Mountains", "Wave", "Magma", "Rainbow smooth"].includes(theme.portfolio.theme.name)
-  ) {
-    return <PortfolioHeader title={title} subtitle={subtitle} />;
-  } else {
-    return (
-      <>
-        <BackgroundImage2 url={theme.portfolio.headerBackground.src}>
-          <ScreenBlock2>
-            <Container maxWidth="md" style={{ display: "flex" }}>
-              <Grid
-                direction="row"
-                container
-                spacing={0}
-                alignItems={verticalAlign}
-                justify={horizontalAlign}
+  const gutterBottom = header?.disableSubtitleGap ? false : true;
+
+  return (
+    <>
+      <BackgroundImage2 url={theme.portfolio.headerBackground.src}>
+        <ScreenBlock2>
+          <Container maxWidth="md" style={{ display: "flex" }}>
+            <Grid
+              direction="row"
+              container
+              spacing={0}
+              alignItems={verticalAlign}
+              justify={horizontalAlign}
+            >
+              <Box
+                padding={
+                  theme.portfolio.section?.borderPadding?.toString() + "px"
+                }
+                marginBottom={marginBottom}
+                style={headerBG.isDark === true 
+                  ? { color: theme.palette.common.white } 
+                  : headerBG.isDark === false
+                    ? { color: theme.palette.common.black } : {}}
               >
-                <Box
-                  padding={
-                    theme.portfolio.section?.borderPadding?.toString() + "px"
-                  }
-                  marginBottom={marginBottom}
-                  style={
-                    isDark ? { color: "#FFFFFF" } : {}
-                  }
+                <Typography
+                  variant="h1"
+                  align={textAlign}
+                  color="inherit"
+                  gutterBottom={gutterBottom}
+                  style={header?.allCaps ? { textTransform: "uppercase" } : {}}
                 >
-                  <Typography
-                    variant="h1"
-                    align={textAlign}
-                    color="inherit"
-                    style={
-                      header?.allCaps ? { textTransform: "uppercase" } : {}
-                    }
-                  > 
-                    {title}
-                  </Typography>
-                  <Typography
-                    variant="h3"
-                    style={header?.useSecondaryForSubtitle ? {color: theme.palette.secondary.main} : {color: "inherit"}}
-                    align={textAlign}
-                  >
-                    {subtitle}
-                  </Typography>
-                </Box>
-              </Grid>
-            </Container>
-          </ScreenBlock2>
-        </BackgroundImage2>
-      </>
-    );
-  }
+                  {title}
+                </Typography>
+                <Typography
+                  variant="h3"
+                  style={
+                    header?.useSecondaryForSubtitle
+                      ? { color: theme.palette.secondary.main }
+                      : { color: "inherit" }
+                  }
+                  align={textAlign}
+                >
+                  {subtitle}
+                </Typography>
+              </Box>
+            </Grid>
+          </Container>
+        </ScreenBlock2>
+      </BackgroundImage2>
+    </>
+  );
 }
 
 const themeColors = (theme: Theme, index: number) => {
   const colors = theme.portfolio?.section?.colors || null;
-  const [backgroundColor, textColor] = colors
+  const [backgroundColor, textColor, isFullHeight] = colors
     ? colors({ theme: theme, index: index })
     : defaultColors({ theme: theme, index: index });
-  return [backgroundColor, textColor];
+  return [backgroundColor, textColor, isFullHeight];
 };
 
 export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
   const theme = useTheme();
-
-  if (
-    !["Arch", "Mountains", "Wave", "Magma", "Rainbow smooth"].includes(theme.portfolio.theme.name)
-  ) {
-    return <SectionGrid sections={sections} />;
-  }
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
   const layoutData = (data: TSection, index?: number) => {
@@ -187,38 +175,40 @@ export const SectionGrid2 = ({ sections }: { sections: TSection[] }) => {
   };
 
   const applyColors = (component: JSX.Element, index: number) => {
-    const [backgroundColor, textColor] = themeColors(theme, index);
+    const [backgroundColor, textColor, isFullHeight] = themeColors(
+      theme,
+      index
+    );
     const customCss = theme.portfolio?.section?.css || {};
 
     return (
-      <Box
-        style={{
-          background: backgroundColor,
-        }}
-      >
-        <Container maxWidth="md">
-          <Box
-            style={{
-              ...customCss,
-              background: backgroundColor,
-              color: textColor,
-            }}
-          >
-            <Container disableGutters>{component}</Container>
-          </Box>
-        </Container>
-      </Box>
+      <>
+        <Box style={isFullHeight ? {} : { background: backgroundColor }}>
+          <Container maxWidth="md">
+            <Box
+              style={{
+                ...customCss,
+                color: textColor,
+              }}
+            >
+              <Container disableGutters>{component}</Container>
+            </Box>
+          </Container>
+        </Box>
+      </>
     );
   };
 
+  const [backgroundColor, _, isFullHeight] = themeColors(theme, 0);
+
   return (
-    <>
+    <Box style={isFullHeight ? { background: backgroundColor } : {}}>
       <CentredGrid2
         components={sections.map((section, index) =>
           applyColors(layoutData(section), index)
         )}
       />
-    </>
+    </Box>
   );
 };
 
@@ -287,7 +277,7 @@ export const Section2 = (data: TSection) => {
   const sectionTheme = theme.portfolio.section;
 
   const titleGap =
-    sectionTheme?.titleGap !== undefined ? sectionTheme.titleGap : 50;
+    sectionTheme?.titleGap !== undefined ? sectionTheme.titleGap : 0;
 
   const sectionGap =
     sectionTheme?.sectionGap !== undefined ? sectionTheme.sectionGap : "10em";
@@ -313,8 +303,7 @@ export const Section2 = (data: TSection) => {
       border = false;
   }
 
-  const [backgroundColor, textColor] = themeColors(theme, data.number);
-
+  const textColor = themeColors(theme, data.number)[1];
   return (
     <>
       <Box textAlign="left" paddingTop={sectionGap} paddingBottom={sectionGap}>

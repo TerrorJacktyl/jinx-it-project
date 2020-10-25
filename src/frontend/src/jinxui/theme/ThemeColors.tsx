@@ -4,17 +4,20 @@ import { colors } from '@material-ui/core';
 
 /** Oscillate between theme colours in the background of sections. */
 const gradient = ({ theme, index }: { theme: Theme, index: number }) => {
-    const type = theme.palette.type;
+    // const type = theme.palette.type;
+    const type = "main"
     const [first, last] = index % 2 === 0 ? ['primary', 'secondary'] : ['secondary', 'primary'];
     // Typescript doesn't like indexing by strings - it'll be okay :')
     // @ts-ignore
     const [firstColor, lastColor] = [theme.palette[first][type], theme.palette[last][type]]
     const backgroundColor = `linear-gradient(${firstColor} 0%, ${lastColor} 100%)`;
     // @ts-ignore
-    const textColor = theme.palette[first].contrastText;
+    const textColor = theme.palette.primary.contrastText;
+    const isFullHeight = true;
     return [
         backgroundColor,
-        textColor
+        textColor,
+        isFullHeight,
     ]
 }
 
@@ -25,9 +28,11 @@ export const rainbowStep = ({ index }: { index: number }) => {
 
     const backgroundColor = hues[index % hues.length]['A100'];
     const textColor = '#000';
+    const isFullHeight = false;
     return [
         backgroundColor,
-        textColor
+        textColor,
+        isFullHeight,
     ]
 }
 
@@ -35,7 +40,7 @@ export const rainbowGradient = ({ index }: { index: number }) => {
     const [firstColor, lastColor] = [hues[index % hues.length]['A100'], hues[(index + 1) % hues.length]['A100']];
     const backgroundColor = `linear-gradient(${firstColor} 0%, ${lastColor} 100%)`;
     const textColor = '#000';
-
+    const isFullHeight = "true";
     return [
         backgroundColor,
         textColor
@@ -65,7 +70,8 @@ const pickColorsBasedOnBackground = (theme: Theme, colorIndex: number) => {
     const color = colorIndex === 0 ? 'default' : 'paper';
     const backgroundColor = theme.palette.background[color];
     const textColor = theme.palette.text.primary;
-    return [backgroundColor, textColor];
+    const isFullHeight = false;
+    return [backgroundColor, textColor, isFullHeight];
 };
 
 const pickColorsBasedOnPrimarySecondary = (theme: Theme, colorIndex: number) => {
@@ -74,7 +80,8 @@ const pickColorsBasedOnPrimarySecondary = (theme: Theme, colorIndex: number) => 
     const backgroundColor = theme.palette[color].main;
     // @ts-ignore
     const textColor = theme.palette[color].contrastText;
-    return [backgroundColor, textColor]
+    const isFullHeight = false;
+    return [backgroundColor, textColor, isFullHeight]
 }
 
 
