@@ -28,7 +28,6 @@ export function ScreenBlock(props: any) {
       ? theme.portfolio.headerBackground.maxHeight
       : "100vh";
   return (
-    // <Box minHeight={`min(100vh, ${maxHeight}px)`} clone>
     <Box minHeight={`min(100vh, ${maxHeight})`} clone>
       {props.children}
     </Box>
@@ -47,7 +46,6 @@ export function BackgroundImage(props: any) {
     createStyles({
       background: {
         backgroundImage: `url(${props.url})`,
-        // background: "linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(karina-vorozheeva-rW-I87aPY5Y-unsplash)",
         backgroundColor: theme.palette.background.default,
         backgroundPosition: "center" /* Center the image */,
         backgroundRepeat: "no-repeat" /* Do not repeat the image */,

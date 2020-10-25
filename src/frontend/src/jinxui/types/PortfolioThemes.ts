@@ -15,7 +15,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
         overlayColor?: string
         // Header height will be minimum of this number and 100% view height
         maxHeight?: number
-        // Flags whether the background is dark
+        // Flags whether the background is dark (for text contrast colour)
         isDark?: boolean
       },
       header?: {
