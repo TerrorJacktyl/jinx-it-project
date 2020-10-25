@@ -26,7 +26,7 @@ const loading: Theme = createTheme({
             name: "Loading"
         },
         headerBackground: {
-            src: 'https://media1.giphy.com/media/ycfHiJV6WZnQDFjSWH/giphy.gif'
+            src: require("images/backgrounds/bg_loading_01.webp"),
         },
     }
 })
@@ -66,7 +66,8 @@ const magma: Theme = createTheme({
             lineHeight: 2.5,
         },
         body1: {
-            "fontFamily": "Lora, serif"
+            "fontFamily": "Lora, serif",
+            fontSize: 22,
         }
     },
     portfolio: {
@@ -74,7 +75,7 @@ const magma: Theme = createTheme({
             name: "Magma",
         },        
         headerBackground: {
-            src: 'https://images.unsplash.com/photo-1556139954-ec19cce61d61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+            src: require("images/backgrounds/magma_01.webp"),
         },
         section: {
             sectionGap: "4em",
@@ -114,7 +115,7 @@ const sunset: Theme = createTheme({
         },
         headerBackground: {
             isDark: true,
-            src: 'https://images.unsplash.com/photo-1536890274788-51861e124205?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+            src: require("images/backgrounds/sunset_01.webp"),
         },
         section: {
             colors: BackgroundColor.gradient,
@@ -153,8 +154,8 @@ const lilypad: Theme = createTheme({
         },
         headerBackground: {
             colors: BackgroundColor.gradient,
-            src: 'https://images.unsplash.com/photo-1542478080-8c03409bbf22?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1265&q=80',
-        }
+            src: require("images/backgrounds/lilypad_01.webp"),
+        },
     },
 });
 
@@ -188,7 +189,7 @@ const autumn: Theme = createTheme({
         },
         headerBackground: {
             colors: BackgroundColor.gradient,
-            src: 'https://images.unsplash.com/photo-1509838174235-432f709c7bfd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+            src: require("images/backgrounds/autumn_01.webp"),
         }
     },
 });
@@ -222,7 +223,7 @@ const cityscape: Theme = createTheme({
             name: "Cityscape",
         },
         headerBackground: {
-            src: 'https://images.unsplash.com/photo-1519010470956-6d877008eaa4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=935&q=80',
+            src: require("images/backgrounds/cityscape_01.webp"),
         },
         section: {
             colors: BackgroundColor.gradient,
@@ -250,7 +251,6 @@ const presentation: Theme = createTheme({
         },
     },
     typography: {
-        fontSize: 22,
         h1: {
             fontFamily: "Computer Modern Bright"
         },
@@ -294,7 +294,6 @@ const rainbow: Theme = createTheme({
         type: "dark"
     },
     typography: {
-        fontSize: 22,
         body1: {
             fontSize: "1.5rem"
         }
@@ -304,7 +303,7 @@ const rainbow: Theme = createTheme({
             name: "Rainbow",
         },
         headerBackground: {
-            src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+            src: require("images/backgrounds/rainbow_01.webp"),
         },
         section: {
             colors: BackgroundColor.rainbowStep,
@@ -326,7 +325,6 @@ const rainbowSmooth: Theme = createTheme({
         type: "dark"
     },
     typography: {
-        fontSize: 22,
         body1: {
             fontSize: "1.5rem"
         }
@@ -337,7 +335,7 @@ const rainbowSmooth: Theme = createTheme({
         },
         headerBackground: {
             isDark: true,
-            src: 'https://images.unsplash.com/photo-1529912626516-e58b23f44f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+            src: require("images/backgrounds/rainbow_01.webp"),
         },
         section: {
             colors: BackgroundColor.rainbowGradient,
