@@ -12,8 +12,6 @@ import { PrimaryMenu, DefaultSectionData } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
 
-import { v4 as uuidv4 } from "uuid";
-
 type TNewSectionMenu = {
   section: any;
   sections: any;
@@ -21,22 +19,8 @@ type TNewSectionMenu = {
   placeAbove?: boolean;
 };
 
-const HandleScroll = (isNew: any, setIsNew: any, newUid: any) => {
-  const scrollTo = document.getElementById(newUid);
-
-  if (isNew && scrollTo !== null) {
-    window.scrollTo({
-      top: scrollTo.offsetHeight,
-      behavior: "smooth",
-    });
-    setIsNew(false);
-  }
-};
-
 const NewSectionMenu = (props: TNewSectionMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [isNew, setIsNew] = React.useState(false);
-  const [newUid, setNewUid] = React.useState("");
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -68,7 +52,6 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const target_index = props.placeAbove ? index : index + 1;
     const newSection = DefaultSectionData();
     newSection.type = section_type;
-    setNewUid(newSection.uid);
 
     props.setSections((sections: any) => [
       ...sections.slice(0, target_index),
@@ -76,13 +59,11 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
       ...sections.slice(target_index),
     ]);
 
-    setIsNew(true);
-
   };
 
   return (
     <div>
-      {HandleScroll(isNew, setIsNew, newUid)}
+      {/* {HandleScroll(isNew, setIsNew, newUid)} */}
       <IconButton onClick={handleClick}>
         <AddIcon />
       </IconButton>

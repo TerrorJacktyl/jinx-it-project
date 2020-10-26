@@ -8,10 +8,9 @@ import {
   StylesProvider,
 } from "@material-ui/core";
 
-import MenuIcon from "@material-ui/icons/Menu";
+
 import {
   UserAvatarDropdown,
-  HeaderButton,
   LightHeaderGrad,
   DarkHeaderGrad,
   LogoLink,

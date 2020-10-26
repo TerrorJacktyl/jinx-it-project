@@ -6,7 +6,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveSharpIcon from '@material-ui/icons/SaveSharp';
-import { PaperSectionBase, PaperSectionDiv, PaperSectionTitle } from "jinxui";
+import { PaperSectionBase, PaperSectionDiv } from "jinxui";
 import { TEditSection } from "jinxui/types";
 
 const StyledDivOuter = styled.div`

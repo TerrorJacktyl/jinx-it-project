@@ -194,7 +194,8 @@ export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
     );
   };
 
-  const [backgroundColor, _, isFullHeight] = themeColors(theme, 0);
+  // eslint-disable-next-line
+  const [backgroundColor, _textColor, isFullHeight] = themeColors(theme, 0);
 
   return (
     <Box style={isFullHeight ? { background: backgroundColor } : {}}>

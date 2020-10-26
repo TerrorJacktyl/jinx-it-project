@@ -88,6 +88,7 @@ const PortfolioDropdown = () => {
     makePortfolioPrivate,
     getPortfolio,
   } = useUser();
+  // eslint-disable-next-line
   const [editRedirect, setEditRedirect] = useState(false);
   const [viewRedirect, setViewRedirect] = useState(false);
 

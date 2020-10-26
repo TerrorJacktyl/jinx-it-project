@@ -1,6 +1,5 @@
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { red, orange, yellow, green, cyan, lightBlue, deepPurple, purple } from '@material-ui/core/colors';
-import { colors } from '@material-ui/core';
 
 /** Oscillate between theme colours in the background of sections. */
 const gradient = ({ theme, index }: { theme: Theme, index: number }) => {
@@ -43,7 +42,8 @@ export const rainbowGradient = ({ index }: { index: number }) => {
     const isFullHeight = "true";
     return [
         backgroundColor,
-        textColor
+        textColor,
+        isFullHeight
     ]
 }
 

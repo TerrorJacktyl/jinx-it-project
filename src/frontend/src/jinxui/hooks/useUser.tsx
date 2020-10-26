@@ -1,16 +1,14 @@
 import { useContext } from "react";
 import { UserContext } from "jinxui";
 import API from "../../API";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 import {
   TPortfolio,
   TPage,
   TSection,
   TPortfolioData,
-  TPageData,
   TSectionData,
 } from "../types/PortfolioTypes";
-import { ValidationError } from "yup";
 
 /**
  * The 'user' hook
@@ -150,11 +148,20 @@ export const useUser = () => {
   }
 
   // Declaring a function as async means the return gets wrapped in a promise
-  async function uploadImage(file: File, name: string) {
+  async function uploadImage(file: File, name: string, setProgress: any) {
     const form_data = new FormData();
     form_data.append("path", file, file.name);
     form_data.append("name", name);
-    const result = API.post(IMAGES_PATH, form_data, state.config)
+
+    const local_config = {
+      ...state.config, 
+      onUploadProgress: (progressEvent:any) => {
+        const prog = Math.round(100 * progressEvent.loaded / progressEvent.total)
+        setProgress(prog)
+      }
+    }
+
+    const result = API.post(IMAGES_PATH, form_data, local_config)
       .then((response: any) => response)
       .catch((error: any) => {
         throw error;

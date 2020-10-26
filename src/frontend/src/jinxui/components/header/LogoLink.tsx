@@ -1,4 +1,3 @@
-import { LightTheme } from "jinxui/theme/GlobalTheme";
 import React from "react";
 import styled from "styled-components";
 

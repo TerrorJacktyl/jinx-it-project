@@ -8,12 +8,9 @@ import Icon from "@material-ui/core/Icon";
 import {
   SiteLayout,
   PrimaryButton,
-  SecondaryButton,
-  useUser,
   LightTheme,
   LightTitleBGGrad,
   HeaderBar,
-  Routes,
   HomeTemplates,
   HomeFooter,
 } from "jinxui";
@@ -103,7 +100,6 @@ const Gap = styled.div`
 const currentTheme = LightTheme;
 
 const Home = () => {
-  const { userData } = useUser();
   return (
     <>
       <ThemeProvider theme={currentTheme}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -8,7 +8,6 @@ import { SettingsBrightness } from "@material-ui/icons";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import TextField from "@material-ui/core/TextField";
 
@@ -25,12 +24,9 @@ import {
   Routes,
   PrimaryColumnDiv,
   ImageTextSectionInput,
-  CentredGrid,
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
-import { truncate } from "fs";
-import NotFound from "NotFound";
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -78,7 +74,6 @@ function sectionDataIsEmpty(data: any) {
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
-  const myRef = useRef<HTMLDivElement>(document.createElement("div"));
   // TEST: Remove this when we've decided on an existing portfolio check
   const existingPortfolio = true;
   const [redirect, setRedirect] = useState(false);
@@ -172,6 +167,7 @@ const Edit = () => {
       (section: TEditSection, index: number) => {
         const newSection = section;
         // Delete uid field: fear not the linting error!
+        // eslint-disable-next-line
         delete newSection.uid;
         // Overwrite the section order number
         newSection.number = index;
@@ -239,7 +235,10 @@ const Edit = () => {
     const LoadingText = ({ rows }: { rows: number }) => {
       return (
         <>
-          {[...Array(rows)].map((item: any, index: number) => <Skeleton />)}
+          {[...Array(rows)].map((item: any, index: number) => (
+              <Skeleton key={index} />
+            )
+          )}
         </>
       )
     }
@@ -259,7 +258,7 @@ const Edit = () => {
       <Grid container>
         <LoadingTitle />
         <Grid container spacing={2}>
-          <Grid item xs={6} spacing={2}>
+          <Grid item xs={6}>
             <LoadingText rows={10} />
           </Grid>
           <Grid item xs={6}>
@@ -279,7 +278,7 @@ const Edit = () => {
             <Container maxWidth='lg'>
               <Grid container spacing={5} direction="column" justify="space-evenly">
                 {[...Array(4)].map((item: any, index: number) =>
-                  <Grid item>
+                  <Grid item key={index}>
                     {index % 2 === 0 ? <LoadingTextSection /> : <LoadingMediaSection />}
                   </Grid>
                 )}
@@ -293,7 +292,7 @@ const Edit = () => {
   }
 
   const DisplaySections = () => {
-    if (sections.length == 0) {
+    if (sections.length === 0) {
       return (
         <>
           <CircularProgress />
@@ -342,10 +341,6 @@ const Edit = () => {
             return <></>;
           }
         })}
-
-        {() => (
-          window.scrollTo({ top: 3000, behavior: "smooth" }))
-        }
       </>
     );
   };
@@ -410,7 +405,7 @@ const Edit = () => {
                       color="secondary"
                     />
                   </PortfolioNameSectionInput>
-                  <DisplaySections />
+                  {DisplaySections()}
 
                   <PublishCancelDiv>
                     <PrimaryButton

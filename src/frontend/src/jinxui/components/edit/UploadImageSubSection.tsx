@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
+import LinearProgress from '@material-ui/core/LinearProgress'
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
 import { TEditSection } from "jinxui/types";
@@ -53,20 +54,24 @@ type TUploadImageSubSection = {
   section: TEditSection;
 };
 
-
-
 const UploadImageSubSection = (props: TUploadImageSubSection) => {
   const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
   const [imageExists, setImageExists] = useState(false);
   const { uploadImage } = useUser();
   const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
   const input_id = uuidv4();
+  const [progress, setProgress] = useState(0.0);
   useEffect(() => {
     if (props.section.path && props.section.path !== "") {
       setImagePath(props.section.path);
       setImageExists(true);
     }
   });
+
+  useEffect(() => {
+    console.log(progress);
+  });
+
   return (
     <>
       {/* Make a hidden upload image button here that we will use a 
@@ -82,10 +87,12 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
             if (event.currentTarget.files) {
               uploadImage(
                 event.currentTarget.files[0],
-                event.currentTarget.files[0].name
+                event.currentTarget.files[0].name,
+                setProgress
               )
                 .then((response) => {
                   setImageResponse(response.data);
+                  setProgress(0);
                   props.section.path = response.data.path;
                   props.section.image = response.data.id;
                 })
@@ -124,7 +131,11 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
             <StyledImageUploadButton />
           </ImageGridIcon>
         </ImageGrid>
-      </label>
+        { progress 
+          ? <LinearProgress variant="determinate" value={progress} />
+          : null
+        }
+        </label>
     </>
   );
 };

@@ -54,11 +54,14 @@ const Portfolio = ({ username }: PortfolioProps) => {
 
   const [author, setAuthor] = useState<string>("");
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
+  // eslint-disable-next-line
   const [pages, setPages] = useState<TPage[]>([]);
+  // eslint-disable-next-line
   const [currPage] = useState<number>(0);
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
-  const [editRedirect, setEditRedirect] = useState(false);
+  // Disabled for no, until menu reconfigured to work with redirects
+  // const [editRedirect, setEditRedirect] = useState(false);
 
   const [error, setError] = useState<boolean>(false);
 

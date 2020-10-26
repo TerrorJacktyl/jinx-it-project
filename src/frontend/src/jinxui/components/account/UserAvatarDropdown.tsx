@@ -4,13 +4,9 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MenuItem from "@material-ui/core/MenuItem";
-import Link from '@material-ui/core/Link';
-import { ThemeProvider } from "@material-ui/core/styles";
 import { Person } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SettingsIcon from "@material-ui/icons/Settings";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import { Redirect } from "react-router-dom";
 import { 
   useUser, 
@@ -18,7 +14,6 @@ import {
   HeaderButton, 
   Routes,
   HeaderMediaWidth,
-  LightTheme
 } from "jinxui";
 
 // const HEADER_MEDIA_WIDTH = "500px";
@@ -43,7 +38,7 @@ const UserAvatarDropdown = () => {
   const [open, setOpen] = React.useState(false);
   const [logoutRedirect, setLogoutRedirect] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const { userData, logout, getPortfolio } = useUser();
+  const { userData, logout } = useUser();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);

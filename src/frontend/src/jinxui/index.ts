@@ -23,8 +23,7 @@ export { default as HeaderDiv } from "./components/header/HeaderDiv";
 export { default as SiteHeader } from "./components/header/SiteHeader";
 export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
-export { HeaderBar as HeaderBar } from "./components/header/HeaderBar";
-export { HeaderMediaWidth as HeaderMediaWidth } from "./components/header/HeaderBar"
+export { HeaderBar, HeaderMediaWidth } from "./components/header/HeaderBar";
 export { default as HeaderButton } from "./components/header/HeaderButton";
 export { default as HeaderBarSpacer } from "./components/header/HeaderBarSpacer";
 
