@@ -8,6 +8,8 @@ import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveSharpIcon from '@material-ui/icons/SaveSharp';
 import { PaperSectionBase, PaperSectionDiv } from "jinxui";
 import { TEditSection } from "jinxui/types";
+import { InputAdornment } from "@material-ui/core";
+import CreateIcon from '@material-ui/icons/Create';
 
 const StyledDivOuter = styled.div`
   display: grid;
@@ -105,7 +107,16 @@ const PaperSection = (props: TPaperSection) => {
             defaultValue={props.section.name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleTitleChange(e, props.section.uid)}
             placeholder = "Section Title"
-            InputProps={{ disableUnderline: true }}
+            color="secondary"
+            InputProps={{ 
+              /*disableUnderline: false*/
+              startAdornment: (
+              <InputAdornment position="start">
+                <CreateIcon />
+              </InputAdornment>
+                )
+            }}
+            
           />
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
