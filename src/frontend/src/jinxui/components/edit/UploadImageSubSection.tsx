@@ -68,10 +68,6 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
     }
   });
 
-  useEffect(() => {
-    console.log(progress);
-  });
-
   return (
     <>
       {/* Make a hidden upload image button here that we will use a 
@@ -92,7 +88,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
               )
                 .then((response) => {
                   setImageResponse(response.data);
-                  setProgress(0);
+                  console.log(response)
                   props.section.path = response.data.path;
                   props.section.image = response.data.id;
                 })
@@ -111,6 +107,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
           <ImageGridMain>
             <UserImage
               src={imageResponse.path === "" ? imagePath : imageResponse.path}
+              onLoad={() => setProgress(0.0)}
               style={
                 imageExists
                   ? {
@@ -132,7 +129,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
           </ImageGridIcon>
         </ImageGrid>
         { progress 
-          ? <LinearProgress variant="determinate" value={progress} />
+          ? <LinearProgress variant="determinate" color="secondary" value={progress} style={{marginTop: -8}} />
           : null
         }
         </label>

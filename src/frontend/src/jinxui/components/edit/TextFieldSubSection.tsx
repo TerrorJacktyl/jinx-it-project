@@ -1,7 +1,5 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import { InputAdornment } from "@material-ui/core";
-import CreateIcon from "@material-ui/icons/Create";
 
 type TTextFieldSubSection = {
   section: any;
@@ -19,8 +17,6 @@ type TTextFieldSubSection = {
 
 const TextFieldSubSection = (props: TTextFieldSubSection) => {
   return (
-    // <div style={{display: "flex" }}>
-    //   <CreateIcon />
       <TextField
         name={props.section.uid}
         defaultValue={props.section.content}
@@ -39,7 +35,6 @@ const TextFieldSubSection = (props: TTextFieldSubSection) => {
         variant="outlined"
         color="secondary"
       />
-    // </div>
   );
 };
 

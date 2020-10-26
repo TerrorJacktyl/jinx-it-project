@@ -33,6 +33,7 @@ const StyledDivRight = styled.div`
   padding-right: 0px;
   display: flex;
   justify-content: right;
+justify-self: end;
   align-items: center;
 `;
 

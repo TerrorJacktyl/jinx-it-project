@@ -23,7 +23,7 @@ import {
 import styled from "styled-components";
 
 const HeaderMediaWidth = () => {
-  return "600px";
+  return "800px";
 };
 
 // Ensure that app bar sticks to top and sides

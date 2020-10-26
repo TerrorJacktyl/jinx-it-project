@@ -13,7 +13,7 @@ const HeaderLogo = styled.img`
 `;
 
 const LogoText = styled(HeaderLogo)`
-  @media (max-width: 480px) {
+  @media (max-width: 800px) {
     display: none;
   }
 `;
