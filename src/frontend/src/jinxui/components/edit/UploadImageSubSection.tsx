@@ -58,7 +58,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
   const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
   const [imageExists, setImageExists] = useState(false);
   const { uploadImage } = useUser();
-  const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
+  const [imageResponse, setImageResponse] = useState({ path: "", id: "null" });
   const input_id = uuidv4();
   const [progress, setProgress] = useState(0.0);
   useEffect(() => {
