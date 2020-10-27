@@ -81,18 +81,20 @@ const StyledLink = styled.a`
 
 type HeaderBarProps = {
   title?: string;
-  lightTheme: boolean;
+  darkTheme?: boolean;
   children?: React.ReactNode;
   hideLogo?: boolean;
   hideLogin? : boolean;
   hideBGLoggedOut? : boolean;
+  isUserEdit? : boolean;
+  isUserView? : boolean;
 };
 
 const HeaderBar = (props: HeaderBarProps) => {
   const { userData } = useUser();
   const trigger = useScrollTrigger();
   const headerGrad =
-    props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad;
+    props.darkTheme === true ? DarkHeaderGrad : LightHeaderGrad;
 
   return (
     <StylesProvider injectFirst>
@@ -104,7 +106,7 @@ const HeaderBar = (props: HeaderBarProps) => {
           <StyledDivOuter>
             <StyledDivLeft>
               {!props.hideLogo ? (
-                <LogoLink lightTheme={props.lightTheme} />
+                <LogoLink lightTheme={!props.darkTheme} />
               ) : null}
             </StyledDivLeft>
             <StyledDivCenter>
@@ -128,7 +130,7 @@ const HeaderBar = (props: HeaderBarProps) => {
                 </StyledLink>
               )}
               <UserAvatarDropdown />
-              <PortfolioDropdown />
+              <PortfolioDropdown isUserView={props.isUserView} />
             </StyledDivRight>
           </StyledDivOuter>
         </StyledAppBar>

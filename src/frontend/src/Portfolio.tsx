@@ -105,7 +105,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
       <CssBaseline />
       {/* Site main theme */}
       <ThemeProvider theme={LightTheme}>
-        <HeaderBar lightTheme={true} hideBGLoggedOut={true} />
+        <HeaderBar hideBGLoggedOut={true} isUserView={userData.username === username}/>
         {/* Portfolio theme */}
         <ThemeProvider theme={thisTheme}>
           <CssBaseline />

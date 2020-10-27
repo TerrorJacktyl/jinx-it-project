@@ -101,7 +101,7 @@ const Signup = () => {
       <ThemeProvider theme={LightTheme}>
         <CssBaseline />
         <AccountPageDiv>
-          <HeaderBar title="Sign Up" lightTheme={true}></HeaderBar>
+          <HeaderBar title="Sign Up"></HeaderBar>
           <FormOuterDiv>
             <div />
             <FormDiv

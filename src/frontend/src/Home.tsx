@@ -108,7 +108,7 @@ const Home = () => {
         <TopBlockDiv elevation={2} style={{ background: LightTitleBGGrad }}>
           <SiteHeader>
             <HeaderDiv>
-              <HeaderBar hideLogo title="" lightTheme={true} />
+              <HeaderBar hideLogo title="" />
             </HeaderDiv>
           </SiteHeader>
 

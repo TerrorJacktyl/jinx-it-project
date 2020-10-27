@@ -272,7 +272,7 @@ const Edit = () => {
       <>
         <ThemeProvider theme={appliedTheme}>
           <CssBaseline />
-          <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()} />
+          <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()} />
           <PrimaryColumnDiv>
             <div />
             <Container maxWidth='lg'>
@@ -357,7 +357,7 @@ const Edit = () => {
       (
         <>
           <ThemeProvider theme={appliedTheme}>
-            <HeaderBar title="Edit" lightTheme={getSavedLightThemeMode()}>
+            <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()}>
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {

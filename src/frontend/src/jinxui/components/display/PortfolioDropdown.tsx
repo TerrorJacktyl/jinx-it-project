@@ -79,7 +79,7 @@ const ThemeMenuItem = (props: TThemeMenu) => {
 
 type TPortfolioMenu = {
   isUserView?: boolean;
-  isUserEdot?: boolean;
+  isUserEdit?: boolean;
 }
 const PortfolioDropdown = (props: TPortfolioMenu) => {
   const [open, setOpen] = React.useState(false);
@@ -129,7 +129,6 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
       if (prevOpen.current === true && open === false) {
         anchorRef.current!.focus();
       }
-
       prevOpen.current = open;
     } catch {}
   }, [open]);
@@ -158,22 +157,34 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
   };
 
   const onView = () => {
-    setOpen(false);
-    setViewRedirect(false);
+    // setOpen(false);
+    // setViewRedirect(false);
+    console.log("ON VIEW")
     return (
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
   };
 
   React.useEffect(() => {
+    let isMounted = true;
     if (userData.authenticated) {
       const fetchPrivacy = async () => {
-        const portfolio = await getPortfolio(userData.portfolioId);
-        setIsPrivate(portfolio.private);
+        getPortfolio(userData.portfolioId)
+          .then((response: any) => {
+            if(isMounted) {
+              setIsPrivate(response.private);
+            }
+          })
+          .catch((error: any) => {
+            console.log(error)
+          })
       };
       fetchPrivacy();
+    };
+    return () => {
+      isMounted = false;
     }
-  });
+  }, []);
 
   const handleMakePublic = () => {
     setOpen(false);
@@ -202,6 +213,8 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
     const path = process.env.REACT_APP_FRONT_URL + "u/" + userData.username;
     navigator.clipboard.writeText(path);
   };
+
+  const view_disabled = props.isUserView !== undefined;
 
   if (editRedirect) {
     return onEdit();
@@ -248,20 +261,20 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
             </Link>
 
             {/* View */}
-
+{/* 
             <Link
               color="inherit"
               underline="none"
               href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
-            >
-              {/* <MenuItem onClick={() => {setViewRedirect(true);}}> */}
-              <MenuItem>
+            > */}
+              <MenuItem onClick={() => {setViewRedirect(true);}} disabled={view_disabled}>
+              {/* <MenuItem disabled={view_disabled}> */}
                 <ListItemIcon>
                   <VisibilityIcon />
                 </ListItemIcon>
                 <ListItemText primary="View" />
               </MenuItem>
-            </Link>
+            {/* </Link> */}
 
             {/* Themes toggle */}
 
