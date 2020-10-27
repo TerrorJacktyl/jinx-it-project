@@ -76,7 +76,12 @@ const ThemeMenuItem = (props: TThemeMenu) => {
   }
 };
 
-const PortfolioDropdown = () => {
+
+type TPortfolioMenu = {
+  isUserView?: boolean;
+  isUserEdot?: boolean;
+}
+const PortfolioDropdown = (props: TPortfolioMenu) => {
   const [open, setOpen] = React.useState(false);
   const [themeOpen, themeSetOpen] = React.useState(false);
   const [isPrivate, setIsPrivate] = React.useState(false);
@@ -227,6 +232,8 @@ const PortfolioDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
+            {/* Edit */}
+
             <Link color="inherit" underline="none" href={Routes.PORTFOLIO_EDIT}>
               {/* Ideally use redirect instead of href if we can solve 
                   'menu disappearing' issue (#45)
@@ -239,6 +246,9 @@ const PortfolioDropdown = () => {
                 <ListItemText primary="Edit" />
               </MenuItem>
             </Link>
+
+            {/* View */}
+
             <Link
               color="inherit"
               underline="none"
@@ -252,6 +262,9 @@ const PortfolioDropdown = () => {
                 <ListItemText primary="View" />
               </MenuItem>
             </Link>
+
+            {/* Themes toggle */}
+
             <MenuItem onClick={handleThemeToggle}>
               <ListItemIcon>
                 <InvertColorsIcon />
@@ -259,6 +272,9 @@ const PortfolioDropdown = () => {
               <ListItemText primary="Themes" />
               {themeOpen ? <ExpandLess /> : <ExpandMore />}
             </MenuItem>
+
+            {/* Themes */}
+
             <Collapse in={themeOpen} timeout="auto" unmountOnExit>
               {Object.values(PortfolioThemes).map((theme: Theme) => (
                 <ThemeMenuItem
@@ -268,12 +284,18 @@ const PortfolioDropdown = () => {
                 />
               ))}
             </Collapse>
+
+            {/* Share Link */}
+
             <MenuItem onClick={handleShareLink}>
               <ListItemIcon>
                 <ShareIcon />
               </ListItemIcon>
               <ListItemText primary="Copy Link" />
             </MenuItem>
+
+            {/* Make public / private */}
+
             <MenuItem
               onClick={isPrivate ? handleMakePublic : handleMakePrivate}
             >

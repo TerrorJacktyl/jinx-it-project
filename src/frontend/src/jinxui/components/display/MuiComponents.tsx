@@ -215,7 +215,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
   return (
     <Grid container spacing={0}>
       {components.map((component, index) => (
-        <Grid item xs={12} key={index} spacing={0}>
+        <Grid item xs={12} key={index} >
           {component}
         </Grid>
       ))}
@@ -332,7 +332,7 @@ export const Section = (data: TSection) => {
             ) : null}
             {data.content ? (
               <Grid item xs={12} sm={colsPerItem}>
-                <Typography variant="body1" style={{ marginTop: "-25px" }}>
+                <Typography variant="body1" style={{ marginTop: "-25px" }} component="span">
                   <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                     {data.content}
                   </ReactMarkdown>
