@@ -46,16 +46,151 @@ const StyledInnerName = styled.div`
   }
 `;
 
+type TEditMenuItem = {
+  edit_disabled: boolean;
+};
+
+const EditMenuItem = React.forwardRef((props: TEditMenuItem, ref: any) => {
+  const [editRedirect, setEditRedirect] = useState(false);
+
+  const onEdit = () => {
+    // At the moment, this fails if a portfolio hasn't been created yet.
+    return (
+      <>
+        <Redirect to={Routes.PORTFOLIO_EDIT} />
+      </>
+    );
+  };
+
+  if (editRedirect) {
+    return onEdit();
+  } else {
+    return (
+      <>
+        <MenuItem
+          ref={ref}
+          onClick={() => {
+            setEditRedirect(true);
+          }}
+          disabled={props.edit_disabled}
+        >
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          <ListItemText primary="Edit" />
+        </MenuItem>
+      </>
+    );
+  }
+});
+
+type TViewMenuItem = {
+  view_disabled: boolean;
+  edit_disabled: boolean;
+};
+
+const ViewMenuItem = React.forwardRef((props: TViewMenuItem, ref: any) => {
+  const { userData } = useUser();
+  const [viewRedirect, setViewRedirect] = useState(false);
+
+  const onView = () => {
+    return (
+      <>
+        <Redirect
+          to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
+        />
+      </>
+    );
+  };
+
+  if (props.view_disabled || props.edit_disabled) {
+    if (viewRedirect) {
+      return onView();
+    } else {
+      return (
+        <>
+          <MenuItem
+            ref={ref}
+            onClick={() => {
+              setViewRedirect(true);
+            }}
+            disabled={props.view_disabled}
+          >
+            <ListItemIcon>
+              <VisibilityIcon />
+            </ListItemIcon>
+            <ListItemText primary="View" />
+          </MenuItem>
+        </>
+      );
+    }
+  } else {
+    return (
+      <Link
+        color="inherit"
+        underline="none"
+        href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
+      >
+        <MenuItem>
+          <ListItemIcon>
+            <VisibilityIcon />
+          </ListItemIcon>
+          <ListItemText primary="View" />
+        </MenuItem>
+      </Link>
+    );
+  }
+});
+
+type TThemeSelectorToggle = {
+  rest_disabled: boolean;
+  handleThemeToggle: any;
+  themeOpen: boolean;
+};
+const ThemeSelectorToggle = React.forwardRef(
+  (props: TThemeSelectorToggle, ref: any) => (
+    <MenuItem
+      ref={ref}
+      onClick={props.handleThemeToggle}
+      disabled={props.rest_disabled}
+    >
+      <ListItemIcon>
+        <InvertColorsIcon />
+      </ListItemIcon>
+      <ListItemText primary="Themes" />
+      {props.themeOpen ? <ExpandLess /> : <ExpandMore />}
+    </MenuItem>
+  )
+);
+
+type TThemeMenuItems = {
+  themeOpen: any;
+  setOpen: any;
+};
+const ThemeMenuItems = React.forwardRef((props: TThemeMenuItems, ref: any) => (
+  <Collapse in={props.themeOpen} timeout="auto" unmountOnExit>
+    {Object.values(PortfolioThemes).map((theme: Theme) => (
+      <ThemeMenuItem
+        ref={ref}
+        key={theme.portfolio.theme.name}
+        theme={theme}
+        setOpen={props.setOpen}
+      />
+    ))}
+  </Collapse>
+));
+
 type TThemeMenu = {
   theme: Theme;
   setOpen: any;
 };
-const ThemeMenuItem = (props: TThemeMenu) => {
+const ThemeMenuItem = React.forwardRef((props: TThemeMenu, ref: any) => {
   const { setTheme, userData } = useUser();
 
   if (props.theme.portfolio.theme.name !== "Loading") {
     return (
       <MenuItem
+        ref={ref}
         onClick={() => {
           props.setOpen(false);
           setTheme(userData.portfolioId, props.theme.portfolio.theme.name);
@@ -74,196 +209,169 @@ const ThemeMenuItem = (props: TThemeMenu) => {
   } else {
     return null;
   }
+});
+
+type TShareMenuItem = {
+  handleShareLink: any;
+  rest_disabled: boolean;
+};
+const ShareMenuItem = React.forwardRef((props: TShareMenuItem, ref: any) => (
+  <MenuItem
+    ref={ref}
+    onClick={props.handleShareLink}
+    disabled={props.rest_disabled}
+  >
+    <ListItemIcon>
+      <ShareIcon />
+    </ListItemIcon>
+    <ListItemText primary="Copy Link" />
+  </MenuItem>
+));
+
+type TPrivateMenuItem = {
+  setOpen: any;
+  rest_disabled: boolean;
 };
 
-type TViewMenuItem = {
-  view_disabled: boolean;
-  edit_disabled: boolean;
-  setViewRedirect: any;
-};
+const PrivacyMenuItem = React.forwardRef(
+  (props: TPrivateMenuItem, ref: any) => {
+    const { userData, makePortfolioPrivate, makePortfolioPublic, getPortfolio } = useUser();
+    const [isPrivate, setIsPrivate] = React.useState(false);
 
-const ViewMenuItem = (props: TViewMenuItem) => {
-  const { userData } = useUser();
+    const handleMakePublic = () => {
+      props.setOpen(false);
+      makePortfolioPublic(userData.portfolioId)
+        .then((response: any) => {
+          if(response)
+          {
+            setIsPrivate(response.data.private);
+          }
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+    };
 
-  if (props.view_disabled || props.edit_disabled) {
+    const handleMakePrivate = () => {
+      props.setOpen(false);
+      makePortfolioPrivate(userData.portfolioId)
+        .then((response: any) => {
+          if (response) {
+            setIsPrivate(response.data.private);
+          }
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+    };
+
+    React.useEffect(() => {
+      let isMounted = true;
+      if (userData.authenticated) {
+        const fetchPrivacy = async () => {
+          getPortfolio(userData.portfolioId)
+            .then((response: any) => {
+              if (isMounted) {
+                setIsPrivate(response.private);
+              }
+            })
+            .catch((error: any) => {
+              console.log(error);
+            });
+        };
+        fetchPrivacy();
+      }
+      return () => {
+        isMounted = false;
+      };
+    }, []);
+
     return (
-      <>
-        <MenuItem
-          onClick={() => {
-            props.setViewRedirect(true);
-          }}
-          disabled={props.view_disabled}
-        >
-          <ListItemIcon>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText primary="View" />
-        </MenuItem>
-      </>
-    );
-  } else {
-    return (
-      <Link
-        color="inherit"
-        underline="none"
-        href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
+      <MenuItem
+        ref={ref}
+        onClick={isPrivate ? handleMakePublic : handleMakePrivate}
+        disabled={props.rest_disabled}
       >
-        <MenuItem>
-          <ListItemIcon>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText primary="View" />
-        </MenuItem>
-      </Link>
+        <ListItemIcon>
+          {isPrivate ? <LockIcon /> : <LockOpenIcon />}
+        </ListItemIcon>
+        <ListItemText primary={isPrivate ? "Make Public" : "Make Private"} />
+      </MenuItem>
     );
   }
-};
+);
 
 type TPortfolioMenu = {
   isUserView?: boolean;
   isUserEdit?: boolean;
 };
-const PortfolioDropdown = (props: TPortfolioMenu) => {
-  const [open, setOpen] = React.useState(false);
-  const [themeOpen, themeSetOpen] = React.useState(false);
-  const [isPrivate, setIsPrivate] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
-  const {
-    userData,
-    makePortfolioPublic,
-    makePortfolioPrivate,
-    getPortfolio,
-  } = useUser();
-  // eslint-disable-next-line
-  const [editRedirect, setEditRedirect] = useState(false);
-  const [viewRedirect, setViewRedirect] = useState(false);
+const PortfolioDropdown = React.forwardRef(
+  (props: TPortfolioMenu, ref: any) => {
+    const [open, setOpen] = React.useState(false);
+    const [themeOpen, themeSetOpen] = React.useState(false);
+    const anchorRef = React.useRef<HTMLButtonElement>(null);
+    const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
+    const { userData } = useUser();
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleThemeToggle = () => {
-    themeSetOpen((themePrevOpen) => !themePrevOpen);
-  };
-
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-    setOpen(false);
-  };
-
-  function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
-
-  // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    try {
-      if (prevOpen.current === true && open === false) {
-        anchorRef.current!.focus();
-      }
-      prevOpen.current = open;
-    } catch {}
-  }, [open]);
-
-  // return focus to the button when we transitioned from !open -> open
-  const themePrevOpen = React.useRef(themeOpen);
-  React.useEffect(() => {
-    try {
-      if (themePrevOpen.current === true && themeOpen === false) {
-        themeAnchorRef.current!.focus();
-      }
-
-      themePrevOpen.current = themeOpen;
-    } catch {}
-  }, [themeOpen]);
-
-  const onEdit = () => {
-    // At the moment, this fails if a portfolio hasn't been created yet.
-    return (
-      <>
-        <Redirect to={Routes.PORTFOLIO_EDIT} />
-      </>
-    );
-  };
-
-  const onView = () => {
-    return (
-      <>
-        <Redirect
-          to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
-        />
-      </>
-    );
-  };
-
-  React.useEffect(() => {
-    let isMounted = true;
-    if (userData.authenticated) {
-      const fetchPrivacy = async () => {
-        getPortfolio(userData.portfolioId)
-          .then((response: any) => {
-            if (isMounted) {
-              setIsPrivate(response.private);
-            }
-          })
-          .catch((error: any) => {
-            console.log(error);
-          });
-      };
-      fetchPrivacy();
-    }
-    return () => {
-      isMounted = false;
+    const handleToggle = () => {
+      setOpen((prevOpen) => !prevOpen);
     };
-  }, []);
 
-  const handleMakePublic = () => {
-    setOpen(false);
-    makePortfolioPublic(userData.portfolioId)
-      .then((response: any) => {
-        setIsPrivate(response.data.private);
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
-  };
+    const handleThemeToggle = () => {
+      themeSetOpen((themePrevOpen) => !themePrevOpen);
+    };
 
-  const handleMakePrivate = () => {
-    setOpen(false);
-    makePortfolioPrivate(userData.portfolioId)
-      .then((response: any) => {
-        setIsPrivate(response.data.private);
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
-  };
+    const handleClose = (event: React.MouseEvent<EventTarget>) => {
+      if (
+        anchorRef.current &&
+        anchorRef.current.contains(event.target as HTMLElement)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
 
-  const handleShareLink = () => {
-    setOpen(false);
-    const path = process.env.REACT_APP_FRONT_URL + "u/" + userData.username;
-    navigator.clipboard.writeText(path);
-  };
+    function handleListKeyDown(event: React.KeyboardEvent) {
+      if (event.key === "Tab") {
+        event.preventDefault();
+        setOpen(false);
+      }
+    }
 
-  const view_disabled = props.isUserView === true;
-  const edit_disabled = props.isUserEdit === true;
-  const rest_disabled = props.isUserView !== true && props.isUserEdit !== true;
+    // return focus to the button when we transitioned from !open -> open
+    const prevOpen = React.useRef(open);
+    React.useEffect(() => {
+      try {
+        if (prevOpen.current === true && open === false) {
+          anchorRef.current!.focus();
+        }
+        prevOpen.current = open;
+      } catch {}
+    }, [open]);
 
-  if (editRedirect) {
-    return onEdit();
-  } else if (viewRedirect) {
-    return onView();
-  } else {
+    // return focus to the button when we transitioned from !open -> open
+    const themePrevOpen = React.useRef(themeOpen);
+    React.useEffect(() => {
+      try {
+        if (themePrevOpen.current === true && themeOpen === false) {
+          themeAnchorRef.current!.focus();
+        }
+
+        themePrevOpen.current = themeOpen;
+      } catch {}
+    }, [themeOpen]);
+
+    const handleShareLink = () => {
+      setOpen(false);
+      const path = process.env.REACT_APP_FRONT_URL + "u/" + userData.username;
+      navigator.clipboard.writeText(path);
+    };
+
+    const view_disabled = props.isUserView === true;
+    const edit_disabled = props.isUserEdit === true;
+    const rest_disabled =
+      props.isUserView !== true && props.isUserEdit !== true;
+
     return (
       <DivWrapper>
         {userData.username ? (
@@ -288,77 +396,31 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
-            {/* Edit */}
-
-            <MenuItem
-              onClick={() => {
-                setEditRedirect(true);
-              }}
-              disabled={edit_disabled}
-            >
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              <ListItemText primary="Edit" />
-            </MenuItem>
-
-            {/* View */}
+            <EditMenuItem edit_disabled={edit_disabled} />
 
             <ViewMenuItem
               view_disabled={view_disabled}
               edit_disabled={edit_disabled}
-              setViewRedirect={setViewRedirect}
             />
 
-            {/* Themes toggle */}
+            <ThemeSelectorToggle
+              handleThemeToggle={handleThemeToggle}
+              rest_disabled={rest_disabled}
+              themeOpen={themeOpen}
+            />
 
-            <MenuItem onClick={handleThemeToggle} disabled={rest_disabled}>
-              <ListItemIcon>
-                <InvertColorsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Themes" />
-              {themeOpen ? <ExpandLess /> : <ExpandMore />}
-            </MenuItem>
+            <ThemeMenuItems themeOpen={themeOpen} setOpen={setOpen} />
 
-            {/* Themes */}
-
-            <Collapse in={themeOpen} timeout="auto" unmountOnExit>
-              {Object.values(PortfolioThemes).map((theme: Theme) => (
-                <ThemeMenuItem
-                  key={theme.portfolio.theme.name}
-                  theme={theme}
-                  setOpen={setOpen}
-                />
-              ))}
-            </Collapse>
-
-            {/* Share Link */}
-
-            <MenuItem onClick={handleShareLink} disabled={rest_disabled}>
-              <ListItemIcon>
-                <ShareIcon />
-              </ListItemIcon>
-              <ListItemText primary="Copy Link" />
-            </MenuItem>
-
-            {/* Make public / private */}
-
-            <MenuItem
-              onClick={isPrivate ? handleMakePublic : handleMakePrivate}
-              disabled={rest_disabled}
-            >
-              <ListItemIcon>
-                {isPrivate ? <LockIcon /> : <LockOpenIcon />}
-              </ListItemIcon>
-              <ListItemText
-                primary={isPrivate ? "Make Public" : "Make Private"}
-              />
-            </MenuItem>
+            <ShareMenuItem
+              rest_disabled={rest_disabled}
+              handleShareLink={handleShareLink}
+            />
+            <PrivacyMenuItem setOpen={setOpen} rest_disabled={rest_disabled} />
           </PrimaryMenu>
         </ClickAwayListener>
       </DivWrapper>
     );
   }
-};
+);
 
 export default PortfolioDropdown;
