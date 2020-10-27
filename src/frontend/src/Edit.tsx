@@ -6,10 +6,12 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Skeleton from '@material-ui/lab/Skeleton';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
+import Skeleton from "@material-ui/lab/Skeleton";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
+import { InputAdornment } from "@material-ui/core";
+import CreateIcon from "@material-ui/icons/Create";
 
 import {
   LightTheme,
@@ -231,17 +233,15 @@ const Edit = () => {
   };
 
   const LoadingSections = (props: any) => {
-
     const LoadingText = ({ rows }: { rows: number }) => {
       return (
         <>
           {[...Array(rows)].map((item: any, index: number) => (
-              <Skeleton key={index} />
-            )
-          )}
+            <Skeleton key={index} />
+          ))}
         </>
-      )
-    }
+      );
+    };
 
     const LoadingTitle = () => <Skeleton width="40%" height="4em" />;
 
@@ -252,7 +252,7 @@ const Edit = () => {
         <LoadingTitle />
         <LoadingText rows={5} />
       </Grid>
-    )
+    );
 
     const LoadingMediaSection = () => (
       <Grid container>
@@ -266,7 +266,7 @@ const Edit = () => {
           </Grid>
         </Grid>
       </Grid>
-    )
+    );
 
     return (
       <>
@@ -275,21 +275,30 @@ const Edit = () => {
           <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()} />
           <PrimaryColumnDiv>
             <div />
-            <Container maxWidth='lg'>
-              <Grid container spacing={5} direction="column" justify="space-evenly">
-                {[...Array(4)].map((item: any, index: number) =>
+            <Container maxWidth="lg">
+              <Grid
+                container
+                spacing={5}
+                direction="column"
+                justify="space-evenly"
+              >
+                {[...Array(4)].map((item: any, index: number) => (
                   <Grid item key={index}>
-                    {index % 2 === 0 ? <LoadingTextSection /> : <LoadingMediaSection />}
+                    {index % 2 === 0 ? (
+                      <LoadingTextSection />
+                    ) : (
+                      <LoadingMediaSection />
+                    )}
                   </Grid>
-                )}
+                ))}
               </Grid>
               <div />
             </Container>
           </PrimaryColumnDiv>
         </ThemeProvider>
       </>
-    )
-  }
+    );
+  };
 
   const DisplaySections = () => {
     if (sections.length === 0) {
@@ -345,92 +354,109 @@ const Edit = () => {
     );
   };
 
-
   if (redirect) {
     return (
       <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
     );
     // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
   } else if (
-    portfolio !== null && pages.length !== 0 && sections.length !== 0) {
+    portfolio !== null &&
+    pages.length !== 0 &&
+    sections.length !== 0
+  ) {
     return (
-      (
-        <>
-          <ThemeProvider theme={appliedTheme}>
-            <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()} isUserEdit={true}>
-              <Button
-                style={{ height: "100%", borderRadius: 0 }}
-                onClick={() => {
-                  switchLightThemeMode().then((response) => { });
-                }}
-                color="inherit"
-              >
-                <SettingsBrightness />
-              </Button>
-            </HeaderBar>
-            <CssBaseline />
-            <PrimaryColumnDiv>
-              <div></div>
-              <div>
-                <FormTitle>Enter your information</FormTitle>
-                <form>
-                  <PortfolioNameSectionInput
-                    title={""} // A title here would be confusing
-                  >
-                    <TextField
-                      name={"portfolioName"}
-                      label={"Portfolio Name"}
-                      defaultValue={portfolio.name}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        var newPortfolio = portfolio;
-                        newPortfolio.name = e.target.value;
-                        setPortfolio(newPortfolio);
-                      }}
-                      id="standard-full-width"
-                      fullWidth
-                      color="secondary"
-                    />
-                    <TextField
-                      // TODO: Display and change the current page name when multiple pages are added
-                      name={"pageName"}
-                      label={"Page Name"}
-                      defaultValue={pages[0].name}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        var newPages = pages;
-                        newPages[0].name = e.target.value;
-                        setPages(newPages);
-                      }}
-                      id="standard-full-width"
-                      fullWidth
-                      color="secondary"
-                    />
-                  </PortfolioNameSectionInput>
-                  {DisplaySections()}
+      <>
+        <ThemeProvider theme={appliedTheme}>
+          <HeaderBar
+            title="Edit"
+            darkTheme={!getSavedLightThemeMode()}
+            isUserEdit={true}
+          >
+            <Button
+              style={{ height: "100%", borderRadius: 0 }}
+              onClick={() => {
+                switchLightThemeMode().then((response) => {});
+              }}
+              color="inherit"
+            >
+              <SettingsBrightness />
+            </Button>
+          </HeaderBar>
+          <CssBaseline />
+          <PrimaryColumnDiv>
+            <div></div>
+            <div>
+              <FormTitle>Enter your information</FormTitle>
+              <form>
+                <PortfolioNameSectionInput
+                  title={""} // A title here would be confusing
+                >
+                  <TextField
+                    name={"portfolioName"}
+                    label={"Portfolio Name"}
+                    defaultValue={portfolio.name}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      var newPortfolio = portfolio;
+                      newPortfolio.name = e.target.value;
+                      setPortfolio(newPortfolio);
+                    }}
+                    id="standard-full-width"
+                    fullWidth
+                    color="secondary"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <CreateIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    // TODO: Display and change the current page name when multiple pages are added
+                    name={"pageName"}
+                    label={"Page Name"}
+                    defaultValue={pages[0].name}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      var newPages = pages;
+                      newPages[0].name = e.target.value;
+                      setPages(newPages);
+                    }}
+                    id="standard-full-width"
+                    fullWidth
+                    color="secondary"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <CreateIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </PortfolioNameSectionInput>
+                {DisplaySections()}
 
-                  <PublishCancelDiv>
-                    <PrimaryButton
-                      onClick={() => {
-                        handlePublishAndRedirect();
-                      }}
-                    >
-                      PUBLISH
-                      </PrimaryButton>
-                    <a href={Routes.HOME}>
-                      <SecondaryButton>Cancel</SecondaryButton>
-                    </a>
-                  </PublishCancelDiv>
-                </form>
-              </div>
-              <div></div>
-            </PrimaryColumnDiv>
-          </ThemeProvider>
-        </>
-      )
+                <PublishCancelDiv>
+                  <PrimaryButton
+                    onClick={() => {
+                      handlePublishAndRedirect();
+                    }}
+                  >
+                    PUBLISH
+                  </PrimaryButton>
+                  <a href={Routes.HOME}>
+                    <SecondaryButton>Cancel</SecondaryButton>
+                  </a>
+                </PublishCancelDiv>
+              </form>
+            </div>
+            <div></div>
+          </PrimaryColumnDiv>
+        </ThemeProvider>
+      </>
     );
   } else {
     return <LoadingSections />;
   }
 };
-
 
 export default Edit;
