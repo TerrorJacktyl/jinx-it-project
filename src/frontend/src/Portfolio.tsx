@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
-import Container from "@material-ui/core/Container";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 
@@ -15,8 +13,8 @@ import {
   SectionGrid,
   PortfolioHeader,
   PortfolioThemes,
-  Routes,
 } from "jinxui";
+
 import NotFound from "./NotFound";
 const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
   const theme_name =
@@ -97,22 +95,24 @@ const Portfolio = ({ username }: PortfolioProps) => {
     );
   }
 
+  const thisTheme = getTheme(portfolio, userData, username);
+
   return (
     <>
       <CssBaseline />
       {/* Site main theme */}
       <ThemeProvider theme={LightTheme}>
-        {/* {userData.authenticated ? <HeaderBar lightTheme={true} /> : null} */}
         <HeaderBar lightTheme={true} hideBGLoggedOut={true} />
         {/* Portfolio theme */}
-        <ThemeProvider theme={getTheme(portfolio, userData, username)}>
+        <ThemeProvider theme={thisTheme}>
+          <CssBaseline />
           <PortfolioHeader
             title={portfolio?.name}
             subtitle={author}
           ></PortfolioHeader>
           <SectionGrid sections={sections} />
         </ThemeProvider>
-        <Copyright text={userData.firstName} />
+        <Copyright text={author} />
       </ThemeProvider>
     </>
   );
