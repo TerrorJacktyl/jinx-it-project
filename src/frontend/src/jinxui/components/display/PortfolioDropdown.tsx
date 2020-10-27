@@ -76,11 +76,53 @@ const ThemeMenuItem = (props: TThemeMenu) => {
   }
 };
 
+type TViewMenuItem = {
+  view_disabled: boolean;
+  edit_disabled: boolean;
+  setViewRedirect: any;
+};
+
+const ViewMenuItem = (props: TViewMenuItem) => {
+  const { userData } = useUser();
+
+  if (props.view_disabled || props.edit_disabled) {
+    return (
+      <>
+        <MenuItem
+          onClick={() => {
+            props.setViewRedirect(true);
+          }}
+          disabled={props.view_disabled}
+        >
+          <ListItemIcon>
+            <VisibilityIcon />
+          </ListItemIcon>
+          <ListItemText primary="View" />
+        </MenuItem>
+      </>
+    );
+  } else {
+    return (
+      <Link
+        color="inherit"
+        underline="none"
+        href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
+      >
+        <MenuItem>
+          <ListItemIcon>
+            <VisibilityIcon />
+          </ListItemIcon>
+          <ListItemText primary="View" />
+        </MenuItem>
+      </Link>
+    );
+  }
+};
 
 type TPortfolioMenu = {
   isUserView?: boolean;
   isUserEdit?: boolean;
-}
+};
 const PortfolioDropdown = (props: TPortfolioMenu) => {
   const [open, setOpen] = React.useState(false);
   const [themeOpen, themeSetOpen] = React.useState(false);
@@ -146,22 +188,21 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
   }, [themeOpen]);
 
   const onEdit = () => {
-    // setOpen(false)
     // At the moment, this fails if a portfolio hasn't been created yet.
     return (
       <>
         <Redirect to={Routes.PORTFOLIO_EDIT} />
-        {/* {setEditRedirect(false)} */}
       </>
     );
   };
 
   const onView = () => {
-    // setOpen(false);
-    // setViewRedirect(false);
-    console.log("ON VIEW")
     return (
-      <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
+      <>
+        <Redirect
+          to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
+        />
+      </>
     );
   };
 
@@ -171,19 +212,19 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
       const fetchPrivacy = async () => {
         getPortfolio(userData.portfolioId)
           .then((response: any) => {
-            if(isMounted) {
+            if (isMounted) {
               setIsPrivate(response.private);
             }
           })
           .catch((error: any) => {
-            console.log(error)
-          })
+            console.log(error);
+          });
       };
       fetchPrivacy();
-    };
+    }
     return () => {
       isMounted = false;
-    }
+    };
   }, []);
 
   const handleMakePublic = () => {
@@ -214,7 +255,9 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
     navigator.clipboard.writeText(path);
   };
 
-  const view_disabled = props.isUserView !== undefined;
+  const view_disabled = props.isUserView === true;
+  const edit_disabled = props.isUserEdit === true;
+  const rest_disabled = props.isUserView !== true && props.isUserEdit !== true;
 
   if (editRedirect) {
     return onEdit();
@@ -247,38 +290,29 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
           >
             {/* Edit */}
 
-            <Link color="inherit" underline="none" href={Routes.PORTFOLIO_EDIT}>
-              {/* Ideally use redirect instead of href if we can solve 
-                  'menu disappearing' issue (#45)
-              */}
-              {/* <MenuItem onClick={() => {setEditRedirect(true);}}> */}
-              <MenuItem>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText primary="Edit" />
-              </MenuItem>
-            </Link>
+            <MenuItem
+              onClick={() => {
+                setEditRedirect(true);
+              }}
+              disabled={edit_disabled}
+            >
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText primary="Edit" />
+            </MenuItem>
 
             {/* View */}
-{/* 
-            <Link
-              color="inherit"
-              underline="none"
-              href={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username}
-            > */}
-              <MenuItem onClick={() => {setViewRedirect(true);}} disabled={view_disabled}>
-              {/* <MenuItem disabled={view_disabled}> */}
-                <ListItemIcon>
-                  <VisibilityIcon />
-                </ListItemIcon>
-                <ListItemText primary="View" />
-              </MenuItem>
-            {/* </Link> */}
+
+            <ViewMenuItem
+              view_disabled={view_disabled}
+              edit_disabled={edit_disabled}
+              setViewRedirect={setViewRedirect}
+            />
 
             {/* Themes toggle */}
 
-            <MenuItem onClick={handleThemeToggle}>
+            <MenuItem onClick={handleThemeToggle} disabled={rest_disabled}>
               <ListItemIcon>
                 <InvertColorsIcon />
               </ListItemIcon>
@@ -300,7 +334,7 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
 
             {/* Share Link */}
 
-            <MenuItem onClick={handleShareLink}>
+            <MenuItem onClick={handleShareLink} disabled={rest_disabled}>
               <ListItemIcon>
                 <ShareIcon />
               </ListItemIcon>
@@ -311,6 +345,7 @@ const PortfolioDropdown = (props: TPortfolioMenu) => {
 
             <MenuItem
               onClick={isPrivate ? handleMakePublic : handleMakePrivate}
+              disabled={rest_disabled}
             >
               <ListItemIcon>
                 {isPrivate ? <LockIcon /> : <LockOpenIcon />}

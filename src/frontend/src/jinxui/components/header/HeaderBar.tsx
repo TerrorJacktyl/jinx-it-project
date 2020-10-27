@@ -130,7 +130,7 @@ const HeaderBar = (props: HeaderBarProps) => {
                 </StyledLink>
               )}
               <UserAvatarDropdown />
-              <PortfolioDropdown isUserView={props.isUserView} />
+              <PortfolioDropdown isUserView={props.isUserView} isUserEdit={props.isUserEdit} />
             </StyledDivRight>
           </StyledDivOuter>
         </StyledAppBar>

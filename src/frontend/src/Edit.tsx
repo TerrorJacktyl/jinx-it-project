@@ -357,7 +357,7 @@ const Edit = () => {
       (
         <>
           <ThemeProvider theme={appliedTheme}>
-            <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()}>
+            <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()} isUserEdit={true}>
               <Button
                 style={{ height: "100%", borderRadius: 0 }}
                 onClick={() => {
