@@ -301,13 +301,6 @@ const Edit = () => {
   };
 
   const DisplaySections = () => {
-    if (sections.length === 0) {
-      return (
-        <>
-          <CircularProgress />
-        </>
-      );
-    }
     return (
       <>
         {sections.map((section: TEditSection) => {
