@@ -253,52 +253,67 @@ export const useUser = () => {
     }
   }
 
-  /* Should only be used for CREATION of a new portfolio. Only handles the posting of a 
-     new portfolio with a single page at the moment. Change sections type to TSections[][] 
-     when multpile pages are accounted for */
-  // TODO: Fix the types
-  async function postFullPortfolio(
+
+  async function sendFullPortfolio(
     portfolio: any,
     pages: any[],
-    sections: any[]
+    sections: any[],
+    existingPortfolio: boolean
   ) {
+    const isNew = !existingPortfolio
     try {
-      const portfolioResp = await postPortfolio(portfolio);
-      const pageResp = await postPage(portfolioResp.id, pages[0]);
-      const sectionResp = await putSections(
-        portfolioResp.id,
-        pageResp.id,
-        sections
-      );
-      // Assures redirection to the newly created portfolio
-      await savePortfolioId(parseInt(portfolioResp.id));
-      return { portfolioResp, pageResp, sectionResp };
+      const portfolioResp = isNew 
+      ? await postPortfolio(portfolio) 
+      : await putPortfolio(portfolio)
+      const pageResp = isNew
+        ? await postPage(portfolioResp.id, pages[0])
+        : await putPage(portfolio.id, pages[0])
+      const sectionResp = isNew
+        ? await putSections(portfolioResp.id, pageResp.id, sections)
+        : await putSections(portfolio.id, pages[0].id, sections)
+      // Assure redirection to newly created portfolio
+      if (isNew) { await savePortfolioId(parseInt(portfolioResp.id)); }
+      return { portfolioResp, pageResp, sectionResp, existingPortfolio };
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
-  /* Should only be used for UPDATING an existing portoflio. Only handles a single page
-     at the moment, use pages.forEach to put the page and its corresponding sections later */
-  // TODO: Fix types and refactor to try catch
-  async function putFullPortfolio(
-    portfolio: any,
-    pages: any[],
-    sections: any[]
-  ) {
-    try {
-      const portfolioResp = await putPortfolio(portfolio);
-      const pageResp = await putPage(portfolio.id, pages[0]);
-      const sectionsResp = await putSections(
-        portfolio.id,
-        pages[0].id,
-        sections
-      );
-      return { portfolioResp, pageResp, sectionsResp };
-    } catch (e) {
-      throw e;
-    }
-  }
+
+  // async function postFullPortfolio(
+  //   portfolio: any,
+  //   pages: any[],
+  //   sections: any[]
+  // ) {
+  //   try {
+  //     const portfolioResp = await postPortfolio(portfolio);
+  //     const pageResp = await postPage(portfolioResp.id, pages[0]);
+  //     const sectionResp = await putSections(portfolioResp.id, pageResp.id, sections);
+  //     // Assures redirection to the newly created portfolio
+  //     await savePortfolioId(parseInt(portfolioResp.id));
+  //     return { portfolioResp, pageResp, sectionResp };
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
+
+  // /* Should only be used for UPDATING an existing portoflio. Only handles a single page
+  //    at the moment, use pages.forEach to put the page and its corresponding sections later */
+  // // TODO: Fix types and refactor to try catch
+  // async function putFullPortfolio(
+  //   portfolio: any,
+  //   pages: any[],
+  //   sections: any[]
+  // ) {
+  //   try {
+  //     const portfolioResp = await putPortfolio(portfolio);
+  //     const pageResp = await putPage(portfolio.id, pages[0]);
+  //     const sectionsResp = await putSections(portfolio.id, pages[0].id, sections);
+  //     return { portfolioResp, pageResp, sectionsResp };
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
 
   /**
    * Update the logged in user's account details.
@@ -583,8 +598,7 @@ export const useUser = () => {
     putPortfolio,
     putPage,
     putSections,
-    postFullPortfolio,
-    putFullPortfolio,
+    sendFullPortfolio,
     getPortfolios,
     getPortfolio,
     getPages,

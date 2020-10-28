@@ -10,6 +10,8 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import { InputAdornment } from "@material-ui/core";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
@@ -43,6 +45,10 @@ const PublishCancelDiv = styled.div`
   padding: 5px;
 `;
 
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 /*  Was used in formik, but is redundant now. Will leave in as a 
     basis for touched and error checking if we implement it in the future 
     (commented out to prevent linting warnings 
@@ -70,17 +76,62 @@ function sectionDataIsEmpty(data: any) {
 }
 */
 
+type TSaveAlert = {
+  errorMessage: string;
+  setErrorMessage: any;
+  successMessage: string;
+  setSuccessMessage: any;
+};
+
+const SaveAlert = (props: TSaveAlert) => {
+  const handleErrorClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setErrorMessage("");
+  };
+
+  const handleSuccessClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    props.setSuccessMessage("");
+  };
+
+  return (
+    <>
+      <Snackbar
+        open={props.successMessage !== ""}
+        autoHideDuration={2000}
+        onClose={handleSuccessClose}
+      >
+        <Alert onClose={handleSuccessClose} severity="success">
+          {props.successMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={props.errorMessage !== ""}
+        autoHideDuration={6000}
+        onClose={handleErrorClose}
+      >
+        <Alert onClose={handleErrorClose} severity="error">
+          {props.errorMessage}
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
 // const scrollToRef = (ref: any) => window.scrollTo({top: 100})
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
   // TEST: Remove this when we've decided on an existing portfolio check
-  const existingPortfolio = true;
+  const portfolioExists = true;
   const [redirect, setRedirect] = useState(false);
   const {
-    postFullPortfolio,
-    putFullPortfolio,
+    sendFullPortfolio,
     getFullPortfolio,
     getSavedPortfolioId,
     userData,
@@ -88,6 +139,7 @@ const Edit = () => {
     getSavedLightThemeMode,
     makePortfolioPublic,
   } = useUser();
+
   // const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(
     getSavedLightThemeMode() ? LightTheme : DarkTheme
@@ -95,12 +147,15 @@ const Edit = () => {
   const [portfolio, setPortfolio] = useState<TPortfolio>(null);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TEditSection[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   // Call useEffect to fetch an existing portfolio's data
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
       // OK to get saved portfolioId from context rather then fetching from backend
       // as primary_portfolio is fetched upon login
       const portfolioId = await getSavedPortfolioId();
+      console.log(portfolioId);
       const { portfolio, pages, sections } = await getFullPortfolio(
         portfolioId
       );
@@ -115,7 +170,7 @@ const Edit = () => {
       setSections(IdSections);
     };
 
-    if (existingPortfolio) {
+    if (portfolioExists) {
       fetchExistingPortfolio();
     } else {
       const newPortfolio = { name: "" } as TPortfolio;
@@ -189,32 +244,39 @@ const Edit = () => {
   /** Save the currently edited page to the backend without redirecting. */
   const handleSave = () => {
     const sections = cleanedSections();
-    if (existingPortfolio) {
-      putFullPortfolio(portfolio, pages, sections);
-    } else {
-      postFullPortfolio(portfolio, pages, sections);
-    }
+    sendFullPortfolio(portfolio, pages, sections, portfolioExists)
+      .then((response: any) => {
+        console.log(response)
+        console.log("RESPNEDE")
+        setSuccessMessage("Portfolio saved");
+      })
+      .catch(() => {
+        setErrorMessage("Unable to save portfolio, something went wrong");
+      });
   };
 
   const handleMakePublic = () => {
-    makePortfolioPublic(userData.portfolioId).catch((error: any) => {
-      console.log(error);
+    makePortfolioPublic(userData.portfolioId).catch(() => {
+      setErrorMessage("Something went wrong, unable to make portfolio public")
     });
   };
+
+  // const handleMakePublic = () => {
+  //   makePortfolioPublic(userData.portfolioId).then(()=> {
+  //     setSuccessMessage("Portfolio is now public")
+  //   }).catch(() => {
+  //     setErrorMessage("Something went wrong, unable to make portfolio public")
+  //   });
+  // };
 
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
     handleMakePublic();
     const sections = cleanedSections();
-    if (existingPortfolio) {
-      putFullPortfolio(portfolio, pages, sections).then(() =>
-        setRedirect(true)
-      );
-    } else {
-      postFullPortfolio(portfolio, pages, sections).then(() =>
-        setRedirect(true)
-      );
-    }
+    // if (portfolioExists) {
+    sendFullPortfolio(portfolio, pages, sections, portfolioExists).then(() =>
+      setRedirect(true)
+    );
   };
 
   const sectionIsNotBlank = (section: TEditSection) => {
@@ -358,6 +420,12 @@ const Edit = () => {
   ) {
     return (
       <>
+        <SaveAlert
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+          successMessage={successMessage}
+          setSuccessMessage={setSuccessMessage}
+        />
         <ThemeProvider theme={appliedTheme}>
           <HeaderBar
             title="Edit"
