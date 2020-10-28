@@ -60,10 +60,10 @@ Sashcha:
   * Maintain a minimum of two meetings per week.
   * Directly contact team members that we are blocked on.
   * Create accessible documentation for inexperienced team members (i.e. make it easy for front-end members to test and run backend features).
-  * Hang out in the Discord voice channels when we’re working.|
+  * Hang out in the Discord voice channels when we’re working.
 * Documentation 
   * Maintain sufficient (but not excessive) detail for mutual understanding in documentation. 
-  * Update documentation at all levels of abstraction (i.e. update both technical instructions and subtle points of user stories)|
+  * Update documentation at all levels of abstraction (i.e. update both technical instructions and subtle points of user stories).
 * Development  
   * Continue to prioritise development best practices (testing, automating technical bottlenecks when they appear rather than ignoring them, testing) alongside active use cases.
   * Develop features to completion, and don’t spread out development among many features.

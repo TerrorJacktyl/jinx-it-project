@@ -1,9 +1,9 @@
 # Sprint 2
 
 ## Planning
+*Please consult the Product Backlog for features complete with user stories AND acceptance criteria. Planning was done before the making the restructuring of our Product Backlog, so user stories are included here.*
 
 #### User Stories
-*Please consult the Product Backlog for features complete with user stories AND acceptance criteria*
 * As a professional, I want to view my portfolio so that I can admire or edit its presentation. 
 * As a professional, I want to add images to my portfolio so that I can display a photo of myself or my work.
 * As a professional, I want the edit page to look acceptable on a variety of screen sizes so that I can edit my portfolio from my phone or computer.
@@ -41,7 +41,7 @@
 
 
 ## Review
-*Item numbers correspond the items in our full Product Backlog*
+*Item numbers correspond to the items in our full Product Backlog*
 
 #### What was completed from the backlog
 * Display user portfolio content (item 1.3)
