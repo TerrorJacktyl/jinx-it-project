@@ -327,12 +327,13 @@ export const Section = (data: TSection) => {
                   src={data.path == null ? "" : data.path}
                   alt={data.alt}
                   className={classes.img}
+                  style={{marginTop: "25px"}} // compensate for markdown
                 />
               </Grid>
             ) : null}
             {data.content ? (
               <Grid item xs={12} sm={colsPerItem}>
-                <Typography variant="body1" style={{ marginTop: "-25px" }} component="span">
+                <Typography variant="body1" component="span">
                   <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                     {data.content}
                   </ReactMarkdown>

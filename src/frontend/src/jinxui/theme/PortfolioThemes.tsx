@@ -508,7 +508,7 @@ const wave: Theme = createTheme({
         h1: {
             fontFamily: "Poppins, sans-serif",
             fontWeight: 700,
-            fontSize: "4.2rem",
+            fontSize: "3.3rem",
             letterSpacing: "0.25rem",
             lineHeight: 1.2,
         },
