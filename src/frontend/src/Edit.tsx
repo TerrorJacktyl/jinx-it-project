@@ -10,8 +10,7 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import { InputAdornment } from "@material-ui/core";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
@@ -27,6 +26,7 @@ import {
   Routes,
   PrimaryColumnDiv,
   ImageTextSectionInput,
+  SnackbarAlert,
 } from "jinxui";
 
 import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
@@ -45,9 +45,7 @@ const PublishCancelDiv = styled.div`
   padding: 5px;
 `;
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+
 
 /*  Was used in formik, but is redundant now. Will leave in as a 
     basis for touched and error checking if we implement it in the future 
@@ -75,52 +73,6 @@ function sectionDataIsEmpty(data: any) {
   );
 }
 */
-
-type TSaveAlert = {
-  errorMessage: string;
-  setErrorMessage: any;
-  successMessage: string;
-  setSuccessMessage: any;
-};
-
-const SaveAlert = (props: TSaveAlert) => {
-  const handleErrorClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    props.setErrorMessage("");
-  };
-
-  const handleSuccessClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    props.setSuccessMessage("");
-  };
-
-  return (
-    <>
-      <Snackbar
-        open={props.successMessage !== ""}
-        autoHideDuration={2000}
-        onClose={handleSuccessClose}
-      >
-        <Alert onClose={handleSuccessClose} severity="success">
-          {props.successMessage}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={props.errorMessage !== ""}
-        autoHideDuration={6000}
-        onClose={handleErrorClose}
-      >
-        <Alert onClose={handleErrorClose} severity="error">
-          {props.errorMessage}
-        </Alert>
-      </Snackbar>
-    </>
-  );
-};
 
 // const scrollToRef = (ref: any) => window.scrollTo({top: 100})
 
@@ -155,7 +107,6 @@ const Edit = () => {
       // OK to get saved portfolioId from context rather then fetching from backend
       // as primary_portfolio is fetched upon login
       const portfolioId = await getSavedPortfolioId();
-      console.log(portfolioId);
       const { portfolio, pages, sections } = await getFullPortfolio(
         portfolioId
       );
@@ -246,8 +197,6 @@ const Edit = () => {
     const sections = cleanedSections();
     sendFullPortfolio(portfolio, pages, sections, portfolioExists)
       .then((response: any) => {
-        console.log(response)
-        console.log("RESPNEDE")
         setSuccessMessage("Portfolio saved");
       })
       .catch(() => {
@@ -420,7 +369,7 @@ const Edit = () => {
   ) {
     return (
       <>
-        <SaveAlert
+        <SnackbarAlert
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
           successMessage={successMessage}

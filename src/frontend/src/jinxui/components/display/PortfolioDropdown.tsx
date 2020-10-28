@@ -27,6 +27,7 @@ import {
   PrimaryMenu,
   Routes,
   PortfolioThemes,
+  SnackbarAlert,
 } from "jinxui";
 
 const DivWrapper = styled.div`
@@ -213,13 +214,14 @@ const ThemeMenuItem = React.forwardRef((props: TThemeMenu, ref: any) => {
 
 type TShareMenuItem = {
   handleShareLink: any;
+  isPrivate: boolean;
   rest_disabled: boolean;
 };
 const ShareMenuItem = React.forwardRef((props: TShareMenuItem, ref: any) => (
   <MenuItem
     ref={ref}
     onClick={props.handleShareLink}
-    disabled={props.rest_disabled}
+    disabled={props.rest_disabled || props.isPrivate}
   >
     <ListItemIcon>
       <ShareIcon />
@@ -231,24 +233,33 @@ const ShareMenuItem = React.forwardRef((props: TShareMenuItem, ref: any) => (
 type TPrivateMenuItem = {
   setOpen: any;
   rest_disabled: boolean;
+  isPrivate: boolean;
+  setIsPrivate: any;
+  setSuccessMessage: any;
+  setErrorMessage: any;
 };
 
 const PrivacyMenuItem = React.forwardRef(
   (props: TPrivateMenuItem, ref: any) => {
-    const { userData, makePortfolioPrivate, makePortfolioPublic, getPortfolio } = useUser();
-    const [isPrivate, setIsPrivate] = React.useState(false);
+    const {
+      userData,
+      makePortfolioPrivate,
+      makePortfolioPublic,
+      getPortfolio,
+    } = useUser();
 
     const handleMakePublic = () => {
       props.setOpen(false);
       makePortfolioPublic(userData.portfolioId)
-        .then((response: any) => {
-          if(response)
-          {
-            setIsPrivate(response.data.private);
+      .then((response: any) => {
+        props.setSuccessMessage("Portfolio is now public")
+          if (response) {
+            props.setIsPrivate(response.data.private);
           }
         })
         .catch((error: any) => {
           console.log(error);
+          props.setErrorMessage("Unable to set portfolio to private, something went wrong")
         });
     };
 
@@ -256,11 +267,13 @@ const PrivacyMenuItem = React.forwardRef(
       props.setOpen(false);
       makePortfolioPrivate(userData.portfolioId)
         .then((response: any) => {
+          props.setSuccessMessage("Portfolio is now private")
           if (response) {
-            setIsPrivate(response.data.private);
+            props.setIsPrivate(response.data.private);
           }
         })
         .catch((error: any) => {
+          props.setErrorMessage("Unable to set portfolio to private, something went wrong")
           console.log(error);
         });
     };
@@ -272,7 +285,7 @@ const PrivacyMenuItem = React.forwardRef(
           getPortfolio(userData.portfolioId)
             .then((response: any) => {
               if (isMounted) {
-                setIsPrivate(response.private);
+                props.setIsPrivate(response.private);
               }
             })
             .catch((error: any) => {
@@ -289,13 +302,13 @@ const PrivacyMenuItem = React.forwardRef(
     return (
       <MenuItem
         ref={ref}
-        onClick={isPrivate ? handleMakePublic : handleMakePrivate}
+        onClick={props.isPrivate ? handleMakePublic : handleMakePrivate}
         disabled={props.rest_disabled}
       >
         <ListItemIcon>
-          {isPrivate ? <LockIcon /> : <LockOpenIcon />}
+          {props.isPrivate ? <LockIcon /> : <LockOpenIcon />}
         </ListItemIcon>
-        <ListItemText primary={isPrivate ? "Make Public" : "Make Private"} />
+        <ListItemText primary={props.isPrivate ? "Make Public" : "Make Private"} />
       </MenuItem>
     );
   }
@@ -309,6 +322,9 @@ const PortfolioDropdown = React.forwardRef(
   (props: TPortfolioMenu, ref: any) => {
     const [open, setOpen] = React.useState(false);
     const [themeOpen, themeSetOpen] = React.useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [isPrivate, setIsPrivate] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
     const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
     const { userData } = useUser();
@@ -365,6 +381,7 @@ const PortfolioDropdown = React.forwardRef(
       setOpen(false);
       const path = process.env.REACT_APP_FRONT_URL + "u/" + userData.username;
       navigator.clipboard.writeText(path);
+      setSuccessMessage("Portfolio link copied to clipboard")
     };
 
     const view_disabled = props.isUserView === true;
@@ -373,6 +390,13 @@ const PortfolioDropdown = React.forwardRef(
       props.isUserView !== true && props.isUserEdit !== true;
 
     return (
+      <>
+        <SnackbarAlert
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+          successMessage={successMessage}
+          setSuccessMessage={setSuccessMessage}
+        />
       <DivWrapper>
         {userData.username ? (
           <StyledName
@@ -413,12 +437,21 @@ const PortfolioDropdown = React.forwardRef(
 
             <ShareMenuItem
               rest_disabled={rest_disabled}
+              isPrivate={isPrivate}
               handleShareLink={handleShareLink}
             />
-            <PrivacyMenuItem setOpen={setOpen} rest_disabled={rest_disabled} />
+            <PrivacyMenuItem
+              setOpen={setOpen}
+              rest_disabled={rest_disabled}
+              isPrivate={isPrivate}
+              setIsPrivate={setIsPrivate}
+              setSuccessMessage={setSuccessMessage}
+              setErrorMessage={setErrorMessage}
+            />
           </PrimaryMenu>
         </ClickAwayListener>
       </DivWrapper>
+      </>
     );
   }
 );

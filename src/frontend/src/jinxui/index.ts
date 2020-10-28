@@ -13,6 +13,7 @@ export { default as FormSectionsDiv } from "./components/form/FormSectionDiv";
 export { default as SiteLayout } from "./components/site/SiteLayout";
 export { default as PrimaryColumnDiv } from "./components/site/PrimaryColumnDiv";
 export { default as PrimaryMenu } from "./components/site/PrimaryMenu";
+export { default as SnackbarAlert } from "./components/site/SnackbarAlert"; 
 
 /* Button */
 export { PrimaryButton } from "./components/button/Button";
