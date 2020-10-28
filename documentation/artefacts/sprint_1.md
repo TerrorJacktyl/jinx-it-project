@@ -2,16 +2,15 @@
 
 ## Planning
 
-### User Stories
-Developed based on interview with client
-
-### Personas
+#### Personas
 |User|Description|
 |----|----------|
 |Max |Wants to build an ePortfolio to aid with job-seeking and to keep a personal record of their achievements.
 |Sascha|A recruiter who wants to assess Max as a candidate for their company using Max’s ePortfolio.
 
-### Stories
+#### Stories
+These were developed based on our interview with the client.
+
 Max:
 * I want to display the work I’m proud of so others can easily recognise my achievements.
 * I want creating and editing my portfolio to be as easy as possible, especially if I’m new to the service.
@@ -24,13 +23,13 @@ Sashcha:
 * I want to easily be able to access any other information I want when landing on a new person’s page.
 * I want the navigation to be clear and fast so I don't waste asny time.
 
-### Product Backlog
+#### Product Backlog
 * As a website user, I want to be able to create a secure account.
 * As a website member, I want to be able to access my personal portfolio site easily.
 * As a website member, I want to be guided through the steps of setting up a web page.
 * As user I want the default template to look good and be well layed out.
 
-### Sprint Backlog
+#### Sprint Backlog
 * Create rudementary API for a very simple website that makes use of React and Django --*assigned to Jack and Giles*.
 * Deploy a simple Django website to the digital ocean server. Ensure it is using Docker --*assigned to John*.
 * Create a website that makes use of Django and React that allows new users to be created --*assigned to Nima and Kevin*.
@@ -38,7 +37,8 @@ Sashcha:
 * Investigate the use of Swagger for documentation --*assigned to Kevin*.
 
 ## Sprint Review
-What was completed from the backlog:
+
+#### What was completed from the backlog:
 * Sign up and login page (no user authentication)
 * Rudimentary backend
 * Basic Portfolio Creation Page
@@ -47,14 +47,15 @@ What was completed from the backlog:
   * NGINX and server have both been set up
 * Figma mockup/wireframe of basic pages
 
-What wasn't completed from the backlog:
+#### What wasn't completed from the backlog:
 * Portfolio display page 
 
-Review of key merics:
+#### Review of key merics:
 * Backlog items weren't atomic enough, we need to split these tasks up more
 
 ## Sprint Retrospective
-What went well?
+
+#### What went well?
 * Team communication 
   * Maintain a minimum of two meetings per week.
   * Directly contact team members that we are blocked on.
@@ -67,7 +68,7 @@ What went well?
   * Continue to prioritise development best practices (testing, automating technical bottlenecks when they appear rather than ignoring them, testing) alongside active use cases.
   * Develop features to completion, and don’t spread out development among many features.
 
-What could be improved upon?
+#### What could be improved upon?
 * Allocating and designing tasks 
   * During sprint 1, our to-dos arose iteratively from our team meetings, as we didn’t have a very detailed list of tasks from the beginning (this was largely due to the technical inexperience of the team). Having each built a solid technical base, we are capable of and should properly envision our tasks at the beginning of each future sprint.
   * We also didn’t make use of story points and detailed acceptance criteria for our tasks, which made it difficult to discern whether we were ‘done’ with them. We should include this structure in future tasks.
