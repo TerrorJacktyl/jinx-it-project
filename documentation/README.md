@@ -15,8 +15,8 @@ Sprint artefacts in accordance with SCRUM methodology:
 * Screenshots of our Trello board throughout the semester, documenting our workflow
 * Personas
 * Notes from our meetings with the client
-* Terminology Document
-* Figma mockups of our UI design
+* Wireframes/Figma mockups of our UI design
+* **TODO**: Product Backlog, Glossary if we still have it, all client meeting notes once final meeting is finished 
 
 Guides to assist with our development:
 * Git usage and preferred protocols

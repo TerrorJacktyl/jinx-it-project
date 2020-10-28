@@ -36,7 +36,7 @@ Sashcha:
 * Create a mockup of the four basic pages (home, new user, portfolio information, personal portfolio) using Figma --*assigned to John*.
 * Investigate the use of Swagger for documentation --*assigned to Kevin*.
 
-## Sprint Review
+## Review
 
 #### What was completed from the backlog:
 * Sign up and login page (no user authentication)
@@ -50,12 +50,12 @@ Sashcha:
 #### What wasn't completed from the backlog:
 * Portfolio display page 
 
-#### Review of key merics:
+#### Review of key metrics:
 * Backlog items weren't atomic enough, we need to split these tasks up more
 
-## Sprint Retrospective
+## Retrospective
 
-#### What went well?
+#### What went well, and how can we keep it up?
 * Team communication 
   * Maintain a minimum of two meetings per week.
   * Directly contact team members that we are blocked on.
@@ -68,7 +68,7 @@ Sashcha:
   * Continue to prioritise development best practices (testing, automating technical bottlenecks when they appear rather than ignoring them, testing) alongside active use cases.
   * Develop features to completion, and don’t spread out development among many features.
 
-#### What could be improved upon?
+#### What could be improved upon, and what do we need to do to improve?
 * Allocating and designing tasks 
   * During sprint 1, our to-dos arose iteratively from our team meetings, as we didn’t have a very detailed list of tasks from the beginning (this was largely due to the technical inexperience of the team). Having each built a solid technical base, we are capable of and should properly envision our tasks at the beginning of each future sprint.
   * We also didn’t make use of story points and detailed acceptance criteria for our tasks, which made it difficult to discern whether we were ‘done’ with them. We should include this structure in future tasks.
