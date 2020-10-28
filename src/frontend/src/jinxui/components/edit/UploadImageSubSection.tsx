@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
-import LinearProgress from '@material-ui/core/LinearProgress'
+import LinearProgress from "@material-ui/core/LinearProgress";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
 import { TEditSection } from "jinxui/types";
@@ -80,7 +80,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
           multiple
           type="file"
           onChange={(event) => {
-            if (event.currentTarget.files) {
+            if (event.currentTarget.files && event.currentTarget.files[0]) {
               uploadImage(
                 event.currentTarget.files[0],
                 event.currentTarget.files[0].name,
@@ -88,7 +88,6 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
               )
                 .then((response) => {
                   setImageResponse(response.data);
-                  console.log(response)
                   props.section.path = response.data.path;
                   props.section.image = response.data.id;
                 })
@@ -109,7 +108,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
               src={imageResponse.path === "" ? imagePath : imageResponse.path}
               onLoad={() => setProgress(0.0)}
               style={
-                imageExists
+                imageExists && progress === 0.0
                   ? {
                       opacity: "100%",
                       padding: 0,
@@ -121,18 +120,22 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
               }
             />
           </ImageGridMain>
-          <StyledImageUploadOverlay elevation={0} square>
+          <StyledImageUploadOverlay elevation={0} square style={progress ? {display: "none"} : {}}>
             Upload Image
           </StyledImageUploadOverlay>
           <ImageGridIcon>
             <StyledImageUploadButton />
           </ImageGridIcon>
         </ImageGrid>
-        { progress 
-          ? <LinearProgress variant="determinate" color="secondary" value={progress} style={{marginTop: -8}} />
-          : null
-        }
-        </label>
+        {progress ? (
+          <LinearProgress
+            variant="determinate"
+            color="secondary"
+            value={progress}
+            style={{ marginTop: -8 }}
+          />
+        ) : null}
+      </label>
     </>
   );
 };

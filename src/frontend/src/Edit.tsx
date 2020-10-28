@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Button, CssBaseline } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";

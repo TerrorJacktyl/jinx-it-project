@@ -21,7 +21,7 @@ const TextFieldSubSection = (props: TTextFieldSubSection) => {
         name={props.section.uid}
         defaultValue={props.section.content}
         placeholder={
-          "Prove you have some level of creativity, write something interesting..."
+          "Start writing..."
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           props.handleChange(e, props.section.uid)

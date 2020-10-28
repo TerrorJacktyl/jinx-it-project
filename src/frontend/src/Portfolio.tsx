@@ -60,6 +60,7 @@ const SkeletonPage = () => (
           width={600}
           height={100}
           style={{ marginBottom: 30 }}
+          animation="wave"
         />
         <Skeleton
           variant="rect"
@@ -91,8 +92,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
   const [currPage] = useState<number>(0);
   // Define as TSection[][] when incorporating multiple pages
   const [sections, setSections] = useState<TSection[]>([]);
-  // Disabled for no, until menu reconfigured to work with redirects
-  // const [editRedirect, setEditRedirect] = useState(false);
 
   const [error, setError] = useState<boolean>(false);
 
