@@ -21,7 +21,12 @@ const TextFieldSubSection = (props: TTextFieldSubSection) => {
         name={props.section.uid}
         defaultValue={props.section.content}
         placeholder={
-          "Start writing..."
+          "Start writing...\n\n"
+          + "Markdown formatting accepted \n"
+          + "  - This displays as a dot point\n"
+          + "**This displays in bold**\n"
+          + "*This displays in italics*\n"
+          + "[This displays as a link](https://app.jinx.systems/)"
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           props.handleChange(e, props.section.uid)
