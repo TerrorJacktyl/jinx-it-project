@@ -16,8 +16,6 @@ import {
   HeaderMediaWidth,
 } from "jinxui";
 
-// const HEADER_MEDIA_WIDTH = "500px";
-
 const StyledName = styled(HeaderButton)`
   font-size: 20px;
   text-transform: none;

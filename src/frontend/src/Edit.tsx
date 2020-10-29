@@ -11,8 +11,6 @@ import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import { InputAdornment } from "@material-ui/core";
-import { StylesProvider } from "@material-ui/core/styles";
-
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
