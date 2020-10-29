@@ -1,0 +1,32 @@
+version: "3"
+services:
+  nginx:
+    build: .
+    container_name: nginx
+    volumes:
+      # where the SSL certificates are stored
+      - "/etc/letsencrypt:/etc/letsencrypt:ro"
+      # place to put tokens used for the acme challenge
+      - "/var/www/_letsencrypt:/var/www/_letsencrypt:ro"
+      # logging
+      - "/var/log/nginx:/var/log/nginx"
+    networks:
+      - br_codimd
+      - br_django
+      - br_internet
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+networks:
+  # communication with upstream servers
+  br_codimd:
+    external:
+      name: br_codimd
+  br_django:
+    external:
+      name: br_django
+  # access to internet
+  br_internet:
+    external:
+      name: br_internet
