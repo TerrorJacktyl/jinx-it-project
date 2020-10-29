@@ -21,7 +21,10 @@ import {
 const StyledName = styled(HeaderButton)`
   font-size: 20px;
   text-transform: none;
-  padding: 0px 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 10px;
+  padding-right: 10px
 `;
 
 const StyledInnerName = styled.div`
