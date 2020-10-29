@@ -430,9 +430,7 @@ const Edit = () => {
                     label={"Portfolio Name"}
                     defaultValue={portfolio.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      // var newPortfolio = portfolio;
-                      // newPortfolio.name = e.target.value;
-                      // setPortfolio(newPortfolio);
+
                       setPortfolio({
                         ...portfolio,
                         name: e.target.value,
@@ -449,27 +447,6 @@ const Edit = () => {
                       ),
                     }}
                   />
-                  {/* <TextField
-                    // TODO: Display and change the current page name when multiple pages are added
-                    name={"pageName"}
-                    label={"Page Name"}
-                    defaultValue={pages[0].name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      var newPages = pages;
-                      newPages[0].name = e.target.value;
-                      setPages(newPages);
-                    }}
-                    id="standard-full-width"
-                    fullWidth
-                    color="secondary"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <CreateIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  /> */}
                 </PortfolioNameSectionInput>
                 {DisplaySections()}
 
