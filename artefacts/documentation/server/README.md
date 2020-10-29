@@ -1,8 +1,12 @@
 # Server Setup
 
+This is the current server setup.
+You can follow this to setup your deployment in a similar fashion.
+However, if you wish to deploy the codebase to a new infrastructure, follow [this guide](./fresh_deploy.md).
+
 For more details, there are additional documentation files in the subdirectories and comments in the configuration files.
 
-The files here are only for documentation, it may not reflect the current server setup.
+The files here are only for documentation, it may be out of sync with the current server setup.
 
 ## File System
 
