@@ -21,11 +21,11 @@ const TextFieldSubSection = (props: TTextFieldSubSection) => {
         name={props.section.uid}
         defaultValue={props.section.content}
         placeholder={
-          "Start writing...\n\n"
-          + "Markdown formatting accepted \n"
-          + "  - This displays as a dot point\n"
-          + "**This displays in bold**\n"
-          + "*This displays in italics*\n"
+          "Start writing...\n\n\n"
+          + "You can use markdown to format your text. \n\n"
+          + "  - This displays as a dot point\n\n"
+          + "**This displays in bold**\n\n"
+          + "*This displays in italics*\n\n"
           + "[This displays as a link](https://app.jinx.systems/)"
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
