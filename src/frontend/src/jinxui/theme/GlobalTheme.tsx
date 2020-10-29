@@ -74,6 +74,14 @@ const DarkTheme = createMuiTheme({
   shape: {
     borderRadius: 0
   },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        fontSize: "0.95em",
+        fontWeight: 500,
+      }
+    },
+  },
   portfolio: {
 
   }
@@ -137,6 +145,14 @@ let LightTheme = createMuiTheme({
   ],
   shape: {
     borderRadius: 0
+  },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        fontSize: "0.95em",
+        fontWeight: 500,
+      }
+    }
   },
   portfolio: {
 

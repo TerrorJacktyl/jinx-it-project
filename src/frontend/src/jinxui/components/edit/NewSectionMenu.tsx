@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import SubjectSharp from "@material-ui/icons/SubjectSharp";
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp";
 import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp";
+import Tooltip from "@material-ui/core/Tooltip"
 
 import { PrimaryMenu, DefaultSectionData } from "jinxui";
 
@@ -63,10 +64,12 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
 
   return (
     <div>
-      {/* {HandleScroll(isNew, setIsNew, newUid)} */}
+      <Tooltip title="Add new section" arrow>
+
       <IconButton onClick={handleClick}>
         <AddIcon />
       </IconButton>
+      </Tooltip>
       <PrimaryMenu
         id="new-section-menu"
         anchorEl={anchorEl}

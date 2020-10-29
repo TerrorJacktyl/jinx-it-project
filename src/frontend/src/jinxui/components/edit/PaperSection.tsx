@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import SaveSharpIcon from '@material-ui/icons/SaveSharp';
-import { PaperSectionBase, PaperSectionDiv } from "jinxui";
+import SaveSharpIcon from "@material-ui/icons/SaveSharp";
+import { PaperSectionBase, PaperSectionDiv, useUser } from "jinxui";
 import { TEditSection } from "jinxui/types";
 import { InputAdornment } from "@material-ui/core";
-import CreateIcon from '@material-ui/icons/Create';
+import CreateIcon from "@material-ui/icons/Create";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const StyledDivOuter = styled.div`
   display: grid;
@@ -33,8 +34,13 @@ const StyledDivRight = styled.div`
   padding-right: 0px;
   display: flex;
   justify-content: right;
-justify-self: end;
+  justify-self: end;
   align-items: center;
+`;
+
+// Required for disabled buttons
+const TooltipDiv = styled.div`
+  display: flex;
 `;
 
 const StyledButton = styled(Button)`
@@ -52,6 +58,8 @@ type TPaperSection = {
 };
 
 const PaperSection = (props: TPaperSection) => {
+  const { savingState } = useUser();
+  const [isSaving, setIsSaving] = useState(false);
   const index = props.sections.findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
@@ -74,14 +82,18 @@ const PaperSection = (props: TPaperSection) => {
     downArrowDisabled = true;
   }
 
+  useEffect(() => {
+    setIsSaving(savingState);
+  }, [savingState]);
+
   const handleMoveUp = () => {
     if (index === 0) {
       return;
     }
     const curr_sections = props.sections;
-    const top = curr_sections.slice(0, index-1);
-    const one_above=curr_sections.slice(index-1, index);
-    const rest = curr_sections.slice(index+1);
+    const top = curr_sections.slice(0, index - 1);
+    const one_above = curr_sections.slice(index - 1, index);
+    const rest = curr_sections.slice(index + 1);
     props.setSections(top.concat(props.section, one_above, rest));
   };
 
@@ -91,33 +103,33 @@ const PaperSection = (props: TPaperSection) => {
     }
     const curr_sections = props.sections;
     const top = curr_sections.slice(0, index);
-    const one_below=curr_sections.slice(index + 1, index + 2);
-    const rest = curr_sections.slice(index+2);
+    const one_below = curr_sections.slice(index + 1, index + 2);
+    const rest = curr_sections.slice(index + 2);
     props.setSections(top.concat(one_below, props.section, rest));
-  }
+  };
 
   return (
     <PaperSectionDiv id={props.section.uid}>
       <StyledDivOuter>
         <StyledDivLeft>
-
-        {/* Title */}
+          {/* Title */}
 
           <TextField
             name={props.section.uid}
             defaultValue={props.section.name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.handleTitleChange(e, props.section.uid)}
-            placeholder = "Section Title"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              props.handleTitleChange(e, props.section.uid)
+            }
+            placeholder="Section Title"
             color="secondary"
-            InputProps={{ 
+            InputProps={{
               /*disableUnderline: false*/
               startAdornment: (
-              <InputAdornment position="start">
-                <CreateIcon />
-              </InputAdornment>
-                )
+                <InputAdornment position="start">
+                  <CreateIcon />
+                </InputAdornment>
+              ),
             }}
-            
           />
         </StyledDivLeft>
         <StyledDivCenter></StyledDivCenter>
@@ -125,37 +137,55 @@ const PaperSection = (props: TPaperSection) => {
         {/* Modify section list buttons */}
 
         <StyledDivRight>
-          <StyledButton
-            size="medium"
-            style={{ minWidth: 40 }}
-            onClick={props.handlePublish}
-          >
-            <SaveSharpIcon />
-          </StyledButton>
-          <StyledButton
-            size="medium"
-            style={{ minWidth: 40 }}
-            disabled={upArrowDisabled}
-            onClick={handleMoveUp}
-          >
-            <ArrowUpwardIcon />
-          </StyledButton>
-          <StyledButton
-            size="medium"
-            style={{ minWidth: 40 }}
-            disabled={downArrowDisabled}
-            onClick={handleMoveDown}
-          >
-            <ArrowDownwardIcon />
-          </StyledButton>
-          <StyledButton
-            size="medium"
-            style={{ minWidth: 40 }}
-            onClick={handleDelete}
-            disabled={deleteDisabled}
-          >
-            <DeleteOutlinedIcon />
-          </StyledButton>
+          <Tooltip title="Save portfolio" arrow>
+            <TooltipDiv >
+              <StyledButton
+                size="medium"
+                style={{ minWidth: 40 }}
+                onClick={props.handlePublish}
+                disabled={isSaving}
+              >
+                <SaveSharpIcon />
+              </StyledButton>
+            </TooltipDiv>
+          </Tooltip>
+          <Tooltip title="Move section up" arrow>
+            <TooltipDiv>
+              <StyledButton
+                size="medium"
+                style={{ minWidth: 40 }}
+                disabled={upArrowDisabled}
+                onClick={handleMoveUp}
+              >
+                <ArrowUpwardIcon />
+              </StyledButton>
+            </TooltipDiv>
+          </Tooltip>
+          <Tooltip title="Move section down" arrow>
+            <TooltipDiv>
+              <StyledButton
+                size="medium"
+                style={{ minWidth: 40 }}
+                disabled={downArrowDisabled}
+                onClick={handleMoveDown}
+              >
+                <ArrowDownwardIcon />
+              </StyledButton>
+            </TooltipDiv>
+          </Tooltip>
+
+          <Tooltip title="Delete this section" arrow>
+            <TooltipDiv>
+              <StyledButton
+                size="medium"
+                style={{ minWidth: 40 }}
+                onClick={handleDelete}
+                disabled={deleteDisabled}
+              >
+                <DeleteOutlinedIcon />
+              </StyledButton>
+            </TooltipDiv>
+          </Tooltip>
         </StyledDivRight>
       </StyledDivOuter>
       <PaperSectionBase elevation={3} variant="outlined" square>

@@ -6,8 +6,8 @@ import {
   Slide,
   useScrollTrigger,
   StylesProvider,
+  Tooltip,
 } from "@material-ui/core";
-
 
 import {
   UserAvatarDropdown,
@@ -84,10 +84,10 @@ type HeaderBarProps = {
   darkTheme?: boolean;
   children?: React.ReactNode;
   hideLogo?: boolean;
-  hideLogin? : boolean;
-  hideBGLoggedOut? : boolean;
-  isUserEdit? : boolean;
-  isUserView? : boolean;
+  hideLogin?: boolean;
+  hideBGLoggedOut?: boolean;
+  isUserEdit?: boolean;
+  isUserView?: boolean;
 };
 
 const HeaderBar = (props: HeaderBarProps) => {
@@ -100,9 +100,20 @@ const HeaderBar = (props: HeaderBarProps) => {
     <StylesProvider injectFirst>
       <Slide appear={false} direction="down" in={!trigger}>
         <StyledAppBar
-          color={userData.authenticated || props.hideBGLoggedOut !== true ? "inherit" : "transparent"}
-          elevation={userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0}
-          style={userData.authenticated || props.hideBGLoggedOut !== true ? {background: headerGrad} : {}}>
+          color={
+            userData.authenticated || props.hideBGLoggedOut !== true
+              ? "inherit"
+              : "transparent"
+          }
+          elevation={
+            userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0
+          }
+          style={
+            userData.authenticated || props.hideBGLoggedOut !== true
+              ? { background: headerGrad }
+              : {}
+          }
+        >
           <StyledDivOuter>
             <StyledDivLeft>
               {!props.hideLogo ? (
@@ -130,7 +141,10 @@ const HeaderBar = (props: HeaderBarProps) => {
                 </StyledLink>
               )}
               <UserAvatarDropdown />
-              <PortfolioDropdown isUserView={props.isUserView} isUserEdit={props.isUserEdit} />
+                <PortfolioDropdown
+                  isUserView={props.isUserView}
+                  isUserEdit={props.isUserEdit}
+                />
             </StyledDivRight>
           </StyledDivOuter>
         </StyledAppBar>

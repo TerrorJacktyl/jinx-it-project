@@ -488,7 +488,7 @@ const mountains: Theme = createTheme({
     },
 });
 
-const wave: Theme = createTheme({
+const sand: Theme = createTheme({
     palette: {
         type: "dark",
         primary: {
@@ -508,7 +508,7 @@ const wave: Theme = createTheme({
         h1: {
             fontFamily: "Poppins, sans-serif",
             fontWeight: 700,
-            fontSize: "3.3rem",
+            fontSize: "4rem",
             letterSpacing: "0.25rem",
             lineHeight: 1.2,
         },
@@ -532,7 +532,7 @@ const wave: Theme = createTheme({
     },
     portfolio: {
         theme: {
-            name: "Wave"
+            name: "Sand"
         },
         headerBackground: {
             src: require("images/backgrounds/black_sand.jpg"),
@@ -568,7 +568,7 @@ const PortfolioThemes = {
     presentation: presentation,
     arch: arch,
     mountains: mountains,
-    wave: wave,
+    sand: sand,
 }
 
 export default PortfolioThemes;

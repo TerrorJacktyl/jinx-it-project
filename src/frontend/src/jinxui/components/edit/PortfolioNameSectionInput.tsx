@@ -1,5 +1,5 @@
 import React from "react";
-import { PaperSectionStatic, TwoColumnSectionDiv } from "jinxui";
+import { PaperSectionStatic, OneColumnSectionDiv } from "jinxui";
 
 type TPortfolioNameSection = {
   title: string,
@@ -9,9 +9,9 @@ type TPortfolioNameSection = {
 const PortfolioNameSection = (props: TPortfolioNameSection) => {
   return (
       <PaperSectionStatic title={props.title}>
-        <TwoColumnSectionDiv>
+        <OneColumnSectionDiv>
             {props.children}
-        </TwoColumnSectionDiv>
+        </OneColumnSectionDiv>
       </PaperSectionStatic>
   );
 }

@@ -9,7 +9,9 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
 import { InputAdornment } from "@material-ui/core";
+import { StylesProvider } from "@material-ui/core/styles";
 
 import CreateIcon from "@material-ui/icons/Create";
 
@@ -45,7 +47,10 @@ const PublishCancelDiv = styled.div`
   padding: 5px;
 `;
 
-
+// Required for disabled buttons
+const TooltipDiv = styled.div`
+  display: flex;
+`;
 
 /*  Was used in formik, but is redundant now. Will leave in as a 
     basis for touched and error checking if we implement it in the future 
@@ -90,6 +95,8 @@ const Edit = () => {
     switchLightThemeMode,
     getSavedLightThemeMode,
     makePortfolioPublic,
+    setSaving,
+    savingState,
   } = useUser();
 
   // const [theme, setTheme] = useState(true);
@@ -101,6 +108,7 @@ const Edit = () => {
   const [sections, setSections] = useState<TEditSection[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   // Call useEffect to fetch an existing portfolio's data
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
@@ -132,8 +140,13 @@ const Edit = () => {
       setPortfolio(newPortfolio);
       setPages(newPage);
       setSections(newSection);
+      setSaving(false);
     }
   }, []);
+
+  useEffect(() => {
+    setIsSaving(savingState);
+  }, [savingState]);
 
   // Updates a section's content if it has been changed within the text field
   const handleChange = (
@@ -194,38 +207,41 @@ const Edit = () => {
 
   /** Save the currently edited page to the backend without redirecting. */
   const handleSave = () => {
+    setSaving(true);
     const sections = cleanedSections();
     sendFullPortfolio(portfolio, pages, sections, portfolioExists)
       .then((response: any) => {
+        setSaving(false);
         setSuccessMessage("Portfolio saved");
       })
       .catch(() => {
+        setSaving(false);
         setErrorMessage("Unable to save portfolio, something went wrong");
       });
   };
 
-  const handleMakePublic = () => {
-    makePortfolioPublic(userData.portfolioId).catch(() => {
-      setErrorMessage("Something went wrong, unable to make portfolio public")
-    });
-  };
-
-  // const handleMakePublic = () => {
-  //   makePortfolioPublic(userData.portfolioId).then(()=> {
-  //     setSuccessMessage("Portfolio is now public")
-  //   }).catch(() => {
-  //     setErrorMessage("Something went wrong, unable to make portfolio public")
-  //   });
-  // };
-
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
-    handleMakePublic();
-    const sections = cleanedSections();
-    // if (portfolioExists) {
-    sendFullPortfolio(portfolio, pages, sections, portfolioExists).then(() =>
-      setRedirect(true)
-    );
+    if (portfolio) {
+      setSaving(true);
+      const sections = cleanedSections();
+
+      sendFullPortfolio(portfolio, pages, sections, portfolioExists)
+        .then(() => {
+          makePortfolioPublic(portfolio.id)
+            .then(() => {
+              setSaving(false);
+              setRedirect(true);
+            })
+            .catch(() => {
+              setErrorMessage("Something went wrong");
+            });
+        })
+        .catch(() => {
+          setSaving(false);
+          setErrorMessage("Unable to save portfolio, something went wrong");
+        });
+    }
   };
 
   const sectionIsNotBlank = (section: TEditSection) => {
@@ -369,27 +385,36 @@ const Edit = () => {
   ) {
     return (
       <>
-        <SnackbarAlert
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
-        />
         <ThemeProvider theme={appliedTheme}>
+          <SnackbarAlert
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+            successMessage={successMessage}
+            setSuccessMessage={setSuccessMessage}
+          />
           <HeaderBar
             title="Edit"
             darkTheme={!getSavedLightThemeMode()}
             isUserEdit={true}
           >
-            <Button
-              style={{ height: "100%", borderRadius: 0 }}
-              onClick={() => {
-                switchLightThemeMode().then((response) => {});
-              }}
-              color="inherit"
+            <Tooltip
+              title={
+                getSavedLightThemeMode()
+                  ? "Switch this page to dark theme"
+                  : "Switch this page to light theme"
+              }
+              arrow
             >
-              <SettingsBrightness />
-            </Button>
+              <Button
+                style={{ height: "100%", borderRadius: 0 }}
+                onClick={() => {
+                  switchLightThemeMode().then((response) => {});
+                }}
+                color="inherit"
+              >
+                <SettingsBrightness />
+              </Button>
+            </Tooltip>
           </HeaderBar>
           <CssBaseline />
           <PrimaryColumnDiv>
@@ -405,9 +430,13 @@ const Edit = () => {
                     label={"Portfolio Name"}
                     defaultValue={portfolio.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      var newPortfolio = portfolio;
-                      newPortfolio.name = e.target.value;
-                      setPortfolio(newPortfolio);
+                      // var newPortfolio = portfolio;
+                      // newPortfolio.name = e.target.value;
+                      // setPortfolio(newPortfolio);
+                      setPortfolio({
+                        ...portfolio,
+                        name: e.target.value,
+                      });
                     }}
                     id="standard-full-width"
                     fullWidth
@@ -420,7 +449,7 @@ const Edit = () => {
                       ),
                     }}
                   />
-                  <TextField
+                  {/* <TextField
                     // TODO: Display and change the current page name when multiple pages are added
                     name={"pageName"}
                     label={"Page Name"}
@@ -440,21 +469,33 @@ const Edit = () => {
                         </InputAdornment>
                       ),
                     }}
-                  />
+                  /> */}
                 </PortfolioNameSectionInput>
                 {DisplaySections()}
 
                 <PublishCancelDiv>
-                  <PrimaryButton
-                    onClick={() => {
-                      handlePublishAndRedirect();
-                    }}
+                  <Tooltip
+                    title="Save, make public, and display portfolio"
+                    arrow
                   >
-                    PUBLISH
-                  </PrimaryButton>
-                  <a href={Routes.HOME}>
-                    <SecondaryButton>Cancel</SecondaryButton>
-                  </a>
+                    <TooltipDiv>
+                      <PrimaryButton
+                        disabled={isSaving}
+                        onClick={() => {
+                          handlePublishAndRedirect();
+                        }}
+                      >
+                        PUBLISH
+                      </PrimaryButton>
+                    </TooltipDiv>
+                  </Tooltip>
+                  <TooltipDiv>
+                    <Tooltip title="Cancel, go back to Jinx home page" arrow>
+                      <a href={Routes.HOME}>
+                        <SecondaryButton>Cancel</SecondaryButton>
+                      </a>
+                    </Tooltip>
+                  </TooltipDiv>
                 </PublishCancelDiv>
               </form>
             </div>

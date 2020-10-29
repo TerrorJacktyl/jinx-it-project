@@ -365,6 +365,17 @@ export const useUser = () => {
     return state.lightThemeMode;
   }
 
+  function setSaving(isSaving: boolean) {
+    updateState({
+      ...state,
+      isSaving: isSaving,
+    })
+  }
+
+  function savingState() {
+    return state.isSaving
+  }
+
   // Note the $s in the function name. Use this if you want to get all of a user's portfolios
   async function getPortfolios() {
     const path = PORTFOLIOS_PATH;
@@ -599,6 +610,8 @@ export const useUser = () => {
     putPage,
     putSections,
     sendFullPortfolio,
+    savingState,
+    setSaving,
     getPortfolios,
     getPortfolio,
     getPages,
