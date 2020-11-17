@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'drf_yasg',
+    'django_extensions',
     # our django apps
     'common',
     'api',
