@@ -10,34 +10,32 @@ Name | Contact
 | -- | -- |
 Xingyue Quan | [quanxq@student.unimelb.edu.au](mailto:quanxq@student.unimelb.edu.au)
 
-## Primary artifacts
+## Epics and use cases
 
-### User stories
+See the `Epics_and_Product_Backlog.pdf` document.
 
-**To complete when we've clarified the main stories for sprint 1.**
+## Agreed requirements
 
-### Motivational model
+### Primary Functional Requirements
+- Multiple users can use the site to create portfolios. I.e. a platform to create a portfolio rather than a single static portfolio for the client. Target audience for the platform includes professionals, recruiters, and hobbyists.
+- Users can create their own sections, meaning users aren’t forced to enter information into default sections (e.g. “biography”, “about”, etc.) and can instead add their own and title it according to their intention of the section. Thus meaning a user can have multiple sections on a single portfolio.
+- Users should have the ability to upload text and images to their chosen sections. This means a section should have multiple types to be chosen from (e.g. text, image, text and image).
+- The user should be able to share their portfolio or allow it to be viewed by others if they wish.
 
-Sample from Canvas: replace with our own.
+### Primary Non-Functional Requirements
 
-![](images/2020-08-24-14-36-42.png)
+- Very easy to use
+    - Easier/less complicated to use than sites like Wix and Wordpress
+    - Ideally users would be able to use the platform quite comfortably regardless of their previous experience with technology.
 
-## Features
+### Secondary Functional Requirements (Low Priority)
 
-### Functional features
-
-Portfolios:
-1. contain (potentially multiple) customizable pages, each with their own customizable sections.
-
-Users can:
-1. create and edit portfolios.
-1. control who to share their portfolios with.
-
-Portfolio viewers can:
-1. view a user's portfolio with a provided link.
-
-### Features not in scope
-
-
-
-### Possible future extensions
+- Multiple theme options that can change the look of the portfolio with the intention to provide customizability and uniqueness to a user’s portfolio.
+- Individual users can have multiple portfolios rather than having to include multiple different intentions and ideas into a single portfolio. E.g. one portfolio to represent university accomplishments and another for art projects.
+- Social interactions, maybe a message board
+- Home page
+    - Displays sample / template portfolios
+    - Show some public portfolios
+- Include Resume builder
+    - Integrate with LinkedIn
+- Interactive tutorial

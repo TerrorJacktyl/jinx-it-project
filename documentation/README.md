@@ -24,3 +24,9 @@ Guides to assist with our development:
 * Notes on Agile and SCRUM methodologies
 * Helpful presentations
 * Notes on Vim usage
+
+Layer-specific information can also be found in the `readme` files of the respective folders:
+- `src/frontend/`
+- `src/backend/`
+- `deploy/`
+
