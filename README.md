@@ -250,3 +250,10 @@ To fix this:
 This is a strange error, likely caused by issues between recent releases of TypeScript, React scripts and ES-Lint, which resulted in us downgrading to TypeScript 3.9.7.
 
 Ensuring that `src/frontend/package.json` contains the line `"typescript": "^3.9.7",` and doing a full rebuild should fix this issue.
+
+### Modifying files gives `device or resource busy`
+
+This happens because Docker has still mounted a folder (such as `src/frontend`) through a volume, and deleting it would confuse Docker. Jack encountered this error trying to delete the whole repository on Windows (WSL2). To fix:
+1. Remove all Docker containers which depend on the file you can't modify/delete. If you're not sure, remove everything with `docker system prune -a` in your Linux shell.
+2. Shutdown WSL from cmd/powershell with `wsl --shutdown`.
+3. Restart WSL and your Linux shell. Modify files.
