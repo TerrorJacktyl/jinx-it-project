@@ -1,4 +1,3 @@
-
 # Documentation
 
 This directory holds an almost complete list of documentation that we've created over the semester. 
@@ -16,7 +15,8 @@ Sprint artefacts in accordance with SCRUM methodology:
 * Personas
 * Notes from our meetings with the client
 * Wireframes/Figma mockups of our UI design
-* **TODO**: Update project scope file, add glossary if we still have it, add all client meeting notes once final meeting is finished, database schema
+* Glossary to ensure consistent communication
+* **TODO**: Update project scope file, add all client meeting notes once final meeting is finished, database schema
 
 Guides to assist with our development:
 * Git usage and preferred protocols
