@@ -113,7 +113,7 @@ class Section(models.Model):
 
 
 class TextSection(Section):
-    content = models.TextField()
+    content = models.TextField(blank=True)
 
 
 class MediaSection(Section):

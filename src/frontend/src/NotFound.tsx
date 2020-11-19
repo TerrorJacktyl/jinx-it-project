@@ -34,7 +34,7 @@ const NotFound = ({ title, message }: NotFoundProps) => {
     <>
       <ThemeProvider theme={LightTheme}>
         <CssBaseline />
-        <HeaderBar lightTheme={true} />
+        <HeaderBar />
         <HeaderBarSpacer />
         <Layout>
           <Typography variant="h3" component="h1" gutterBottom>

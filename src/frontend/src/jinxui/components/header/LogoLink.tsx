@@ -1,4 +1,3 @@
-import { LightTheme } from "jinxui/theme/GlobalTheme";
 import React from "react";
 import styled from "styled-components";
 
@@ -14,7 +13,7 @@ const HeaderLogo = styled.img`
 `;
 
 const LogoText = styled(HeaderLogo)`
-  @media (max-width: 480px) {
+  @media (max-width: 800px) {
     display: none;
   }
 `;

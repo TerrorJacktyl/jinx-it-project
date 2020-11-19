@@ -188,7 +188,7 @@ const HomeTemplates = () => {
         </NumberOneIconDiv>
         <NumberOneTextDiv>
           <Typography variant="h3">
-            Make an account and fill out your details. It only a few minutes!
+            Make an account and fill out your details. It only a few minutes.
           </Typography>
         </NumberOneTextDiv>
 
@@ -202,7 +202,7 @@ const HomeTemplates = () => {
         </NumberTwoBGDiv>
         <NumberTwoTextDiv>
           <Typography variant="h3">
-            Choose a theme. They all look great on desktop and mobile!
+            Choose a theme. They all look great on desktop and mobile.
           </Typography>
         </NumberTwoTextDiv>
         <TemplatePreviewContainerOuter>

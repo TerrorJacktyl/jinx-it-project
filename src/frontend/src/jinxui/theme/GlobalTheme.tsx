@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
@@ -73,6 +74,14 @@ const DarkTheme = createMuiTheme({
   shape: {
     borderRadius: 0
   },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        fontSize: "0.95em",
+        fontWeight: 500,
+      }
+    },
+  },
   portfolio: {
 
   }
@@ -136,6 +145,14 @@ let LightTheme = createMuiTheme({
   ],
   shape: {
     borderRadius: 0
+  },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        fontSize: "0.95em",
+        fontWeight: 500,
+      }
+    }
   },
   portfolio: {
 

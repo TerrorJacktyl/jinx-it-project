@@ -11,7 +11,7 @@ const DefaultSectionData: any = () => {
     media: "",
     type: "text",
     path: "",
-    image: 0,
+    image: null,
     uid: uuidv4(),
   };
   return defaultSection;

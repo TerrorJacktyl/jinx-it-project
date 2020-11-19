@@ -194,7 +194,8 @@ export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
     );
   };
 
-  const [backgroundColor, _, isFullHeight] = themeColors(theme, 0);
+  // eslint-disable-next-line
+  const [backgroundColor, _textColor, isFullHeight] = themeColors(theme, 0);
 
   return (
     <Box style={isFullHeight ? { background: backgroundColor } : {}}>
@@ -214,7 +215,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
   return (
     <Grid container spacing={0}>
       {components.map((component, index) => (
-        <Grid item xs={12} key={index} spacing={0}>
+        <Grid item xs={12} key={index} >
           {component}
         </Grid>
       ))}
@@ -326,12 +327,13 @@ export const Section = (data: TSection) => {
                   src={data.path == null ? "" : data.path}
                   alt={data.alt}
                   className={classes.img}
+                  style={{marginTop: "25px"}} // compensate for markdown
                 />
               </Grid>
             ) : null}
             {data.content ? (
               <Grid item xs={12} sm={colsPerItem}>
-                <Typography variant="body1" style={{ marginTop: "-25px" }}>
+                <Typography variant="body1" component="span">
                   <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                     {data.content}
                   </ReactMarkdown>

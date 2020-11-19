@@ -74,7 +74,7 @@ const Login = () => {
         <ThemeProvider theme={LightTheme}>
           <CssBaseline />
           <AccountPageDiv>
-              <HeaderBar title="Login" lightTheme={true} hideLogin={true} />
+              <HeaderBar title="Login" hideLogin={true} />
               <FormOuterDiv>
                   <div />
                   <FormDiv
