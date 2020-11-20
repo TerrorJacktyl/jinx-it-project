@@ -4,7 +4,7 @@ This directory holds an almost complete list of documentation that we've created
 
 For our more informal notes, and a greater insight into our process throughout the semester, please consult our Google Docs shared drive (especially the minutes file).
 
-Our presentation can be viewed [here](https://app.jinx.systems/u/jinxteam)
+Our presentation can be viewed [here](https://app.jinx.systems/u/jinxteam).
 
 #### Our documentation consists of 2 parts:
 
@@ -16,7 +16,6 @@ Sprint artefacts in accordance with SCRUM methodology:
 * Notes from our meetings with the client
 * Wireframes/Figma mockups of our UI design
 * Glossary to ensure consistent communication
-* **TODO**: Database schema
 
 Guides to assist with our development:
 * Git usage and preferred protocols
