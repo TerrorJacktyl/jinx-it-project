@@ -2,7 +2,7 @@
 
 A platform where anyone from enthusiasts to professionals can create stunning portfolios that showcase their crafts and projects, and share them with the world.
 
-Our live site can be accessed at [`app.jinx.systems`](https://app.jinx.systems/).
+Live demo at [`app.jinx.systems`](https://app.jinx.systems/).
 
 The rest of this document serves as *general installation and technical advice*. If you're after project management, scope and SCRUM related documents, see the `documentation` folder.
 
