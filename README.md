@@ -6,6 +6,8 @@ A platform where anyone from enthusiasts to professionals can create stunning po
 
 Our live site can be accessed at [`app.jinx.systems`](https://app.jinx.systems/).
 
+The rest of this document serves as *general installation and technical advice*. If you're after project management, scope and SCRUM related documents, see the `documentation` folder.
+
 ## Getting started
 
 To build and run the app, you'll need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on your system.

@@ -8,7 +8,7 @@ Our presentation can be viewed [here](https://app.jinx.systems/u/jinxteam).
 
 #### Our documentation consists of 2 parts:
 
-Sprint artefacts in accordance with SCRUM methodology:
+Sprint artefacts in accordance with SCRUM methodology are in `artefacts`:
 * Documents for each sprint which include planning, review, and retrospective
 * All diagrams, including motivational model and architecture diagram
 * Screenshots of our Trello board throughout the semester, documenting our workflow
@@ -17,7 +17,7 @@ Sprint artefacts in accordance with SCRUM methodology:
 * Wireframes/Figma mockups of our UI design
 * Glossary to ensure consistent communication
 
-Guides to assist with our development:
+Guides to assist with our development are in `guides`:
 * Git usage and preferred protocols
 * Style guides
 * Notes on Agile and SCRUM methodologies
