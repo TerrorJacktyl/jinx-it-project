@@ -1,10 +1,43 @@
-[![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)](https://www.gnu.org/licenses/agpl-3.0.en.html)
-
 # Jinx ePortfolio App
+
+[![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)](https://www.gnu.org/licenses/agpl-3.0.en.html)
 
 A platform where anyone from enthusiasts to professionals can create stunning portfolios that showcase their crafts and projects, and share them with the world.
 
-## Getting started
+Live demo at [`app.jinx.systems`](https://app.jinx.systems/).
+
+The rest of this document serves as *general installation and technical advice*. If you're after project management, scope and SCRUM related documents, see the `documentation` folder.
+
+##  1. <a name='Tableofcontents'></a>Table of contents
+
+<!-- vscode-markdown-toc -->
+* 1. [Table of contents](#Tableofcontents)
+* 2. [Getting started](#Gettingstarted)
+* 3. [Stack](#Stack)
+* 4. [Guides and advice](#Guidesandadvice)
+	* 4.1. [Preliminary note: permissions on Linux](#Preliminarynote:permissionsonLinux)
+* 5. [Project file structure](#Projectfilestructure)
+	* 5.1. [Building and running](#Buildingandrunning)
+	* 5.2. [Attach shells to running Docker containers](#AttachshellstorunningDockercontainers)
+	* 5.3. [Making API requests to Django](#MakingAPIrequeststoDjango)
+	* 5.4. [API documentation](#APIdocumentation)
+	* 5.5. [Interacting with the database](#Interactingwiththedatabase)
+* 6. [Issues and fixes](#Issuesandfixes)
+	* 6.1. [The database doesn't reset on a rebuild](#Thedatabasedoesntresetonarebuild)
+	* 6.2. [Something's terribly wrong! How do I 'reset'?](#SomethingsterriblywrongHowdoIreset)
+	* 6.3. [The build instructions not working](#Thebuildinstructionsnotworking)
+	* 6.4. [Material UI icons won't load](#MaterialUIiconswontload)
+	* 6.5. [Modifying Django models doesn't work](#ModifyingDjangomodelsdoesntwork)
+	* 6.6. [Map undefined error on line zero](#Mapundefinederroronlinezero)
+	* 6.7. [Modifying files gives `device or resource busy`](#Modifyingfilesgivesdeviceorresourcebusy)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+##  2. <a name='Gettingstarted'></a>Getting started
 
 To build and run the app, you'll need [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on your system.
 
@@ -28,7 +61,7 @@ docker-compose run --build
 docker-compose up
 ```
 
-## Stack
+##  3. <a name='Stack'></a>Stack
 
 Our app runs with the following components:
 
@@ -42,9 +75,9 @@ Our app runs with the following components:
 
 If you're looking at working on the project, the sections below should help if you run into bugs or trouble.
 
-## Guides and advice
+##  4. <a name='Guidesandadvice'></a>Guides and advice
 
-### Preliminary note: permissions on Linux
+###  4.1. <a name='Preliminarynote:permissionsonLinux'></a>Preliminary note: permissions on Linux
 
 You'll need sudo access to run `docker` and `docker-compose`. However, it's **recommended** to [create a new `docker` group and add yourself to it](https://docs.docker.com/engine/install/linux-postinstall/) to avoid invoking sudo all the time. Avoiding this and running docker with sudo may cause permissions for certain files to be revoked from your non-root user, requiring you to use `sudo` when you run docker in future.
 
@@ -54,7 +87,7 @@ If you run `docker` or `docker-compose` with `sudo`, please make sure you _rever
 $ sudo chown -R $USER:$USER .
 ```
 
-## Project file structure
+##  5. <a name='Projectfilestructure'></a>Project file structure
 
 | Folder   | Contains                                              |
 | -------- | ----------------------------------------------------- |
@@ -62,7 +95,7 @@ $ sudo chown -R $USER:$USER .
 | `env`    | Environment variables specific to development.        |
 | `src`    | Source code for frontend (React) and backend (Djagno) |
 
-### Building and running
+###  5.1. <a name='Buildingandrunning'></a>Building and running
 
 These are all the build commands you should need:
 
@@ -84,7 +117,7 @@ $ docker-compose up
 $ docker-compose run django python manage.py makemigrations && python manage.py migrate
 ```
 
-### Attach shells to running Docker containers
+###  5.2. <a name='AttachshellstorunningDockercontainers'></a>Attach shells to running Docker containers
 
 It's often useful to attach terminals to running containers, or run specific commands inside of them. To open a shell in a container of your choice:
 
@@ -110,7 +143,7 @@ $ docker exec -it <container name> bash
 $ docker exec -it jinx_django python manage.py migrate
 ```
 
-### Making API requests to Django
+###  5.3. <a name='MakingAPIrequeststoDjango'></a>Making API requests to Django
 
 Using the frontend's sign up page:
 
@@ -143,13 +176,13 @@ $ docker exec -it jinx_django manage.py shell
 {'first_name': 'Jack', 'last_name': 'Zezula', 'email': 'jackzezula@tuta.io', 'password': 'jackzezula'}
 ```
 
-### API documentation
+###  5.4. <a name='APIdocumentation'></a>API documentation
 
 This application uses Swagger to automatically document the API. You can access it by running the server and going to `localhost:8080/swagger` in your web browser.
 
 See [drf-yasg documentation](https://drf-yasg.readthedocs.io/en/stable/) for more information.
 
-### Interacting with the database
+###  5.5. <a name='Interactingwiththedatabase'></a>Interacting with the database
 
 If you need to edit the database manually (e.g. creating new roles, editing their permissions) rather than through Django's models interface, you can do the following.
 
@@ -177,11 +210,11 @@ $ psql -d jinx_db -U jinx
 
 ---
 
-## Issues and fixes
+##  6. <a name='Issuesandfixes'></a>Issues and fixes
 
 This is a list of issues we've encountered and some solutions for them. If you resolve an issue, please add them here!
 
-### The database doesn't reset on a rebuild
+###  6.1. <a name='Thedatabasedoesntresetonarebuild'></a>The database doesn't reset on a rebuild
 
 You might want to change various aspects of the database, i.e:
 
@@ -197,7 +230,7 @@ docker rmi postgres
 
 With regard to point 2, this is necessary because the information in `docker-compose.yml` _only affects the database the **first** time it's built_.
 
-### Something's terribly wrong! How do I 'reset'?
+###  6.2. <a name='SomethingsterriblywrongHowdoIreset'></a>Something's terribly wrong! How do I 'reset'?
 
 If you've done something like manually installing, updating or editing dependencies within the containers, you might run into some bugs.
 
@@ -222,15 +255,15 @@ docker rmi <imagename>
 docker image prune -a
 ```
 
-### The build instructions not working
+###  6.3. <a name='Thebuildinstructionsnotworking'></a>The build instructions not working
 
 First, make sure to delete any old images of the project using `docker rmi <imagename>` as specified above. Then try building all the required images from scratch using `docker-compose build`. Since the database is built from scratch, django models must be migrated using `docker-compose run django python manage.py migrate`. Everything should now be ready to go, so you can run the containers with `docker-compose up`. Happy hacking!
 
-### Material UI icons won't load
+###  6.4. <a name='MaterialUIiconswontload'></a>Material UI icons won't load
 
 If you are getting problems loading Material-UI icons, you might need to do a full system rebuild (`docker system prune -a` before a build).
 
-### Modifying Django models doesn't work
+###  6.5. <a name='ModifyingDjangomodelsdoesntwork'></a>Modifying Django models doesn't work
 
 When you run `manage.py makemigrations`, you get:
 
@@ -245,8 +278,15 @@ To fix this:
 ./manage.py makemigrations && ./manage.py migrate
 ```
 
-### Map undefined error on line zero
+###  6.6. <a name='Mapundefinederroronlinezero'></a>Map undefined error on line zero
 
 This is a strange error, likely caused by issues between recent releases of TypeScript, React scripts and ES-Lint, which resulted in us downgrading to TypeScript 3.9.7.
 
 Ensuring that `src/frontend/package.json` contains the line `"typescript": "^3.9.7",` and doing a full rebuild should fix this issue.
+
+###  6.7. <a name='Modifyingfilesgivesdeviceorresourcebusy'></a>Modifying files gives `device or resource busy`
+
+This happens because Docker has still mounted a folder (such as `src/frontend`) through a volume, and deleting it would confuse Docker. Jack encountered this error trying to delete the whole repository on Windows (WSL2). To fix:
+1. Remove all Docker containers which depend on the file you can't modify/delete. If you're not sure, remove everything with `docker system prune -a` in your Linux shell.
+2. Shutdown WSL from cmd/powershell with `wsl --shutdown`.
+3. Restart WSL and your Linux shell. Modify files.
