@@ -29,3 +29,5 @@ Layer-specific information can also be found in the `readme` files of the respec
 - `src/backend/`
 - `deploy/`
 
+Our less formal minutes documentation is [accessible here (you must be signed into a University of Melbourne Google account).](https://docs.google.com/document/d/1lZHzJGFCXUFKqDrTwBtxOW7lKHzEN2dSZDAkhdDrYM4/edit?usp=sharing)
+
