@@ -10,8 +10,7 @@ import NotFound from "./NotFound";
 
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from "react-router-dom";
 import { UserContextProvider, LoggedInRoute, PortfolioDisplay, Routes } from "jinxui";
-// import { SmoothProvider } from 'react-smooth-scrolling'
-import Test from "./Test";
+// import { SmoothProvider } from 'react-smooth-scrolling';
 
 const OverallDiv = styled.div`
   overflow-x: hidden;

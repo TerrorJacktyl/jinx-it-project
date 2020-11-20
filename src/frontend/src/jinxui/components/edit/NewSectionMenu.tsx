@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import SubjectSharp from "@material-ui/icons/SubjectSharp";
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp";
 import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp";
+import Tooltip from "@material-ui/core/Tooltip"
 
 import { PrimaryMenu, DefaultSectionData } from "jinxui";
 
@@ -19,22 +20,8 @@ type TNewSectionMenu = {
   placeAbove?: boolean;
 };
 
-const HandleScroll = (isNew: any, setIsNew: any, newUid: any) => {
-  const scrollTo = document.getElementById(newUid);
-
-  if (isNew && scrollTo !== null) {
-    window.scrollTo({ 
-      top: scrollTo.offsetHeight,
-      behavior: "smooth",
-    });
-    setIsNew(false);
-  }
-};
-
 const NewSectionMenu = (props: TNewSectionMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [isNew, setIsNew] = React.useState(false);
-  const [newUid, setNewUid] = React.useState("");
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,7 +53,6 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const target_index = props.placeAbove ? index : index + 1;
     const newSection = DefaultSectionData();
     newSection.type = section_type;
-    setNewUid(newSection.uid);
 
     props.setSections((sections: any) => [
       ...sections.slice(0, target_index),
@@ -74,16 +60,16 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
       ...sections.slice(target_index),
     ]);
 
-    setIsNew(true);
-
   };
 
   return (
     <div>
-      {HandleScroll(isNew, setIsNew, newUid)}
+      <Tooltip title="Add new section" arrow>
+
       <IconButton onClick={handleClick}>
         <AddIcon />
       </IconButton>
+      </Tooltip>
       <PrimaryMenu
         id="new-section-menu"
         anchorEl={anchorEl}

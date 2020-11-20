@@ -12,6 +12,7 @@ export const defaultUserContext: IUserContext = {
   authenticated: false,
   theme: "",
   lightThemeMode: true,
+  isSaving: false,
   config: {},
 };
 

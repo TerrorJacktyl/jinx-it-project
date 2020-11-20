@@ -10,6 +10,7 @@ export interface IUserContext {
   authenticated: boolean;
   lightThemeMode: boolean;
   portfolioId: number;
-  theme: string; 
+  theme: string;
+  isSaving: boolean; 
   config: AxiosRequestConfig;
 }

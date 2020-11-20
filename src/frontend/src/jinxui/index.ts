@@ -13,6 +13,7 @@ export { default as FormSectionsDiv } from "./components/form/FormSectionDiv";
 export { default as SiteLayout } from "./components/site/SiteLayout";
 export { default as PrimaryColumnDiv } from "./components/site/PrimaryColumnDiv";
 export { default as PrimaryMenu } from "./components/site/PrimaryMenu";
+export { default as SnackbarAlert } from "./components/site/SnackbarAlert"; 
 
 /* Button */
 export { PrimaryButton } from "./components/button/Button";
@@ -23,8 +24,7 @@ export { default as HeaderDiv } from "./components/header/HeaderDiv";
 export { default as SiteHeader } from "./components/header/SiteHeader";
 export { default as LogoLink } from "./components/header/LogoLink";
 export { default as HeaderTitle } from "./components/header/HeaderTitle";
-export { HeaderBar as HeaderBar } from "./components/header/HeaderBar";
-export { HeaderMediaWidth as HeaderMediaWidth} from "./components/header/HeaderBar"
+export { HeaderBar, HeaderMediaWidth } from "./components/header/HeaderBar";
 export { default as HeaderButton } from "./components/header/HeaderButton";
 export { default as HeaderBarSpacer } from "./components/header/HeaderBarSpacer";
 
@@ -51,6 +51,9 @@ export {
   ScreenBlock,
   PortfolioHeader,
 } from "./components/display/MuiComponents";
+
+
+
 
 /* Edit */
 export { default as PaperSection } from "./components/edit/PaperSection"
@@ -89,11 +92,11 @@ export {
 
 /* Types */
 
-export type { 
-  TPortfolio, 
-  TPage, 
-  TSection, 
-  TSectionData, 
+export type {
+  TPortfolio,
+  TPage,
+  TSection,
+  TSectionData,
   TEditSection,
   TPortfolioData,
   TPageData,
@@ -120,4 +123,4 @@ export {
 } from "./theme/GlobalTheme";
 
 /* Portfolio themes */
-export { PortfolioThemes } from "./theme/index";
+export { PortfolioThemes, defaultColors } from "./theme/index";

@@ -6,10 +6,10 @@ const StyledPrimaryMenu = React.forwardRef((props: MenuProps, ref: any) => (
   <Menu
     ref={ref}
     elevation={0}
-    PaperProps={{ 
-      style: { 
+    PaperProps={{
+      style: {
         border: "1px solid #d3d4d5",
-      } 
+      }
     }}
     getContentAnchorEl={null}
     anchorOrigin={{
@@ -23,5 +23,20 @@ const StyledPrimaryMenu = React.forwardRef((props: MenuProps, ref: any) => (
     {...props}
   />
 ));
+
+// const StyledPrimaryMenu = (props: any) => (
+//   <Menu
+//     id={props.id}
+//     anchorEl={props.anchorE1}
+//     keepMounted={props.keepMounted}
+//     open={props.open}
+//     onClose={props.handleClose}
+    
+//     elevation={0}
+
+//   >
+//     {props.children}
+//   </Menu>
+// );
 
 export default StyledPrimaryMenu;

@@ -1,4 +1,8 @@
-# API Documentation
+# Backend
+
+Our backend is built on [Django](https://www.djangoproject.com/), making use of the [Django Rest Framework (DRF)](https://www.django-rest-framework.org/), and interfaces with a [PostgreSQL database](https://www.postgresql.org/).
+
+# API documentation
 ## How To Use
 ### Portfolio Endpoints
 The endpoints are documented using swagger.

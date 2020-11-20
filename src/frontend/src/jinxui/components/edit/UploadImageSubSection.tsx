@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import AddPhotoAlternateOutlined from "@material-ui/icons/AddPhotoAlternateOutlined";
 import { useUser, UserImage } from "jinxui";
 import { TEditSection } from "jinxui/types";
@@ -53,20 +54,20 @@ type TUploadImageSubSection = {
   section: TEditSection;
 };
 
-
-
 const UploadImageSubSection = (props: TUploadImageSubSection) => {
   const [imagePath, setImagePath] = useState(FRONT_END_URL + "blank_image.svg");
   const [imageExists, setImageExists] = useState(false);
   const { uploadImage } = useUser();
-  const [imageResponse, setImageResponse] = useState({ path: "", id: "0" });
+  const [imageResponse, setImageResponse] = useState({ path: "", id: "null" });
   const input_id = uuidv4();
+  const [progress, setProgress] = useState(0.0);
   useEffect(() => {
     if (props.section.path && props.section.path !== "") {
       setImagePath(props.section.path);
       setImageExists(true);
     }
   });
+
   return (
     <>
       {/* Make a hidden upload image button here that we will use a 
@@ -79,10 +80,11 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
           multiple
           type="file"
           onChange={(event) => {
-            if (event.currentTarget.files) {
+            if (event.currentTarget.files && event.currentTarget.files[0]) {
               uploadImage(
                 event.currentTarget.files[0],
-                event.currentTarget.files[0].name
+                event.currentTarget.files[0].name,
+                setProgress
               )
                 .then((response) => {
                   setImageResponse(response.data);
@@ -104,8 +106,9 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
           <ImageGridMain>
             <UserImage
               src={imageResponse.path === "" ? imagePath : imageResponse.path}
+              onLoad={() => setProgress(0.0)}
               style={
-                imageExists
+                imageExists && progress === 0.0
                   ? {
                       opacity: "100%",
                       padding: 0,
@@ -117,13 +120,21 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
               }
             />
           </ImageGridMain>
-          <StyledImageUploadOverlay elevation={0} square>
+          <StyledImageUploadOverlay elevation={0} square style={progress ? {display: "none"} : {}}>
             Upload Image
           </StyledImageUploadOverlay>
           <ImageGridIcon>
             <StyledImageUploadButton />
           </ImageGridIcon>
         </ImageGrid>
+        {progress ? (
+          <LinearProgress
+            variant="determinate"
+            color="secondary"
+            value={progress}
+            style={{ marginTop: -8 }}
+          />
+        ) : null}
       </label>
     </>
   );

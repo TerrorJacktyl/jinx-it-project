@@ -6,12 +6,11 @@ import {
   Slide,
   useScrollTrigger,
   StylesProvider,
+  Tooltip,
 } from "@material-ui/core";
 
-import MenuIcon from "@material-ui/icons/Menu";
 import {
   UserAvatarDropdown,
-  HeaderButton,
   LightHeaderGrad,
   DarkHeaderGrad,
   LogoLink,
@@ -24,7 +23,7 @@ import {
 import styled from "styled-components";
 
 const HeaderMediaWidth = () => {
-  return "600px";
+  return "800px";
 };
 
 // Ensure that app bar sticks to top and sides
@@ -82,30 +81,43 @@ const StyledLink = styled.a`
 
 type HeaderBarProps = {
   title?: string;
-  lightTheme: boolean;
+  darkTheme?: boolean;
   children?: React.ReactNode;
   hideLogo?: boolean;
-  hideLogin? : boolean;
-  hideBGLoggedOut? : boolean;
+  hideLogin?: boolean;
+  hideBGLoggedOut?: boolean;
+  isUserEdit?: boolean;
+  isUserView?: boolean;
 };
 
 const HeaderBar = (props: HeaderBarProps) => {
   const { userData } = useUser();
   const trigger = useScrollTrigger();
   const headerGrad =
-    props.lightTheme === true ? LightHeaderGrad : DarkHeaderGrad;
+    props.darkTheme === true ? DarkHeaderGrad : LightHeaderGrad;
 
   return (
     <StylesProvider injectFirst>
       <Slide appear={false} direction="down" in={!trigger}>
         <StyledAppBar
-          color={userData.authenticated || props.hideBGLoggedOut !== true ? "inherit" : "transparent"}
-          elevation={userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0}
-          style={userData.authenticated || props.hideBGLoggedOut !== true ? {background: headerGrad} : {}}>
+          color={
+            userData.authenticated || props.hideBGLoggedOut !== true
+              ? "inherit"
+              : "transparent"
+          }
+          elevation={
+            userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0
+          }
+          style={
+            userData.authenticated || props.hideBGLoggedOut !== true
+              ? { background: headerGrad }
+              : {}
+          }
+        >
           <StyledDivOuter>
             <StyledDivLeft>
               {!props.hideLogo ? (
-                <LogoLink lightTheme={props.lightTheme} />
+                <LogoLink lightTheme={!props.darkTheme} />
               ) : null}
             </StyledDivLeft>
             <StyledDivCenter>
@@ -129,7 +141,10 @@ const HeaderBar = (props: HeaderBarProps) => {
                 </StyledLink>
               )}
               <UserAvatarDropdown />
-              <PortfolioDropdown />
+                <PortfolioDropdown
+                  isUserView={props.isUserView}
+                  isUserEdit={props.isUserEdit}
+                />
             </StyledDivRight>
           </StyledDivOuter>
         </StyledAppBar>
