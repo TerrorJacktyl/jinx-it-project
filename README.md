@@ -1,5 +1,7 @@
 # Jinx ePortfolio App
 
+[![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)](https://www.gnu.org/licenses/agpl-3.0.en.html)
+
 A platform where anyone from enthusiasts to professionals can create stunning portfolios that showcase their crafts and projects, and share them with the world.
 
 Live demo at [`app.jinx.systems`](https://app.jinx.systems/).
@@ -33,7 +35,7 @@ The rest of this document serves as *general installation and technical advice*.
 	numbering=true
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->[![AGPLv3 License](https://img.shields.io/badge/License-AGPL%20v3-yellow.svg)](https://www.gnu.org/licenses/agpl-3.0.en.html)
+<!-- /vscode-markdown-toc -->
 
 ##  2. <a name='Gettingstarted'></a>Getting started
 
