@@ -1,4 +1,4 @@
-# Preperation
+# Client interview notes
 
 ## Core Features
 
