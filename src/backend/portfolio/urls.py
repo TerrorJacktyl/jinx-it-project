@@ -46,4 +46,9 @@ urlpatterns = [
         views.ImageDetail.as_view(),
         name = 'image_list',
     ),
+    path(
+        'links',
+        views.LinkList.as_view(),
+        name = 'link_list'
+    )
 ]

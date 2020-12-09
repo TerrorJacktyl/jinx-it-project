@@ -45,3 +45,10 @@ export type TSectionData = {
   path?: string;
   alt?: string;
 };
+
+export type TLinkData = {
+  title?: string;
+  address?: string;
+  icon?: string;
+  id: string;
+} | null;

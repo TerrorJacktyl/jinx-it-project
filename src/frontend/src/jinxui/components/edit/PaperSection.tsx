@@ -123,9 +123,8 @@ const PaperSection = (props: TPaperSection) => {
             placeholder="Section Title"
             color="secondary"
             InputProps={{
-              /*disableUnderline: false*/
-              startAdornment: (
-                <InputAdornment position="start">
+              endAdornment: (
+                <InputAdornment position="end">
                   <CreateIcon />
                 </InputAdornment>
               ),

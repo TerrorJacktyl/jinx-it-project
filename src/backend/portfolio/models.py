@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 from datetime import datetime
 from django.dispatch import receiver
@@ -155,3 +156,26 @@ class ImageTextSection(Section):
 class ImageSection(Section):
     image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
 
+
+# class ProjectSection(Section):
+
+#     content = models.TextField(blank=True)
+
+class Link(models.Model):
+
+    class LinkIcon(models.TextChoices):
+        NONE = "None"
+        GITHUB = "Github"
+        WEB = "Web"
+    owner = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='links'
+    )
+    icon = models.CharField(
+        max_length = 20,
+        choices = LinkIcon.choices,
+        default = LinkIcon.NONE,
+    )
+    address = models.TextField(blank=True)
+    title = models.TextField(blank=True)

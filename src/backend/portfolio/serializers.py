@@ -251,3 +251,13 @@ class ImageTextSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
         model = models.ImageTextSection
         fields = SectionSerializer.Meta.fields + ['image', 'content', 'path']
+
+class LinkInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Link
+        fields = ['id', 'icon', 'title', 'address']
+
+class LinkOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Link
+        fields = ['id', 'owner', 'icon', 'title', 'address' ]

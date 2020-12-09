@@ -70,6 +70,9 @@ export { default as PaperSectionStatic } from "./components/edit/PaperSectionSta
 export { default as PaperSectionBase } from "./components/edit/PaperSectionBase"
 export { default as PaperSectionDiv } from "./components/edit/PaperSectionDiv"
 export { default as PaperSectionTitle } from "./components/edit/PaperSectionTitle"
+export { default as LinkIconMenu } from "./components/edit/LinkIconMenu"
+export { default as LinkDialog } from "./components/edit/LinkDialog"
+export { default as DisplayIcon } from "./components/edit/DisplayIcon"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

@@ -281,3 +281,39 @@ class ImageList(generics.ListCreateAPIView):
         # pylint: disable=no-member
         super().perform_destroy(instance)
         models.Section.objects.normalise(parent_id)
+
+
+class LinkDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.LinkInputSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.LinkInputSerializer
+        return serializers.LinkOutoutSerializer
+
+    lookup_url_kwarg = "link_id"
+
+    def get_queryset(self):
+        return models.Link.objects.filter(owner=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+    
+    swagger_schema = swagger.PortfolioAutoSchema
+
+class LinkList(generics.ListCreateAPIView):
+    serializer_class = serializers.LinkInputSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return serializers.LinkInputSerializer
+        return serializers.LinkOutputSerializer
+
+    def get_queryset(self):
+        return models.Link.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    swagger_schema = swagger.PortfolioAutoSchema

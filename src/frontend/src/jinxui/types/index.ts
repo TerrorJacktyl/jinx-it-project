@@ -6,6 +6,7 @@ export type {
   TEditSection,
   TPortfolioData,
   TPageData,
+  TLinkData,
 } from "./PortfolioTypes";
 
 export type {

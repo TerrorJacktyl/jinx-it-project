@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { Button, CssBaseline } from "@material-ui/core";
+import { Button, CssBaseline, Icon } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Grid from "@material-ui/core/Grid";
@@ -12,6 +12,7 @@ import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import { InputAdornment } from "@material-ui/core";
 import CreateIcon from "@material-ui/icons/Create";
+import Typography from "@material-ui/core/Typography";
 
 import {
   LightTheme,
@@ -27,9 +28,17 @@ import {
   PrimaryColumnDiv,
   ImageTextSectionInput,
   SnackbarAlert,
+  LinkDialog,
+  DisplayIcon,
 } from "jinxui";
 
-import { TPortfolio, TPage, TSection, TEditSection } from "jinxui/types";
+import {
+  TPortfolio,
+  TPage,
+  TSection,
+  TEditSection,
+  TLinkData,
+} from "jinxui/types";
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -48,6 +57,12 @@ const PublishCancelDiv = styled.div`
 // Required for disabled buttons
 const TooltipDiv = styled.div`
   display: flex;
+`;
+
+const LinksDiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex-flow: wrap;
 `;
 
 /*  Was used in formik, but is redundant now. Will leave in as a 
@@ -107,6 +122,7 @@ const Edit = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [links, setLinks] = useState<TLinkData[]>([]);
   // Call useEffect to fetch an existing portfolio's data
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
@@ -324,6 +340,26 @@ const Edit = () => {
     );
   };
 
+  const DisplayLinks = () => {
+    return (
+      <>
+        {links.map((link: TLinkData) => {
+          if (link)
+          {
+            return (
+                <Button key={link.id}>
+                  <DisplayIcon icon={link?.icon} />
+                  <Typography variant="h6">
+                    {link.title}
+                  </Typography>
+                </Button>
+            );
+          }
+        })}
+      </>
+    );
+  };
+
   const DisplaySections = () => {
     return (
       <>
@@ -428,7 +464,6 @@ const Edit = () => {
                     label={"Portfolio Name"}
                     defaultValue={portfolio.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-
                       setPortfolio({
                         ...portfolio,
                         name: e.target.value,
@@ -438,13 +473,18 @@ const Edit = () => {
                     fullWidth
                     color="secondary"
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
+                      endAdornment: (
+                        <InputAdornment position="end">
                           <CreateIcon />
                         </InputAdornment>
                       ),
                     }}
                   />
+                  <p></p>
+                  <LinksDiv>
+                    <DisplayLinks />
+                    <LinkDialog links={links} setLinks={setLinks} />
+                  </LinksDiv>
                 </PortfolioNameSectionInput>
                 {DisplaySections()}
 
