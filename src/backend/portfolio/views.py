@@ -417,9 +417,13 @@ class LinkList(generics.ListCreateAPIView):
         # request.data['link_id']['owner'] = self.request.user.id
         # request.data['page_id'] = kwargs['page_id']
         # Convert JSON into Python object
-        print("HAHA")
-        data = {"page_id": kwargs['page_id'], "link_id": request.data}
-        serializer = serializers.PageLinkSerializer(data=data)
+        data_list = []
+        print(request.data)
+        for single_request in request.data:
+            print(single_request)
+            data_list.append({"page_id": kwargs['page_id'], "link_id": single_request})
+
+        serializer = serializers.PageLinkSerializer(data=data_list, many=True)
         # serializer = serializers.PageLinkSerializer(data=request.data)
         if(serializer.is_valid()):
             # If succesfully saved, call `create` method in serializer
