@@ -167,6 +167,9 @@ class Link(models.Model):
         NONE = "None"
         GITHUB = "Github"
         WEB = "Web"
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='links'
+    )
     id = models.CharField(
         max_length = 36,
         primary_key = True
