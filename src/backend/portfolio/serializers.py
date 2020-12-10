@@ -274,8 +274,6 @@ class PageLinkSerializer(serializers.ModelSerializer):
         fields = ['page_id', 'link_id']
     
     def create(self, validated_data):
-        print("OWNER")
-        print(validated_data)
         # Store the data for the link seperately
         owner = validated_data.pop('owner')
         links_data = validated_data.pop('link_id')
@@ -289,57 +287,3 @@ class PageLinkSerializer(serializers.ModelSerializer):
             **validated_data)
         # Retern the nested JSON data
         return page_link
-
-
-
-
-
-
-
-
-
-
-
-
-# class LinkSerializer(serializers.ModelSerializer):
-#     page_link = PageLinkSerializer
-
-#     class Meta:
-#         model = models.Link
-#         fields = ['id', 'icon', 'address', 'title', 'page_id']
-
-#     def create(self, validated_data):
-#         print(validated_data)
-#         page_link_data = validated_data.pop('page_link')
-#         link = models.Link.objects.create(**validated_data)
-#         models.PageLink.objects.create(page_id = id, **page_link_data)
-#         return link
-
-
-
-
-
-
-
-
-    # link = LinkInputSerializer(many=False)
-
-    # class Meta:
-    #     model = models.PageLink
-    #     fields = ['link', 'page_id']
-    
-    # def create(self, validated_data):
-    #     links_data = validated_data.pop('link')
-    #     print(validated_data)
-    #     page_link = models.PageLink.objects.create("{page_id=16, link_id='123'}")
-    #     # page_link = models.PageLink.objects.create(**validated_data)
-    #     print(page_link)
-    #     models.Link.create(id=page_link, **links_data)
-    #     return page_link
-
-    # link = serializers.PrimaryKeyRelatedField(
-    #     queryset = models.Link.objects.all()
-    # )
-    # class Meta:
-    #     model = models.PageLink
-    #     fields = ['link_id', 'page_id', 'link']

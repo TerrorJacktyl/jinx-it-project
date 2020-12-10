@@ -46,24 +46,8 @@ urlpatterns = [
         views.ImageDetail.as_view(),
         name = 'image_list',
     ),
-    # path(
-    #     'portfolios/<int:portfolio_id>/pages/<int:page_id>/page_links',
-    #     views.PageLinkList.as_view(),
-    #     name = 'link_list'
-    # ),
-    # path(
-    #     'portfolios/<int:portfolio_id>/pages/link',
-    #     views.PageLinkDetail.as_view(),
-    #     name = 'link_detail'
-    # ),
-
-
     path(
         'portfolios/<int:portfolio_id>/pages/<int:page_id>/links',
         views.LinkList.as_view()
-    ),
-    path(
-        'links/<str:pk>/',
-        views.LinkDetail.as_view()
     ),
 ]

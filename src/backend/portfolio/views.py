@@ -289,110 +289,9 @@ class ImageList(generics.ListCreateAPIView):
         super().perform_destroy(instance)
         models.Section.objects.normalise(parent_id)
 
-
-# class LinkDetail(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = serializers.LinkInputSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get_serializer_class(self):
-#         if self.request.method in ['PUT', 'PATCH']:
-#             return serializers.LinkInputSerializer
-#         return serializers.LinkOutoutSerializer
-
-#     lookup_url_kwarg = "link_id"
-
-#     def get_queryset(self):
-#         return models.Link.objects.filter(owner=self.request.user)
-    
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
-    
-#     swagger_schema = swagger.PortfolioAutoSchema
-
-# class LinkList(generics.ListCreateAPIView):
-#     serializer_class = serializers.LinkInputSerializer
-
-#     def get_serializer_class(self):
-#         if self.request.method in ['POST']:
-#             return serializers.LinkInputSerializer
-#         return serializers.LinkOutputSerializer
-
-#     def get_queryset(self):
-#         return models.Link.objects.filter(owner=self.request.user)
-
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
-
-#     swagger_schema = swagger.PortfolioAutoSchema
-
-class PageLinkList(generics.ListCreateAPIView):
-    serializer_class = serializers.LinkInputSerializer
-    permission_classes = [(IsNotPrivate & IsReadOnly) | IsOwner]
-
-    def get_queryset(self):
-        try:
-            portfolio = models.Portfolio.objects.get(
-                id=self.kwargs['portfolio_id'])
-            page = portfolio.pages.get(id=self.kwargs['page_id'])
-        except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
-            raise Http404 from exc
-
-        link_ids = []
-
-        page_link_queryset = models.PageLink.objects.filter(page_id=page)
-        for page_link in page_link_queryset:
-            link_ids.append(page_link.link_id.id)
-
-        return models.Link.objects.filter(id__in = link_ids)
-    
-    swagger_schema = swagger.PortfolioAutoSchema
-
-class PageLinkDetail(generics.CreateAPIView):
-    # Solution from here: 
-    # https://stackoverflow.com/questions/54987028/drf-serializer-multiple-models
-    queryset = models.Link.objects.all()
-    # serializer_class = serializers.LinkInputSerializer
-    serializer_class = serializers.LinkSerializer
-
-    # def create(self, request, *args, **kwargs):
-    #     try:
-    #         page_link_data = request.data.pop('id')
-    #     except KeyError:
-    #         return Response({}, status=status.HTTP_400_BAD_REQUEST)
-    #     print("HELLLOOOOO")
-
-    #     serializer = self.get_serializer(data = request.data)
-    #     serializer.is_valid(raise_exception = True)
-
-    #     # instance = serializer.save()
-    #     # print(serializer.is_valid(raise_exception=True))
-    #     # print(request.data)
-
-    #     # with transaction.atomic():
-    #     #     instance = serializer.save()
-    #         # for page_link in page_link_data:
-    #         #     s = PageLinkSerializer(data=page_link)
-    #         #     print(s)
-
-    #     return Response({}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-
-
-
-
 class LinkList(generics.ListCreateAPIView):
     serializer_class = serializers.LinkSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    # # Override `perform_create` to include the user in serialization process
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
-
 
     def get(self, request, *args, **kwargs):
         portfolio_id = kwargs['portfolio_id']
@@ -413,54 +312,13 @@ class LinkList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        # Insert owner id into request data
-        # request.data['link_id']['owner'] = self.request.user.id
-        # request.data['page_id'] = kwargs['page_id']
-        # Convert JSON into Python object
         data_list = []
-        print(request.data)
         for single_request in request.data:
-            print(single_request)
             data_list.append({"page_id": kwargs['page_id'], "link_id": single_request})
 
         serializer = serializers.PageLinkSerializer(data=data_list, many=True)
-        # serializer = serializers.PageLinkSerializer(data=request.data)
         if(serializer.is_valid()):
             # If succesfully saved, call `create` method in serializer
             serializer.save(owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LinkDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Link.objects.all()
-    serializer_class = serializers.PageLinkSerializer
-
-
-    # def get_object(self, id):
-    #     try:
-    #         link = models.Link.objects.get(id = id)
-    #     except Link.DoesNotExist:
-    #         return Http404
-
-    # def get(self, request, id):
-    #     link = self.get_object(id)
-    #     # Convert model to string
-    #     serializer = serializers.LinkSerializer(link)
-    #     # Return JSON
-    #     return Response(serializer.data)
-
-    # def put(self, request, id):
-    #     link = self.get_object(id)
-    #     # Attempt to convert string to model
-    #     serializer = serializers.LinkSerializer(link, data=request.data)
-    #     # Process if valid
-    #     if serializer.is_valid():
-    #         # Save the model
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def delete(self, request, pk):
-    #     link = selef.get_object(id)
-    #     link.delete()
-    #     return HttpResponse(status=status.HTTP_204_NO_CONTENT)
