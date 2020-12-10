@@ -20,6 +20,7 @@ from . import swagger
 
 from .permissions import IsOwner, IsNotPrivate
 
+import json
 
 class PortfolioList(generics.ListCreateAPIView):
     def get_serializer_class(self):
@@ -316,4 +317,52 @@ class LinkList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    swagger_schema = swagger.PortfolioAutoSchema
+
+class PageLinkList(generics.ListCreateAPIView):
+    serializer_class = serializers.LinkInputSerializer
+    permission_classes = [(IsNotPrivate & IsReadOnly) | IsOwner]
+    
+    # def get_queryset(self):
+    #     return models.PageLink.objects.filter(
+    #         models.PageLink.page_id == self.kwargs(['request_page_id'])
+    #     )
+
+    def get_queryset(self):
+        try:
+            portfolio = models.Portfolio.objects.get(
+                id=self.kwargs['portfolio_id'])
+            page = portfolio.pages.get(id=self.kwargs['page_id'])
+        except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
+            raise Http404 from exc
+
+
+        # # TODO: consolidate all the section data into the section model?
+        # section_types = [
+        #     models.TextSection,
+        #     models.ImageSection,
+        #     models.ImageTextSection,
+        #     models.MediaSection
+        # ]
+
+        link_ids = []
+
+        page_link_queryset = models.PageLink.objects.filter(page_id=page)
+
+        for page_link in page_link_queryset:
+            link_ids.append(page_link.link_id.id)
+
+        #     # links += models.Link.objects.filter(id = link_id)
+        #     # links += models.Link.objects.filter(link_id = page_link.link_id)
+        # print(link_ids)
+        return models.Link.objects.filter(id__in = link_ids)
+        # return models.PageLink.objects.filter(page_id = page)
+        # for section in section_types:
+        #     ret += section.objects.filter(**filter_param)
+
+        # return sorted(ret, key=lambda s: s.number)
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.page_id)
+    
     swagger_schema = swagger.PortfolioAutoSchema

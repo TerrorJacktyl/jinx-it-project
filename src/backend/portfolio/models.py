@@ -161,16 +161,15 @@ class ImageSection(Section):
 
 #     content = models.TextField(blank=True)
 
-class Link(models.Model):
 
+class Link(models.Model):
     class LinkIcon(models.TextChoices):
         NONE = "None"
         GITHUB = "Github"
         WEB = "Web"
-    owner = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
-        related_name='links'
+    id = models.CharField(
+        max_length = 36,
+        primary_key = True
     )
     icon = models.CharField(
         max_length = 20,
@@ -179,3 +178,16 @@ class Link(models.Model):
     )
     address = models.TextField(blank=True)
     title = models.TextField(blank=True)
+
+
+class PageLink(models.Model):
+    link_id = models.OneToOneField(
+        Link, 
+        primary_key = True, 
+        on_delete = models.CASCADE
+    )
+    
+    page_id = models.ForeignKey(
+        Page, 
+        on_delete = models.CASCADE
+    )

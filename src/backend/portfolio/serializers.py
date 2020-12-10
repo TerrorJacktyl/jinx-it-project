@@ -260,4 +260,9 @@ class LinkInputSerializer(serializers.ModelSerializer):
 class LinkOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Link
-        fields = ['id', 'owner', 'icon', 'title', 'address' ]
+        fields = ['id', 'icon', 'title', 'address' ]
+
+class PageLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PageLink
+        fields = ['link_id', 'page_id']

@@ -47,8 +47,8 @@ urlpatterns = [
         name = 'image_list',
     ),
     path(
-        'links',
-        views.LinkList.as_view(),
+        'portfolios/<int:portfolio_id>/pages/<int:page_id>/page_links',
+        views.PageLinkList.as_view(),
         name = 'link_list'
     )
 ]

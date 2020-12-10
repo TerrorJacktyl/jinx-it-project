@@ -49,4 +49,8 @@ class SectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Link)
 class LinkAdmin(admin.ModelAdmin):
-    list_display = ['owner', 'icon', 'title', 'address', 'id']
+    list_display = ['icon', 'title', 'address', 'id']
+
+@admin.register(models.PageLink)
+class PageLinkAdmin(admin.ModelAdmin):
+    list_display = ['link_id', 'page_id']
