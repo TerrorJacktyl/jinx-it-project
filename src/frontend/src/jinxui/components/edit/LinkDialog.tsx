@@ -83,19 +83,33 @@ const LinkDialog = (props: TLinkDialog) => {
             handleAdd();
           }}
         >
-                <Form>
-          <DialogTitle id="link-dialog-title">Link</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Note: Leave Link Title blank to display just the icon.
-            </DialogContentText>
-            <LinkInputDiv>
-              <LinkInputInnerDiv>
-                <LinkIconMenu linkIcon={linkIcon} setLinkIcon={setLinkIcon} />
+          <Form>
+            <DialogTitle id="link-dialog-title">Link</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Note: Leave Link Title blank to display just the icon.
+              </DialogContentText>
+              <LinkInputDiv>
+                <LinkInputInnerDiv>
+                  <LinkIconMenu linkIcon={linkIcon} setLinkIcon={setLinkIcon} />
+                  <Field
+                    component={TextField}
+                    name="linkTitle"
+                    label="Link Title"
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CreateIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </LinkInputInnerDiv>
                 <Field
                   component={TextField}
-                  name="linkTitle"
-                  label="Link Title"
+                  name={"linkAddress"}
+                  label={"Link Address"}
                   fullWidth
                   InputProps={{
                     endAdornment: (
@@ -105,40 +119,20 @@ const LinkDialog = (props: TLinkDialog) => {
                     ),
                   }}
                 />
-              </LinkInputInnerDiv>
-              <Field
-                component={TextField}
-                name={"linkAddress"}
-                label={"Link Address"}
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <CreateIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </LinkInputDiv>
-          </DialogContent>
-          <DialogActions>
-            <PublishCancelDiv>
-              <div>
-                <PrimaryButton 
-                  type="submit"  
-                >
-                  ADD
-                </PrimaryButton>
-              </div>
-              <div>
-                <SecondaryButton 
-                  type="button"
-                  onClick={handleClose}>
-                  Cancel
-                </SecondaryButton>
-              </div>
-            </PublishCancelDiv>
-          </DialogActions>
+              </LinkInputDiv>
+            </DialogContent>
+            <DialogActions>
+              <PublishCancelDiv>
+                <div>
+                  <PrimaryButton type="submit">ADD</PrimaryButton>
+                </div>
+                <div>
+                  <SecondaryButton type="button" onClick={handleClose}>
+                    Cancel
+                  </SecondaryButton>
+                </div>
+              </PublishCancelDiv>
+            </DialogActions>
           </Form>
         </Formik>
       </Dialog>

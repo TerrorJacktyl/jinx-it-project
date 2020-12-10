@@ -21,12 +21,6 @@ from . import swagger
 
 from .permissions import IsOwner, IsNotPrivate
 
-from rest_framework import generics
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-
-
 
 class PortfolioList(generics.ListCreateAPIView):
     def get_serializer_class(self):

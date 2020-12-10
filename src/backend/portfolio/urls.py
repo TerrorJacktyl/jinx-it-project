@@ -44,10 +44,11 @@ urlpatterns = [
     path(
         'images/<int:image_id>',
         views.ImageDetail.as_view(),
-        name = 'image_list',
+        name = 'image_detail',
     ),
     path(
         'portfolios/<int:portfolio_id>/pages/<int:page_id>/links',
-        views.LinkList.as_view()
+        views.LinkList.as_view(),
+        name = 'link_list',
     ),
 ]

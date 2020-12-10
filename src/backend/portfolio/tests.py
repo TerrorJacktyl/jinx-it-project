@@ -235,6 +235,67 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
             0
         )
 
+class LinkTest(UserMixin, PortfolioMixin, APITestCase):
+    def setUp(self):
+        """Code run before each test. Setup API access simulation."""
+        self.setUpUser()
+        self.setUpPortfolio()
+    
+    def test_page_link_create(self):
+        data = [
+            {
+                "id": "asdasfdsa",
+                "icon": "Github",
+                "address": "string",
+                "title": "string"
+            },
+            {
+                "id": "asdasfdsb",
+                "icon": "Github",
+                "address": "string",
+                "title": "string"
+            }
+        ]
+        response = self.client.post(
+            reverse(
+                'link_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+            data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 201)
+    
+    def test_page_link_validation(self):
+        data = [
+            {
+                "id": "asd",
+                "icon": "LinkedIn",
+                "address": "www.linkedin.com",
+                "title": "My LinkedIn"
+            },
+            {
+                "id": "asd",
+                "icon": "LinkedIn",
+                "address": "www.linkedin.com",
+                "title": "My LinkedIn"
+            }
+        ]
+        response = self.client.post(
+            reverse(
+                'link_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+            data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 400)
 
 class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
     def setUp(self):
