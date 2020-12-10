@@ -265,7 +265,7 @@ class LinkOutputSerializer(serializers.ModelSerializer):
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Link
-        fields = ['id', 'icon', 'address', 'title','owner']
+        fields = ['id', 'icon', 'address', 'title']
 
 class PageLinkSerializer(serializers.ModelSerializer):
     link_id = LinkSerializer()
@@ -274,11 +274,14 @@ class PageLinkSerializer(serializers.ModelSerializer):
         fields = ['page_id', 'link_id']
     
     def create(self, validated_data):
+        print("OWNER")
+        print(validated_data)
         # Store the data for the link seperately
+        owner = validated_data.pop('owner')
         links_data = validated_data.pop('link_id')
         if links_data:
             # Create a Link model from the seperated data
-            link = models.Link.objects.create(**links_data)
+            link = models.Link.objects.create(owner=owner, **links_data)
         # Create a new PageLink model that connects to the
         # newly created Link model
         page_link = models.PageLink.objects.create(

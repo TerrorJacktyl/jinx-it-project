@@ -389,9 +389,9 @@ class LinkList(generics.ListCreateAPIView):
     serializer_class = serializers.LinkSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # Override `perform_create` to include the user in serialization process
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    # # Override `perform_create` to include the user in serialization process
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
 
 
     def get(self, request, *args, **kwargs):
@@ -414,13 +414,16 @@ class LinkList(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         # Insert owner id into request data
-        request.data['link_id']['owner'] = self.request.user.id
+        # request.data['link_id']['owner'] = self.request.user.id
         # request.data['page_id'] = kwargs['page_id']
         # Convert JSON into Python object
-        serializer = serializers.PageLinkSerializer(data=request.data)
+        print("HAHA")
+        data = {"page_id": kwargs['page_id'], "link_id": request.data}
+        serializer = serializers.PageLinkSerializer(data=data)
+        # serializer = serializers.PageLinkSerializer(data=request.data)
         if(serializer.is_valid()):
             # If succesfully saved, call `create` method in serializer
-            serializer.save()
+            serializer.save(owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
