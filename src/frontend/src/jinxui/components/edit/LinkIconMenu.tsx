@@ -7,9 +7,10 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import LanguageIcon from "@material-ui/icons/Language";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 
-import { PrimaryMenu, DisplayIcon } from "jinxui";
+import { PrimaryMenu, LinkDisplayIcon } from "jinxui";
 
 
 
@@ -33,7 +34,7 @@ const LinkIconMenu = (props: any) => {
     <div>
       <Tooltip title="Choose a link icon">
         <Button onClick={handleClick}>
-          <DisplayIcon icon={props.linkIcon} />
+          <LinkDisplayIcon icon={props.linkIcon} />
           <ExpandMoreIcon fontSize="small" />
         </Button>
       </Tooltip>
@@ -46,11 +47,19 @@ const LinkIconMenu = (props: any) => {
       >
         <MenuItem
           onClick={() => {
+            props.setLinkIcon("None");
+            handleClose();
+          }}
+        >
+          <LinkDisplayIcon icon="None" />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
             props.setLinkIcon("Web");
             handleClose();
           }}
         >
-          <LanguageIcon />
+          <LinkDisplayIcon icon="Web" />
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -58,7 +67,7 @@ const LinkIconMenu = (props: any) => {
             handleClose();
           }}
         >
-          <GitHubIcon />
+          <LinkDisplayIcon icon="Github" />
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -66,7 +75,7 @@ const LinkIconMenu = (props: any) => {
             handleClose();
           }}
         >
-          <LinkedInIcon />
+          <LinkDisplayIcon icon="LinkedIn" />
         </MenuItem>
       </PrimaryMenu>
     </div>

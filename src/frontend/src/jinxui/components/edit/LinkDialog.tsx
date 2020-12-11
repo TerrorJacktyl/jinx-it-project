@@ -97,6 +97,7 @@ const LinkDialog = (props: TLinkDialog) => {
                     name="linkTitle"
                     label="Link Title"
                     fullWidth
+                    color="secondary"
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -111,6 +112,7 @@ const LinkDialog = (props: TLinkDialog) => {
                   name={"linkAddress"}
                   label={"Link Address"}
                   fullWidth
+                  color="secondary"
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">

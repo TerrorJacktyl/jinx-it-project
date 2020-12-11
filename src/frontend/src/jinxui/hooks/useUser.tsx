@@ -220,20 +220,6 @@ export const useUser = () => {
     }
   }
 
-  async function postLink(
-    portfolio_id: string,
-    page_id: string,
-    data: TLinkData,
-  ) {
-    const path = 
-      PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
-    try {
-      const response = await API.post(path, [data], state.config);
-    } catch (e) {
-      throw e;
-    }
-  }
-
   // TODO: Fix types
   async function putPortfolio(portfolio: any) {
     const path = PORTFOLIOS_PATH + "/" + portfolio.id;
@@ -271,7 +257,7 @@ export const useUser = () => {
   async function putLinks(
     portfolio_id: string,
     page_id: string,
-    links: [TLinkData]
+    links: TLinkData[]
   ) {
     const path =
       PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
@@ -288,6 +274,7 @@ export const useUser = () => {
     portfolio: any,
     pages: any[],
     sections: any[],
+    links: TLinkData[],
     existingPortfolio: boolean
   ) {
     const isNew = !existingPortfolio
@@ -301,6 +288,8 @@ export const useUser = () => {
       const sectionResp = isNew
         ? await putSections(portfolioResp.id, pageResp.id, sections)
         : await putSections(portfolio.id, pages[0].id, sections)
+      const linkResp = 
+        await putLinks(portfolio.id, pages[0].id, links)
       // Assure redirection to newly created portfolio
       if (isNew) { await savePortfolioId(parseInt(portfolioResp.id)); }
       return { portfolioResp, pageResp, sectionResp, existingPortfolio };
@@ -483,6 +472,30 @@ export const useUser = () => {
     return PORTFOLIOS_PATH + "/" + portfolio_id;
   }
 
+  function getPageLinks(portfolio_id: number, page_id: number) {
+    const path =
+      PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
+    const result = API.get(path, state.config)
+      .then((response: any) => {
+        let links = []
+        try{
+          for (var page_link of response.data){
+            links.push(page_link.link)
+          }
+        }
+        catch(Error) {
+          throw(Error)
+        }
+        console.log(links)
+        return(links)        
+      })
+      .catch((error: any) => {
+        console.log(error);
+        throw(error)
+      })
+    return result;
+  }
+
   /* Will retrieve a portoflio, all of its pages, and the first page's sections. 
      Tried to incorporate functionality to fetch all sections corresponding to all pages,
      but ran into a very lame bug with nested list indexing :'( */
@@ -490,13 +503,15 @@ export const useUser = () => {
     try {
       const portfolio: TPortfolio = await getPortfolio(portfolio_id);
       const pages: TPage[] = await getPages(portfolio_id);
+      const links: TLinkData[] = await getPageLinks(portfolio_id, pages[0].id);
+      console.log(links)
       // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
       const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
       //        pages.forEach(async (page: any) => {
       //          sections.push(await getSections(portfolio_id, page.id))
       //        })
       // console.log(sections);
-      return { portfolio, pages, sections };
+      return { portfolio, pages, sections, links };
     } catch (e) {
       throw e;
     }

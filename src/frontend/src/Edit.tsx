@@ -29,7 +29,7 @@ import {
   ImageTextSectionInput,
   SnackbarAlert,
   LinkDialog,
-  DisplayIcon,
+  LinkDisplayIcon,
 } from "jinxui";
 
 import {
@@ -129,7 +129,7 @@ const Edit = () => {
       // OK to get saved portfolioId from context rather then fetching from backend
       // as primary_portfolio is fetched upon login
       const portfolioId = await getSavedPortfolioId();
-      const { portfolio, pages, sections } = await getFullPortfolio(
+      const { portfolio, pages, sections, links } = await getFullPortfolio(
         portfolioId
       );
       setPortfolio(portfolio);
@@ -141,6 +141,7 @@ const Edit = () => {
         return newSection;
       });
       setSections(IdSections);
+      setLinks(links)
     };
 
     if (portfolioExists) {
@@ -223,7 +224,7 @@ const Edit = () => {
   const handleSave = () => {
     setSaving(true);
     const sections = cleanedSections();
-    sendFullPortfolio(portfolio, pages, sections, portfolioExists)
+    sendFullPortfolio(portfolio, pages, sections, links, portfolioExists)
       .then((response: any) => {
         setSaving(false);
         setSuccessMessage("Portfolio saved");
@@ -240,7 +241,7 @@ const Edit = () => {
       setSaving(true);
       const sections = cleanedSections();
 
-      sendFullPortfolio(portfolio, pages, sections, portfolioExists)
+      sendFullPortfolio(portfolio, pages, sections, links, portfolioExists)
         .then(() => {
           makePortfolioPublic(portfolio.id)
             .then(() => {
@@ -348,7 +349,7 @@ const Edit = () => {
           {
             return (
                 <Button key={link.id}>
-                  <DisplayIcon icon={link?.icon} />
+                  <LinkDisplayIcon icon={link?.icon} />
                   <Typography variant="h6">
                     {link.title}
                   </Typography>

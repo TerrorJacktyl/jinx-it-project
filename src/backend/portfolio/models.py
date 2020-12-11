@@ -164,10 +164,12 @@ class ImageSection(Section):
 
 class Link(models.Model):
     class LinkIcon(models.TextChoices):
-        NONE = "None"
+        LINKEDIN = "LinkedIn"
         GITHUB = "Github"
         WEB = "Web"
-        
+        NONE = "None"
+
+
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='links'
     )
