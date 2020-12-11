@@ -306,7 +306,7 @@ class LinkList(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         page_links = self.get_queryset()
         page = kwargs['page_id']
-        
+
         # Serialize them into a string
         serializer = serializers.PageLinkSerializer(
             page_links, 
@@ -338,3 +338,6 @@ class LinkList(generics.ListCreateAPIView):
             serializer.save(owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, *args, **kwargs):
+        return self.put(request, *args, **kwargs)

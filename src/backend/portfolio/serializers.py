@@ -64,7 +64,7 @@ class PageInputSerializer(serializers.ModelSerializer):
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Page
-        fields = ['id', 'name', 'number', 'sections']
+        fields = ['id', 'name', 'number', 'sections', 'page_links']
 
 
 class SectionSerializer(serializers.ModelSerializer):
