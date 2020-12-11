@@ -202,3 +202,15 @@ class PageLink(models.Model):
         on_delete = models.CASCADE,
         related_name = 'page_links',
     )
+
+class SectionLink(models.Model):
+    link = models.OneToOneField(
+        Link,
+        primary_key = True,
+        on_delete = models.CASCADE,
+    )
+    section = models.ForeignKey(
+        Section,
+        on_delete = models.CASCADE,
+        related_name = 'section_links',
+    )

@@ -287,7 +287,7 @@ class ImageList(generics.ListCreateAPIView):
         super().perform_destroy(instance)
         models.Section.objects.normalise(parent_id)
 
-class LinkList(generics.ListCreateAPIView):
+class PageLinkList(generics.ListCreateAPIView):
     serializer_class = serializers.LinkSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -309,35 +309,86 @@ class LinkList(generics.ListCreateAPIView):
 
         # Serialize them into a string
         serializer = serializers.PageLinkSerializer(
-            page_links, 
+            page_links,
             child=serializers.PageLinkDetailSerializer(),
-            )
+        )
         # Return the JSON string
         return Response(serializer.data)
-    
-    def put(self, request, *args, **kwargs):
-        data_list = []
-        for single_request in request.data:
-            data_list.append(
-                {"page": kwargs['page_id'], "link": single_request})
 
-        existing_queryset = models.PageLink.objects.filter(page=kwargs['page_id'])
-        
-        
-        context = super().get_serializer_context()
-        context['in_list'] = True
-        
-        serializer = serializers.PageLinkSerializer(
+    def set_serializer(self, data_list):
+        return serializers.PageLinkSerializer(
             self.get_queryset(),
             data=data_list,
-            child=serializers.PageLinkDetailSerializer(context=context),
-            )
+            child=serializers.PageLinkDetailSerializer(),
+        )
 
-        if(serializer.is_valid()):
-            # If succesfully saved, call `create` method in serializer
-            serializer.save(owner=self.request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_keywords(self):
+        return "page", "page_id"
+        
+    def put(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.put(request, *args, **kwargs)
+        return link_association_put(self, request, **kwargs)
+
+
+class SectionLinkList(generics.ListCreateAPIView):
+    serializer_class = serializers.LinkSerializer
+    permission_class = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        try:
+            portfolio_id = self.kwargs['portfolio_id']
+            page = self.kwargs['page_id']
+            section = self.kwargs['section_id']
+            portfolio = models.Portfolio.objects.get(
+                id=portfolio_id)
+            page = portfolio.pages.get(id=page)
+            section = page.sections.get(id=section)
+        except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
+            raise Http404 from exc
+
+        return models.SectionLink.objects.filter(section=section)
+    
+    def get(self, request, *args, **kwargs):
+        section_links = self.get_queryset()
+        section = kwargs['section_id']
+
+        # Serialize them into a string
+        serializer = serializers.SectionLinkSerializer(
+            section_links,
+            child=serializers.SectionLinkDetailSerializer(),
+        )
+        # Return the JSON string
+        return Response(serializer.data)
+
+    def set_serializer(self, data_list):
+        return serializers.SectionLinkSerializer(
+            self.get_queryset(),
+            data=data_list,
+            child=serializers.SectionLinkDetailSerializer(),
+        )
+
+    def get_keywords(self):
+        return "section", "section_id"
+
+    def put(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+
+def link_association_put(view, request, **kwargs):
+    data_list = []
+    assoc_name, assoc_id_name = view.get_keywords()
+    for single_request in request.data:
+        data_list.append(
+            {assoc_name: kwargs[assoc_id_name], "link": single_request})
+
+    serializer = view.set_serializer(data_list)
+
+    if(serializer.is_valid()):
+        serializer.save(owner=view.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

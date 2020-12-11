@@ -1,13 +1,13 @@
 import React from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import MenuItem from "@material-ui/core/MenuItem";
+import Tooltip from "@material-ui/core/Tooltip";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddIcon from "@material-ui/icons/Add";
 import SubjectSharp from "@material-ui/icons/SubjectSharp";
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp";
 import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp";
-import Tooltip from "@material-ui/core/Tooltip"
 
 import { PrimaryMenu, DefaultSectionData } from "jinxui";
 

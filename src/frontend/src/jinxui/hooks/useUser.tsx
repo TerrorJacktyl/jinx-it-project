@@ -486,7 +486,6 @@ export const useUser = () => {
         catch(Error) {
           throw(Error)
         }
-        console.log(links)
         return(links)        
       })
       .catch((error: any) => {
@@ -504,7 +503,6 @@ export const useUser = () => {
       const portfolio: TPortfolio = await getPortfolio(portfolio_id);
       const pages: TPage[] = await getPages(portfolio_id);
       const links: TLinkData[] = await getPageLinks(portfolio_id, pages[0].id);
-      console.log(links)
       // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
       const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
       //        pages.forEach(async (page: any) => {

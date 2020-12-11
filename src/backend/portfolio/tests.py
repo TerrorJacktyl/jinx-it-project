@@ -335,6 +335,102 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['link']['address'], "www.github.com")
 
+    def test_section_link_create(self):
+        data = [
+            {
+                "id": "asdasfdsa",
+                "icon": "Github",
+                "address": "string",
+                "title": "string"
+            },
+            {
+                "id": "asdasfdsb",
+                "icon": "Github",
+                "address": "string",
+                "title": "string"
+            }
+        ]
+        response = self.client.put(
+            reverse(
+                'section_link',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id
+                }
+            ),
+            data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 201)
+
+    def test_section_link_update(self):
+        data = [
+            {
+                "id": "asc",
+                "icon": "LinkedIn",
+                "address": "www.linkedin.com",
+                "title": "My LinkedIn"
+            },
+            {
+                "id": "asd",
+                "icon": "Github",
+                "address": "www.linkedin.com",
+                "title": "My LinkedIn"
+            }
+        ]
+        response = self.client.put(
+            reverse(
+                'section_link',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id
+                }
+            ),
+            data,
+            format='json'
+        )
+        self.assertEqual(len(response.data), 2)
+
+        self.assertEqual(response.status_code, 201)
+
+        updated_data = [
+            {
+                "id": "asc",
+                "icon": "Github",
+                "address": "www.github.com",
+                "title": "My LinkedIn"
+            },
+        ]
+        response = self.client.put(
+            reverse(
+                'section_link',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id
+                }
+            ),
+            updated_data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 201)
+        response = self.client.get(
+            reverse(
+                'section_link',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                    'section_id': self.section.id
+                }
+            ),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['link']['address'], "www.github.com")
+
 
 class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
     def setUp(self):

@@ -73,6 +73,7 @@ export { default as PaperSectionTitle } from "./components/edit/PaperSectionTitl
 export { default as LinkIconMenu } from "./components/edit/LinkIconMenu"
 export { default as LinkDialog } from "./components/edit/LinkDialog"
 export { default as LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
+export { default as LinkEditMenu } from "./components/edit/LinkEditMenu"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

@@ -15,8 +15,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 import CreateIcon from "@material-ui/icons/Create";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+
 
 import { LinkIconMenu, PrimaryButton, SecondaryButton } from "jinxui";
 import { TLinkData } from "jinxui/types";
@@ -45,24 +49,50 @@ const PublishCancelDiv = styled.div`
 type TLinkDialog = {
   links: TLinkData[];
   setLinks: any;
+  // isEdit?: boolean;
+  link?: TLinkData;
 };
-const LinkDialog = (props: TLinkDialog) => {
+const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [open, setOpen] = useState(false);
-  const [linkIcon, setLinkIcon] = useState("Web");
+  const [linkIcon, setLinkIcon] = useState(props.link?props.link.icon:"Web");
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  const ActivationButton = () => {
+    if (props.link){
+      return (
+        <MenuItem onClick={handleClickOpen}>
+          <ListItemIcon>
+            <CreateIcon />
+          </ListItemIcon>
+          <ListItemText primary="Edit" />
+        </MenuItem>
+      );
+    } else {
+      return (
+        <PrimaryButton onClick={handleClickOpen}>
+          Add link
+        </PrimaryButton>
+      )  
+    }
+  }
+
+  
   const newLink: TLinkData = {
     title: "",
     address: "",
     icon: linkIcon,
     id: uuidv4(),
   };
-
+  
+  const activeLink = props.link? props.link : newLink;
+  const okayText = props.link? "SAVE" : "ADD";
+  // if(props.link){
+  //   setLinkIcon(props.link.icon);
+  // }
   const handleAdd = () => {
-    console.log(newLink);
     props.setLinks((links: any) => [...links, newLink]);
     setOpen(false);
   };
@@ -71,9 +101,10 @@ const LinkDialog = (props: TLinkDialog) => {
     setOpen(false);
   };
 
+
   return (
     <>
-      <PrimaryButton onClick={handleClickOpen}>Add link</PrimaryButton>
+      <ActivationButton />
       <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title">
         <Formik
           initialValues={{ linkTitle: "", linkAddress: "" }}
@@ -91,11 +122,14 @@ const LinkDialog = (props: TLinkDialog) => {
               </DialogContentText>
               <LinkInputDiv>
                 <LinkInputInnerDiv>
-                  <LinkIconMenu linkIcon={linkIcon} setLinkIcon={setLinkIcon} />
+                  <LinkIconMenu 
+                    linkIcon={linkIcon} 
+                    setLinkIcon={setLinkIcon} />
                   <Field
                     component={TextField}
                     name="linkTitle"
                     label="Link Title"
+                    value={activeLink.title}
                     fullWidth
                     color="secondary"
                     InputProps={{
@@ -111,6 +145,7 @@ const LinkDialog = (props: TLinkDialog) => {
                   component={TextField}
                   name={"linkAddress"}
                   label={"Link Address"}
+                  value={activeLink.address}
                   fullWidth
                   color="secondary"
                   InputProps={{
@@ -126,7 +161,7 @@ const LinkDialog = (props: TLinkDialog) => {
             <DialogActions>
               <PublishCancelDiv>
                 <div>
-                  <PrimaryButton type="submit">ADD</PrimaryButton>
+                  <PrimaryButton type="submit">{okayText}</PrimaryButton>
                 </div>
                 <div>
                   <SecondaryButton type="button" onClick={handleClose}>
@@ -140,6 +175,6 @@ const LinkDialog = (props: TLinkDialog) => {
       </Dialog>
     </>
   );
-};
+});
 
 export default LinkDialog;

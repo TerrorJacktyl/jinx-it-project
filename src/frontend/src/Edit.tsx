@@ -30,6 +30,7 @@ import {
   SnackbarAlert,
   LinkDialog,
   LinkDisplayIcon,
+  LinkEditMenu,
 } from "jinxui";
 
 import {
@@ -348,12 +349,12 @@ const Edit = () => {
           if (link)
           {
             return (
-                <Button key={link.id}>
-                  <LinkDisplayIcon icon={link?.icon} />
-                  <Typography variant="h6">
-                    {link.title}
-                  </Typography>
-                </Button>
+              <LinkEditMenu 
+                key={link.id} 
+                link={link} 
+                links={links}
+                setLinks={setLinks}
+              />
             );
           }
         })}
