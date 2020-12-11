@@ -167,9 +167,11 @@ class Link(models.Model):
         NONE = "None"
         GITHUB = "Github"
         WEB = "Web"
+        
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='links'
     )
+
     id = models.CharField(
         max_length = 36,
         primary_key = True
@@ -182,15 +184,19 @@ class Link(models.Model):
     address = models.TextField(blank=True)
     title = models.TextField(blank=True)
 
+    def __str__(self):
+        return self.title + " | " + self.address
+
 
 class PageLink(models.Model):
-    link_id = models.OneToOneField(
+    link = models.OneToOneField(
         Link, 
         primary_key = True, 
         on_delete = models.CASCADE
     )
     
-    page_id = models.ForeignKey(
+    page = models.ForeignKey(
         Page, 
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        related_name = 'page_links',
     )

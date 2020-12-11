@@ -106,7 +106,7 @@ class SectionSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict):
         if 'page' not in data:
-            data['page'] = self.context['page_id']
+            data['page'] = self.context['page']
         return super().to_internal_value(data)
 
 
@@ -266,24 +266,151 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Link
         fields = ['id', 'icon', 'address', 'title']
+        extra_kwargs = {
+            'id': {'validators': []},
+        }
 
-class PageLinkSerializer(serializers.ModelSerializer):
-    link_id = LinkSerializer()
+
+class PageLinkSerializer(serializers.ListSerializer):
+    link = LinkSerializer()
+
+    # def __init__(self, *args, **kwargs):
+    #     self.child = kwargs.pop('child', copy.deepcopy(self.child))
+    #     self.allow_empty = kwargs.pop('allow_empty', True)
+    #     super(serializers.ListSerializer, self).__init__(*args, **kwargs)
+
+
     class Meta:
         model = models.PageLink
-        fields = ['page_id', 'link_id']
-    
+        fields = ['page', 'link']
+
+    def update(self, instance, validated_data):
+        print("UPDATE BEGIN")
+        print(validated_data)
+        # print(instance)
+        link_mapping = {page_link.link.id: page_link for page_link in instance}
+
+        # data_mapping = {item['link']: item for item in validated_data}
+
+        print("DATA MAPPING")
+        print(link_mapping.items())
+
+        ret = []
+        print("FINISHED MAPPING")
+        # print(link_mapping.items())
+        # print(link_mapping.get("1010"))
+
+
+        for data in validated_data:
+            print("IN LOOP")
+            # owner = data.pop('owner')
+            print(data)
+            # print(owner)
+            # this_link = data.pop('link', None)
+            # this_id = this_link.pop('id', None)
+            this_link = data['link']
+            this_id = this_link['id']
+            existing_link = link_mapping.get(this_id, None)
+            # print("ACTUAL MODEL")
+            # actual_model = models.Link.objects.filter(id = this_id)
+            print(existing_link)
+            if existing_link is None:
+                print("ABOUT TO CREATE")
+                ret.append(self.child.create(data))
+            else:
+                print("ABOUT TO UPDATE")
+                print(existing_link)
+                ret.append(self.child.update(existing_link, data))
+
+            # Perform deletions
+        print("RET")
+        print(ret)
+        # updated_ids = map(lambda s: s.link.id, ret)
+        updated_ids = [x.link.id for x in ret]
+        print(updated_ids)
+        print(type(updated_ids))
+        # if "2" in updated_ids:    
+        #     print ("FOUND")
+
+        for link_id, link in link_mapping.items():
+            if link_id not in updated_ids:
+                print("DELETING")
+                print(link.link)
+                link.link.delete()
+                link.delete()
+                # link.delete()
+
+        return ret
+            # print(link)
+
+            # link = link_mapping.get(data.pop('link', None).pop('id', None), None)
+            # print(link)
+        # for link, data in validated_data:
+        #     page_link = link_mapping.get(link, None)
+        #     if book is None:
+        #         ret.append(self.child.create(data))
+        #     else:
+        #         ret.append()
+
+
     def create(self, validated_data):
+        print("CREATING")
+        print(validated_data)
+
+
+
+
         # Store the data for the link seperately
         owner = validated_data.pop('owner')
-        links_data = validated_data.pop('link_id')
+        links_data = validated_data.pop('link')
         if links_data:
             # Create a Link model from the seperated data
             link = models.Link.objects.create(owner=owner, **links_data)
         # Create a new PageLink model that connects to the
         # newly created Link model
         page_link = models.PageLink.objects.create(
-            link_id = link, 
+            link = link, 
             **validated_data)
-        # Retern the nested JSON data
+        # Return the nested JSON data
         return page_link
+
+class PageLinkDetailSerializer(serializers.ModelSerializer):
+    link = LinkSerializer()
+    # link = serializers.CharField()
+
+    class Meta:
+        list_serializer_class = PageLinkSerializer
+        model = models.PageLink
+        fields = ['page', 'link']
+
+    def create(self, validated_data):
+        print("DETAIL CREATING")
+        print(validated_data)
+        # Store the data for the link seperately
+        owner = validated_data.pop('owner')
+        links_data = validated_data.pop('link')
+        print(links_data)
+        if links_data:
+            link = models.Link.objects.create(owner = owner, **links_data)
+        # Create a new PageLink model that connects to the
+        # newly created Link model
+        page_link = models.PageLink.objects.create(
+            link = link,
+            **validated_data
+        )
+        print("NEW PAGE LINK")
+        print(page_link)
+        # Return the nested JSON data
+        return page_link
+    
+    def update(self, instance, validated_data):
+        print("UPDATING")
+        new_link = validated_data.pop('link')
+        print(type(new_link))
+        for key, value in new_link.items():
+            setattr(instance.link, key, value)
+            print(getattr(instance.link, key))
+        print("UPDATED INSTANCE")
+        print(instance.link.address)
+        instance.link.save()
+        return instance

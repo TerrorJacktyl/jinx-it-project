@@ -106,7 +106,7 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
             return serializers.PageInputSerializer
         return serializers.PageOutputSerializer
 
-    lookup_url_kwarg = 'page_id'
+    lookup_url_kwarg = 'page'
     permission_classes = [(IsNotPrivate & IsReadOnly) | IsOwner]
     queryset = models.Page.objects.all()
     swagger_schema = swagger.PortfolioAutoSchema
@@ -157,18 +157,22 @@ class SectionList(generics.ListCreateAPIView):
         context = super().get_serializer_context()
         # kind of redundant as context['view'] would have the kwargs but just in case
         # the urls change
-        context['page_id'] = self.kwargs['page_id']
+        context['page'] = self.kwargs['page_id']
         return context
 
     swagger_schema = swagger.PortfolioAutoSchema
 
     # bulk section creation/update
     def put(self, request, *args, **kwargs):
+        print("REQUEST DATA")
+        print(request.data)
         request.data.sort(key=(lambda s: s['number']))
         for i, section in enumerate(request.data):
             section['number'] = i
         context = self.get_serializer_context()
         context['in_list'] = True
+        # print(self.get_serializer_context())
+        # print(context)
         serializer = serializers.SectionListSerializer(
             self.get_queryset(),
             data=request.data,
@@ -176,6 +180,8 @@ class SectionList(generics.ListCreateAPIView):
                 context=context
             ),
         )
+        print("CONTEXT")
+        print(serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -201,7 +207,7 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['page_id'] = self.kwargs['page_id']
+        context['page'] = self.kwargs['page_id']
         return context
 
     # modified based on code from GenericAPIView default implementation
@@ -287,28 +293,71 @@ class LinkList(generics.ListCreateAPIView):
     serializer_class = serializers.LinkSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        try:
+            portfolio_id = self.kwargs['portfolio_id']
+            page = self.kwargs['page_id']
+            portfolio = models.Portfolio.objects.get(
+                id=portfolio_id)
+            page = portfolio.pages.get(id=page)
+        except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
+            raise Http404 from exc
+
+        return models.PageLink.objects.filter(page=page)
+
     def get(self, request, *args, **kwargs):
         portfolio_id = kwargs['portfolio_id']
-        page_id = kwargs['page_id']
+        page = kwargs['page_id']
         try:
             portfolio = models.Portfolio.objects.get(
                 id=portfolio_id)
-            page = portfolio.pages.get(id=page_id)
+            page = portfolio.pages.get(id=page)
         except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
             raise Http404 from exc
 
 
-        page_links = models.PageLink.objects.filter(page_id=page_id)
+        page_links = models.PageLink.objects.filter(page=page)
 
         # Serialize them into a string
         serializer = serializers.PageLinkSerializer(page_links, many=True)
         # Return the JSON string
         return Response(serializer.data)
+    
+    def put(self, request, *args, **kwargs):
+        data_list = []
+        for single_request in request.data:
+            data_list.append(
+                {"page": kwargs['page_id'], "link": single_request})
+
+        existing_queryset = models.PageLink.objects.filter(page=kwargs['page_id'])
+        print(data_list)
+        print("EXISTING")
+        context = super().get_serializer_context()
+        context['in_list'] = True
+        print(context)
+        serializer = serializers.PageLinkSerializer(
+            self.get_queryset(),
+            data=data_list,
+            # data = request.data,
+            child=serializers.PageLinkDetailSerializer(
+                context=context
+                ),
+            # many=True)
+            )
+        if(serializer.is_valid()):
+            print("VALIDATED DATA")
+            print(serializer.validated_data)
+            # If succesfully saved, call `create` method in serializer
+            print("SOMETHING")
+            serializer.save(owner=self.request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def post(self, request, *args, **kwargs):
         data_list = []
         for single_request in request.data:
-            data_list.append({"page_id": kwargs['page_id'], "link_id": single_request})
+            data_list.append({"page": kwargs['page_id'], "link": single_request})
 
         serializer = serializers.PageLinkSerializer(data=data_list, many=True)
         if(serializer.is_valid()):

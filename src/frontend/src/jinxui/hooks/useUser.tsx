@@ -8,6 +8,7 @@ import {
   TSection,
   TPortfolioData,
   TSectionData,
+  TLinkData,
 } from "../types/PortfolioTypes";
 
 /**
@@ -219,6 +220,20 @@ export const useUser = () => {
     }
   }
 
+  async function postLink(
+    portfolio_id: string,
+    page_id: string,
+    data: TLinkData,
+  ) {
+    const path = 
+      PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
+    try {
+      const response = await API.post(path, [data], state.config);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   // TODO: Fix types
   async function putPortfolio(portfolio: any) {
     const path = PORTFOLIOS_PATH + "/" + portfolio.id;
@@ -250,6 +265,21 @@ export const useUser = () => {
       return response;
     } catch (e) {
       throw e;
+    }
+  }
+
+  async function putLinks(
+    portfolio_id: string,
+    page_id: string,
+    links: [TLinkData]
+  ) {
+    const path =
+      PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
+    try {
+      const response = await API.put(path, links, state.config);
+      return response;
+    } catch (e) {
+      throw e
     }
   }
 
