@@ -19,6 +19,8 @@ from . import models
 from . import views
 from . import serializers
 
+import io
+from rest_framework.parsers import JSONParser
 
 class UserMixin():
     def setUpUser(self):
@@ -256,7 +258,7 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
                 "title": "string"
             }
         ]
-        response = self.client.post(
+        response = self.client.put(
             reverse(
                 'link_list',
                 kwargs={
@@ -269,22 +271,22 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         )
         self.assertEqual(response.status_code, 201)
     
-    def test_page_link_validation(self):
+    def test_page_link_update(self):
         data = [
             {
-                "id": "asd",
-                "icon": "LinkedIn",
+                "id": "asc",
+                "icon": "Github",
                 "address": "www.linkedin.com",
                 "title": "My LinkedIn"
             },
             {
                 "id": "asd",
-                "icon": "LinkedIn",
+                "icon": "Github",
                 "address": "www.linkedin.com",
                 "title": "My LinkedIn"
             }
         ]
-        response = self.client.post(
+        response = self.client.put(
             reverse(
                 'link_list',
                 kwargs={
@@ -295,7 +297,43 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
             data,
             format='json'
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.data), 2)
+
+        self.assertEqual(response.status_code, 201)
+        updated_data = [
+            {
+                "id": "asc",
+                "icon": "Github",
+                "address": "www.github.com",
+                "title": "My LinkedIn"
+            },
+        ]
+        response = self.client.put(
+            reverse(
+                'link_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+            updated_data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 201)
+        response = self.client.get(
+            reverse(
+                'link_list',
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id,
+                }
+            ),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['link']['address'], "www.github.com")
+
 
 class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
     def setUp(self):
