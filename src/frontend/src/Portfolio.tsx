@@ -17,6 +17,7 @@ import {
   SectionGrid,
   PortfolioHeader,
   PortfolioThemes,
+  defaultPortfolioContext,
 } from "jinxui";
 
 import NotFound from "./NotFound";
@@ -85,7 +86,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
   } = useUser();
 
   const [author, setAuthor] = useState<string>("");
-  const [portfolio, setPortfolio] = useState<TPortfolio>(null);
+  const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
   // eslint-disable-next-line
   const [pages, setPages] = useState<TPage[]>([]);
   // eslint-disable-next-line

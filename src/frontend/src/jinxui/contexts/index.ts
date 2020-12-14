@@ -6,3 +6,9 @@ export {
   storeUserData,
   retrieveUserData,
 } from "./UserContext";
+
+export {
+  PortfolioContextProvider,
+  PortfolioContext,
+  defaultPortfolioContext,
+} from "./PortfolioContext"

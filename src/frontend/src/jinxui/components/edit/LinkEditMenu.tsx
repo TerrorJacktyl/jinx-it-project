@@ -60,6 +60,7 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
           links={props.links}
           setLinks={props.setLinks}
           link={props.link}
+          setAnchoEl={setAnchorEl}
         />
         <MenuItem>
           <ListItemIcon>

@@ -51,6 +51,7 @@ type TLinkDialog = {
   setLinks: any;
   // isEdit?: boolean;
   link?: TLinkData;
+  setAnchoEl?: any
 };
 const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [open, setOpen] = useState(false);
@@ -63,8 +64,14 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const ActivationButton = () => {
     if (props.link){
       return (
-        <MenuItem onClick={handleClickOpen}>
-          <ListItemIcon>
+        <MenuItem onClick={()=>{
+          handleClickOpen()
+          if(props.setAnchoEl){
+            props.setAnchoEl(null)
+          }
+        }
+        }>
+        <ListItemIcon>
             <CreateIcon />
           </ListItemIcon>
           <ListItemText primary="Edit" />
@@ -88,12 +95,23 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   };
   
   const activeLink = props.link? props.link : newLink;
-  const okayText = props.link? "SAVE" : "ADD";
+  const okayText = props.link? "OK" : "ADD";
   // if(props.link){
   //   setLinkIcon(props.link.icon);
   // }
   const handleAdd = () => {
-    props.setLinks((links: any) => [...links, newLink]);
+    if (props.link) {
+      // props.link.title="ASD"
+      props.link.title = newLink.title
+      // props.link.icon = activeLink.icon
+      // props.link.title =activeLink.title
+      // props.link.address = activeLink.address
+      // const index = props.links.findIndex(
+      //   (p: TLinkData) => p.id === props.link.id
+      //   );
+    } else {
+      props.setLinks((links: any) => [...links, newLink]);
+    }
     setOpen(false);
   };
 
@@ -107,7 +125,10 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
       <ActivationButton />
       <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title">
         <Formik
-          initialValues={{ linkTitle: "", linkAddress: "" }}
+          initialValues={{ 
+            linkTitle: activeLink.title, 
+            linkAddress: activeLink.address, 
+          }}
           onSubmit={(values) => {
             newLink.title = values.linkTitle;
             newLink.address = values.linkAddress;
@@ -129,7 +150,6 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
                     component={TextField}
                     name="linkTitle"
                     label="Link Title"
-                    value={activeLink.title}
                     fullWidth
                     color="secondary"
                     InputProps={{
@@ -145,7 +165,6 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
                   component={TextField}
                   name={"linkAddress"}
                   label={"Link Address"}
-                  value={activeLink.address}
                   fullWidth
                   color="secondary"
                   InputProps={{

@@ -3,21 +3,20 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { Button, CssBaseline, Icon } from "@material-ui/core";
+import { Button, CssBaseline, Icon, InputAdornment, TextField } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
-import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
-import { InputAdornment } from "@material-ui/core";
-import CreateIcon from "@material-ui/icons/Create";
 import Typography from "@material-ui/core/Typography";
+import CreateIcon from "@material-ui/icons/Create";
 
 import {
   LightTheme,
   DarkTheme,
   useUser,
+  usePortfolio,
   HeaderBar,
   PrimaryButton,
   SecondaryButton,
@@ -28,9 +27,13 @@ import {
   PrimaryColumnDiv,
   ImageTextSectionInput,
   SnackbarAlert,
+  defaultPortfolioContext,
   LinkDialog,
   LinkDisplayIcon,
   LinkEditMenu,
+  PaperSectionStatic,
+  OneColumnSectionDiv,
+  DisplayLinks,
 } from "jinxui";
 
 import {
@@ -65,6 +68,7 @@ const LinksDiv = styled.div`
   align-items: center;
   flex-flow: wrap;
 `;
+
 
 /*  Was used in formik, but is redundant now. Will leave in as a 
     basis for touched and error checking if we implement it in the future 
@@ -117,7 +121,7 @@ const Edit = () => {
   const appliedTheme = createMuiTheme(
     getSavedLightThemeMode() ? LightTheme : DarkTheme
   );
-  const [portfolio, setPortfolio] = useState<TPortfolio>(null);
+  const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
   const [pages, setPages] = useState<TPage[]>([]);
   const [sections, setSections] = useState<TEditSection[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -342,25 +346,7 @@ const Edit = () => {
     );
   };
 
-  const DisplayLinks = () => {
-    return (
-      <>
-        {links.map((link: TLinkData) => {
-          if (link)
-          {
-            return (
-              <LinkEditMenu 
-                key={link.id} 
-                link={link} 
-                links={links}
-                setLinks={setLinks}
-              />
-            );
-          }
-        })}
-      </>
-    );
-  };
+
 
   const DisplaySections = () => {
     return (
@@ -458,36 +444,36 @@ const Edit = () => {
             <div>
               <FormTitle>Enter your information</FormTitle>
               <form>
-                <PortfolioNameSectionInput
-                  title={""} // A title here would be confusing
-                >
-                  <TextField
-                    name={"portfolioName"}
-                    label={"Portfolio Name"}
-                    defaultValue={portfolio.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setPortfolio({
-                        ...portfolio,
-                        name: e.target.value,
-                      });
-                    }}
-                    id="standard-full-width"
-                    fullWidth
-                    color="secondary"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <CreateIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <p></p>
-                  <LinksDiv>
-                    <DisplayLinks />
-                    <LinkDialog links={links} setLinks={setLinks} />
-                  </LinksDiv>
-                </PortfolioNameSectionInput>
+                  <PaperSectionStatic title={""}>
+                    <OneColumnSectionDiv>
+                      <TextField
+                        name={"portfolioName"}
+                        label={"Portfolio Name"}
+                        defaultValue={portfolio.name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          setPortfolio({
+                            ...portfolio,
+                            name: e.target.value,
+                          });
+                        }}
+                        id="standard-full-width"
+                        fullWidth
+                        color="secondary"
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <CreateIcon />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <p></p>
+                      <LinksDiv>
+                        <DisplayLinks links={links} setLinks={setLinks} />
+                        <LinkDialog links={links} setLinks={setLinks} />
+                      </LinksDiv>
+                    </OneColumnSectionDiv>
+                  </PaperSectionStatic>
                 {DisplaySections()}
 
                 <PublishCancelDiv>

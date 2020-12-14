@@ -9,7 +9,7 @@ export type TPortfolio = {
   pages: number[];
   theme: string;
   background: string;
-} | null;
+};// | null;
 
 export type TPage = {
   id: number;

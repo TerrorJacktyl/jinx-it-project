@@ -10,6 +10,7 @@ import {
   TSectionData,
   TLinkData,
 } from "../types/PortfolioTypes";
+import Portfolio from "Portfolio";
 
 /**
  * The 'user' hook
@@ -596,6 +597,10 @@ export const useUser = () => {
       });
   }
 
+  const getConfig = () => {
+    return state.config
+  }
+
   /**
    * Extract the error message from various hook functions.
    * If we come up with a standard error response format, this function will become much smaller.
@@ -670,6 +675,7 @@ export const useUser = () => {
     makePortfolioPrivate,
     getPortfolioPath,
     setTheme,
+    getConfig,
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)

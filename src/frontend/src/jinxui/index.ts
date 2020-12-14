@@ -74,6 +74,7 @@ export { default as LinkIconMenu } from "./components/edit/LinkIconMenu"
 export { default as LinkDialog } from "./components/edit/LinkDialog"
 export { default as LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
 export { default as LinkEditMenu } from "./components/edit/LinkEditMenu"
+export { default as DisplayLinks } from "./components/edit/PortfolioNameSectionInput"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";
@@ -92,6 +93,9 @@ export {
   defaultUserContext,
   storeUserData,
   retrieveUserData,
+  PortfolioContextProvider,
+  PortfolioContext,
+  defaultPortfolioContext,
 } from "./contexts/index";
 
 /* Types */
@@ -109,6 +113,7 @@ export type {
 
 /* Hook */
 export { useUser } from "./hooks/useUser";
+export { usePortfolio } from "./hooks/usePortfolio";
 
 /* Theme */
 export {
