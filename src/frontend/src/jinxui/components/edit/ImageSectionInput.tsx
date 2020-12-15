@@ -11,8 +11,6 @@ import { TEditSection } from "jinxui/types";
 type TImageSection = {
   key: string;
   section: TEditSection;
-  // sections: any;
-  // setSections: any;
   handleTitleChange: any;
   handlePublish: any;
 };
@@ -30,15 +28,11 @@ const ImageSectionInput = (props: TImageSection) => {
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
-          // sections={props.sections}
-          // setSections={props.setSections}
           placeAbove={true}
         />
       )}
       <PaperSection
         section={props.section}
-        // sections={props.sections}
-        // setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
         handlePublish={props.handlePublish}
       >
@@ -48,8 +42,6 @@ const ImageSectionInput = (props: TImageSection) => {
       </PaperSection>
       <NewSectionMenu
         section={props.section}
-        // sections={props.sections}
-        // setSections={props.setSections}
       />
     </>
   );

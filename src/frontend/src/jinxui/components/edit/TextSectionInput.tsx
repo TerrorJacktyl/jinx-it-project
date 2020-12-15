@@ -27,8 +27,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
-          // sections={props.sections}
-          // setSections={props.setSections}
           placeAbove={true}
         />
       )}
@@ -37,8 +35,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
 
       <PaperSection
         section={props.section}
-        // sections={props.sections}
-        // setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
         handlePublish={props.handlePublish}
       >
@@ -55,8 +51,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
 
       <NewSectionMenu
         section={props.section}
-        // sections={props.sections}
-        // setSections={props.setSections}
       />
     </>
   );

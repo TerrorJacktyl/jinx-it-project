@@ -17,8 +17,6 @@ type TImageTextSectionInput = {
   handleChange: any;
   handleTitleChange: any;
   handlePublish: any;
-  // sections: any;
-  // setSections: any;
 };
 
 const ImageTextSectionInput = (props: TImageTextSectionInput) => {
@@ -35,15 +33,11 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
-          // sections={props.sections}
-          // setSections={props.setSections}
           placeAbove={true}
         />
       )}
       <PaperSection
         section={props.section}
-        // sections={props.sections}
-        // setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
         handlePublish={props.handlePublish}
       >
@@ -62,8 +56,6 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
       </PaperSection>
       <NewSectionMenu
         section={props.section}
-        // sections={props.sections}
-        // setSections={props.setSections}
       />
     </>
   );

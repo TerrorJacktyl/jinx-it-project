@@ -122,9 +122,7 @@ const Edit = () => {
   const {
     fetchPortfolio,
     getSavedPortfolio,
-    setPortfolio,
     setPortfolioName,
-    setPortfolioTheme,
   } = usePortfolio();
 
   const {
@@ -164,29 +162,15 @@ const Edit = () => {
 
       await fetchPortfolio();
       await fetchSections(pages[0].id)
-      // setPortfolio(portfolio);
       setPages(pages);
-      // Assign each section a unique id so that they may be identified through in callback functions
-      // const IdSections = sections.map((section: TSection) => {
-      //   const uidPair = { uid: uuidv4() };
-      //   const newSection = { ...section, ...uidPair };
-      //   return newSection;
-      // });
-      // setSections(IdSections);
       setLinks(links)
     };
 
     if (portfolioExists) {
       fetchExistingPortfolio();
     } else {
-      // const newPortfolio = { name: "" } as TPortfolio;
       const newPage = [{ name: "home", number: 0 }] as TPage[];
-      // const newSection = [
-      //   { name: "First", number: 0, content: "", type: "text", uid: uuidv4() },
-      // ] as TEditSection[];
-      // setPortfolio(newPortfolio);
       setPages(newPage);
-      // setSections(newSection);
       setSaving(false);
     }
   }, []);
@@ -194,32 +178,6 @@ const Edit = () => {
   useEffect(() => {
     setIsSaving(savingState);
   }, [savingState]);
-
-  // Updates a section's content if it has been changed within the text field
-  // const handleChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>,
-  //   key: string
-  // ) => {
-  //   const index = sections.findIndex(
-  //     (section: TEditSection) => section.uid === key
-  //   );
-  //   var newSections = sections;
-  //   newSections[index].content = e.target.value;
-  //   setSections(newSections);
-  // };
-
-  // const handleTitleChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>,
-  //   key: string
-  // ) => {
-  //   const index = sections.findIndex(
-  //     (section: TEditSection) => section.uid === key
-  //   );
-  //   var newSections = sections;
-  //   newSections[index].name = e.target.value;
-  //   setSections(newSections);
-
-  // };
 
   /**
    * Prepare section data for sending to backend.
@@ -391,8 +349,6 @@ const Edit = () => {
                 handleTitleChange={handleTitleChange}
                 handlePublish={handleSave}
                 section={section}
-                // sections={sections}
-                // setSections={setSections}
               />
             );
           } else if (section.type === "image") {
@@ -402,8 +358,6 @@ const Edit = () => {
                 handleTitleChange={handleTitleChange}
                 handlePublish={handleSave}
                 section={section}
-                // sections={sections}
-                // setSections={setSections}
               />
             );
           } else if (section.type === "image_text") {
@@ -414,8 +368,6 @@ const Edit = () => {
                 handleTitleChange={handleTitleChange}
                 handlePublish={handleSave}
                 section={section}
-                // sections={sections}
-                // setSections={setSections}
               />
             );
           } else {
@@ -482,10 +434,6 @@ const Edit = () => {
                         label={"Portfolio Name"}
                         defaultValue={getSavedPortfolio().name}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          // setPortfolio({
-                          //   ...portfolio,
-                          //   name: e.target.value,
-                          // });
                           setPortfolioName(e.target.value)
                         }}
                         id="standard-full-width"
@@ -540,9 +488,6 @@ const Edit = () => {
       </>
     );
   } else {
-    // console.log(getSavedPortfolio())
-    // console.log(pages.length)
-    // console.log(getSavedSections())
     return <LoadingSections />;
   }
 };

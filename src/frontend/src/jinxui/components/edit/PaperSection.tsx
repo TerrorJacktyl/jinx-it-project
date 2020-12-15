@@ -54,8 +54,6 @@ const StyledButton = styled(Button)`
 
 type TPaperSection = {
   section: any;
-  // sections: any;
-  // setSections: any;
   children: any;
   hideEditButtons?: boolean;
   handleTitleChange: any;
@@ -74,12 +72,6 @@ const PaperSection = (props: TPaperSection) => {
   const index = getSavedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
-  // const handleDelete = () => {
-  //   props.setSections([
-  //     ...props.sections.slice(0, index),
-  //     ...props.sections.slice(index + 1),
-  //   ]);
-  // };
 
   let deleteDisabled = false;
   let upArrowDisabled = false;
@@ -109,27 +101,6 @@ const PaperSection = (props: TPaperSection) => {
   const handleMoveDown = () => {
     handleSectionMoveDown(index, props.section)
   }
-  // const handleMoveUp = () => {
-  //   if (index === 0) {
-  //     return;
-  //   }
-  //   const curr_sections = props.sections;
-  //   const top = curr_sections.slice(0, index - 1);
-  //   const one_above = curr_sections.slice(index - 1, index);
-  //   const rest = curr_sections.slice(index + 1);
-  //   props.setSections(top.concat(props.section, one_above, rest));
-  // };
-
-  // const handleMoveDown = () => {
-  //   if (index === props.sections.length - 1) {
-  //     return;
-  //   }
-  //   const curr_sections = props.sections;
-  //   const top = curr_sections.slice(0, index);
-  //   const one_below = curr_sections.slice(index + 1, index + 2);
-  //   const rest = curr_sections.slice(index + 2);
-  //   props.setSections(top.concat(one_below, props.section, rest));
-  // };
 
   return (
     <PaperSectionDiv id={props.section.uid}>

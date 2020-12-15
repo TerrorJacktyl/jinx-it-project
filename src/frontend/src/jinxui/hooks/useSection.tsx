@@ -8,7 +8,6 @@ export const useSection = () => {
   const [state, updateState, setState] = useContext(SectionContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
-  const { getSavedPortfolio } = usePortfolio();
 
   async function getSections(portfolio_id: number, page_id: number) {
     const path =
@@ -31,7 +30,6 @@ export const useSection = () => {
         return newSection;
       });
       await setState(IdSections);
-      console.log(IdSections)
     } catch (e) {
       throw e;
     }
@@ -42,12 +40,6 @@ export const useSection = () => {
     key: string
   ) => {
     updateState(key, {content: e.target.value});
-    // const index = state.findIndex(
-    //   (section: TEditSection) => section.uid === key
-    // );
-    // var newSections = sections;
-    // newSections[index].content = e.target.value;
-    // setSections(newSections);
   };
 
   const handleTitleChange = (
@@ -55,12 +47,6 @@ export const useSection = () => {
     key: string
   ) => {
     updateState(key, {title: e.target.value})
-    // const index = sections.findIndex(
-    //   (section: TEditSection) => section.uid === key
-    // );
-    // var newSections = sections;
-    // newSections[index].name = e.target.value;
-    // setSections(newSections);
   };
 
   function handleSectionChange(targetIndex: number, newSection:TEditSection[]) {

@@ -15,8 +15,6 @@ import { TEditSection } from "jinxui/types";
 
 type TNewSectionMenu = {
   section: any;
-  // sections: any;
-  // setSections: any;
   placeAbove?: boolean;
 };
 
@@ -60,13 +58,7 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const newSection = DefaultSectionData();
     newSection.type = section_type;
 
-    // handleSectionsChange((sections: any) => [
-    //   ...getSavedSections().slice(0, target_index),
-    //   newSection,
-    //   ...getSavedSections().slice(target_index),
-    // ]);
     handleSectionChange(target_index, newSection);
-
   };
 
   return (
