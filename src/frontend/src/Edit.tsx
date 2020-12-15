@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +17,7 @@ import {
   DarkTheme,
   useUser,
   usePortfolio,
+  useSection,
   HeaderBar,
   PrimaryButton,
   SecondaryButton,
@@ -34,6 +35,7 @@ import {
   PaperSectionStatic,
   OneColumnSectionDiv,
   DisplayLinks,
+  PortfolioContext,
 } from "jinxui";
 
 import {
@@ -117,49 +119,74 @@ const Edit = () => {
     savingState,
   } = useUser();
 
+  const {
+    fetchPortfolio,
+    getSavedPortfolio,
+    setPortfolio,
+    setPortfolioName,
+    setPortfolioTheme,
+  } = usePortfolio();
+
+  const {
+    fetchSections,
+    getSavedSections,
+    handleContentChange,
+    handleTitleChange,
+  } = useSection();
+
+  // const [state, updateState] = useContext(PortfolioContext);
+
+
   // const [theme, setTheme] = useState(true);
   const appliedTheme = createMuiTheme(
     getSavedLightThemeMode() ? LightTheme : DarkTheme
   );
-  const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
+  // const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
   const [pages, setPages] = useState<TPage[]>([]);
-  const [sections, setSections] = useState<TEditSection[]>([]);
+  // const [sections, setSections] = useState<TEditSection[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [links, setLinks] = useState<TLinkData[]>([]);
   // Call useEffect to fetch an existing portfolio's data
+
+
+
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
       // OK to get saved portfolioId from context rather then fetching from backend
       // as primary_portfolio is fetched upon login
       const portfolioId = await getSavedPortfolioId();
+      // const portfolio = await fetchPortfolio();
       const { portfolio, pages, sections, links } = await getFullPortfolio(
         portfolioId
       );
-      setPortfolio(portfolio);
+
+      await fetchPortfolio();
+      await fetchSections(pages[0].id)
+      // setPortfolio(portfolio);
       setPages(pages);
       // Assign each section a unique id so that they may be identified through in callback functions
-      const IdSections = sections.map((section: TSection) => {
-        const uidPair = { uid: uuidv4() };
-        const newSection = { ...section, ...uidPair };
-        return newSection;
-      });
-      setSections(IdSections);
+      // const IdSections = sections.map((section: TSection) => {
+      //   const uidPair = { uid: uuidv4() };
+      //   const newSection = { ...section, ...uidPair };
+      //   return newSection;
+      // });
+      // setSections(IdSections);
       setLinks(links)
     };
 
     if (portfolioExists) {
       fetchExistingPortfolio();
     } else {
-      const newPortfolio = { name: "" } as TPortfolio;
+      // const newPortfolio = { name: "" } as TPortfolio;
       const newPage = [{ name: "home", number: 0 }] as TPage[];
-      const newSection = [
-        { name: "First", number: 0, content: "", type: "text", uid: uuidv4() },
-      ] as TEditSection[];
-      setPortfolio(newPortfolio);
+      // const newSection = [
+      //   { name: "First", number: 0, content: "", type: "text", uid: uuidv4() },
+      // ] as TEditSection[];
+      // setPortfolio(newPortfolio);
       setPages(newPage);
-      setSections(newSection);
+      // setSections(newSection);
       setSaving(false);
     }
   }, []);
@@ -169,29 +196,30 @@ const Edit = () => {
   }, [savingState]);
 
   // Updates a section's content if it has been changed within the text field
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: string
-  ) => {
-    const index = sections.findIndex(
-      (section: TEditSection) => section.uid === key
-    );
-    var newSections = sections;
-    newSections[index].content = e.target.value;
-    setSections(newSections);
-  };
+  // const handleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   key: string
+  // ) => {
+  //   const index = sections.findIndex(
+  //     (section: TEditSection) => section.uid === key
+  //   );
+  //   var newSections = sections;
+  //   newSections[index].content = e.target.value;
+  //   setSections(newSections);
+  // };
 
-  const handleTitleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: string
-  ) => {
-    const index = sections.findIndex(
-      (section: TEditSection) => section.uid === key
-    );
-    var newSections = sections;
-    newSections[index].name = e.target.value;
-    setSections(newSections);
-  };
+  // const handleTitleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   key: string
+  // ) => {
+  //   const index = sections.findIndex(
+  //     (section: TEditSection) => section.uid === key
+  //   );
+  //   var newSections = sections;
+  //   newSections[index].name = e.target.value;
+  //   setSections(newSections);
+
+  // };
 
   /**
    * Prepare section data for sending to backend.
@@ -201,7 +229,8 @@ const Edit = () => {
    */
   const cleanedSections = () => {
     // Deep copy sections
-    const sectionsCopy = JSON.parse(JSON.stringify(sections));
+    const sectionsCopy = JSON.parse(JSON.stringify(getSavedSections()));
+    // const sectionsCopy = JSON.parse(JSON.stringify(sections));
 
     var cleanSections = sectionsCopy.map(
       (section: TEditSection, index: number) => {
@@ -227,9 +256,11 @@ const Edit = () => {
 
   /** Save the currently edited page to the backend without redirecting. */
   const handleSave = () => {
+    console.log(getSavedPortfolio());
+
     setSaving(true);
     const sections = cleanedSections();
-    sendFullPortfolio(portfolio, pages, sections, links, portfolioExists)
+    sendFullPortfolio(getSavedPortfolio(), pages, sections, links, portfolioExists)
       .then((response: any) => {
         setSaving(false);
         setSuccessMessage("Portfolio saved");
@@ -242,13 +273,13 @@ const Edit = () => {
 
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
-    if (portfolio) {
+    if (getSavedPortfolio()) {
       setSaving(true);
       const sections = cleanedSections();
 
-      sendFullPortfolio(portfolio, pages, sections, links, portfolioExists)
+      sendFullPortfolio(getSavedPortfolio(), pages, sections, links, portfolioExists)
         .then(() => {
-          makePortfolioPublic(portfolio.id)
+          makePortfolioPublic(getSavedPortfolio().id)
             .then(() => {
               setSaving(false);
               setRedirect(true);
@@ -351,17 +382,17 @@ const Edit = () => {
   const DisplaySections = () => {
     return (
       <>
-        {sections.map((section: TEditSection) => {
+        {getSavedSections().map((section: TEditSection) => {
           if (section.type === "text") {
             return (
               <TextSectionInput
                 key={section.uid}
-                section={section}
-                handleChange={handleChange}
+                handleChange={handleContentChange}
                 handleTitleChange={handleTitleChange}
                 handlePublish={handleSave}
-                sections={sections}
-                setSections={setSections}
+                section={section}
+                // sections={sections}
+                // setSections={setSections}
               />
             );
           } else if (section.type === "image") {
@@ -371,20 +402,20 @@ const Edit = () => {
                 handleTitleChange={handleTitleChange}
                 handlePublish={handleSave}
                 section={section}
-                sections={sections}
-                setSections={setSections}
+                // sections={sections}
+                // setSections={setSections}
               />
             );
           } else if (section.type === "image_text") {
             return (
               <ImageTextSectionInput
                 key={section.uid}
-                handleChange={handleChange}
+                handleChange={handleContentChange}
                 handleTitleChange={handleTitleChange}
                 handlePublish={handleSave}
                 section={section}
-                sections={sections}
-                setSections={setSections}
+                // sections={sections}
+                // setSections={setSections}
               />
             );
           } else {
@@ -401,9 +432,9 @@ const Edit = () => {
     );
     // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
   } else if (
-    portfolio !== null &&
+    getSavedPortfolio() &&
     pages.length !== 0 &&
-    sections.length !== 0
+    getSavedSections().length !== 0
   ) {
     return (
       <>
@@ -449,12 +480,13 @@ const Edit = () => {
                       <TextField
                         name={"portfolioName"}
                         label={"Portfolio Name"}
-                        defaultValue={portfolio.name}
+                        defaultValue={getSavedPortfolio().name}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          setPortfolio({
-                            ...portfolio,
-                            name: e.target.value,
-                          });
+                          // setPortfolio({
+                          //   ...portfolio,
+                          //   name: e.target.value,
+                          // });
+                          setPortfolioName(e.target.value)
                         }}
                         id="standard-full-width"
                         fullWidth
@@ -508,6 +540,9 @@ const Edit = () => {
       </>
     );
   } else {
+    // console.log(getSavedPortfolio())
+    // console.log(pages.length)
+    // console.log(getSavedSections())
     return <LoadingSections />;
   }
 };

@@ -7,6 +7,7 @@ export type TPortfolio = {
   owner: number;
   name: string;
   pages: number[];
+  private: boolean;
   theme: string;
   background: string;
 };// | null;

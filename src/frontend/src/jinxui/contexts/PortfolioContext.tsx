@@ -1,45 +1,37 @@
 import React, { useState } from "react";
-import {TPortfolio} from "jinxui/types";
-
-
-// export interface TPortfolio {
-//   id: number;
-//   owner: number;
-//   name: string;
-//   pages: number[];
-//   theme: string;
-//   background: string;
-// };// | null;
+import {
+  TPortfolio,
+} from "jinxui/types";
 
 export const defaultPortfolioContext: TPortfolio = {
   id: 0,
   owner: 0,
   name: "",
   pages: [],
+  private: true,
   theme: "",
   background: ""
 }
 
-export const PortfolioContext = React.createContext<[TPortfolio, any, any]>([
+export const PortfolioContext = React.createContext<[TPortfolio, any,]>([
   defaultPortfolioContext,
-  () => {},
   () => {},
 ]);
 
-export const PortfolioContextProvider = (props: any) => {
-  const [state, setState] = useState<TPortfolio>(defaultPortfolioContext)
+type TPortfolioContextProvider = {
+  children: any;
+};
+export const PortfolioContextProvider = (props: TPortfolioContextProvider) => {
+  const [state, setState] = useState<TPortfolio>(defaultPortfolioContext);
 
   const updateState = (fieldsToUpdate: Partial<TPortfolio>) => {
-    setState((state) => { return {...state, ...fieldsToUpdate} });
+    // setState((state) => { return {...state, ...fieldsToUpdate} });
+    setState({...state, ...fieldsToUpdate})
     return;
   }
 
-  const resetState = () => {
-    setState(defaultPortfolioContext);
-  }
-
   return (
-    <PortfolioContext.Provider value={[state, updateState, resetState]}>
+    <PortfolioContext.Provider value={[state, updateState]}>
       {props.children}
     </PortfolioContext.Provider>
   );

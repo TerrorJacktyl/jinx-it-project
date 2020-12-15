@@ -11,4 +11,10 @@ export {
   PortfolioContextProvider,
   PortfolioContext,
   defaultPortfolioContext,
-} from "./PortfolioContext"
+} from "./PortfolioContext";
+
+export {
+  SectionContextProvider,
+  SectionContext,
+  defaultSectionContext,
+} from "./SectionContext";

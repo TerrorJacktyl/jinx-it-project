@@ -96,6 +96,9 @@ export {
   PortfolioContextProvider,
   PortfolioContext,
   defaultPortfolioContext,
+  SectionContextProvider,
+  SectionContext,
+  defaultSectionContext,
 } from "./contexts/index";
 
 /* Types */
@@ -114,6 +117,7 @@ export type {
 /* Hook */
 export { useUser } from "./hooks/useUser";
 export { usePortfolio } from "./hooks/usePortfolio";
+export { useSection } from "./hooks/useSection";
 
 /* Theme */
 export {

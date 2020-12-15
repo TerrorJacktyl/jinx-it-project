@@ -9,19 +9,25 @@ import SubjectSharp from "@material-ui/icons/SubjectSharp";
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp";
 import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp";
 
-import { PrimaryMenu, DefaultSectionData } from "jinxui";
+import { PrimaryMenu, DefaultSectionData, useSection } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
 
 type TNewSectionMenu = {
   section: any;
-  sections: any;
-  setSections: any;
+  // sections: any;
+  // setSections: any;
   placeAbove?: boolean;
 };
 
+
+
 const NewSectionMenu = (props: TNewSectionMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const {
+    getSavedSections,
+    handleSectionChange,
+  } = useSection();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -46,7 +52,7 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
   const addSection = (section_type: string) => {
     setAnchorEl(null);
 
-    const index = props.sections.findIndex(
+    const index = getSavedSections().findIndex(
       (p: TEditSection) => p.uid === props.section.uid
     );
 
@@ -54,11 +60,12 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const newSection = DefaultSectionData();
     newSection.type = section_type;
 
-    props.setSections((sections: any) => [
-      ...sections.slice(0, target_index),
-      newSection,
-      ...sections.slice(target_index),
-    ]);
+    // handleSectionsChange((sections: any) => [
+    //   ...getSavedSections().slice(0, target_index),
+    //   newSection,
+    //   ...getSavedSections().slice(target_index),
+    // ]);
+    handleSectionChange(target_index, newSection);
 
   };
 

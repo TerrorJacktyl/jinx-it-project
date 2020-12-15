@@ -6,7 +6,12 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import SaveSharpIcon from "@material-ui/icons/SaveSharp";
-import { PaperSectionBase, PaperSectionDiv, useUser } from "jinxui";
+import {
+  PaperSectionBase,
+  PaperSectionDiv,
+  useUser,
+  useSection,
+} from "jinxui";
 import { TEditSection } from "jinxui/types";
 import { InputAdornment } from "@material-ui/core";
 import CreateIcon from "@material-ui/icons/Create";
@@ -49,8 +54,8 @@ const StyledButton = styled(Button)`
 
 type TPaperSection = {
   section: any;
-  sections: any;
-  setSections: any;
+  // sections: any;
+  // setSections: any;
   children: any;
   hideEditButtons?: boolean;
   handleTitleChange: any;
@@ -59,26 +64,33 @@ type TPaperSection = {
 
 const PaperSection = (props: TPaperSection) => {
   const { savingState } = useUser();
+  const {
+    getSavedSections,
+    handleSectionDelete,
+    handleSectionMoveUp,
+    handleSectionMoveDown,
+  } = useSection();
   const [isSaving, setIsSaving] = useState(false);
-  const index = props.sections.findIndex(
+  const index = getSavedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
-  const handleDelete = () => {
-    props.setSections([
-      ...props.sections.slice(0, index),
-      ...props.sections.slice(index + 1),
-    ]);
-  };
+  // const handleDelete = () => {
+  //   props.setSections([
+  //     ...props.sections.slice(0, index),
+  //     ...props.sections.slice(index + 1),
+  //   ]);
+  // };
+
   let deleteDisabled = false;
   let upArrowDisabled = false;
   let downArrowDisabled = false;
-  if (props.sections.length === 1) {
+  if (getSavedSections().length === 1) {
     deleteDisabled = true;
   }
   if (index === 0) {
     upArrowDisabled = true;
   }
-  if (index === props.sections.length - 1) {
+  if (index === getSavedSections().length - 1) {
     downArrowDisabled = true;
   }
 
@@ -86,27 +98,38 @@ const PaperSection = (props: TPaperSection) => {
     setIsSaving(savingState);
   }, [savingState]);
 
+  const handleDelete = () => {
+    handleSectionDelete(index);
+  };
+
   const handleMoveUp = () => {
-    if (index === 0) {
-      return;
-    }
-    const curr_sections = props.sections;
-    const top = curr_sections.slice(0, index - 1);
-    const one_above = curr_sections.slice(index - 1, index);
-    const rest = curr_sections.slice(index + 1);
-    props.setSections(top.concat(props.section, one_above, rest));
+    handleSectionMoveUp(index, props.section)
   };
 
   const handleMoveDown = () => {
-    if (index === props.sections.length - 1) {
-      return;
-    }
-    const curr_sections = props.sections;
-    const top = curr_sections.slice(0, index);
-    const one_below = curr_sections.slice(index + 1, index + 2);
-    const rest = curr_sections.slice(index + 2);
-    props.setSections(top.concat(one_below, props.section, rest));
-  };
+    handleSectionMoveDown(index, props.section)
+  }
+  // const handleMoveUp = () => {
+  //   if (index === 0) {
+  //     return;
+  //   }
+  //   const curr_sections = props.sections;
+  //   const top = curr_sections.slice(0, index - 1);
+  //   const one_above = curr_sections.slice(index - 1, index);
+  //   const rest = curr_sections.slice(index + 1);
+  //   props.setSections(top.concat(props.section, one_above, rest));
+  // };
+
+  // const handleMoveDown = () => {
+  //   if (index === props.sections.length - 1) {
+  //     return;
+  //   }
+  //   const curr_sections = props.sections;
+  //   const top = curr_sections.slice(0, index);
+  //   const one_below = curr_sections.slice(index + 1, index + 2);
+  //   const rest = curr_sections.slice(index + 2);
+  //   props.setSections(top.concat(one_below, props.section, rest));
+  // };
 
   return (
     <PaperSectionDiv id={props.section.uid}>
@@ -137,7 +160,7 @@ const PaperSection = (props: TPaperSection) => {
 
         <StyledDivRight>
           <Tooltip title="Save portfolio" arrow>
-            <TooltipDiv >
+            <TooltipDiv>
               <StyledButton
                 size="medium"
                 style={{ minWidth: 40 }}
