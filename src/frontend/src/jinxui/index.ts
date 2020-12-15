@@ -96,6 +96,9 @@ export {
   PortfolioContextProvider,
   PortfolioContext,
   defaultPortfolioContext,
+  PageContextProvider,
+  PageContext,
+  defaultPageContext,
   SectionContextProvider,
   SectionContext,
   defaultSectionContext,
@@ -118,6 +121,7 @@ export type {
 export { useUser } from "./hooks/useUser";
 export { usePortfolio } from "./hooks/usePortfolio";
 export { useSection } from "./hooks/useSection";
+export { usePage } from "./hooks/usePage";
 
 /* Theme */
 export {

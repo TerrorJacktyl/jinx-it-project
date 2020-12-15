@@ -18,3 +18,9 @@ export {
   SectionContext,
   defaultSectionContext,
 } from "./SectionContext";
+
+export {
+  PageContextProvider,
+  PageContext,
+  defaultPageContext,
+} from "./PageContext";

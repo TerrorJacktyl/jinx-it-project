@@ -279,6 +279,10 @@ export const useUser = () => {
     existingPortfolio: boolean
   ) {
     const isNew = !existingPortfolio
+    console.log(isNew)
+    console.log(portfolio)
+    console.log(pages)
+    console.log(sections)
     try {
       const portfolioResp = isNew 
       ? await postPortfolio(portfolio) 
@@ -676,6 +680,7 @@ export const useUser = () => {
     getPortfolioPath,
     setTheme,
     getConfig,
+
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).
     // If you need to use these, please write a wrapper in this User hook instead. :)

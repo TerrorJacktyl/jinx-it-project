@@ -17,6 +17,7 @@ import {
   DarkTheme,
   useUser,
   usePortfolio,
+  usePage,
   useSection,
   HeaderBar,
   PrimaryButton,
@@ -99,8 +100,6 @@ function sectionDataIsEmpty(data: any) {
 }
 */
 
-// const scrollToRef = (ref: any) => window.scrollTo({top: 100})
-
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
@@ -132,6 +131,12 @@ const Edit = () => {
     handleTitleChange,
   } = useSection();
 
+  const {
+    fetchPages,
+    setPages,
+    getSavedPages,
+  } = usePage();
+
   // const [state, updateState] = useContext(PortfolioContext);
 
 
@@ -140,7 +145,7 @@ const Edit = () => {
     getSavedLightThemeMode() ? LightTheme : DarkTheme
   );
   // const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
-  const [pages, setPages] = useState<TPage[]>([]);
+  // const [pages, setPages] = useState<TPage[]>([]);
   // const [sections, setSections] = useState<TEditSection[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -161,8 +166,9 @@ const Edit = () => {
       );
 
       await fetchPortfolio();
-      await fetchSections(pages[0].id)
-      setPages(pages);
+      await fetchSections(pages[0].id);
+      await fetchPages();
+      // setPages(pages);
       setLinks(links)
     };
 
@@ -189,7 +195,7 @@ const Edit = () => {
     // Deep copy sections
     const sectionsCopy = JSON.parse(JSON.stringify(getSavedSections()));
     // const sectionsCopy = JSON.parse(JSON.stringify(sections));
-
+    
     var cleanSections = sectionsCopy.map(
       (section: TEditSection, index: number) => {
         const newSection = section;
@@ -200,7 +206,7 @@ const Edit = () => {
         newSection.number = index;
         return newSection;
       }
-    );
+      );
     // Remove empty sections
     // TO DO: make this happen in a single pass (i.e. above) with a for loop instead of map
     return cleanSections.filter(sectionIsNotBlank);
@@ -214,11 +220,10 @@ const Edit = () => {
 
   /** Save the currently edited page to the backend without redirecting. */
   const handleSave = () => {
-    console.log(getSavedPortfolio());
 
     setSaving(true);
     const sections = cleanedSections();
-    sendFullPortfolio(getSavedPortfolio(), pages, sections, links, portfolioExists)
+    sendFullPortfolio(getSavedPortfolio(), getSavedPages(), sections, links, portfolioExists)
       .then((response: any) => {
         setSaving(false);
         setSuccessMessage("Portfolio saved");
@@ -235,7 +240,7 @@ const Edit = () => {
       setSaving(true);
       const sections = cleanedSections();
 
-      sendFullPortfolio(getSavedPortfolio(), pages, sections, links, portfolioExists)
+      sendFullPortfolio(getSavedPortfolio(), getSavedPages(), sections, links, portfolioExists)
         .then(() => {
           makePortfolioPublic(getSavedPortfolio().id)
             .then(() => {
@@ -385,7 +390,7 @@ const Edit = () => {
     // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
   } else if (
     getSavedPortfolio() &&
-    pages.length !== 0 &&
+    getSavedPages().length !== 0 &&
     getSavedSections().length !== 0
   ) {
     return (

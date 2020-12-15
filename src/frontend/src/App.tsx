@@ -18,6 +18,7 @@ import {
 import {
   UserContextProvider,
   PortfolioContextProvider,
+  PageContextProvider,
   SectionContextProvider,
   LoggedInRoute,
   PortfolioDisplay,
@@ -34,6 +35,7 @@ function App() {
   // <SmoothProvider skew={false}>
   const app = (
     <PortfolioContextProvider>
+      <PageContextProvider>
       <SectionContextProvider>
         <UserContextProvider>
           {/** Wrap the whole app in the UserContext so they can all access the user
@@ -70,6 +72,7 @@ function App() {
           </Router>
         </UserContextProvider>
       </SectionContextProvider>
+      </PageContextProvider>
     </PortfolioContextProvider>
     // </SmoothProvider >
   );

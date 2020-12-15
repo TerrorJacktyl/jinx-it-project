@@ -49,7 +49,7 @@ export const useSection = () => {
     updateState(key, {title: e.target.value})
   };
 
-  function handleSectionChange(targetIndex: number, newSection:TEditSection[]) {
+  function handleSectionChange(targetIndex: number, newSection:TEditSection) {
     setState([
       ...state.slice(0, targetIndex),
       newSection,
