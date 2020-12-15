@@ -21,7 +21,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 
-
 import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink } from "jinxui";
 import { TLinkData } from "jinxui/types";
 
@@ -51,57 +50,55 @@ type TLinkDialog = {
   // setLinks: any;
   // isEdit?: boolean;
   link?: TLinkData;
-  setAnchoEl?: any
+  setAnchoEl?: any;
 };
 const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [open, setOpen] = useState(false);
-  const [linkIcon, setLinkIcon] = useState(props.link?props.link.icon:"None");
-  const { getFetchedLinks, setLinks, addLink, updateLink } = useLink();
+  const [linkIcon, setLinkIcon] = useState(
+    props.link ? props.link.icon : "None"
+  );
+  const { updateLink } = useLink();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const ActivationButton = () => {
-    if (props.link){
+    if (props.link) {
       return (
-        <MenuItem onClick={()=>{
-          handleClickOpen()
-          if(props.setAnchoEl){
-            props.setAnchoEl(null)
-          }
-        }
-        }>
-        <ListItemIcon>
+        <MenuItem
+          onClick={() => {
+            handleClickOpen();
+            if (props.setAnchoEl) {
+              props.setAnchoEl(null);
+            }
+          }}
+        >
+          <ListItemIcon>
             <CreateIcon />
           </ListItemIcon>
           <ListItemText primary="Edit" />
         </MenuItem>
       );
     } else {
-      return (
-        <PrimaryButton onClick={handleClickOpen}>
-          Add link
-        </PrimaryButton>
-      )  
+      return <PrimaryButton onClick={handleClickOpen}>Add link</PrimaryButton>;
     }
-  }
+  };
 
-  
   const newLink: TLinkData = {
     title: "",
     address: "",
     icon: linkIcon,
     id: uuidv4(),
   };
-  
-  const activeLink = props.link? props.link : newLink;
-  const okayText = props.link? "OK" : "ADD";
+
+  const activeLink = props.link ? props.link : newLink;
+  const okayText = props.link ? "OK" : "ADD";
   // if(props.link){
   //   setLinkIcon(props.link.icon);
   // }
   const handleAdd = () => {
-    updateLink(activeLink)
+    updateLink(activeLink);
     // if (props.link) {
     //   // // props.link.title="ASD"
     //   // props.link.title = newLink.title
@@ -122,15 +119,14 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     setOpen(false);
   };
 
-
   return (
     <>
       <ActivationButton />
       <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title">
         <Formik
-          initialValues={{ 
-            linkTitle: activeLink.title, 
-            linkAddress: activeLink.address, 
+          initialValues={{
+            linkTitle: activeLink.title,
+            linkAddress: activeLink.address,
           }}
           onSubmit={(values) => {
             newLink.title = values.linkTitle;
@@ -146,9 +142,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
               </DialogContentText>
               <LinkInputDiv>
                 <LinkInputInnerDiv>
-                  <LinkIconMenu 
-                    linkIcon={linkIcon} 
-                    setLinkIcon={setLinkIcon} />
+                  <LinkIconMenu linkIcon={linkIcon} setLinkIcon={setLinkIcon} />
                   <Field
                     component={TextField}
                     name="linkTitle"

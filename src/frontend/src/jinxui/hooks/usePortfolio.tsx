@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import {
   PortfolioContext,
-  defaultPortfolioContext,
   useUser,
   useSection,
   useLink,
@@ -11,7 +10,7 @@ import {
 } from "jinxui";
 import API from "../../API";
 import { TPortfolio } from "../types/PortfolioTypes";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 
 
 export const usePortfolio = () => {
@@ -142,35 +141,6 @@ export const usePortfolio = () => {
       return result;
     }
   }
-
-  // /** Save the currently edited page to the backend and redirect to display page. */
-  // const publishFullPortfolio = () => {
-  //   if (state) {
-  //     setSaving(true);
-
-  //     sendFullPortfolio(
-  //       getFetchedPortfolio(),
-  //       getFetchedPages(),
-  //       getCleanedSections(),
-  //       getFetchedLinks(),
-  //       portfolioExists
-  //     )
-  //       .then(() => {
-  //         makePortfolioPublic(getFetchedPortfolio().id)
-  //           .then(() => {
-  //             setSaving(false);
-  //             setRedirect(true);
-  //           })
-  //           .catch(() => {
-  //             setErrorMessage("Something went wrong");
-  //           });
-  //       })
-  //       .catch(() => {
-  //         setSaving(false);
-  //         setErrorMessage("Unable to save portfolio, something went wrong");
-  //       });
-  //   }
-  // };
 
   return {
     portfolioData: state,

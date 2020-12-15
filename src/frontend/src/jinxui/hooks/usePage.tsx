@@ -1,15 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { PageContext, useUser } from "jinxui";
 import API from "../../API";
-import { v4 as uuidv4 } from "uuid";
 import { TPage } from "../types/PortfolioTypes";
 
 
 export const usePage = () => {
   const [state, updateState, setState] = useContext(PageContext);
+  
+  // Error and success message for a single page in edit mode
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
-
 
   async function getPages(portfolio_id: number) {
     const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
@@ -30,6 +32,10 @@ export const usePage = () => {
     }
   }
 
+  function getFetchedPages() {
+    return state;
+  }
+
   async function setPages(pages: TPage[]) {
     try {
       await setState(pages);
@@ -38,13 +44,13 @@ export const usePage = () => {
     }
   }
 
-  function getFetchedPages() {
-    return state;
-  }
-
   return {
     fetchPages,
     setPages,
     getFetchedPages,
+    errorMessage,
+    setErrorMessage,
+    successMessage,
+    setSuccessMessage
   };
 }

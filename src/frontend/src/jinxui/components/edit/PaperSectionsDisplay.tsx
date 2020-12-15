@@ -9,26 +9,14 @@ import {
   TextSectionInput,
   ImageSectionInput,
   ImageTextSectionInput,
+  PaperSectionPage,
 } from "jinxui";
 
-import {
-  TEditSection,
-} from "jinxui/types";
+import { TEditSection } from "jinxui/types";
 
 const PaperSectionsDisplay = () => {
-  const portfolioExists = true;
-  // const [redirect, setRedirect] = useState(false);
-  const {
-    sendFullPortfolio,
-    setSaving,
-  } = useUser();
 
-  const {
-    getFetchedPortfolio,
-    saveFullPortfolio,
-  } = usePortfolio();
-
-  const { getFetchedPages } = usePage();
+  const { saveFullPortfolio } = usePortfolio();
 
   const {
     getFetchedSections,
@@ -36,58 +24,14 @@ const PaperSectionsDisplay = () => {
     handleTitleChange,
   } = useSection();
 
-
-
-  const { getFetchedLinks } = useLink();
   const sections = getFetchedSections();
-
-
-
-
-    // const sectionIsNotBlank = (section: TEditSection) => {
-    //   if (section.type === "text") {
-    //     return section.name !== "" || section.content !== "";
-    //   } else if (section.type === "image") {
-    //     return section.name !== "" || section.path !== "";
-    //   } else if (section.type === "image_text") {
-    //     return (
-    //       section.name !== "" || section.path !== "" || section.content !== ""
-    //     );
-    //   } else {
-    //     return true;
-    //   }
-    // };
-
-
-
-
-  // /** Save the currently edited page to the backend without redirecting. */
-  // const handleSave = () => {
-  //   setSaving(true);
-  //   const sections = cleanedSections();
-  //   sendFullPortfolio(
-  //     getFetchedPortfolio(),
-  //     getFetchedPages(),
-  //     getFetchedSections(),
-  //     getFetchedLinks(),
-  //     portfolioExists
-  //   )
-  //     .then((response: any) => {
-  //       setSaving(false);
-  //       // setSuccessMessage("Portfolio saved");
-  //     })
-  //     .catch(() => {
-  //       setSaving(false);
-  //       // setErrorMessage("Unable to save portfolio, something went wrong");
-  //     });
-  // };
 
   return (
     <>
+      <PaperSectionPage />
       {sections.map((section: TEditSection) => {
         if (section.type === "text" && section.uid) {
           return (
-            
             <TextSectionInput
               key={section.uid}
               handleChange={handleContentChange}
@@ -123,4 +67,4 @@ const PaperSectionsDisplay = () => {
   );
 };
 
-export default PaperSectionsDisplay
+export default PaperSectionsDisplay;

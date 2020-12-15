@@ -77,6 +77,8 @@ export { default as LinkEditMenu } from "./components/edit/LinkEditMenu"
 export { default as DisplayLinks } from "./components/edit/PortfolioNameSectionInput"
 export { default as LoadingSections } from "./components/edit/LoadingSections"
 export { default as PaperSectionsDisplay } from "./components/edit/PaperSectionsDisplay"
+export { default as EditHeader } from "./components/edit/EditHeader"
+export { default as PaperSectionPage } from "./components/edit/PaperSectionPage"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";
