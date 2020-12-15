@@ -52,4 +52,4 @@ export type TLinkData = {
   address?: string;
   icon?: string;
   id: string;
-} | null;
+}// | null;

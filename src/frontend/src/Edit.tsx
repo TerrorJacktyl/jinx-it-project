@@ -19,6 +19,7 @@ import {
   usePortfolio,
   usePage,
   useSection,
+  useLink,
   HeaderBar,
   PrimaryButton,
   SecondaryButton,
@@ -125,6 +126,12 @@ const Edit = () => {
   } = usePortfolio();
 
   const {
+    fetchPages,
+    setPages,
+    getSavedPages,
+  } = usePage();
+
+  const {
     fetchSections,
     getSavedSections,
     handleContentChange,
@@ -132,11 +139,10 @@ const Edit = () => {
   } = useSection();
 
   const {
-    fetchPages,
-    setPages,
-    getSavedPages,
-  } = usePage();
-
+    fetchPageLinks,
+    getSavedLinks,
+    setLinks,
+  } = useLink();
   // const [state, updateState] = useContext(PortfolioContext);
 
 
@@ -150,7 +156,7 @@ const Edit = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [links, setLinks] = useState<TLinkData[]>([]);
+  // const [links, setLinks] = useState<TLinkData[]>([]);
   // Call useEffect to fetch an existing portfolio's data
 
 
@@ -223,7 +229,7 @@ const Edit = () => {
 
     setSaving(true);
     const sections = cleanedSections();
-    sendFullPortfolio(getSavedPortfolio(), getSavedPages(), sections, links, portfolioExists)
+    sendFullPortfolio(getSavedPortfolio(), getSavedPages(), getSavedSections(), getSavedLinks(), portfolioExists)
       .then((response: any) => {
         setSaving(false);
         setSuccessMessage("Portfolio saved");
@@ -240,7 +246,7 @@ const Edit = () => {
       setSaving(true);
       const sections = cleanedSections();
 
-      sendFullPortfolio(getSavedPortfolio(), getSavedPages(), sections, links, portfolioExists)
+      sendFullPortfolio(getSavedPortfolio(), getSavedPages(), getSavedSections(), getSavedLinks(), portfolioExists)
         .then(() => {
           makePortfolioPublic(getSavedPortfolio().id)
             .then(() => {
@@ -454,8 +460,8 @@ const Edit = () => {
                       />
                       <p></p>
                       <LinksDiv>
-                        <DisplayLinks links={links} setLinks={setLinks} />
-                        <LinkDialog links={links} setLinks={setLinks} />
+                        <DisplayLinks/>
+                        <LinkDialog/>
                       </LinksDiv>
                     </OneColumnSectionDiv>
                   </PaperSectionStatic>

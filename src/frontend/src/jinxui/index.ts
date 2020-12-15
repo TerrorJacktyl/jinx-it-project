@@ -102,6 +102,9 @@ export {
   SectionContextProvider,
   SectionContext,
   defaultSectionContext,
+  LinkContextProvider,
+  LinkContext,
+  defaultLinkContext,
 } from "./contexts/index";
 
 /* Types */
@@ -122,6 +125,7 @@ export { useUser } from "./hooks/useUser";
 export { usePortfolio } from "./hooks/usePortfolio";
 export { useSection } from "./hooks/useSection";
 export { usePage } from "./hooks/usePage";
+export { useLink } from "./hooks/useLink";
 
 /* Theme */
 export {

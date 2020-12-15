@@ -22,7 +22,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 
-import { LinkIconMenu, PrimaryButton, SecondaryButton } from "jinxui";
+import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink } from "jinxui";
 import { TLinkData } from "jinxui/types";
 
 const LinkInputDiv = styled.div`
@@ -47,15 +47,16 @@ const PublishCancelDiv = styled.div`
 `;
 
 type TLinkDialog = {
-  links: TLinkData[];
-  setLinks: any;
+  // links: TLinkData[];
+  // setLinks: any;
   // isEdit?: boolean;
   link?: TLinkData;
   setAnchoEl?: any
 };
 const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [open, setOpen] = useState(false);
-  const [linkIcon, setLinkIcon] = useState(props.link?props.link.icon:"Web");
+  const [linkIcon, setLinkIcon] = useState(props.link?props.link.icon:"None");
+  const {getSavedLinks, setLinks, addLink, updateLink} = useLink();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -100,18 +101,20 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   //   setLinkIcon(props.link.icon);
   // }
   const handleAdd = () => {
-    if (props.link) {
-      // props.link.title="ASD"
-      props.link.title = newLink.title
-      // props.link.icon = activeLink.icon
-      // props.link.title =activeLink.title
-      // props.link.address = activeLink.address
-      // const index = props.links.findIndex(
-      //   (p: TLinkData) => p.id === props.link.id
-      //   );
-    } else {
-      props.setLinks((links: any) => [...links, newLink]);
-    }
+    updateLink(activeLink)
+    // if (props.link) {
+    //   // // props.link.title="ASD"
+    //   // props.link.title = newLink.title
+    //   // // props.link.icon = activeLink.icon
+    //   // // props.link.title =activeLink.title
+    //   // // props.link.address = activeLink.address
+    //   // // const index = props.links.findIndex(
+    //   // //   (p: TLinkData) => p.id === props.link.id
+    //   // //   );
+    //   updateLink(props.link.id, props.link.title);
+    // } else {
+    //   setLinks((links: any) => [...links, newLink]);
+    // }
     setOpen(false);
   };
 

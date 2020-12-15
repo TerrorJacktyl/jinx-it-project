@@ -7,6 +7,7 @@ import { InputAdornment } from "@material-ui/core";
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
+  useLink,
   LinkDialog,
   LinkDisplayIcon,
   LinkEditMenu,
@@ -27,21 +28,23 @@ const LinksDiv = styled.div`
 
 
 type TDisplayLinks = {
-  links: any,
-  setLinks: any,
+  // links: any,
+  // setLinks: any,
 }
 
 const DisplayLinks = (props: TDisplayLinks) => {
+  const {getSavedLinks} = useLink();
+
   return (
     <>
-      {props.links.map((link: TLinkData) => {
+      {getSavedLinks().map((link: TLinkData) => {
         if (link) {
           return (
             <LinkEditMenu
               key={link.id}
               link={link}
-              links={props.links}
-              setLinks={props.setLinks}
+              // links={props.links}
+              // setLinks={props.setLinks}
             />
           );
         }

@@ -20,6 +20,7 @@ import {
   PortfolioContextProvider,
   PageContextProvider,
   SectionContextProvider,
+  LinkContextProvider,
   LoggedInRoute,
   PortfolioDisplay,
   Routes,
@@ -37,6 +38,7 @@ function App() {
     <PortfolioContextProvider>
       <PageContextProvider>
       <SectionContextProvider>
+        <LinkContextProvider>
         <UserContextProvider>
           {/** Wrap the whole app in the UserContext so they can all access the user
       data without passing it as props everywhere */}
@@ -71,6 +73,7 @@ function App() {
             </OverallDiv>
           </Router>
         </UserContextProvider>
+        </LinkContextProvider>
       </SectionContextProvider>
       </PageContextProvider>
     </PortfolioContextProvider>

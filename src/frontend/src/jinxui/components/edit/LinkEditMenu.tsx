@@ -13,13 +13,13 @@ import CreateIcon from "@material-ui/icons/Create";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
-import { LinkDisplayIcon, PrimaryMenu, LinkDialog } from "jinxui";
+import { LinkDisplayIcon, PrimaryMenu, LinkDialog, useLink } from "jinxui";
 import { TLinkData } from "jinxui/types";
 
 type TLinkEditMenu = {
   link: TLinkData;
-  links: any;
-  setLinks: any;
+  // links: any;
+  // setLinks: any;
 };
 const LinkEditMenu = (props: TLinkEditMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -35,7 +35,7 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
   const handleEdit = () => {
     return (
       <>
-        <LinkDialog links={props.links} setLinks={props.setLinks} />
+        <LinkDialog/>
       </>
     );
   };
@@ -57,8 +57,8 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
       >
 
         <LinkDialog
-          links={props.links}
-          setLinks={props.setLinks}
+          // links={props.links}
+          // setLinks={props.setLinks}
           link={props.link}
           setAnchoEl={setAnchorEl}
         />
