@@ -1,15 +1,35 @@
 import { useContext, useState } from "react";
-import { PortfolioContext, defaultPortfolioContext, useUser } from "jinxui";
+import {
+  PortfolioContext,
+  defaultPortfolioContext,
+  useUser,
+  useSection,
+  useLink,
+  usePage,
+  LightTheme,
+  DarkTheme,
+} from "jinxui";
 import API from "../../API";
 import { TPortfolio } from "../types/PortfolioTypes";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
 
 export const usePortfolio = () => {
-  // const [state, setState,] = useContext(PortfolioContext);
   const [state, updateState] = useContext(PortfolioContext);
+  const [portfolioIsSaving, setSaving] = useState(false);
+  const {
+    getConfig,
+    getSavedPortfolioId,
+    getSavedLightThemeMode,
+    sendFullPortfolio,
+  } = useUser();
+  const { getFetchedPages } = usePage();
+  const { getFetchedSections, getCleanedSections } = useSection();
+  const { getFetchedLinks } = useLink();
+
+  const portfolioExists = true;
 
   const PORTFOLIOS_PATH = "api/portfolios";
-
-  const { getConfig, getSavedPortfolioId } = useUser();
 
   async function fetchPortfolio() {
     try {
@@ -32,7 +52,7 @@ export const usePortfolio = () => {
     }
   }
 
-  function getSavedPortfolio() {
+  function getFetchedPortfolio() {
     return state;
   }
 
@@ -47,8 +67,12 @@ export const usePortfolio = () => {
     return result;
   }
 
+  function getLightTheme() {
+    return createMuiTheme(getSavedLightThemeMode() ? LightTheme : DarkTheme);
+  }
+
   function setPortfolioName(name: string) {
-    updateState({name: name});
+    updateState({ name: name });
   }
 
   async function setPortfolioTheme(portfolio_id: number, theme_name: string) {
@@ -91,18 +115,72 @@ export const usePortfolio = () => {
 
   async function setPortfolio(portfolio: TPortfolio) {
     try {
-      await updateState(portfolio)
+      await updateState(portfolio);
     } catch (e) {
       throw e;
     }
   }
 
+  async function saveFullPortfolio() {
+    if (state){
+        setSaving(true);
+      const result = sendFullPortfolio(
+        state,
+        getFetchedPages(),
+        getCleanedSections(),
+        getFetchedLinks(),
+        portfolioExists
+      )
+        .then((response: any) => {
+          setSaving(false);
+          return response.data;
+        })
+        .catch((e) => {
+          setSaving(false);
+          throw e;
+        });
+      return result;
+    }
+  }
+
+  // /** Save the currently edited page to the backend and redirect to display page. */
+  // const publishFullPortfolio = () => {
+  //   if (state) {
+  //     setSaving(true);
+
+  //     sendFullPortfolio(
+  //       getFetchedPortfolio(),
+  //       getFetchedPages(),
+  //       getCleanedSections(),
+  //       getFetchedLinks(),
+  //       portfolioExists
+  //     )
+  //       .then(() => {
+  //         makePortfolioPublic(getFetchedPortfolio().id)
+  //           .then(() => {
+  //             setSaving(false);
+  //             setRedirect(true);
+  //           })
+  //           .catch(() => {
+  //             setErrorMessage("Something went wrong");
+  //           });
+  //       })
+  //       .catch(() => {
+  //         setSaving(false);
+  //         setErrorMessage("Unable to save portfolio, something went wrong");
+  //       });
+  //   }
+  // };
+
   return {
     portfolioData: state,
     fetchPortfolio,
-    getSavedPortfolio,
+    getFetchedPortfolio,
+    getLightTheme,
     setPortfolioName,
     setPortfolioTheme,
     setPortfolio,
+    saveFullPortfolio,
+    portfolioIsSaving,
   };
 };

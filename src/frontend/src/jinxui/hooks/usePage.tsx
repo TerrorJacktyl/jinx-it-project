@@ -38,13 +38,13 @@ export const usePage = () => {
     }
   }
 
-  function getSavedPages() {
+  function getFetchedPages() {
     return state;
   }
 
   return {
     fetchPages,
     setPages,
-    getSavedPages,
-  }
+    getFetchedPages,
+  };
 }

@@ -25,7 +25,7 @@ export interface TSection extends TSectionData {
   number: number;
 }
 export interface TEditSection extends TSection {
-  uid: string
+  uid?: string
 };
 
 export type TPortfolioData = {

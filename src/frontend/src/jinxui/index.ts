@@ -39,7 +39,7 @@ export { default as TextSectionDiv } from "./components/display/TextSectionDiv";
 export { default as PageDiv } from "./components/display/PageDiv";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
-export { default as PortfolioDropdown } from "./components/display/PortfolioDropdown"
+export { default as PortfolioDropdown } from "./components/display/PortfolioDropdown";
 
 /* Display Mui*/
 export {
@@ -75,6 +75,8 @@ export { default as LinkDialog } from "./components/edit/LinkDialog"
 export { default as LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
 export { default as LinkEditMenu } from "./components/edit/LinkEditMenu"
 export { default as DisplayLinks } from "./components/edit/PortfolioNameSectionInput"
+export { default as LoadingSections } from "./components/edit/LoadingSections"
+export { default as PaperSectionsDisplay } from "./components/edit/PaperSectionsDisplay"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

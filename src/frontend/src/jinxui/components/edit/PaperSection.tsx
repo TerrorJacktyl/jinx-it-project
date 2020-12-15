@@ -63,26 +63,26 @@ type TPaperSection = {
 const PaperSection = (props: TPaperSection) => {
   const { savingState } = useUser();
   const {
-    getSavedSections,
+    getFetchedSections,
     handleSectionDelete,
     handleSectionMoveUp,
     handleSectionMoveDown,
   } = useSection();
   const [isSaving, setIsSaving] = useState(false);
-  const index = getSavedSections().findIndex(
+  const index = getFetchedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
 
   let deleteDisabled = false;
   let upArrowDisabled = false;
   let downArrowDisabled = false;
-  if (getSavedSections().length === 1) {
+  if (getFetchedSections().length === 1) {
     deleteDisabled = true;
   }
   if (index === 0) {
     upArrowDisabled = true;
   }
-  if (index === getSavedSections().length - 1) {
+  if (index === getFetchedSections().length - 1) {
     downArrowDisabled = true;
   }
 

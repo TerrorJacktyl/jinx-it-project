@@ -33,11 +33,11 @@ type TDisplayLinks = {
 }
 
 const DisplayLinks = (props: TDisplayLinks) => {
-  const {getSavedLinks} = useLink();
+  const { getFetchedLinks } = useLink();
 
   return (
     <>
-      {getSavedLinks().map((link: TLinkData) => {
+      {getFetchedLinks().map((link: TLinkData) => {
         if (link) {
           return (
             <LinkEditMenu

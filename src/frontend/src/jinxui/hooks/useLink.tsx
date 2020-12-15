@@ -60,14 +60,14 @@ export const useLink = () => {
     });
   }
 
-  function getSavedLinks() {
+  function getFetchedLinks() {
     return state;
   }
 
   return {
     fetchPageLinks,
     setLinks,
-    getSavedLinks,
+    getFetchedLinks,
     addLink,
     updateLink,
   };

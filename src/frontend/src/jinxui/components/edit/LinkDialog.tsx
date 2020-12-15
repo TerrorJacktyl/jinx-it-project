@@ -56,7 +56,7 @@ type TLinkDialog = {
 const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [open, setOpen] = useState(false);
   const [linkIcon, setLinkIcon] = useState(props.link?props.link.icon:"None");
-  const {getSavedLinks, setLinks, addLink, updateLink} = useLink();
+  const { getFetchedLinks, setLinks, addLink, updateLink } = useLink();
 
   const handleClickOpen = () => {
     setOpen(true);

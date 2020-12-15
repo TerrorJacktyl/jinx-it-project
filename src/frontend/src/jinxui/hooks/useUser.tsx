@@ -279,10 +279,6 @@ export const useUser = () => {
     existingPortfolio: boolean
   ) {
     const isNew = !existingPortfolio
-    console.log(isNew)
-    console.log(portfolio)
-    console.log(pages)
-    console.log(sections)
     try {
       const portfolioResp = isNew 
       ? await postPortfolio(portfolio) 

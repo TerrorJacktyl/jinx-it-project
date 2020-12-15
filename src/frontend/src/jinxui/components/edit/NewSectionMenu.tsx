@@ -22,10 +22,7 @@ type TNewSectionMenu = {
 
 const NewSectionMenu = (props: TNewSectionMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const {
-    getSavedSections,
-    handleSectionChange,
-  } = useSection();
+  const { getFetchedSections, handleSectionChange } = useSection();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -50,7 +47,7 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
   const addSection = (section_type: string) => {
     setAnchorEl(null);
 
-    const index = getSavedSections().findIndex(
+    const index = getFetchedSections().findIndex(
       (p: TEditSection) => p.uid === props.section.uid
     );
 

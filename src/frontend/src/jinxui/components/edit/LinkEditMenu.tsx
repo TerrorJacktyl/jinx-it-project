@@ -57,8 +57,6 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
       >
 
         <LinkDialog
-          // links={props.links}
-          // setLinks={props.setLinks}
           link={props.link}
           setAnchoEl={setAnchorEl}
         />

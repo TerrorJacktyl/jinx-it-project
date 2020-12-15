@@ -2,7 +2,21 @@ import { useContext } from "react";
 import { SectionContext, useUser, usePortfolio } from "jinxui";
 import API from "../../API";
 import { v4 as uuidv4 } from "uuid";
-import { TEditSection } from "../types/PortfolioTypes";
+import { TEditSection, TSection } from "../types/PortfolioTypes";
+
+const sectionIsNotBlank = (section: TEditSection) => {
+  if (section.type === "text") {
+    return section.name !== "" || section.content !== "";
+  } else if (section.type === "image") {
+    return section.name !== "" || section.path !== "";
+  } else if (section.type === "image_text") {
+    return (
+      section.name !== "" || section.path !== "" || section.content !== ""
+    );
+  } else {
+    return true;
+  }
+};
 
 export const useSection = () => {
   const [state, updateState, setState] = useContext(SectionContext);
@@ -35,39 +49,55 @@ export const useSection = () => {
     }
   }
 
+  /**
+   * Prepare section data for sending to backend.
+   * 1. Remove unique identifiers
+   * 2. Override section numbers
+   * 3. Remove empty sections entirely
+   */
+  const getCleanedSections = () => {
+    var cleanSections: TSection[] = [];
+    for (var i = 0; i < state.length; i++) {
+      if (sectionIsNotBlank(state[i])) {
+        var cleanSection = state[i];
+        delete cleanSection.uid;
+        cleanSection.number = i;
+        cleanSections.push(cleanSection)
+      }
+    }
+    return cleanSections;
+  };
+
   const handleContentChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
   ) => {
-    updateState(key, {content: e.target.value});
+    updateState(key, { content: e.target.value });
   };
 
   const handleTitleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
   ) => {
-    updateState(key, {title: e.target.value})
+    updateState(key, { title: e.target.value });
   };
 
-  function handleSectionChange(targetIndex: number, newSection:TEditSection) {
+  function handleSectionChange(targetIndex: number, newSection: TEditSection) {
     setState([
       ...state.slice(0, targetIndex),
       newSection,
-      ...state.slice(targetIndex)
-    ])
+      ...state.slice(targetIndex),
+    ]);
   }
 
-  function handleSectionDelete(targetIndex: number){
-    setState([
-      ...state.slice(0, targetIndex),
-      ...state.slice(targetIndex + 1),
-    ])
+  function handleSectionDelete(targetIndex: number) {
+    setState([...state.slice(0, targetIndex), ...state.slice(targetIndex + 1)]);
   }
-    
-  function handleSectionMoveUp(targetIndex: number, section: TEditSection){
-      if (targetIndex === 0) {
-        return;
-      }
+
+  function handleSectionMoveUp(targetIndex: number, section: TEditSection) {
+    if (targetIndex === 0) {
+      return;
+    }
     const curr_sections = state;
     const top = curr_sections.slice(0, targetIndex - 1);
     const one_above = curr_sections.slice(targetIndex - 1, targetIndex);
@@ -75,9 +105,7 @@ export const useSection = () => {
     setState(top.concat(section, one_above, rest));
   }
 
-
-  function handleSectionMoveDown(targetIndex: number, section: TEditSection)
-  {
+  function handleSectionMoveDown(targetIndex: number, section: TEditSection) {
     if (targetIndex === state.length - 1) {
       return;
     }
@@ -85,16 +113,17 @@ export const useSection = () => {
     const top = curr_sections.slice(0, targetIndex);
     const one_below = curr_sections.slice(targetIndex + 1, targetIndex + 2);
     const rest = curr_sections.slice(targetIndex + 2);
-    setState(top.concat(one_below, section, rest));    
+    setState(top.concat(one_below, section, rest));
   }
 
-  function getSavedSections() {
+  function getFetchedSections() {
     return state;
   }
 
   return {
     fetchSections,
-    getSavedSections,
+    getFetchedSections,
+    getCleanedSections,
     handleContentChange,
     handleTitleChange,
     handleSectionChange,

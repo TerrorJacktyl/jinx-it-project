@@ -14,9 +14,9 @@ type TTextSectionProps = {
 };
 
 const TextSectionInput = (props: TTextSectionProps) => {
-  const { getSavedSections } = useSection();
+  const { getFetchedSections } = useSection();
 
-  const index = getSavedSections().findIndex(
+  const index = getFetchedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
 

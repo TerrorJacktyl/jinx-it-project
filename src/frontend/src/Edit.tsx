@@ -1,20 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
-import { v4 as uuidv4 } from "uuid";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { Button, CssBaseline, Icon, InputAdornment, TextField } from "@material-ui/core";
+import { ThemeProvider,  } from "@material-ui/core/styles";
+import { Button, CssBaseline, InputAdornment, TextField } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
 import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
-  LightTheme,
-  DarkTheme,
   useUser,
   usePortfolio,
   usePage,
@@ -23,29 +16,20 @@ import {
   HeaderBar,
   PrimaryButton,
   SecondaryButton,
-  TextSectionInput,
-  ImageSectionInput,
-  PortfolioNameSectionInput,
   Routes,
   PrimaryColumnDiv,
-  ImageTextSectionInput,
   SnackbarAlert,
-  defaultPortfolioContext,
   LinkDialog,
-  LinkDisplayIcon,
-  LinkEditMenu,
   PaperSectionStatic,
   OneColumnSectionDiv,
   DisplayLinks,
-  PortfolioContext,
+  LoadingSections,
+  PaperSectionsDisplay,
 } from "jinxui";
 
 import {
-  TPortfolio,
   TPage,
-  TSection,
   TEditSection,
-  TLinkData,
 } from "jinxui/types";
 
 const FormTitle = styled.h2`
@@ -73,34 +57,6 @@ const LinksDiv = styled.div`
   flex-flow: wrap;
 `;
 
-
-/*  Was used in formik, but is redundant now. Will leave in as a 
-    basis for touched and error checking if we implement it in the future 
-    (commented out to prevent linting warnings 
-*/
-/*
-const EditSchema = Yup.object().shape({
-  portfolioName: Yup.string().max(50, "Too Long!").required("Required"),
-  sections: Yup.array().of(
-    Yup.object().shape({
-      content: Yup.string().required("Section must have content"),
-    })
-  ),
-});
-*/
-
-// Unutilised, but may come in handly later
-// (commented out to prevent linting warnings)
-/*
-function sectionDataIsEmpty(data: any) {
-  return (
-    (data.type === "text" && data.content === "") ||
-    (data.type === "image" && data.image === 0) ||
-    (data.type === "image_text" && data.image === 0 && data.content === "")
-  );
-}
-*/
-
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = () => {
@@ -110,10 +66,10 @@ const Edit = () => {
   const {
     sendFullPortfolio,
     getFullPortfolio,
-    getSavedPortfolioId,
     userData,
     switchLightThemeMode,
     getSavedLightThemeMode,
+    getSavedPortfolioId,
     makePortfolioPublic,
     setSaving,
     savingState,
@@ -121,44 +77,32 @@ const Edit = () => {
 
   const {
     fetchPortfolio,
-    getSavedPortfolio,
+    getFetchedPortfolio,
     setPortfolioName,
+    getLightTheme,
+    saveFullPortfolio,
+    portfolioIsSaving,
   } = usePortfolio();
 
   const {
     fetchPages,
     setPages,
-    getSavedPages,
+    getFetchedPages,
   } = usePage();
 
   const {
     fetchSections,
-    getSavedSections,
-    handleContentChange,
-    handleTitleChange,
+    getFetchedSections,
   } = useSection();
 
   const {
-    fetchPageLinks,
-    getSavedLinks,
+    getFetchedLinks,
     setLinks,
   } = useLink();
-  // const [state, updateState] = useContext(PortfolioContext);
 
-
-  // const [theme, setTheme] = useState(true);
-  const appliedTheme = createMuiTheme(
-    getSavedLightThemeMode() ? LightTheme : DarkTheme
-  );
-  // const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
-  // const [pages, setPages] = useState<TPage[]>([]);
-  // const [sections, setSections] = useState<TEditSection[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  // const [links, setLinks] = useState<TLinkData[]>([]);
-  // Call useEffect to fetch an existing portfolio's data
-
+  // const [isSaving, setIsSaving] = useState(false);
 
 
   useEffect(() => {
@@ -183,40 +127,13 @@ const Edit = () => {
     } else {
       const newPage = [{ name: "home", number: 0 }] as TPage[];
       setPages(newPage);
-      setSaving(false);
+      // setSaving(false);
     }
   }, []);
 
-  useEffect(() => {
-    setIsSaving(savingState);
-  }, [savingState]);
-
-  /**
-   * Prepare section data for sending to backend.
-   * 1. Remove unique identifiers
-   * 2. Override section numbers
-   * 3. Remove empty sections entirely
-   */
-  const cleanedSections = () => {
-    // Deep copy sections
-    const sectionsCopy = JSON.parse(JSON.stringify(getSavedSections()));
-    // const sectionsCopy = JSON.parse(JSON.stringify(sections));
-    
-    var cleanSections = sectionsCopy.map(
-      (section: TEditSection, index: number) => {
-        const newSection = section;
-        // Delete uid field: fear not the linting error!
-        // eslint-disable-next-line
-        delete newSection.uid;
-        // Overwrite the section order number
-        newSection.number = index;
-        return newSection;
-      }
-      );
-    // Remove empty sections
-    // TO DO: make this happen in a single pass (i.e. above) with a for loop instead of map
-    return cleanSections.filter(sectionIsNotBlank);
-  };
+  // useEffect(() => {
+  //   setIsSaving(savingState);
+  // }, [savingState]);
 
   /** Some shocking repeated code because of the gridlock imposed by:
    * 1. handlePublish can't be made async without pulling it out of the Edit component
@@ -224,169 +141,15 @@ const Edit = () => {
    * TODO: burn it and refactor `publish` into a hook method so it can be made async
    */
 
-  /** Save the currently edited page to the backend without redirecting. */
-  const handleSave = () => {
-
-    setSaving(true);
-    const sections = cleanedSections();
-    sendFullPortfolio(getSavedPortfolio(), getSavedPages(), getSavedSections(), getSavedLinks(), portfolioExists)
-      .then((response: any) => {
-        setSaving(false);
-        setSuccessMessage("Portfolio saved");
-      })
-      .catch(() => {
-        setSaving(false);
-        setErrorMessage("Unable to save portfolio, something went wrong");
-      });
-  };
-
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
-    if (getSavedPortfolio()) {
-      setSaving(true);
-      const sections = cleanedSections();
-
-      sendFullPortfolio(getSavedPortfolio(), getSavedPages(), getSavedSections(), getSavedLinks(), portfolioExists)
-        .then(() => {
-          makePortfolioPublic(getSavedPortfolio().id)
-            .then(() => {
-              setSaving(false);
-              setRedirect(true);
-            })
-            .catch(() => {
-              setErrorMessage("Something went wrong");
-            });
-        })
-        .catch(() => {
-          setSaving(false);
-          setErrorMessage("Unable to save portfolio, something went wrong");
-        });
-    }
-  };
-
-  const sectionIsNotBlank = (section: TEditSection) => {
-    if (section.type === "text") {
-      return section.name !== "" || section.content !== "";
-    } else if (section.type === "image") {
-      return section.name !== "" || section.path !== "";
-    } else if (section.type === "image_text") {
-      return (
-        section.name !== "" || section.path !== "" || section.content !== ""
-      );
-    } else {
-      return true;
-    }
-  };
-
-  const LoadingSections = (props: any) => {
-    const LoadingText = ({ rows }: { rows: number }) => {
-      return (
-        <>
-          {[...Array(rows)].map((item: any, index: number) => (
-            <Skeleton key={index} />
-          ))}
-        </>
-      );
-    };
-
-    const LoadingTitle = () => <Skeleton width="40%" height="4em" />;
-
-    const LoadingMedia = () => <Skeleton variant="rect" height="20em" />;
-
-    const LoadingTextSection = () => (
-      <Grid container direction="column">
-        <LoadingTitle />
-        <LoadingText rows={5} />
-      </Grid>
-    );
-
-    const LoadingMediaSection = () => (
-      <Grid container>
-        <LoadingTitle />
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <LoadingText rows={10} />
-          </Grid>
-          <Grid item xs={6}>
-            <LoadingMedia />
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-
-    return (
-      <>
-        <ThemeProvider theme={appliedTheme}>
-          <CssBaseline />
-          <HeaderBar title="Edit" darkTheme={!getSavedLightThemeMode()} />
-          <PrimaryColumnDiv>
-            <div />
-            <Container maxWidth="lg">
-              <Grid
-                container
-                spacing={5}
-                direction="column"
-                justify="space-evenly"
-              >
-                {[...Array(4)].map((item: any, index: number) => (
-                  <Grid item key={index}>
-                    {index % 2 === 0 ? (
-                      <LoadingTextSection />
-                    ) : (
-                      <LoadingMediaSection />
-                    )}
-                  </Grid>
-                ))}
-              </Grid>
-              <div />
-            </Container>
-          </PrimaryColumnDiv>
-        </ThemeProvider>
-      </>
-    );
-  };
-
-
-
-  const DisplaySections = () => {
-    return (
-      <>
-        {getSavedSections().map((section: TEditSection) => {
-          if (section.type === "text") {
-            return (
-              <TextSectionInput
-                key={section.uid}
-                handleChange={handleContentChange}
-                handleTitleChange={handleTitleChange}
-                handlePublish={handleSave}
-                section={section}
-              />
-            );
-          } else if (section.type === "image") {
-            return (
-              <ImageSectionInput
-                key={section.uid}
-                handleTitleChange={handleTitleChange}
-                handlePublish={handleSave}
-                section={section}
-              />
-            );
-          } else if (section.type === "image_text") {
-            return (
-              <ImageTextSectionInput
-                key={section.uid}
-                handleChange={handleContentChange}
-                handleTitleChange={handleTitleChange}
-                handlePublish={handleSave}
-                section={section}
-              />
-            );
-          } else {
-            return <></>;
-          }
-        })}
-      </>
-    );
+    saveFullPortfolio().then(() => {
+      makePortfolioPublic(getFetchedPortfolio().id).then(() => {
+        setRedirect(true);
+      }).catch(() => {
+        setErrorMessage("Something went wrong");
+      });
+    })
   };
 
   if (redirect) {
@@ -395,13 +158,13 @@ const Edit = () => {
     );
     // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
   } else if (
-    getSavedPortfolio() &&
-    getSavedPages().length !== 0 &&
-    getSavedSections().length !== 0
+    getFetchedPortfolio() &&
+    getFetchedPages().length !== 0 &&
+    getFetchedSections().length !== 0
   ) {
     return (
       <>
-        <ThemeProvider theme={appliedTheme}>
+        <ThemeProvider theme={getLightTheme()}>
           <SnackbarAlert
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
@@ -438,34 +201,34 @@ const Edit = () => {
             <div>
               <FormTitle>Enter your information</FormTitle>
               <form>
-                  <PaperSectionStatic title={""}>
-                    <OneColumnSectionDiv>
-                      <TextField
-                        name={"portfolioName"}
-                        label={"Portfolio Name"}
-                        defaultValue={getSavedPortfolio().name}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          setPortfolioName(e.target.value)
-                        }}
-                        id="standard-full-width"
-                        fullWidth
-                        color="secondary"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <CreateIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                      <p></p>
-                      <LinksDiv>
-                        <DisplayLinks/>
-                        <LinkDialog/>
-                      </LinksDiv>
-                    </OneColumnSectionDiv>
-                  </PaperSectionStatic>
-                {DisplaySections()}
+                <PaperSectionStatic title={""}>
+                  <OneColumnSectionDiv>
+                    <TextField
+                      name={"portfolioName"}
+                      label={"Portfolio Name"}
+                      defaultValue={getFetchedPortfolio().name}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setPortfolioName(e.target.value);
+                      }}
+                      id="standard-full-width"
+                      fullWidth
+                      color="secondary"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <CreateIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                    <p></p>
+                    <LinksDiv>
+                      <DisplayLinks />
+                      <LinkDialog />
+                    </LinksDiv>
+                  </OneColumnSectionDiv>
+                </PaperSectionStatic>
+                {PaperSectionsDisplay()}
 
                 <PublishCancelDiv>
                   <Tooltip
@@ -474,7 +237,7 @@ const Edit = () => {
                   >
                     <TooltipDiv>
                       <PrimaryButton
-                        disabled={isSaving}
+                        disabled={portfolioIsSaving}
                         onClick={() => {
                           handlePublishAndRedirect();
                         }}
