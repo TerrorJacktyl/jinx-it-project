@@ -125,8 +125,9 @@ const UserAvatarDropdown = () => {
               </ListItemIcon>
               <ListItemText primary="Logout" />
             </MenuItem>
-            
+
             {/* </Link> */}
+            
           </PrimaryMenu>
         </ClickAwayListener>
       </DivWrapper>

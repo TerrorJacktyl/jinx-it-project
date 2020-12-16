@@ -20,7 +20,7 @@ const DarkTheme = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
-      main: "#0081CA",
+      main: "#70C2F2",
     },
     secondary: {
       main: "#00FFC2",
@@ -38,56 +38,195 @@ const DarkTheme = createMuiTheme({
     fontWeightBold: 400,
     h3: {
       fontWeight: 200,
-      fontSize: "3rem"
+      fontSize: "3rem",
     },
     button: {
-      textTransform: "none"
+      textTransform: "none",
     },
   },
   shadows: [
     "none",
-    "0px 2px 3px 0px rgba(   " + DarkShadowColour +  ", 0.15),0px 4px 5px 0px rgba(   " + LightShadowColour + ", 0.06),0px 2px 1px -1px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 2px 5px 0px rgba(   " + DarkShadowColour +  ", 0.15),0px 2px 2px 0px rgba(   " + LightShadowColour + ", 0.06),0px 3px 1px -2px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 2px 9px 0px rgba(   " + DarkShadowColour +  ", 0.15),0px 1px 3px 0px rgba(   " + LightShadowColour + ", 0.06),0px 3px 3px -2px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 4px 4px -1px rgba(  " + DarkShadowColour +  ", 0.15),0px 0px 5px 0px rgba(   " + LightShadowColour + ", 0.06),0px 1px 10px 0px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 6px 6px -1px rgba(  " + DarkShadowColour +  ", 0.15),0px -1px 10px 0px rgba( " + LightShadowColour + ", 0.06),0px 1px 14px 0px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 6px 6px -1px rgba(  " + DarkShadowColour +  ", 0.15),0px -2px 12px 0px rgba( " + LightShadowColour + ", 0.06),0px 1px 18px 0px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 7px 6px -2px rgba(  " + DarkShadowColour +  ", 0.15),0px -1px 12px 1px rgba( " + LightShadowColour + ", 0.06),0px 2px 16px 1px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 10px 6px -3px rgba( " + DarkShadowColour +  ", 0.15),0px 0px 12px 1px rgba(  " + LightShadowColour + ", 0.06),0px 3px 14px 2px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 10px 7px -3px rgba( " + DarkShadowColour +  ", 0.15),0px 1px 14px 1px rgba(  " + LightShadowColour + ", 0.06),0px 3px 16px 2px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 11px 7px -3px rgba( " + DarkShadowColour +  ", 0.15),0px 2px 16px 1px rgba(  " + LightShadowColour + ", 0.06),0px 4px 18px 3px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 11px 8px -4px rgba( " + DarkShadowColour +  ", 0.15),0px 3px 17px 1px rgba(  " + LightShadowColour + ", 0.06),0px 4px 20px 3px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 13px 9px -4px rgba( " + DarkShadowColour +  ", 0.15),0px 4px 19px 2px rgba(  " + LightShadowColour + ", 0.06),0px 5px 22px 4px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 13px 9px -4px rgba( " + DarkShadowColour +  ", 0.15),0px 5px 21px 2px rgba(  " + LightShadowColour + ", 0.06),0px 5px 24px 4px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 13px 10px -4px rgba(" + DarkShadowColour +  ", 0.15),0px 6px 23px 2px rgba(  " + LightShadowColour + ", 0.06),0px 5px 26px 4px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 15px 10px -5px rgba(" + DarkShadowColour +  ", 0.15),0px 7px 24px 2px rgba(  " + LightShadowColour + ", 0.06),0px 6px 28px 5px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 15px 12px -5px rgba(" + DarkShadowColour +  ", 0.15),0px 8px 26px 2px rgba(  " + LightShadowColour + ", 0.06),0px 6px 30px 5px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 15px 13px -5px rgba(" + DarkShadowColour +  ", 0.15),0px 9px 28px 2px rgba(  " + LightShadowColour + ", 0.06),0px 6px 32px 5px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 17px 13px -5px rgba(" + DarkShadowColour +  ", 0.15),0px 10px 30px 2px rgba( " + LightShadowColour + ", 0.06),0px 7px 34px 6px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 17px 14px -6px rgba(" + DarkShadowColour +  ", 0.15),0px 11px 31px 2px rgba( " + LightShadowColour + ", 0.06),0px 7px 36px 6px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 19px 15px -6px rgba(" + DarkShadowColour +  ", 0.15),0px 12px 33px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 38px 7px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 19px 15px -6px rgba(" + DarkShadowColour +  ", 0.15),0px 13px 35px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 40px 7px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 19px 16px -6px rgba(" + DarkShadowColour +  ", 0.15),0px 14px 37px 3px rgba( " + LightShadowColour + ", 0.06),0px 8px 42px 7px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 20px 16px -7px rgba(" + DarkShadowColour +  "  0.15),0px 15px 38px 3px rgba( " +  LightShadowColour + ", 0.06),0px 9px 44px 8px rgba(" + LightShadowColour + ", 0.04)",
-    "0px 20px 18px -7px rgba(" + DarkShadowColour +  "  0.15),0px 16px 40px 3px rgba( " +  LightShadowColour + ", 0.06),0px 9px 46px 8px rgba(" + LightShadowColour + ", 0.04)",
-  ], 
+    "0px 2px 3px 0px rgba(   " +
+      DarkShadowColour +
+      ", 0.15),0px 4px 5px 0px rgba(   " +
+      LightShadowColour +
+      ", 0.06),0px 2px 1px -1px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 2px 5px 0px rgba(   " +
+      DarkShadowColour +
+      ", 0.15),0px 2px 2px 0px rgba(   " +
+      LightShadowColour +
+      ", 0.06),0px 3px 1px -2px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 2px 9px 0px rgba(   " +
+      DarkShadowColour +
+      ", 0.15),0px 1px 3px 0px rgba(   " +
+      LightShadowColour +
+      ", 0.06),0px 3px 3px -2px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 4px 4px -1px rgba(  " +
+      DarkShadowColour +
+      ", 0.15),0px 0px 5px 0px rgba(   " +
+      LightShadowColour +
+      ", 0.06),0px 1px 10px 0px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 6px 6px -1px rgba(  " +
+      DarkShadowColour +
+      ", 0.15),0px -1px 10px 0px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 1px 14px 0px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 6px 6px -1px rgba(  " +
+      DarkShadowColour +
+      ", 0.15),0px -2px 12px 0px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 1px 18px 0px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 7px 6px -2px rgba(  " +
+      DarkShadowColour +
+      ", 0.15),0px -1px 12px 1px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 2px 16px 1px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 10px 6px -3px rgba( " +
+      DarkShadowColour +
+      ", 0.15),0px 0px 12px 1px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 3px 14px 2px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 10px 7px -3px rgba( " +
+      DarkShadowColour +
+      ", 0.15),0px 1px 14px 1px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 3px 16px 2px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 11px 7px -3px rgba( " +
+      DarkShadowColour +
+      ", 0.15),0px 2px 16px 1px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 4px 18px 3px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 11px 8px -4px rgba( " +
+      DarkShadowColour +
+      ", 0.15),0px 3px 17px 1px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 4px 20px 3px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 13px 9px -4px rgba( " +
+      DarkShadowColour +
+      ", 0.15),0px 4px 19px 2px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 5px 22px 4px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 13px 9px -4px rgba( " +
+      DarkShadowColour +
+      ", 0.15),0px 5px 21px 2px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 5px 24px 4px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 13px 10px -4px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 6px 23px 2px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 5px 26px 4px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 15px 10px -5px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 7px 24px 2px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 6px 28px 5px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 15px 12px -5px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 8px 26px 2px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 6px 30px 5px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 15px 13px -5px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 9px 28px 2px rgba(  " +
+      LightShadowColour +
+      ", 0.06),0px 6px 32px 5px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 17px 13px -5px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 10px 30px 2px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 7px 34px 6px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 17px 14px -6px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 11px 31px 2px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 7px 36px 6px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 19px 15px -6px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 12px 33px 3px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 8px 38px 7px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 19px 15px -6px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 13px 35px 3px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 8px 40px 7px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 19px 16px -6px rgba(" +
+      DarkShadowColour +
+      ", 0.15),0px 14px 37px 3px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 8px 42px 7px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 20px 16px -7px rgba(" +
+      DarkShadowColour +
+      "  0.15),0px 15px 38px 3px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 9px 44px 8px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+    "0px 20px 18px -7px rgba(" +
+      DarkShadowColour +
+      "  0.15),0px 16px 40px 3px rgba( " +
+      LightShadowColour +
+      ", 0.06),0px 9px 46px 8px rgba(" +
+      LightShadowColour +
+      ", 0.04)",
+  ],
   shape: {
-    borderRadius: 0
-  },
-  zIndex: {
-    modal: 1600,
+    borderRadius: 0,
   },
   overrides: {
     MuiTooltip: {
       tooltip: {
         fontSize: "0.95em",
         fontWeight: 500,
-      }
+      },
     },
   },
-  portfolio: {
-
-  }
+  portfolio: {},
 });
 
 let LightTheme = createMuiTheme({

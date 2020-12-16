@@ -12,6 +12,7 @@ export interface IUserContext {
   portfolioId: number;
   theme: string;
   isSaving: boolean;
+  isLoading: boolean;
   successMessage: string;
   errorMessage: string;
   config: AxiosRequestConfig;

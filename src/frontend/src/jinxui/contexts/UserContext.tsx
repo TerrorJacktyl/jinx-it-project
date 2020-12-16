@@ -13,6 +13,7 @@ export const defaultUserContext: IUserContext = {
   theme: "",
   lightThemeMode: true,
   isSaving: false,
+  isLoading: false,
   successMessage: "",
   errorMessage: "",
   config: {},

@@ -61,7 +61,6 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
   return (
     <div>
       <Tooltip title="Add new section" arrow>
-
       <IconButton onClick={handleClick}>
         <AddIcon />
       </IconButton>

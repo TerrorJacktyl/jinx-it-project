@@ -6,7 +6,6 @@ import { TextField } from "formik-material-ui";
 
 import { v4 as uuidv4 } from "uuid";
 
-import Button from "@material-ui/core/Button";
 // import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
@@ -17,9 +16,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import LinkIcon from "@material-ui/icons/Link";
 
 import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink } from "jinxui";
 import { TLinkData } from "jinxui/types";
@@ -46,9 +48,6 @@ const PublishCancelDiv = styled.div`
 `;
 
 type TLinkDialog = {
-  // links: TLinkData[];
-  // setLinks: any;
-  // isEdit?: boolean;
   link?: TLinkData;
   setAnchoEl?: any;
 };
@@ -81,7 +80,19 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
         </MenuItem>
       );
     } else {
-      return <PrimaryButton onClick={handleClickOpen}>Add link</PrimaryButton>;
+      return (
+        <Tooltip title="Add new external link" arrow>
+          <Button
+            onClick={handleClickOpen}
+            color="primary"
+            variant="text"
+            disableElevation
+          >
+            <LinkIcon />
+          </Button>
+        </Tooltip>
+      );
+      // <PrimaryButton onClick={handleClickOpen}>Add link</PrimaryButton>;
     }
   };
 

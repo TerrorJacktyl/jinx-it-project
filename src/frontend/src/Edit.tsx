@@ -44,7 +44,7 @@ const Edit = (props: any) => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const portfolioExists = true;
   // const [redirect, setRedirect] = useState(false);
-  const { userData, isSaving, setErrorMessage } = useUser();
+  const { userData, isSaving, setErrorMessage, setLoading } = useUser();
 
   const {
     fetchFullPortfolio,
@@ -58,6 +58,7 @@ const Edit = (props: any) => {
 
 
   useEffect(() => {
+    setLoading(true);
     const fetchExistingPortfolio = async () => {
       await fetchFullPortfolio();
     };

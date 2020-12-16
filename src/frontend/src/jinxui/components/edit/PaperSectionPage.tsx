@@ -5,6 +5,7 @@ import Skelaton from "@material-ui/lab/Skeleton";
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
+  useUser,
   usePortfolio,
   LinkDialog,
   PaperSectionStatic,
@@ -27,58 +28,59 @@ const LinksSkelatonDiv = styled.div`
 
 const PaperSectionPage = () => {
   const {
+    isLoading
+  } = useUser();
+  const {
     getFetchedPortfolio,
     setPortfolioName,
-    portfolioIsFetched,
   } = usePortfolio();
-
 
   return (
     <>
-    <PaperSectionStatic title={""}>
-      <OneColumnSectionDiv>
-        {portfolioIsFetched() ? (
-          <TextField
-            name={"portfolioName"}
-            label={"Portfolio Name"}
-            defaultValue={getFetchedPortfolio().name}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setPortfolioName(e.target.value);
-            }}
-            id="standard-full-width"
-            fullWidth
-            color="secondary"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <CreateIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        ) : (
-          <>
-            <Skelaton variant="text" height={14} width={100} />
-            <Skelaton variant="text" height={34} animation="wave"/>
-          </>
-        )}
-        <p></p>
-        <LinksDiv>
-          {portfolioIsFetched() ? (
+      <PaperSectionStatic title={""}>
+        <OneColumnSectionDiv>
+          {isLoading() ? (
             <>
-              <DisplayLinks />
-              <LinkDialog />
+              <Skelaton variant="text" height={14} width={100} />
+              <Skelaton variant="text" height={34} animation="wave" />
             </>
           ) : (
-            <LinksSkelatonDiv>
-              <Skelaton variant="circle" width={30} height={30} />
-              <Skelaton variant="circle" width={30} height={30} />
-              <Skelaton variant="circle" width={30} height={30} />
-            </LinksSkelatonDiv>
+            <TextField
+              name={"portfolioName"}
+              label={"Portfolio Name"}
+              defaultValue={getFetchedPortfolio().name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPortfolioName(e.target.value);
+              }}
+              id="standard-full-width"
+              fullWidth
+              color="secondary"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <CreateIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
           )}
-        </LinksDiv>
-      </OneColumnSectionDiv>
-    </PaperSectionStatic>
+          <p></p>
+          <LinksDiv>
+            {isLoading() ? (
+              <LinksSkelatonDiv>
+                <Skelaton variant="circle" width={30} height={30} />
+                <Skelaton variant="circle" width={30} height={30} />
+                <Skelaton variant="circle" width={30} height={30} />
+              </LinksSkelatonDiv>
+            ) : (
+              <>
+                <DisplayLinks />
+                <LinkDialog />
+              </>
+            )}
+          </LinksDiv>
+        </OneColumnSectionDiv>
+      </PaperSectionStatic>
     </>
   );
 };

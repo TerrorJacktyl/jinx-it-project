@@ -78,7 +78,7 @@ async function postSection(
 
 export const useSection = () => {
   const [state, updateState, setState, resetState] = useContext(SectionContext);
-  const { getConfig, getSavedPortfolioId } = useUser();
+  const { getConfig, getSavedPortfolioId, isLoading, setLoading } = useUser();
 
   async function fetchSections(page_id: number) {
     try {
@@ -93,8 +93,10 @@ export const useSection = () => {
         return newSection;
       });
       await setState(IdSections);
+      setLoading(false)
     } catch (e) {
       throw e;
+    } finally {
     }
   }
 
@@ -166,7 +168,7 @@ export const useSection = () => {
   }
 
   function getFetchedSections() {
-    return state.length == 0 ? [defaultSectionContext] : state;
+    return isLoading() ? [defaultSectionContext] : state;
   }
 
   async function saveSections(isNew: boolean, portfolio_id: number, page_id: number) {

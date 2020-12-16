@@ -223,7 +223,15 @@ export const useUser = () => {
   }
 
   function isSaving() {
-    return state.isSaving
+    return state.isSaving;
+  }
+
+  function setLoading(isLoading: boolean) {
+    updateState({isLoading: isLoading})
+  }
+
+  function isLoading() {
+    return state.isLoading;
   }
 
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
@@ -378,6 +386,8 @@ export const useUser = () => {
     uploadImage,
     isSaving,
     setSaving,
+    isLoading,
+    setLoading,
     getSavedPortfolioId,
     getSavedLightThemeMode,
     getImage,
