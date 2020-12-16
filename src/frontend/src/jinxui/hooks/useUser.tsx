@@ -73,6 +73,8 @@ export const useUser = () => {
           authenticated: true,
           isSaving: false,
           config: config,
+          successMessage: "",
+          errorMessage: "",
         };
         await updateState(stateChanges);
         return accDetails;
@@ -85,7 +87,6 @@ export const useUser = () => {
   async function savePortfolioId(id: number) {
     try {
       await updateState({
-        ...state,
         portfolioId: id,
       });
     } catch (e) {
@@ -96,7 +97,6 @@ export const useUser = () => {
   async function switchLightThemeMode() {
     try {
       await updateState({
-        ...state,
         lightThemeMode: !state.lightThemeMode,
       });
     } catch (e) {
@@ -104,6 +104,7 @@ export const useUser = () => {
     }
     return state.lightThemeMode;
   }
+
 
   // Another style: await with try catch
   async function logout() {
@@ -404,10 +405,7 @@ export const useUser = () => {
   }
 
   function setSaving(isSaving: boolean) {
-    updateState({
-      ...state,
-      isSaving: isSaving,
-    })
+    updateState({isSaving: isSaving})
   }
 
   function isSaving() {
@@ -435,16 +433,16 @@ export const useUser = () => {
   //   return result;
   // }
 
-  async function getPages(portfolio_id: number) {
-    const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
-    const result = API.get(path, state.config)
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        console.log(error);
-        throw error;
-      });
-    return result;
-  }
+  // async function getPages(portfolio_id: number) {
+  //   const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
+  //   const result = API.get(path, state.config)
+  //     .then((response: any) => response.data)
+  //     .catch((error: any) => {
+  //       console.log(error);
+  //       throw error;
+  //     });
+  //   return result;
+  // }
 
   async function getAccountDetails(konfig: AxiosRequestConfig = state.config) {
     try {
@@ -514,10 +512,7 @@ export const useUser = () => {
   async function setTheme(portfolio_id: number, theme_name: string) {
     async function savePortfolioTheme(theme: string) {
       try {
-        await updateState({
-          ...state,
-          theme: theme,
-        });
+        await updateState({theme: theme});
       } catch (e) {
         throw e;
       }
@@ -549,6 +544,30 @@ export const useUser = () => {
 
   const getConfig = () => {
     return state.config
+  }
+
+  async function setSuccessMessage(message: string) {
+    try {
+      await updateState({successMessage: message})
+    } catch(e) {
+      throw e;
+    }
+  }
+
+  async function setErrorMessage(message: string) {
+    try {
+      await updateState({ errorMessage: message });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  function getSuccessMessage() {
+    return state.successMessage;
+  }
+
+  function getErrorMessage() {
+    return state.errorMessage;
   }
 
   /**
@@ -612,7 +631,7 @@ export const useUser = () => {
     setSaving,
     // getPortfolios,
     // getPortfolio,
-    getPages,
+    // getPages,
     getSavedPortfolioId,
     getSavedLightThemeMode,
     getImage,
@@ -621,6 +640,10 @@ export const useUser = () => {
     handleError,
     setTheme,
     getConfig,
+    setSuccessMessage,
+    setErrorMessage,
+    getSuccessMessage,
+    getErrorMessage,
 
     // Context state managing functions - warning, not recommended for use!
     // Using these might cause unexpected behaviour for the wrapper functions above (login, logout, etc).

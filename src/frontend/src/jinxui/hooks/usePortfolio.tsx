@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   PortfolioContext,
   useUser,
@@ -88,13 +88,18 @@ async function putPortfolio(portfolio: any, config: any) {
 }
 
 export const usePortfolio = () => {
+  // Error and success message for a single page in edit mode
+  // const [errorMessage, setErrorMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
   const [state, updateState] = useContext(PortfolioContext);
-  // const [portfolioIsSaving, setSaving] = useState(false);
   const {
     getConfig,
     getSavedPortfolioId,
     getSavedLightThemeMode,
+    getSuccessMessage,
     setSaving,
+    setErrorMessage,
+    setSuccessMessage,
   } = useUser();
   const { fetchPages, getFetchedPages, savePage } = usePage();
   const { fetchSections, getCleanedSections, saveSections } = useSection();
@@ -103,23 +108,6 @@ export const usePortfolio = () => {
   const portfolioExists = true;
 
   const PORTFOLIOS_PATH = "api/portfolios";
-
-  // async function getFullPortfolio(portfolio_id: number) {
-  //   try {
-  //     const portfolio: TPortfolio = await getPortfolio(portfolio_id);
-  //     const pages: TPage[] = await getPages(portfolio_id);
-  //     const links: TLinkData[] = await getPageLinks(portfolio_id, pages[0].id);
-  //     // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
-  //     const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
-  //     //        pages.forEach(async (page: any) => {
-  //     //          sections.push(await getSections(portfolio_id, page.id))
-  //     //        })
-  //     // console.log(sections);
-  //     return { portfolio, pages, sections, links };
-  //   } catch (e) {
-  //     throw e;
-  //   }
-  // }
 
   async function fetchPortfolio() {
     try {
@@ -225,7 +213,7 @@ export const usePortfolio = () => {
   }
 
   async function saveFullPortfolio(isNew: boolean) {
-    setSaving(true)
+    setSaving(true);
     if (state) {
       try {
         const portfolioResponse = await savePortfolio(isNew);
@@ -236,13 +224,19 @@ export const usePortfolio = () => {
           pageResponse.data.id
         );
         await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
+        await setSuccessMessage("Portfolio saved")
       } catch (e) {
+        setErrorMessage("Something went wrong")
         throw e;
       } finally {
         setSaving(false);
       }
     }
   }
+
+  // useEffect(() => {
+  //   console.log("USE EFFECT")
+  // }, [getSuccessMessage()])
 
   async function makePortfolioPublic(portfolio_id: number) {
     return changePortfolioPrivacy(portfolio_id, false, getConfig());

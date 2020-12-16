@@ -51,13 +51,9 @@ const Edit = (props: any) => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const portfolioExists = true;
   // const [redirect, setRedirect] = useState(false);
-  const {
-    userData,
-    isSaving,
-  } = useUser();
+  const { userData, isSaving, setErrorMessage } = useUser();
 
   const {
-    // fetchPortfolio,
     fetchFullPortfolio,
     getFetchedPortfolio,
     getLightTheme,
@@ -69,7 +65,6 @@ const Edit = (props: any) => {
     fetchPages,
     setPages,
     getFetchedPages,
-    setErrorMessage,
   } = usePage();
 
   const {

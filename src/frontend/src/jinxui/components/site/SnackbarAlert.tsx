@@ -9,32 +9,31 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-type TSaveAlert = {
-  errorMessage: string;
-  setErrorMessage: any;
-  successMessage: string;
-  setSuccessMessage: any;
-};
-
-const SnackbarAlert = (props: TSaveAlert) => {
-  const { getSavedLightThemeMode } = useUser();
+const SnackbarAlert = () => {
+  const { 
+    getSavedLightThemeMode,
+    setSuccessMessage,
+    setErrorMessage,
+    getSuccessMessage,
+    getErrorMessage,
+  } = useUser();
   const initialAppliedTheme = getSavedLightThemeMode() ? LightTheme : DarkTheme;
   const [appliedTheme, setAppliedTheme] = useState(initialAppliedTheme);
-
-  // const appliedTheme = createMuiTheme(
-  //   getSavedLightThemeMode() ? LightTheme : DarkTheme
-  // );
 
   useEffect(() => {
     const newAppliedTheme = getSavedLightThemeMode() ? LightTheme : DarkTheme;
     setAppliedTheme(newAppliedTheme)
   }, [getSavedLightThemeMode] );
 
-  const handleErrorClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleErrorClose = (
+    event?: React.SyntheticEvent, 
+    reason?: string
+  ) => {
     if (reason === "clickaway") {
       return;
     }
-    props.setErrorMessage("");
+    // props.setErrorMessage("");
+    setErrorMessage("")
   };
 
   const handleSuccessClose = (
@@ -44,15 +43,20 @@ const SnackbarAlert = (props: TSaveAlert) => {
     if (reason === "clickaway") {
       return;
     }
-    props.setSuccessMessage("");
+    // props.setSuccessMessage("");
+    setSuccessMessage("")
   };
+
+  const handleSuccessOpen = ( getSuccessMessage() !== "" );
+
+  const handleErrorOpen = ( getErrorMessage() !== "" );
 
   return (
     <>
       <ThemeProvider theme={appliedTheme}>
         <Snackbar
-          open={props.successMessage !== ""}
-          autoHideDuration={2000}
+          open={handleSuccessOpen}
+          autoHideDuration={3000}
           onClose={handleSuccessClose}
         >
           <Alert
@@ -62,11 +66,11 @@ const SnackbarAlert = (props: TSaveAlert) => {
               fontWeight: 500,
             }}
           >
-            {props.successMessage}
+            {getSuccessMessage()}
           </Alert>
         </Snackbar>
         <Snackbar
-          open={props.errorMessage !== ""}
+          open={handleErrorOpen}
           autoHideDuration={6000}
           onClose={handleErrorClose}
         >
@@ -77,7 +81,7 @@ const SnackbarAlert = (props: TSaveAlert) => {
               fontWeight: 500,
             }}
           >
-            {props.errorMessage}
+            {getErrorMessage()}
           </Alert>
         </Snackbar>
       </ThemeProvider>

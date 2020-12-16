@@ -239,14 +239,14 @@ type TPrivateMenuItem = {
   rest_disabled: boolean;
   isPrivate: boolean;
   setIsPrivate: any;
-  setSuccessMessage: any;
-  setErrorMessage: any;
 };
 
 const PrivacyMenuItem = React.forwardRef(
   (props: TPrivateMenuItem, ref: any) => {
     const {
       userData,
+      setSuccessMessage,
+      setErrorMessage,
     } = useUser();
 
     const {
@@ -259,14 +259,14 @@ const PrivacyMenuItem = React.forwardRef(
       props.setOpen(false);
       makePortfolioPublic(userData.portfolioId)
       .then((response: any) => {
-        props.setSuccessMessage("Portfolio is now public")
+        setSuccessMessage("Portfolio is now public")
           if (response) {
             props.setIsPrivate(response.data.private);
           }
         })
         .catch((error: any) => {
           console.log(error);
-          props.setErrorMessage("Unable to set portfolio to private, something went wrong")
+          setErrorMessage("Unable to set portfolio to private, something went wrong")
         });
     };
 
@@ -274,13 +274,13 @@ const PrivacyMenuItem = React.forwardRef(
       props.setOpen(false);
       makePortfolioPrivate(userData.portfolioId)
         .then((response: any) => {
-          props.setSuccessMessage("Portfolio is now private")
+          setSuccessMessage("Portfolio is now private")
           if (response) {
             props.setIsPrivate(response.data.private);
           }
         })
         .catch((error: any) => {
-          props.setErrorMessage("Unable to set portfolio to private, something went wrong")
+          setErrorMessage("Unable to set portfolio to private, something went wrong")
           console.log(error);
         });
     };
@@ -330,12 +330,12 @@ const PortfolioDropdown = React.forwardRef(
   (props: TPortfolioMenu, ref: any) => {
     const [open, setOpen] = React.useState(false);
     const [themeOpen, themeSetOpen] = React.useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
+    // const [errorMessage, setErrorMessage] = useState("");
+    // const [successMessage, setSuccessMessage] = useState("");
     const [isPrivate, setIsPrivate] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
     const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
-    const { userData } = useUser();
+    const { userData, setSuccessMessage, setErrorMessage } = useUser();
 
     const handleToggle = () => {
       setOpen((prevOpen) => !prevOpen);
@@ -399,12 +399,7 @@ const PortfolioDropdown = React.forwardRef(
 
     return (
       <>
-        <SnackbarAlert
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
-        />
+        <SnackbarAlert/>
       <DivWrapper>
         {userData.username ? (
           <StyledName
@@ -453,8 +448,6 @@ const PortfolioDropdown = React.forwardRef(
               rest_disabled={rest_disabled}
               isPrivate={isPrivate}
               setIsPrivate={setIsPrivate}
-              setSuccessMessage={setSuccessMessage}
-              setErrorMessage={setErrorMessage}
             />
           </PrimaryMenu>
         </ClickAwayListener>

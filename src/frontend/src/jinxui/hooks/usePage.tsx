@@ -34,10 +34,6 @@ async function putPage(portfolioId: number, page: TPage, config: any) {
 
 export const usePage = () => {
   const [state, updateState, setState] = useContext(PageContext);
-  
-  // Error and success message for a single page in edit mode
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
 
@@ -88,10 +84,6 @@ export const usePage = () => {
     fetchPages,
     setPages,
     getFetchedPages,
-    errorMessage,
-    setErrorMessage,
-    successMessage,
-    setSuccessMessage,
     savePage,
   };
 }

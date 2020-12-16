@@ -1,34 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import {
   useUser,
-  usePortfolio,
-  usePage,
-  useSection,
-  useLink,
   HeaderBar,
   SnackbarAlert,
 } from "jinxui";
 
 const EditHeader = () => {
-  const { switchLightThemeMode, getSavedLightThemeMode } = useUser();
-  const {
-    errorMessage,
-    setErrorMessage,
-    successMessage,
-    setSuccessMessage,
-  } = usePage();
+  const { 
+    switchLightThemeMode, 
+    getSavedLightThemeMode,
+  } = useUser();
+
+
   return (
     <>
-      <SnackbarAlert
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
-        successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
-      />
+      <SnackbarAlert/>
       <HeaderBar
         title="Edit"
         darkTheme={!getSavedLightThemeMode()}
