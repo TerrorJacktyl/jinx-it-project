@@ -96,7 +96,6 @@ export const usePortfolio = () => {
     getConfig,
     getSavedPortfolioId,
     getSavedLightThemeMode,
-    getSuccessMessage,
     setSaving,
     setErrorMessage,
     setSuccessMessage,
@@ -233,10 +232,6 @@ export const usePortfolio = () => {
       }
     }
   }
-
-  // useEffect(() => {
-  //   console.log("USE EFFECT")
-  // }, [getSuccessMessage()])
 
   async function makePortfolioPublic(portfolio_id: number) {
     return changePortfolioPrivacy(portfolio_id, false, getConfig());

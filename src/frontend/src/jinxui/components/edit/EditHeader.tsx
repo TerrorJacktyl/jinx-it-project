@@ -6,8 +6,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import {
   useUser,
   HeaderBar,
-  SnackbarAlert,
-} from "jinxui";
+  } from "jinxui";
 
 const EditHeader = () => {
   const { 
@@ -18,7 +17,6 @@ const EditHeader = () => {
 
   return (
     <>
-      <SnackbarAlert/>
       <HeaderBar
         title="Edit"
         darkTheme={!getSavedLightThemeMode()}

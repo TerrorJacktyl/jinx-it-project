@@ -1,28 +1,24 @@
-import React, { useState, useEffect, } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Tooltip from "@material-ui/core/Tooltip";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
   useUser,
   usePortfolio,
   usePage,
-  useSection,
-  useLink,
   PrimaryButton,
   SecondaryButton,
   Routes,
   PrimaryColumnDiv,
-  LoadingSections,
   PaperSectionsDisplay,
   EditHeader,
 } from "jinxui";
 
-import {
-  TPage,
-} from "jinxui/types";
+import { TPage } from "jinxui/types";
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -43,8 +39,6 @@ const TooltipDiv = styled.div`
   display: flex;
 `;
 
-
-
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
 const Edit = (props: any) => {
@@ -61,37 +55,13 @@ const Edit = (props: any) => {
     makePortfolioPublic,
   } = usePortfolio();
 
-  const {
-    fetchPages,
-    setPages,
-    getFetchedPages,
-  } = usePage();
+  const { setPages } = usePage();
 
-  const {
-    fetchSections,
-    getFetchedSections,
-  } = useSection();
-
-  const {
-    setLinks,
-  } = useLink();
 
   useEffect(() => {
     const fetchExistingPortfolio = async () => {
-      // OK to get saved portfolioId from context rather then fetching from backend
-      // as primary_portfolio is fetched upon login
-      // const portfolioId = await getSavedPortfolioId();
-      // const portfolio = await fetchPortfolio();
-      // const { pages, links } = await getFullPortfolio(
-      //   portfolioId
-      // );
-
       await fetchFullPortfolio();
-      // await fetchSections(pages[0].id);
-      // await fetchPages();
-      // setLinks(links)
     };
-
     if (portfolioExists) {
       fetchExistingPortfolio();
     } else {
@@ -103,71 +73,60 @@ const Edit = (props: any) => {
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
     saveFullPortfolio(false).then(() => {
-      makePortfolioPublic(getFetchedPortfolio().id).then(() => {
-        props.history.push(
-          Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username
-        );
-      }).catch(() => {
-        setErrorMessage("Something went wrong");
-      });
-    })
+      makePortfolioPublic(getFetchedPortfolio().id)
+        .then(() => {
+          props.history.push(
+            Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username
+          );
+        })
+        .catch(() => {
+          setErrorMessage("Something went wrong");
+        });
+    });
   };
 
-  // if (redirect) {
-  //   return (
-  //     <Redirect to={Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username} />
-  //   );
-  //   // Null check here isn't really necessary, but ensures that the page will load with all TextFields populated
-  // } else if (
-  //   getFetchedPortfolio() &&
-  //   getFetchedPages().length !== 0 &&
-  //   getFetchedSections().length !== 0
-  // ) {
-    return (
-      <>
-        <ThemeProvider theme={getLightTheme()}>
-          <EditHeader />
-          <CssBaseline />
-          <PrimaryColumnDiv>
-            <div></div>
-            <div>
-              <FormTitle>Enter your information</FormTitle>
-              <form>
-                {PaperSectionsDisplay()}
-                <PublishCancelDiv>
-                  <Tooltip
-                    title="Save, make public, and display portfolio"
-                    arrow
-                  >
-                    <TooltipDiv>
-                      <PrimaryButton
-                        disabled={isSaving()}
-                        onClick={() => {
-                          handlePublishAndRedirect();
-                        }}
-                      >
-                        PUBLISH
-                      </PrimaryButton>
-                    </TooltipDiv>
-                  </Tooltip>
+  return (
+    <>
+      <Backdrop open={isSaving()}>
+        <CircularProgress />
+      </Backdrop>
+      <ThemeProvider theme={getLightTheme()}>
+        <EditHeader />
+        <CssBaseline />
+        <PrimaryColumnDiv>
+          <div></div>
+          <div>
+            <FormTitle>Enter your information</FormTitle>
+            <form>
+              {PaperSectionsDisplay()}
+              <PublishCancelDiv>
+                <Tooltip title="Save, make public, and display portfolio" arrow>
                   <TooltipDiv>
-                    <Tooltip title="Cancel, go back to Jinx home page" arrow>
-                      <a href={Routes.HOME}>
-                        <SecondaryButton>Cancel</SecondaryButton>
-                      </a>
-                    </Tooltip>
+                    <PrimaryButton
+                      disabled={isSaving()}
+                      onClick={() => {
+                        handlePublishAndRedirect();
+                      }}
+                    >
+                      PUBLISH
+                    </PrimaryButton>
                   </TooltipDiv>
-                </PublishCancelDiv>
-              </form>
-            </div>
-            <div></div>
-          </PrimaryColumnDiv>
-        </ThemeProvider>
-      </>
-    );
-  // } else {
-  //   return <LoadingSections />;
-  // }
+                </Tooltip>
+                <TooltipDiv>
+                  <Tooltip title="Cancel, go back to Jinx home page" arrow>
+                    <a href={Routes.HOME}>
+                      <SecondaryButton>Cancel</SecondaryButton>
+                    </a>
+                  </Tooltip>
+                </TooltipDiv>
+              </PublishCancelDiv>
+            </form>
+          </div>
+          <div></div>
+        </PrimaryColumnDiv>
+      </ThemeProvider>
+    </>
+  );
 };
 
 export default Edit;

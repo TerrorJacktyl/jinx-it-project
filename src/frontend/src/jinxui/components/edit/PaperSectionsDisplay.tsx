@@ -1,11 +1,12 @@
 import React from "react";
 
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import {
   useUser,
   usePortfolio,
-  usePage,
   useSection,
-  useLink,
   TextSectionInput,
   ImageSectionInput,
   ImageTextSectionInput,
@@ -17,6 +18,7 @@ import { TEditSection } from "jinxui/types";
 
 const PaperSectionsDisplay = () => {
 
+  const { isSaving } = useUser()
   const { saveFullPortfolio } = usePortfolio();
 
   const {
@@ -27,6 +29,9 @@ const PaperSectionsDisplay = () => {
 
   return (
     <>
+      <Backdrop open={isSaving()} style={{zIndex: 2000}}>
+        <CircularProgress color="secondary" />
+      </Backdrop>
       <PaperSectionPage />
       {getFetchedSections().map((section: TEditSection) => {
         if (section.type === "skelaton" && section.uid) {

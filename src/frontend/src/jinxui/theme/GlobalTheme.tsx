@@ -74,6 +74,9 @@ const DarkTheme = createMuiTheme({
   shape: {
     borderRadius: 0
   },
+  zIndex: {
+    modal: 1600,
+  },
   overrides: {
     MuiTooltip: {
       tooltip: {

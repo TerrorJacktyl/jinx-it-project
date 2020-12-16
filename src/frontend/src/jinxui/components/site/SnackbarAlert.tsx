@@ -3,6 +3,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
+
 import { LightTheme, DarkTheme, useUser } from "jinxui";
 
 function Alert(props: AlertProps) {
@@ -10,30 +11,31 @@ function Alert(props: AlertProps) {
 }
 
 const SnackbarAlert = () => {
-  const { 
+  const {
     getSavedLightThemeMode,
     setSuccessMessage,
     setErrorMessage,
     getSuccessMessage,
     getErrorMessage,
+    isSaving,
   } = useUser();
   const initialAppliedTheme = getSavedLightThemeMode() ? LightTheme : DarkTheme;
   const [appliedTheme, setAppliedTheme] = useState(initialAppliedTheme);
-
+  const [successIsOpen, setSuccessIsOpen] = useState(false);
+  const [errorIsOpen, setErrorIsOpen] = useState(false);
   useEffect(() => {
     const newAppliedTheme = getSavedLightThemeMode() ? LightTheme : DarkTheme;
-    setAppliedTheme(newAppliedTheme)
-  }, [getSavedLightThemeMode] );
+    setAppliedTheme(newAppliedTheme);
+  }, [getSavedLightThemeMode]);
 
-  const handleErrorClose = (
-    event?: React.SyntheticEvent, 
-    reason?: string
-  ) => {
+  const handleErrorClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
-    // props.setErrorMessage("");
-    setErrorMessage("")
+    setErrorIsOpen(false);
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 1000);
   };
 
   const handleSuccessClose = (
@@ -43,19 +45,31 @@ const SnackbarAlert = () => {
     if (reason === "clickaway") {
       return;
     }
-    // props.setSuccessMessage("");
-    setSuccessMessage("")
+    setSuccessIsOpen(false);
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 1000);
   };
 
-  const handleSuccessOpen = ( getSuccessMessage() !== "" );
+  useEffect(() => {
+    if (getSuccessMessage() !== "" && !successIsOpen) {
+      setSuccessIsOpen(true);
+    }
+  }, [getSuccessMessage()]);
 
-  const handleErrorOpen = ( getErrorMessage() !== "" );
+  useEffect(() => {
+    if (getErrorMessage() !== "" && !errorIsOpen) {
+      setErrorIsOpen(true);
+    }
+  }, [getErrorMessage()]);
+
 
   return (
     <>
       <ThemeProvider theme={appliedTheme}>
+
         <Snackbar
-          open={handleSuccessOpen}
+          open={successIsOpen}
           autoHideDuration={3000}
           onClose={handleSuccessClose}
         >
@@ -70,7 +84,7 @@ const SnackbarAlert = () => {
           </Alert>
         </Snackbar>
         <Snackbar
-          open={handleErrorOpen}
+          open={errorIsOpen}
           autoHideDuration={6000}
           onClose={handleErrorClose}
         >
