@@ -8,8 +8,9 @@ export const defaultPageContext: TPage = {
   sections: []
 };
 
-export const PageContext = React.createContext<[TPage[], any, any]>([
+export const PageContext = React.createContext<[TPage[], any, any, any]>([
   [],
+  () => {},
   () => {},
   () => {},
 ]);
@@ -30,8 +31,12 @@ export const PageContextProvider = (props: TPageContextProvider) => {
     setState(newPages);
   };
 
+  const resetState = () => {
+    setState([])
+  }
+
   return (
-    <PageContext.Provider value={[state, updateState, setState]}>
+    <PageContext.Provider value={[state, updateState, setState, resetState]}>
       {props.children}
     </PageContext.Provider>
   );

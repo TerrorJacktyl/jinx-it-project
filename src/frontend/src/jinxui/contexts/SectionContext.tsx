@@ -18,8 +18,9 @@ export const defaultSectionContext: TEditSection = {
 
 
 
-export const SectionContext = React.createContext<[TEditSection[], any, any]>([
+export const SectionContext = React.createContext<[TEditSection[], any, any, any]>([
   [],
+  () => {},
   () => {},
   () => {},
 ]);
@@ -40,8 +41,12 @@ export const SectionContextProvider = (props: TSectionContextProvider) => {
     setState(newSections);
   };
 
+  const resetState = () => {
+    setState([]);
+  }
+
   return (
-    <SectionContext.Provider value={[state, updateState, setState]}>
+    <SectionContext.Provider value={[state, updateState, setState, resetState]}>
       {props.children}
     </SectionContext.Provider>
   );

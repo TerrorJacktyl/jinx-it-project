@@ -8,10 +8,11 @@ import { Person } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Redirect } from "react-router-dom";
-import { 
-  useUser, 
-  PrimaryMenu, 
-  HeaderButton, 
+import {
+  useUser,
+  usePortfolio,
+  PrimaryMenu,
+  HeaderButton,
   Routes,
   HeaderMediaWidth,
 } from "jinxui";
@@ -22,7 +23,7 @@ const StyledName = styled(HeaderButton)`
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left: 10px;
-  padding-right: 10px
+  padding-right: 10px;
 `;
 
 const StyledInnerName = styled.div`
@@ -33,13 +34,14 @@ const StyledInnerName = styled.div`
 
 const DivWrapper = styled.div`
   height: 100%;
-`
+`;
 
 const UserAvatarDropdown = () => {
   const [open, setOpen] = React.useState(false);
   const [logoutRedirect, setLogoutRedirect] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const { userData, logout } = useUser();
+  const { resetFullPortfolio } = usePortfolio();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -75,11 +77,10 @@ const UserAvatarDropdown = () => {
     } catch {}
   }, [open]);
 
-
-
   const handleLogout = () => {
     logout()
       .then(() => {
+        resetFullPortfolio();
         setOpen(false);
         setLogoutRedirect(true);
       })
@@ -89,14 +90,13 @@ const UserAvatarDropdown = () => {
   };
 
   const onLogout = () => {
-    return <Redirect to={Routes.LOGIN} />  
-  }
+    return <Redirect to={Routes.LOGIN} />;
+  };
 
   if (logoutRedirect) return onLogout();
   else
     return (
       <DivWrapper>
-
         {userData.username ? (
           <StyledName
             ref={anchorRef}
@@ -119,33 +119,13 @@ const UserAvatarDropdown = () => {
             onClose={handleClose}
             onKeyDown={handleListKeyDown}
           >
-            {/*
-
-            This currently commented out but is left here for future purposes incase
-            the other menu item functionality is to be implemented in the future
-
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <AccountBoxIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary="Account" />
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Preferences" />
-            </MenuItem>
-            
-            */}
-            {/* <Link href={Routes.LOGIN} color="inherit" underline="none"> */}
-
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText primary="Logout" />
             </MenuItem>
+            
             {/* </Link> */}
           </PrimaryMenu>
         </ClickAwayListener>

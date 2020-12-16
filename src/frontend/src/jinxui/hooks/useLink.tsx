@@ -26,7 +26,7 @@ async function putLinks(
 }
 
 export const useLink = () => {
-  const [state, updateState, setState] = useContext(LinkContext);
+  const [state, updateState, setState, resetState] = useContext(LinkContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
 
@@ -93,6 +93,10 @@ export const useLink = () => {
     }
   }
 
+  function resetLinks() {
+    resetState();
+  }
+
   return {
     fetchPageLinks,
     setLinks,
@@ -100,5 +104,6 @@ export const useLink = () => {
     addLink,
     updateLink,
     saveLinks,
+    resetLinks,
   };
 };

@@ -9,8 +9,9 @@ export const defaultLinkContext: TLinkData = {
   id: uuidv4(),
 };
 
-export const LinkContext = React.createContext<[TLinkData[], any, any]>([
+export const LinkContext = React.createContext<[TLinkData[], any, any, any]>([
   [],
+  () => {},
   () => {},
   () => {},
 ]);
@@ -42,16 +43,12 @@ export const LinkContextProvider = (props: TLinkContextProvider) => {
     }
   };
 
-  // function updateLink(id: string, fieldsToUpdate: Partial<TLinkData>) {
-  //   const index = state.findIndex((link: TLinkData) => link.id === id);
-  //   var newLink: TLinkData = { ...state[index], ...fieldsToUpdate };
-  //   var newLinks: TLinkData[] = state;
-  //   newLinks[index] = newLink;
-  //   setState(newLinks);
-  // }
+  const resetState = () => {
+    setState([]);
+  }
 
   return (
-    <LinkContext.Provider value={[state, updateState, setState]}>
+    <LinkContext.Provider value={[state, updateState, setState, resetState]}>
       {props.children}
     </LinkContext.Provider>
   );

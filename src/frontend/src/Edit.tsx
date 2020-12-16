@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Tooltip from "@material-ui/core/Tooltip";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
+
 
 import {
   useUser,
@@ -87,9 +86,6 @@ const Edit = (props: any) => {
 
   return (
     <>
-      <Backdrop open={isSaving()}>
-        <CircularProgress />
-      </Backdrop>
       <ThemeProvider theme={getLightTheme()}>
         <EditHeader />
         <CssBaseline />

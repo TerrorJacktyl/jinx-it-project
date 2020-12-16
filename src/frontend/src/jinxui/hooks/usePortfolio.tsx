@@ -91,7 +91,7 @@ export const usePortfolio = () => {
   // Error and success message for a single page in edit mode
   // const [errorMessage, setErrorMessage] = useState("");
   // const [successMessage, setSuccessMessage] = useState("");
-  const [state, updateState] = useContext(PortfolioContext);
+  const [state, updateState, resetState] = useContext(PortfolioContext);
   const {
     getConfig,
     getSavedPortfolioId,
@@ -100,9 +100,9 @@ export const usePortfolio = () => {
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, getFetchedPages, savePage } = usePage();
-  const { fetchSections, getCleanedSections, saveSections } = useSection();
-  const { fetchPageLinks, getFetchedLinks, saveLinks } = useLink();
+  const { fetchPages, getFetchedPages, savePage, resetPages } = usePage();
+  const { fetchSections, getCleanedSections, saveSections, resetSections } = useSection();
+  const { fetchPageLinks, getFetchedLinks, saveLinks, resetLinks } = useLink();
 
   const portfolioExists = true;
 
@@ -241,6 +241,13 @@ export const usePortfolio = () => {
     return changePortfolioPrivacy(portfolio_id, true, getConfig());
   }
 
+  function resetFullPortfolio() {
+    resetState();
+    resetPages();
+    resetSections();
+    resetLinks();
+  }
+
   return {
     portfolioData: state,
     fetchFullPortfolio,
@@ -253,5 +260,6 @@ export const usePortfolio = () => {
     makePortfolioPublic,
     makePortfolioPrivate,
     portfolioIsFetched,
+    resetFullPortfolio,
   };
 };

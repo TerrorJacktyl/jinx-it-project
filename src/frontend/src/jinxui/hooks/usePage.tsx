@@ -33,7 +33,7 @@ async function putPage(portfolioId: number, page: TPage, config: any) {
 
 
 export const usePage = () => {
-  const [state, updateState, setState] = useContext(PageContext);
+  const [state, updateState, setState, resetState] = useContext(PageContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
 
@@ -80,10 +80,15 @@ export const usePage = () => {
     }
   }
 
+  function resetPages() {
+    resetState();
+  }
+
   return {
     fetchPages,
     setPages,
     getFetchedPages,
     savePage,
+    resetPages,
   };
 }

@@ -77,7 +77,7 @@ async function postSection(
 }
 
 export const useSection = () => {
-  const [state, updateState, setState] = useContext(SectionContext);
+  const [state, updateState, setState, resetState] = useContext(SectionContext);
   const { getConfig, getSavedPortfolioId } = useUser();
 
   async function fetchSections(page_id: number) {
@@ -179,6 +179,10 @@ export const useSection = () => {
     }
   }
 
+  function resetSections() {
+    resetState();
+  }
+
   return {
     fetchSections,
     getFetchedSections,
@@ -190,5 +194,6 @@ export const useSection = () => {
     handleSectionMoveUp,
     handleSectionMoveDown,
     saveSections,
+    resetSections,
   };
 };
