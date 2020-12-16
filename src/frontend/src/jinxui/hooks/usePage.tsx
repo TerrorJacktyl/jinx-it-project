@@ -1,7 +1,35 @@
 import { useContext, useState } from "react";
-import { PageContext, useUser } from "jinxui";
+import { PageContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
 import { TPage } from "../types/PortfolioTypes";
+
+async function postPage(portfolioId: number, data: TPage, config: any) {
+  const path = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages";
+  try {
+    const response = await API.post(
+      path,
+      {
+        name: data.name,
+        number: data.number,
+      },
+      config
+    );
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function putPage(portfolioId: number, page: TPage, config: any) {
+  const path =
+    PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
+  try {
+    const response = await API.put(path, page, config);
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
 
 
 export const usePage = () => {
@@ -26,7 +54,9 @@ export const usePage = () => {
   async function fetchPages() {
     try {
       const id = getSavedPortfolioId();
-      setState(await getPages(id));
+      const pages = await getPages(id)
+      setState(pages);
+      return pages
     } catch (e) {
       throw e
     }
@@ -44,6 +74,16 @@ export const usePage = () => {
     }
   }
 
+  async function savePage(isNew: boolean, portfolio_id: number) {
+    try {
+      return isNew
+        ? await postPage(portfolio_id, state[0], getConfig())
+        : await putPage(portfolio_id, state[0], getConfig());
+    } catch (e) {
+      throw e;
+    }
+  }
+
   return {
     fetchPages,
     setPages,
@@ -51,6 +91,7 @@ export const usePage = () => {
     errorMessage,
     setErrorMessage,
     successMessage,
-    setSuccessMessage
+    setSuccessMessage,
+    savePage,
   };
 }

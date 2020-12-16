@@ -36,7 +36,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
       <PaperSection
         section={props.section}
         handleTitleChange={props.handleTitleChange}
-        handlePublish={props.handlePublish}
       >
         <OneColumnSectionDiv>
           <TextFieldSubSection

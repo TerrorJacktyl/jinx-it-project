@@ -150,3 +150,18 @@ export {
 
 /* Portfolio themes */
 export { PortfolioThemes, defaultColors } from "./theme/index";
+
+const LOGIN_PATH = "auth/token/login";
+const LOGOUT_PATH = "auth/token/logout";
+const ACCOUNT_PATH = "api/accounts";
+const SIGNUP_PATH = "auth/users";
+const IMAGES_PATH = "api/images";
+const PORTFOLIOS_PATH = "api/portfolios";
+export {
+  LOGIN_PATH,
+  LOGOUT_PATH,
+  ACCOUNT_PATH,
+  SIGNUP_PATH,
+  IMAGES_PATH,
+  PORTFOLIOS_PATH,
+};

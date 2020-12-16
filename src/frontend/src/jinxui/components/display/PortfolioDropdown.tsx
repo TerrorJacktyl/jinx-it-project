@@ -23,6 +23,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import {
   HeaderButton,
   useUser,
+  usePortfolio,
   HeaderMediaWidth,
   PrimaryMenu,
   Routes,
@@ -246,10 +247,13 @@ const PrivacyMenuItem = React.forwardRef(
   (props: TPrivateMenuItem, ref: any) => {
     const {
       userData,
+    } = useUser();
+
+    const {
       makePortfolioPrivate,
       makePortfolioPublic,
-      getPortfolio,
-    } = useUser();
+      getFetchedPortfolio,
+    } = usePortfolio();
 
     const handleMakePublic = () => {
       props.setOpen(false);
@@ -285,15 +289,16 @@ const PrivacyMenuItem = React.forwardRef(
       let isMounted = true;
       if (userData.authenticated) {
         const fetchPrivacy = async () => {
-          getPortfolio(userData.portfolioId)
-            .then((response: any) => {
-              if (isMounted) {
-                props.setIsPrivate(response.private);
-              }
-            })
-            .catch((error: any) => {
-              console.log(error);
-            });
+          props.setIsPrivate(getFetchedPortfolio().private)
+          // getFetchedPortfolio()
+            // .then((response: any) => {
+              // if (isMounted) {
+              //   props.setIsPrivate(response.private);
+              // }
+            // })
+            // .catch((error: any) => {
+            //   console.log(error);
+            // });
         };
         fetchPrivacy();
       }

@@ -1,8 +1,29 @@
 import { useContext } from "react";
-import { LinkContext, useUser, usePortfolio } from "jinxui";
+import { LinkContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
 import { v4 as uuidv4 } from "uuid";
 import { TLinkData } from "../types/PortfolioTypes";
+
+async function putLinks(
+  portfolio_id: number,
+  page_id: number,
+  links: TLinkData[],
+  config: any,
+) {
+  const path =
+    PORTFOLIOS_PATH +
+    "/" +
+    portfolio_id.toString() +
+    "/pages/" +
+    page_id.toString() +
+    "/links";
+  try {
+    const response = await API.put(path, links, config);
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
 
 export const useLink = () => {
   const [state, updateState, setState] = useContext(LinkContext);
@@ -64,11 +85,20 @@ export const useLink = () => {
     return state;
   }
 
+  async function saveLinks(portfolio_id: number, page_id: number) {
+    try {
+      return await putLinks(portfolio_id, page_id, state, getConfig())
+    } catch (e) {
+      throw e;
+    }
+  }
+
   return {
     fetchPageLinks,
     setLinks,
     getFetchedLinks,
     addLink,
     updateLink,
+    saveLinks,
   };
 };

@@ -37,7 +37,6 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
       <PaperSection
         section={props.section}
         handleTitleChange={props.handleTitleChange}
-        handlePublish={props.handlePublish}
       >
         <TwoColumnSectionDiv>
 

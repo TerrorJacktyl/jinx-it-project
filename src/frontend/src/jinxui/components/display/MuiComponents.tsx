@@ -12,6 +12,7 @@ import {
   responsiveFontSizes,
 } from "@material-ui/core/styles";
 import { TSection, defaultColors } from "jinxui";
+import { TSectionData } from "jinxui/types"
 
 // Markdown
 import ReactMarkdown from "react-markdown";
@@ -161,7 +162,11 @@ const themeColors = (theme: Theme, index: number) => {
   return [backgroundColor, textColor, isFullHeight];
 };
 
-export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
+// export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
+type TSectionGrid = {
+  sections: TSection[]
+}
+export const SectionGrid = (props: TSectionGrid) => {
   const theme = useTheme();
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
@@ -200,7 +205,7 @@ export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
   return (
     <Box style={isFullHeight ? { background: backgroundColor } : {}}>
       <CentredGrid
-        components={sections.map((section, index) =>
+        components={props.sections.map((section, index) =>
           applyColors(layoutData(section), index)
         )}
       />

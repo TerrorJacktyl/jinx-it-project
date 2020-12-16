@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import {
   PortfolioContext,
   useUser,
@@ -7,70 +7,157 @@ import {
   usePage,
   LightTheme,
   DarkTheme,
+  PORTFOLIOS_PATH,
 } from "jinxui";
 import API from "../../API";
-import { TPortfolio } from "../types/PortfolioTypes";
+import { TPortfolio, TPortfolioData } from "../types/PortfolioTypes";
 import { createMuiTheme } from "@material-ui/core/styles";
 
+async function changePortfolioPrivacy(
+  portfolio_id: number,
+  privacy: boolean,
+  config: any
+) {
+  const path = PORTFOLIOS_PATH + "/" + portfolio_id;
+  API.get(path, config)
+    .then((response: any) => {
+      const result = API.put(
+        path,
+        {
+          name: response.data.name,
+          private: privacy,
+        },
+        config
+      ).catch((error: any) => {
+        console.log(error);
+        throw error;
+      });
+      return result;
+    })
+    .catch((error: any) => {
+      console.log(error);
+      throw error;
+    });
+}
+
+// Note the $s in the function name. Use this if you want to get all of a user's portfolios
+async function getPortfolios(config: any) {
+  const path = PORTFOLIOS_PATH;
+  const result = API.get(path, config).then((response: any) => response.data);
+  return result;
+}
+
+// Use this if you want to get a specific portfolio
+async function getPortfolio(portfolio_id: number, config: any) {
+  const path = PORTFOLIOS_PATH + "/" + portfolio_id.toString();
+  const result = API.get(path, config)
+    .then((response: any) => response.data)
+    .catch((error: any) => {
+      console.log(error);
+      throw error;
+    });
+  return result;
+}
+
+async function postPortfolio(data: TPortfolioData, config: any) {
+  if (!data) {
+    throw "Portfolio data is null";
+  }
+  try {
+    const response = await API.post(
+      PORTFOLIOS_PATH,
+      {
+        name: data.name,
+      },
+      config
+    );
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function putPortfolio(portfolio: any, config: any) {
+  const path = PORTFOLIOS_PATH + "/" + portfolio.id;
+  try {
+    const response = API.put(path, portfolio, config);
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
 
 export const usePortfolio = () => {
   const [state, updateState] = useContext(PortfolioContext);
-  const [portfolioIsSaving, setSaving] = useState(false);
+  // const [portfolioIsSaving, setSaving] = useState(false);
   const {
     getConfig,
     getSavedPortfolioId,
     getSavedLightThemeMode,
-    sendFullPortfolio,
+    setSaving,
   } = useUser();
-  const { getFetchedPages } = usePage();
-  const { getFetchedSections, getCleanedSections } = useSection();
-  const { getFetchedLinks } = useLink();
+  const { fetchPages, getFetchedPages, savePage } = usePage();
+  const { fetchSections, getCleanedSections, saveSections } = useSection();
+  const { fetchPageLinks, getFetchedLinks, saveLinks } = useLink();
 
   const portfolioExists = true;
 
   const PORTFOLIOS_PATH = "api/portfolios";
 
-
+  // async function getFullPortfolio(portfolio_id: number) {
+  //   try {
+  //     const portfolio: TPortfolio = await getPortfolio(portfolio_id);
+  //     const pages: TPage[] = await getPages(portfolio_id);
+  //     const links: TLinkData[] = await getPageLinks(portfolio_id, pages[0].id);
+  //     // Define as TSection[][] = [] and uncomment forEach loop when incorporating multiple pages
+  //     const sections: TSection[] = await getSections(portfolio_id, pages[0].id);
+  //     //        pages.forEach(async (page: any) => {
+  //     //          sections.push(await getSections(portfolio_id, page.id))
+  //     //        })
+  //     // console.log(sections);
+  //     return { portfolio, pages, sections, links };
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
 
   async function fetchPortfolio() {
-    setSaving(true)
     try {
-      const portfolioDetails = await getPortfolio(getSavedPortfolioId());
-      const stateChanges: TPortfolio = {
-        id: portfolioDetails.id,
-        owner: portfolioDetails.owner,
-        name: portfolioDetails.name,
-        pages: portfolioDetails.pages,
-        private: portfolioDetails.private,
-        theme: portfolioDetails.theme,
-        background: portfolioDetails.string,
-      };
+      const portfolioDetails: TPortfolio = await getPortfolio(
+        getSavedPortfolioId(),
+        getConfig()
+      );
+      await updateState(portfolioDetails);
 
-      await updateState(stateChanges);
+      return portfolioDetails;
+    } catch (e) {
+      throw e;
+    }
+  }
 
-      return state;
+  /* Will retrieve a portoflio, all of its pages, and the first page's sections.
+     Tried to incorporate functionality to fetch all sections corresponding to all pages,
+     but ran into a very lame bug with nested list indexing :'( */
+  async function fetchFullPortfolio() {
+    try {
+      await fetchPortfolio();
+      const pages = await fetchPages();
+      if (pages.length < 1) {
+        throw "No pages found for portfolio";
+      }
+      await fetchSections(pages[0].id);
+      await fetchPageLinks(pages[0].id);
     } catch (e) {
       throw e;
     }
   }
 
   function portfolioIsFetched() {
-    return(state.id>0)
+    return state.id > 0;
   }
 
   function getFetchedPortfolio() {
     return state;
-  }
-
-  async function getPortfolio(portfolio_id: number) {
-    const path = PORTFOLIOS_PATH + "/" + portfolio_id;
-    const result = API.get(path, getConfig())
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        console.log(error);
-        throw error;
-      });
-    return result;
   }
 
   function getLightTheme() {
@@ -127,38 +214,55 @@ export const usePortfolio = () => {
     }
   }
 
-  async function saveFullPortfolio() {
-    if (state){
-        setSaving(true);
-      const result = sendFullPortfolio(
-        state,
-        getFetchedPages(),
-        getCleanedSections(),
-        getFetchedLinks(),
-        portfolioExists
-      )
-        .then((response: any) => {
-          setSaving(false);
-          return response.data;
-        })
-        .catch((e) => {
-          setSaving(false);
-          throw e;
-        });
-      return result;
+  async function savePortfolio(isNew: boolean) {
+    try {
+      return isNew
+        ? await postPortfolio(state, getConfig())
+        : await putPortfolio(state, getConfig());
+    } catch (e) {
+      throw e;
     }
+  }
+
+  async function saveFullPortfolio(isNew: boolean) {
+    setSaving(true)
+    if (state) {
+      try {
+        const portfolioResponse = await savePortfolio(isNew);
+        const pageResponse = await savePage(isNew, portfolioResponse.data.id);
+        await saveSections(
+          isNew,
+          portfolioResponse.data.id,
+          pageResponse.data.id
+        );
+        await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
+      } catch (e) {
+        throw e;
+      } finally {
+        setSaving(false);
+      }
+    }
+  }
+
+  async function makePortfolioPublic(portfolio_id: number) {
+    return changePortfolioPrivacy(portfolio_id, false, getConfig());
+  }
+
+  async function makePortfolioPrivate(portfolio_id: number) {
+    return changePortfolioPrivacy(portfolio_id, true, getConfig());
   }
 
   return {
     portfolioData: state,
-    fetchPortfolio,
+    fetchFullPortfolio,
     getFetchedPortfolio,
     getLightTheme,
     setPortfolioName,
     setPortfolioTheme,
     setPortfolio,
     saveFullPortfolio,
-    portfolioIsSaving,
+    makePortfolioPublic,
+    makePortfolioPrivate,
     portfolioIsFetched,
   };
 };

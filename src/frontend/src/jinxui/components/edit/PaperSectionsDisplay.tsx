@@ -25,8 +25,6 @@ const PaperSectionsDisplay = () => {
     handleTitleChange,
   } = useSection();
 
-  const sections = getFetchedSections();
-
   return (
     <>
       <PaperSectionPage />

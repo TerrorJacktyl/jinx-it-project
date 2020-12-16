@@ -1,45 +1,20 @@
 
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Grid from "@material-ui/core/Grid";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
 import {
-  Button,
   CssBaseline,
-  Icon,
-  InputAdornment,
-  TextField,
 } from "@material-ui/core";
 
 
 import {
-  LightTheme,
-  DarkTheme,
   useUser,
   usePortfolio,
-  usePage,
-  useSection,
-  useLink,
   HeaderBar,
-  PrimaryButton,
-  SecondaryButton,
-  TextSectionInput,
-  ImageSectionInput,
-  PortfolioNameSectionInput,
-  Routes,
   PrimaryColumnDiv,
-  ImageTextSectionInput,
-  SnackbarAlert,
-  defaultPortfolioContext,
-  LinkDialog,
-  LinkDisplayIcon,
-  LinkEditMenu,
-  PaperSectionStatic,
-  OneColumnSectionDiv,
-  DisplayLinks,
-  PortfolioContext,
 } from "jinxui";
 
 
@@ -47,22 +22,10 @@ import {
 
 const LoadingSections = (props: any) => {
   const {
-    sendFullPortfolio,
-    getFullPortfolio,
-    getSavedPortfolioId,
-    userData,
-    switchLightThemeMode,
     getSavedLightThemeMode,
-    makePortfolioPublic,
-    setSaving,
-    savingState,
   } = useUser();
 
   const { getLightTheme } = usePortfolio(); 
-
-  // const appliedTheme = createMuiTheme(
-  //   getSavedLightThemeMode() ? LightTheme : DarkTheme
-  // );
 
   const LoadingText = ({ rows }: { rows: number }) => {
     return (

@@ -50,20 +50,19 @@ const TooltipDiv = styled.div`
 const Edit = (props: any) => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const portfolioExists = true;
-  const [redirect, setRedirect] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
   const {
-    getFullPortfolio,
     userData,
-    getSavedPortfolioId,
-    makePortfolioPublic,
+    isSaving,
   } = useUser();
 
   const {
-    fetchPortfolio,
+    // fetchPortfolio,
+    fetchFullPortfolio,
     getFetchedPortfolio,
     getLightTheme,
     saveFullPortfolio,
-    portfolioIsSaving,
+    makePortfolioPublic,
   } = usePortfolio();
 
   const {
@@ -86,16 +85,16 @@ const Edit = (props: any) => {
     const fetchExistingPortfolio = async () => {
       // OK to get saved portfolioId from context rather then fetching from backend
       // as primary_portfolio is fetched upon login
-      const portfolioId = await getSavedPortfolioId();
+      // const portfolioId = await getSavedPortfolioId();
       // const portfolio = await fetchPortfolio();
-      const { pages, links } = await getFullPortfolio(
-        portfolioId
-      );
+      // const { pages, links } = await getFullPortfolio(
+      //   portfolioId
+      // );
 
-      await fetchPortfolio();
-      await fetchSections(pages[0].id);
-      await fetchPages();
-      setLinks(links)
+      await fetchFullPortfolio();
+      // await fetchSections(pages[0].id);
+      // await fetchPages();
+      // setLinks(links)
     };
 
     if (portfolioExists) {
@@ -108,12 +107,11 @@ const Edit = (props: any) => {
 
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
-    saveFullPortfolio().then(() => {
+    saveFullPortfolio(false).then(() => {
       makePortfolioPublic(getFetchedPortfolio().id).then(() => {
         props.history.push(
           Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username
         );
-        setRedirect(true);
       }).catch(() => {
         setErrorMessage("Something went wrong");
       });
@@ -148,7 +146,7 @@ const Edit = (props: any) => {
                   >
                     <TooltipDiv>
                       <PrimaryButton
-                        disabled={portfolioIsSaving}
+                        disabled={isSaving()}
                         onClick={() => {
                           handlePublishAndRedirect();
                         }}

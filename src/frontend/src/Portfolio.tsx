@@ -9,6 +9,10 @@ import Grid from "@material-ui/core/Grid";
 import {
   LightTheme,
   useUser,
+  usePortfolio,
+  usePage,
+  useSection,
+  useLink,
   TPortfolio,
   TPage,
   TSection,
@@ -81,18 +85,25 @@ const SkeletonPage = () => (
 const Portfolio = ({ username }: PortfolioProps) => {
   const {
     userData,
-    getFullPortfolio,
+    // getFullPortfolio,
     getAccountDetailsFromUsername,
   } = useUser();
 
+  const {fetchFullPortfolio, getFetchedPortfolio} = usePortfolio();
+  const { getFetchedPages } = usePage();
+  const { getCleanedSections } = useSection();
+  const { getFetchedLinks } = useLink();
+
+  const sections = getCleanedSections();
+
   const [author, setAuthor] = useState<string>("");
-  const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
+  // const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
   // eslint-disable-next-line
-  const [pages, setPages] = useState<TPage[]>([]);
+  // const [pages, setPages] = useState<TPage[]>([]);
   // eslint-disable-next-line
-  const [currPage] = useState<number>(0);
+  // const [currPage] = useState<number>(0);
   // Define as TSection[][] when incorporating multiple pages
-  const [sections, setSections] = useState<TSection[]>([]);
+  // const [sections, setSections] = useState<TSection[]>([]);
 
   const [error, setError] = useState<boolean>(false);
 
@@ -102,17 +113,18 @@ const Portfolio = ({ username }: PortfolioProps) => {
       setError(false);
       try {
         const {
-          primary_portfolio,
+          // primary_portfolio,
           first_name,
           last_name,
         } = await getAccountDetailsFromUsername(username);
-        const { portfolio, pages, sections } = await getFullPortfolio(
-          primary_portfolio
-        );
+        // const { portfolio, pages, sections } = await getFullPortfolio(
+        //   primary_portfolio
+        // );
+        await fetchFullPortfolio();
         setAuthor(`${first_name} ${last_name}`);
-        setPortfolio(portfolio);
-        setPages(pages);
-        setSections(sections);
+        // setPortfolio(portfolio);
+        // setPages(pages);
+        // setSections(sections);
       } catch (e) {
         setError(true);
       }
@@ -129,7 +141,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
     );
   }
 
-  const thisTheme = getTheme(portfolio, userData, username);
+  const thisTheme = getTheme(getFetchedPortfolio(), userData, username);
 
   if (thisTheme.portfolio.theme.name !== "Loading") {
     // Main Page
@@ -146,7 +158,8 @@ const Portfolio = ({ username }: PortfolioProps) => {
           <ThemeProvider theme={thisTheme}>
             <CssBaseline />
             <PortfolioHeader
-              title={portfolio?.name}
+              // title={portfolio?.name}
+              title={getFetchedPortfolio().name}
               subtitle={author}
             ></PortfolioHeader>
             <SectionGrid sections={sections} />

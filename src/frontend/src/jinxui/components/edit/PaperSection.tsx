@@ -10,6 +10,7 @@ import {
   PaperSectionBase,
   PaperSectionDiv,
   useUser,
+  usePortfolio,
   useSection,
 } from "jinxui";
 import { TEditSection } from "jinxui/types";
@@ -57,18 +58,18 @@ type TPaperSection = {
   children: any;
   hideEditButtons?: boolean;
   handleTitleChange: any;
-  handlePublish: any;
 };
 
 const PaperSection = (props: TPaperSection) => {
-  const { savingState } = useUser();
+  const { isSaving } = useUser();
+  const { saveFullPortfolio } = usePortfolio();
   const {
     getFetchedSections,
     handleSectionDelete,
     handleSectionMoveUp,
     handleSectionMoveDown,
   } = useSection();
-  const [isSaving, setIsSaving] = useState(false);
+
   const index = getFetchedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
@@ -86,10 +87,6 @@ const PaperSection = (props: TPaperSection) => {
     downArrowDisabled = true;
   }
 
-  useEffect(() => {
-    setIsSaving(savingState);
-  }, [savingState]);
-
   const handleDelete = () => {
     handleSectionDelete(index);
   };
@@ -100,6 +97,13 @@ const PaperSection = (props: TPaperSection) => {
 
   const handleMoveDown = () => {
     handleSectionMoveDown(index, props.section)
+  }
+
+  const handleSave = () => {
+    saveFullPortfolio(false).catch((error: any) => {
+      console.log(error);
+      throw(error);
+    })
   }
 
   return (
@@ -135,8 +139,8 @@ const PaperSection = (props: TPaperSection) => {
               <StyledButton
                 size="medium"
                 style={{ minWidth: 40 }}
-                onClick={props.handlePublish}
-                disabled={isSaving}
+                onClick={ handleSave }
+                disabled={ isSaving() }
               >
                 <SaveSharpIcon />
               </StyledButton>

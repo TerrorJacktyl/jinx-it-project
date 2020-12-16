@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SectionContext, useUser, usePortfolio } from "jinxui";
+import { SectionContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
 import { v4 as uuidv4 } from "uuid";
 import { TEditSection, TSection } from "../types/PortfolioTypes";
@@ -11,34 +11,82 @@ const sectionIsNotBlank = (section: TEditSection) => {
   } else if (section.type === "image") {
     return section.name !== "" || section.path !== "";
   } else if (section.type === "image_text") {
-    return (
-      section.name !== "" || section.path !== "" || section.content !== ""
-    );
+    return section.name !== "" || section.path !== "" || section.content !== "";
   } else {
     return true;
   }
 };
 
+async function getSections(portfolio_id: number, page_id: number, config: any) {
+  const path =
+    PORTFOLIOS_PATH +
+    "/" +
+    portfolio_id.toString() +
+    "/pages/" +
+    page_id.toString() +
+    "/sections";
+  const result = API.get(path, config)
+    .then((response: any) => response.data)
+    .catch((error: any) => {
+      console.log(error);
+      throw error;
+    });
+  return result;
+}
+
+async function putSections(
+  portfolioId: number,
+  pageId: number,
+  sections: TSection[],
+  config: any
+) {
+  const path =
+    PORTFOLIOS_PATH +
+    "/" +
+    portfolioId.toString() +
+    "/pages/" +
+    pageId.toString() +
+    "/sections";
+  try {
+    const response = await API.put(path, sections, config);
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
+
+async function postSection(
+  portfolio_id: number,
+  page_id: number,
+  data: TSection,
+  config: any,
+) {
+  const path =
+    PORTFOLIOS_PATH +
+    "/" +
+    portfolio_id.toString() +
+    "/pages/" +
+    page_id.toString() +
+    "/sections";
+  try {
+    const response = await API.post(path, data, config);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+}
+
 export const useSection = () => {
   const [state, updateState, setState] = useContext(SectionContext);
-  const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
-
-  async function getSections(portfolio_id: number, page_id: number) {
-    const path =
-      PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/sections";
-    const result = API.get(path, getConfig())
-      .then((response: any) => response.data)
-      .catch((error: any) => {
-        console.log(error);
-        throw error;
-      });
-    return result;
-  }
 
   async function fetchSections(page_id: number) {
     try {
-      const sectionDetails = await getSections(getSavedPortfolioId(), page_id);
+      const sectionDetails = await getSections(
+        getSavedPortfolioId(),
+        page_id,
+        getConfig()
+      );
       const IdSections = sectionDetails.map((section: TEditSection) => {
         const uidPair = { uid: uuidv4() };
         const newSection = { ...section, ...uidPair };
@@ -63,7 +111,7 @@ export const useSection = () => {
         var cleanSection = state[i];
         delete cleanSection.uid;
         cleanSection.number = i;
-        cleanSections.push(cleanSection)
+        cleanSections.push(cleanSection);
       }
     }
     return cleanSections;
@@ -118,7 +166,17 @@ export const useSection = () => {
   }
 
   function getFetchedSections() {
-    return state.length == 0? [defaultSectionContext] : state;
+    return state.length == 0 ? [defaultSectionContext] : state;
+  }
+
+  async function saveSections(isNew: boolean, portfolio_id: number, page_id: number) {
+    try {
+      return isNew 
+      ? await putSections(portfolio_id, page_id, state, getConfig())
+      : await putSections(portfolio_id, page_id, state, getConfig())
+    } catch(e) {
+      throw e;
+    }
   }
 
   return {
@@ -131,5 +189,6 @@ export const useSection = () => {
     handleSectionDelete,
     handleSectionMoveUp,
     handleSectionMoveDown,
+    saveSections,
   };
 };

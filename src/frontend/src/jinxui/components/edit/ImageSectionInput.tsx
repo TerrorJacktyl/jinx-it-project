@@ -32,7 +32,6 @@ const ImageSectionInput = (props: TImageSection) => {
       <PaperSection
         section={props.section}
         handleTitleChange={props.handleTitleChange}
-        handlePublish={props.handlePublish}
       >
         <OneColumnSectionDiv>
           <UploadImageSubSection section={props.section} />
