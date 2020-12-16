@@ -11,7 +11,7 @@ export const defaultSectionContext: TEditSection = {
   path: "",
   alt: "",
   id: 0,
-  type: "text",
+  type: "skelaton",
   number: 0,
   uid: uuidv4(),
 };

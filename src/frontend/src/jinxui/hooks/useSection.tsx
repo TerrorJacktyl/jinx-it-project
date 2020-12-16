@@ -3,6 +3,7 @@ import { SectionContext, useUser, usePortfolio } from "jinxui";
 import API from "../../API";
 import { v4 as uuidv4 } from "uuid";
 import { TEditSection, TSection } from "../types/PortfolioTypes";
+import { defaultSectionContext } from "jinxui/contexts";
 
 const sectionIsNotBlank = (section: TEditSection) => {
   if (section.type === "text") {
@@ -117,7 +118,7 @@ export const useSection = () => {
   }
 
   function getFetchedSections() {
-    return state;
+    return state.length == 0? [defaultSectionContext] : state;
   }
 
   return {

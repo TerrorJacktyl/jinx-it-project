@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import {
   PortfolioContext,
   useUser,
@@ -30,7 +30,10 @@ export const usePortfolio = () => {
 
   const PORTFOLIOS_PATH = "api/portfolios";
 
+
+
   async function fetchPortfolio() {
+    setSaving(true)
     try {
       const portfolioDetails = await getPortfolio(getSavedPortfolioId());
       const stateChanges: TPortfolio = {
@@ -49,6 +52,10 @@ export const usePortfolio = () => {
     } catch (e) {
       throw e;
     }
+  }
+
+  function portfolioIsFetched() {
+    return(state.id>0)
   }
 
   function getFetchedPortfolio() {
@@ -152,5 +159,6 @@ export const usePortfolio = () => {
     setPortfolio,
     saveFullPortfolio,
     portfolioIsSaving,
+    portfolioIsFetched,
   };
 };

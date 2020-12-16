@@ -10,6 +10,7 @@ import {
   ImageSectionInput,
   ImageTextSectionInput,
   PaperSectionPage,
+  SkelatonSectionInput,
 } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
@@ -29,7 +30,10 @@ const PaperSectionsDisplay = () => {
   return (
     <>
       <PaperSectionPage />
-      {sections.map((section: TEditSection) => {
+      {getFetchedSections().map((section: TEditSection) => {
+        if (section.type === "skelaton" && section.uid) {
+          return <SkelatonSectionInput key={section.uid} />;
+        }
         if (section.type === "text" && section.uid) {
           return (
             <TextSectionInput

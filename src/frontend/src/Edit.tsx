@@ -47,7 +47,7 @@ const TooltipDiv = styled.div`
 
 /* Consider passing as props a bool that signals whether this is an edit of an existing
    portfolio, or a new one entirely */
-const Edit = () => {
+const Edit = (props: any) => {
   // TEST: Remove this when we've decided on an existing portfolio check
   const portfolioExists = true;
   const [redirect, setRedirect] = useState(false);
@@ -110,7 +110,9 @@ const Edit = () => {
   const handlePublishAndRedirect = () => {
     saveFullPortfolio().then(() => {
       makePortfolioPublic(getFetchedPortfolio().id).then(() => {
-        this.props.history.push
+        props.history.push(
+          Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username
+        );
         setRedirect(true);
       }).catch(() => {
         setErrorMessage("Something went wrong");
