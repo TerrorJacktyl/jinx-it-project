@@ -16,10 +16,11 @@ import { createMuiTheme } from "@material-ui/core/styles";
 async function changePortfolioPrivacy(
   portfolio_id: number,
   privacy: boolean,
-  config: any
+  config: any,
+  updateState: any
 ) {
   const path = PORTFOLIOS_PATH + "/" + portfolio_id;
-  API.get(path, config)
+  const outerResult = API.get(path, config)
     .then((response: any) => {
       const result = API.put(
         path,
@@ -28,16 +29,21 @@ async function changePortfolioPrivacy(
           private: privacy,
         },
         config
-      ).catch((error: any) => {
-        console.log(error);
-        throw error;
-      });
-      return result;
+      )
+        .then((response: any) => {
+          updateState({private: response.data.private})
+        })
+        .catch((error: any) => {
+          console.log(error);
+          throw error;
+        });
+        return result;
     })
     .catch((error: any) => {
       console.log(error);
       throw error;
     });
+  return outerResult;
 }
 
 // Note the $s in the function name. Use this if you want to get all of a user's portfolios
@@ -117,10 +123,7 @@ export const usePortfolio = () => {
 
   async function fetchPortfolio(id: number) {
     try {
-      const portfolioDetails: TPortfolio = await getPortfolio(
-        id,
-        getConfig()
-      );
+      const portfolioDetails: TPortfolio = await getPortfolio(id, getConfig());
       await updateState(portfolioDetails);
 
       return portfolioDetails;
@@ -151,8 +154,6 @@ export const usePortfolio = () => {
         fetchSections(pages[0].id),
         fetchPageLinks(pages[0].id),
       ]);
-
-      setLoading(false);
     } catch (e) {
       throw e;
     }
@@ -172,6 +173,10 @@ export const usePortfolio = () => {
 
   function setPortfolioName(name: string) {
     updateState({ name: name });
+  }
+
+  function isPrivate() {
+    return state.private;
   }
 
   async function setPortfolioTheme(portfolio_id: number, theme_name: string) {
@@ -253,11 +258,11 @@ export const usePortfolio = () => {
   }
 
   async function makePortfolioPublic(portfolio_id: number) {
-    return changePortfolioPrivacy(portfolio_id, false, getConfig());
+    return await changePortfolioPrivacy(portfolio_id, false, getConfig(), updateState);
   }
 
   async function makePortfolioPrivate(portfolio_id: number) {
-    return changePortfolioPrivacy(portfolio_id, true, getConfig());
+    return await changePortfolioPrivacy(portfolio_id, true, getConfig(), updateState);
   }
 
   function resetFullPortfolio() {
@@ -272,6 +277,7 @@ export const usePortfolio = () => {
     fetchFullPortfolio,
     getFetchedPortfolio,
     getLightTheme,
+    isPrivate,
     setPortfolioName,
     setPortfolioTheme,
     setPortfolio,

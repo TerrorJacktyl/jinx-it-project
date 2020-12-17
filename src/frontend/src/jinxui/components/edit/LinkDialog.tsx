@@ -134,6 +134,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
           onSubmit={(values) => {
             activeLink.title = values.linkTitle;
             activeLink.address = values.linkAddress;
+            activeLink.icon = linkIcon;
             handleUpdate();
           }}
         >

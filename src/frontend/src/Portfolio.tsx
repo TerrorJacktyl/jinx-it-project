@@ -25,6 +25,7 @@ import {
 } from "jinxui";
 
 import NotFound from "./NotFound";
+import { findAllByDisplayValue } from "@testing-library/react";
 const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
   const theme_name =
     userData.authenticated &&
@@ -85,14 +86,13 @@ const SkeletonPage = () => (
 const Portfolio = ({ username }: PortfolioProps) => {
   const {
     userData,
-    // getFullPortfolio,
     getAccountDetailsFromUsername,
+    isLoading,
+    setLoading,
   } = useUser();
 
   const {fetchFullPortfolio, getFetchedPortfolio} = usePortfolio();
-  const { getFetchedPages } = usePage();
   const { getCleanedSections } = useSection();
-  const { getFetchedLinks } = useLink();
 
   const sections = getCleanedSections();
 
@@ -103,6 +103,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
+      setLoading(true)
       setError(false);
       try {
         const {
@@ -113,6 +114,9 @@ const Portfolio = ({ username }: PortfolioProps) => {
         setAuthor(`${first_name} ${last_name}`);
       } catch (e) {
         setError(true);
+      } finally {
+        console.log("FINISHED")
+        setLoading(false)
       }
     };
     fetchPortfolio();
@@ -129,7 +133,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
 
   const thisTheme = getTheme(getFetchedPortfolio(), userData, username);
 
-  if (thisTheme.portfolio.theme.name !== "Loading") {
+  if (!isLoading()) {
     // Main Page
     return (
       <>

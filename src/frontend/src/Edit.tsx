@@ -15,7 +15,6 @@ import {
   EditHeader,
 } from "jinxui";
 
-
 const FormTitle = styled.h2`
   font-weight: 300;
 `;
@@ -49,23 +48,27 @@ const Edit = (props: any) => {
     makePortfolioPublic,
   } = usePortfolio();
 
+  // Updating portfolio/page/section data
   useEffect(() => {
     let mounted = true;
 
-    const fetchExistingPortfolio = async () => {
-      await fetchFullPortfolio();
-    };
-    if (mounted) {
+    const fetchPortfolio = async () => {
       setLoading(true);
-      fetchExistingPortfolio();
-    }
+      try {
+        await fetchFullPortfolio();
+      } catch (e) {
+        throw e;
+      } finally {
+        setLoading(false)
+      }
+    };
+    fetchPortfolio();
 
     // Run on dismount. Should prevent memory leaks.
-    return () => { mounted = false }
-  }, []);
+    return () => { mounted = false; };
+  }, []); 
 
-
-  /** Save the currently edited page to the backend and redirect to display page. */
+  /* Save the currently edited page to backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
     saveFullPortfolio(false).then(() => {
       makePortfolioPublic(getFetchedPortfolio().id)
@@ -119,6 +122,6 @@ const Edit = (props: any) => {
       </ThemeProvider>
     </>
   );
-};;
+};
 
 export default Edit;

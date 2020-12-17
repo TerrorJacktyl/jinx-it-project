@@ -105,7 +105,11 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
         <ImageGrid>
           <ImageGridMain>
             <UserImage
-              src={imageResponse.path === "" ? imagePath : imageResponse.path}
+              src={
+                imageResponse.path === ""
+                  ? imagePath
+                  : imageResponse.path
+              }
               onLoad={() => setProgress(0.0)}
               style={
                 imageExists && progress === 0.0
@@ -120,7 +124,11 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
               }
             />
           </ImageGridMain>
-          <StyledImageUploadOverlay elevation={0} square style={progress ? {display: "none"} : {}}>
+          <StyledImageUploadOverlay
+            elevation={0}
+            square
+            style={progress ? { display: "none" } : {}}
+          >
             Upload Image
           </StyledImageUploadOverlay>
           <ImageGridIcon>

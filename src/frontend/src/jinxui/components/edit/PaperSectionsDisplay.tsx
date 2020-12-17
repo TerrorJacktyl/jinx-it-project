@@ -33,7 +33,7 @@ const PaperSectionsDisplay = () => {
         <CircularProgress color="secondary" />
       </Backdrop>
       <PaperSectionPage />
-      {getFetchedSections().map((section: TEditSection) => {
+      {getFetchedSections().map((section: TEditSection, index: number) => {
         if (section.type === "skelaton" && section.uid) {
           return <SkelatonSectionInput key={section.uid} />;
         }
@@ -66,9 +66,7 @@ const PaperSectionsDisplay = () => {
               section={section}
             />
           );
-        } else {
-          return <></>;
-        }
+        } 
       })}
     </>
   );
