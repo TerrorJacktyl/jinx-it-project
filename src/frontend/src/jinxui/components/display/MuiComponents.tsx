@@ -151,7 +151,8 @@ export function PortfolioHeader({ subtitle }: { subtitle?: string }) {
                 >
                   {subtitle}
                 </Typography>
-                <DisplayPageLinks />
+                <Box height="30px" />
+                <DisplayPageLinks horizontalAlign={horizontalAlign}/>
               </Box>
             </Grid>
           </Container>

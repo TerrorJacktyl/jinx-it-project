@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
-import { v4 as uuidv4 } from "uuid";
 
 // import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -21,8 +20,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import LinkIcon from "@material-ui/icons/Link";
-import LaunchIcon from "@material-ui/icons/Launch";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink } from "jinxui";
@@ -49,6 +46,10 @@ const PublishCancelDiv = styled.div`
   width: 100%;
 `;
 
+
+/**
+ *  Dialog for choosing or modifying a link / icon combination
+ */
 type TLinkDialog = {
   link?: TLinkData;
   setAnchoEl?: any;
@@ -58,7 +59,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [linkIcon, setLinkIcon] = useState(
     props.link ? props.link.icon : "None"
   );
-  const { updateLink } = useLink();
+  const { updateLink, getFetchedLinks } = useLink();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -69,7 +70,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     title: "",
     address: "",
     icon: linkIcon,
-    id: uuidv4(),
+    id: "",
   };
 
   // Set up the link to be worked on
@@ -81,6 +82,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   // Add new link to list / update existing
   const handleUpdate = () => {
     updateLink(activeLink)
+    setLinkIcon("None");
     setOpen(false);
   };
 
@@ -142,13 +144,14 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
             <DialogTitle id="link-dialog-title">Link</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                Note: Leave Link Title blank to display just the icon.
+                Note: Leave title blank to display just the icon.
               </DialogContentText>
               <LinkInputDiv>
                 <LinkInputInnerDiv>
                   <LinkIconMenu linkIcon={linkIcon} setLinkIcon={setLinkIcon} />
                   <Field
                     component={TextField}
+                    id="linkTitle"
                     name="linkTitle"
                     label="Link Title"
                     fullWidth
@@ -164,8 +167,9 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
                 </LinkInputInnerDiv>
                 <Field
                   component={TextField}
-                  name={"linkAddress"}
-                  label={"Link Address"}
+                  id="linkAddress"
+                  name="linkAddress"
+                  label="Link Address"
                   fullWidth
                   color="secondary"
                   InputProps={{

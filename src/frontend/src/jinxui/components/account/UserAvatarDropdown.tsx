@@ -6,10 +6,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Person } from "@material-ui/icons";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { Redirect } from "react-router-dom";
 
 import {
   useUser,
   usePortfolio,
+  Routes,
   PrimaryMenu,
   HeaderButton,
   HeaderMediaWidth,
@@ -32,6 +34,7 @@ const StyledInnerName = styled.div`
 
 const UserAvatarDropdown = () => {
   const [open, setOpen] = React.useState(false);
+  const [redirect, setRedirect] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { userData, logout } = useUser();
   const { resetFullPortfolio } = usePortfolio();
@@ -46,6 +49,7 @@ const UserAvatarDropdown = () => {
 
   const handleLogout = () => {
     setOpen(false);
+    setRedirect(true);
     logout()
     .then(() => {
         resetFullPortfolio();
@@ -55,10 +59,10 @@ const UserAvatarDropdown = () => {
       });
   };
 
-  /*  Note, redirect is handled automatically when user is not logged in
-      Redirecting here will cause memory leaks */
-
-  if (userData.username) {
+  if (redirect) {
+    return <Redirect to={Routes.LOGIN} />
+  }
+  else if (userData.username) {
     return (
       <>
         <StyledName

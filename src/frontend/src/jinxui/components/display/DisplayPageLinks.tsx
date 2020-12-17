@@ -3,7 +3,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
-
+import { useTheme } from "@material-ui/core/styles"
 import { useLink, LinkDisplayIcon } from "jinxui";
 
 import { TLinkData } from "jinxui/types";
@@ -14,12 +14,20 @@ import { TLinkData } from "jinxui/types";
  *  otherwise make it a graphic
  * If link has an icon, display it
  */
-const DisplayPageLinks = () => {
+type TDisplayPageLinks = {
+  horizontalAlign: string
+}
+const DisplayPageLinks = (props: TDisplayPageLinks) => {
   const { getFetchedLinks } = useLink();
+  const theme = useTheme();
 
-  const GetLinkDisplayIcon = (props: any) => {
+  type TGetLinkDisplayIcon = {
+    link: TLinkData,
+    size: any,
+  }
+  const GetLinkDisplayIcon = (props: TGetLinkDisplayIcon) => {
     if (props.link.icon && props.link.icon != "None") {
-      return <LinkDisplayIcon icon={props.link.icon} />;
+      return <LinkDisplayIcon icon={props.link.icon} size={props.size} />;
     } else {
       return <></>;
     }
@@ -36,10 +44,28 @@ const DisplayPageLinks = () => {
   };
   // }, []);
 
+  type TLinkContent = {
+    link: TLinkData
+  }
+  const LinkContent = (props: TLinkContent) => {
+    // const size = linksHaveText() ? 35 : 100
+    const size = linksHaveText() 
+      ? theme.typography.h3.fontSize
+      : theme.typography.h1.fontSize
+    console.log(size)
+    return (
+      <Box display="flex" alignItems="center">
+        <GetLinkDisplayIcon link={props.link} size={size}/>
+        <Box width="15px" />
+        <Typography variant="h6">{props.link.title}</Typography>
+      </Box>
+    );
+  }
+
   const direction = linksHaveText() ? "column" : "row";
   return (
     <>
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent={props.horizontalAlign}>
         <Box
           display="flex"
           width="max-content"
@@ -48,7 +74,7 @@ const DisplayPageLinks = () => {
         >
           {getFetchedLinks().map((link: TLinkData) => {
             return (
-              <Box key={link.id} margin="15px">
+              <Box key={link.id} marginTop="15px">
                 {link.address && link.address !== "" ? (
                   /* Address exists */
                   <Tooltip title={link.address}>
@@ -57,15 +83,13 @@ const DisplayPageLinks = () => {
                       color="textPrimary"
                       underline="none"
                     >
-                      <GetLinkDisplayIcon link={link} />
-                      <Typography variant="h6">{link.title}</Typography>
+                      <LinkContent link={link} />
                     </Link>
                   </Tooltip>
                 ) : (
                   /* Address does not exist */
                   <>
-                    <GetLinkDisplayIcon link={link} />
-                    <Typography variant="h6">{link.title}</Typography>
+                    <LinkContent link={link} />
                   </>
                 )}
               </Box>
