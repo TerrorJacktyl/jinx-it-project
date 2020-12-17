@@ -115,7 +115,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
       } catch (e) {
         setError(true);
       } finally {
-        console.log("FINISHED")
         setLoading(false)
       }
     };

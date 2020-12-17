@@ -78,12 +78,12 @@ async function postSection(
 
 export const useSection = () => {
   const [state, updateState, setState, resetState] = useContext(SectionContext);
-  const { getConfig, getSavedPortfolioId, isLoading, setLoading } = useUser();
+  const { getConfig, isLoading, setLoading } = useUser();
 
-  async function fetchSections(page_id: number) {
+  async function fetchSections(portfolio_id: number, page_id: number, ) {
     try {
       const sectionDetails = await getSections(
-        getSavedPortfolioId(),
+        portfolio_id,
         page_id,
         getConfig()
       );

@@ -117,8 +117,6 @@ export const usePortfolio = () => {
   } = useSection();
   const { fetchPageLinks, getFetchedLinks, saveLinks, resetLinks } = useLink();
 
-  const portfolioExists = true;
-
   const PORTFOLIOS_PATH = "api/portfolios";
 
   async function fetchPortfolio(id: number) {
@@ -137,11 +135,11 @@ export const usePortfolio = () => {
      but ran into a very lame bug with nested list indexing :'( */
   async function fetchFullPortfolio(username?: string) {
     try {
-      var portfolioId = getSavedPortfolioId();
-      if (username) {
-        const accountDetails = await getAccountDetailsFromUsername(username);
-        portfolioId = accountDetails.primary_portfolio;
-      }
+
+      const portfolioId = username
+        ? (await getAccountDetailsFromUsername(username)).primary_portfolio
+        : getSavedPortfolioId()
+
       // Run symultanious get requests for speed
       const [_, pages] = await Promise.all([
         fetchPortfolio(portfolioId),
@@ -150,9 +148,10 @@ export const usePortfolio = () => {
       if (pages.length < 1) {
         throw "No pages found for portfolio";
       }
+
       await Promise.all([
-        fetchSections(pages[0].id),
-        fetchPageLinks(pages[0].id),
+        fetchSections(portfolioId, pages[0].id),
+        fetchPageLinks(portfolioId, pages[0].id),
       ]);
     } catch (e) {
       throw e;

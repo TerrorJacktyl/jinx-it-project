@@ -57,9 +57,8 @@ export const useLink = () => {
     return result;
   }
 
-  async function fetchPageLinks(page_id: number) {
+  async function fetchPageLinks(portfolio_id: number, page_id: number) {
     try {
-      const portfolio_id = getSavedPortfolioId();
       setState(await getPageLinks(portfolio_id, page_id));
     } catch (e) {
       throw e;
