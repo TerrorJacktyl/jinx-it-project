@@ -22,6 +22,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import LinkIcon from "@material-ui/icons/Link";
+import LaunchIcon from "@material-ui/icons/Launch";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink } from "jinxui";
 import { TLinkData } from "jinxui/types";
@@ -62,6 +64,31 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     setOpen(true);
   };
 
+  // The link to use if not editing an existing one
+  const newLink: TLinkData = {
+    title: "",
+    address: "",
+    icon: linkIcon,
+    id: uuidv4(),
+  };
+
+  // Set up the link to be worked on
+  const activeLink = props.link ? props.link : newLink;
+
+  // Set up the button text
+  const okayText = props.link ? "OK" : "ADD";
+
+  // Add new link to list / update existing
+  const handleUpdate = () => {
+    updateLink(activeLink)
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // The 'OK' button
   const ActivationButton = () => {
     if (props.link) {
       return (
@@ -88,46 +115,11 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
             variant="text"
             disableElevation
           >
-            <LinkIcon />
+            <AddCircleIcon />
           </Button>
         </Tooltip>
       );
-      // <PrimaryButton onClick={handleClickOpen}>Add link</PrimaryButton>;
     }
-  };
-
-  const newLink: TLinkData = {
-    title: "",
-    address: "",
-    icon: linkIcon,
-    id: uuidv4(),
-  };
-
-  const activeLink = props.link ? props.link : newLink;
-  const okayText = props.link ? "OK" : "ADD";
-  // if(props.link){
-  //   setLinkIcon(props.link.icon);
-  // }
-  const handleAdd = () => {
-    updateLink(activeLink);
-    // if (props.link) {
-    //   // // props.link.title="ASD"
-    //   // props.link.title = newLink.title
-    //   // // props.link.icon = activeLink.icon
-    //   // // props.link.title =activeLink.title
-    //   // // props.link.address = activeLink.address
-    //   // // const index = props.links.findIndex(
-    //   // //   (p: TLinkData) => p.id === props.link.id
-    //   // //   );
-    //   updateLink(props.link.id, props.link.title);
-    // } else {
-    //   setLinks((links: any) => [...links, newLink]);
-    // }
-    setOpen(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -140,9 +132,9 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
             linkAddress: activeLink.address,
           }}
           onSubmit={(values) => {
-            newLink.title = values.linkTitle;
-            newLink.address = values.linkAddress;
-            handleAdd();
+            activeLink.title = values.linkTitle;
+            activeLink.address = values.linkAddress;
+            handleUpdate();
           }}
         >
           <Form>

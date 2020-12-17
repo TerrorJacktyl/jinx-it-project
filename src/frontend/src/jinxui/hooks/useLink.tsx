@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { LinkContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
-import { v4 as uuidv4 } from "uuid";
 import { TLinkData } from "../types/PortfolioTypes";
 
 async function putLinks(
@@ -25,10 +24,16 @@ async function putLinks(
   }
 }
 
+
+
 export const useLink = () => {
   const [state, updateState, setState, resetState] = useContext(LinkContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig, getSavedPortfolioId } = useUser();
+
+  function linkIndex(id: string) {
+    return state.findIndex((p: TLinkData) => p.id === id);
+  }
 
   async function getPageLinks(portfolio_id: number, page_id: number) {
     const path =
@@ -93,17 +98,54 @@ export const useLink = () => {
     }
   }
 
+  function handleLinkDelete(link: TLinkData) {
+    const index = linkIndex(link.id);
+    setState([...state.slice(0, index), ...state.slice(index + 1)]);
+  }
+
+  function handleLinkMoveUp(link: TLinkData) {
+    const index = linkIndex(link.id);
+    if (index === 0) {
+      return;
+    }
+    const current_links = state;
+
+    const top = current_links.slice(0, index - 1);
+    const one_above = current_links.slice(index - 1, index);
+    const rest = current_links.slice(index + 1);
+
+    setState(top.concat(link, one_above, rest));
+  }
+
+  function handleLinkMoveDown(link: TLinkData) {
+    const index = linkIndex(link.id);
+    if (index === state.length - 1) {
+      return;
+    }
+    const current_links = state;
+
+    const top = current_links.slice(0, index);
+    const one_below = current_links.slice(index + 1, index + 2);
+    const rest = current_links.slice(index + 2);
+
+    setState(top.concat(one_below, link, rest));
+  }
+
   function resetLinks() {
     resetState();
   }
 
   return {
+    linkIndex,
     fetchPageLinks,
     setLinks,
     getFetchedLinks,
     addLink,
     updateLink,
     saveLinks,
+    handleLinkDelete,
+    handleLinkMoveUp,
+    handleLinkMoveDown,
     resetLinks,
   };
 };

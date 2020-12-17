@@ -8,9 +8,9 @@ import {
   useUser,
   usePortfolio,
   LinkDialog,
+  LinksDisplay,
   PaperSectionStatic,
   OneColumnSectionDiv,
-  DisplayLinks,
 } from "jinxui";
 
 const LinksDiv = styled.div`
@@ -74,7 +74,7 @@ const PaperSectionPage = () => {
               </LinksSkelatonDiv>
             ) : (
               <>
-                <DisplayLinks />
+                <LinksDisplay />
                 <LinkDialog />
               </>
             )}

@@ -28,17 +28,12 @@ export const LinkContextProvider = (props: TLinkContextProvider) => {
   ) => {
     const index = state.findIndex(
       (link: TLinkData) => link.id === uuid_index
-    );
-    if (index > -1) {
-
+    );    
+    if (index > -1) {   // Link exists
       var newLink: TLinkData = { ...state[index], ...fieldsToUpdate };
-      var newLinks: TLinkData[] = state;
-      newLinks[index] = newLink;
-      setState(newLinks);
-    } else {
+      setState([...state.slice(0, index), newLink, ...state.slice(index+1)]);
+    } else {            // New link required
       const newLink:TLinkData = {...defaultLinkContext, ...fieldsToUpdate}
-
-
       setState([...state, newLink])
     }
   };

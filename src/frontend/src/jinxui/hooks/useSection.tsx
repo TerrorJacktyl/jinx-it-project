@@ -93,7 +93,6 @@ export const useSection = () => {
         return newSection;
       });
       await setState(IdSections);
-      setLoading(false)
     } catch (e) {
       throw e;
     } finally {

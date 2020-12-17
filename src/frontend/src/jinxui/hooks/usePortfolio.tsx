@@ -97,11 +97,17 @@ export const usePortfolio = () => {
     getSavedPortfolioId,
     getSavedLightThemeMode,
     setSaving,
+    setLoading,
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
   const { fetchPages, getFetchedPages, savePage, resetPages } = usePage();
-  const { fetchSections, getCleanedSections, saveSections, resetSections } = useSection();
+  const {
+    fetchSections,
+    getCleanedSections,
+    saveSections,
+    resetSections,
+  } = useSection();
   const { fetchPageLinks, getFetchedLinks, saveLinks, resetLinks } = useLink();
 
   const portfolioExists = true;
@@ -127,13 +133,17 @@ export const usePortfolio = () => {
      but ran into a very lame bug with nested list indexing :'( */
   async function fetchFullPortfolio() {
     try {
-      await fetchPortfolio();
-      const pages = await fetchPages();
+      // Run symultanious get requests for speed
+      const [_, pages] = await Promise.all([fetchPortfolio(), fetchPages()]);
       if (pages.length < 1) {
         throw "No pages found for portfolio";
       }
-      await fetchSections(pages[0].id);
-      await fetchPageLinks(pages[0].id);
+      await Promise.all([
+        fetchSections(pages[0].id),
+        fetchPageLinks(pages[0].id),
+      ]);
+
+      setLoading(false);
     } catch (e) {
       throw e;
     }
@@ -223,9 +233,9 @@ export const usePortfolio = () => {
           pageResponse.data.id
         );
         await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
-        await setSuccessMessage("Portfolio saved")
+        await setSuccessMessage("Portfolio saved");
       } catch (e) {
-        setErrorMessage("Something went wrong")
+        setErrorMessage("Something went wrong");
         throw e;
       } finally {
         setSaving(false);
