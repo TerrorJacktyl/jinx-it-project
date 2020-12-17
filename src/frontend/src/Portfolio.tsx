@@ -97,13 +97,6 @@ const Portfolio = ({ username }: PortfolioProps) => {
   const sections = getCleanedSections();
 
   const [author, setAuthor] = useState<string>("");
-  // const [portfolio, setPortfolio] = useState<TPortfolio>(defaultPortfolioContext);
-  // eslint-disable-next-line
-  // const [pages, setPages] = useState<TPage[]>([]);
-  // eslint-disable-next-line
-  // const [currPage] = useState<number>(0);
-  // Define as TSection[][] when incorporating multiple pages
-  // const [sections, setSections] = useState<TSection[]>([]);
 
   const [error, setError] = useState<boolean>(false);
 
@@ -113,18 +106,11 @@ const Portfolio = ({ username }: PortfolioProps) => {
       setError(false);
       try {
         const {
-          // primary_portfolio,
           first_name,
           last_name,
         } = await getAccountDetailsFromUsername(username);
-        // const { portfolio, pages, sections } = await getFullPortfolio(
-        //   primary_portfolio
-        // );
-        await fetchFullPortfolio();
+        await fetchFullPortfolio(username);
         setAuthor(`${first_name} ${last_name}`);
-        // setPortfolio(portfolio);
-        // setPages(pages);
-        // setSections(sections);
       } catch (e) {
         setError(true);
       }
@@ -158,8 +144,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
           <ThemeProvider theme={thisTheme}>
             <CssBaseline />
             <PortfolioHeader
-              // title={portfolio?.name}
-              title={getFetchedPortfolio().name}
+
               subtitle={author}
             ></PortfolioHeader>
             <SectionGrid sections={sections} />

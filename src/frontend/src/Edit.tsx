@@ -4,11 +4,9 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Tooltip from "@material-ui/core/Tooltip";
 
-
 import {
   useUser,
   usePortfolio,
-  usePage,
   PrimaryButton,
   SecondaryButton,
   Routes,
@@ -17,7 +15,6 @@ import {
   EditHeader,
 } from "jinxui";
 
-import { TPage } from "jinxui/types";
 
 const FormTitle = styled.h2`
   font-weight: 300;
@@ -38,14 +35,12 @@ const TooltipDiv = styled.div`
   display: flex;
 `;
 
-/* Consider passing as props a bool that signals whether this is an edit of an existing
-   portfolio, or a new one entirely */
 const Edit = (props: any) => {
-  // TEST: Remove this when we've decided on an existing portfolio check
-  const portfolioExists = true;
-  // const [redirect, setRedirect] = useState(false);
-  const { userData, isSaving, setErrorMessage, setLoading } = useUser();
+  /*  Existing portfolio checks removed. New accounts should have an 
+      portfolio created automatically. If no portfolios are found, an error
+      should be reported */
 
+  const { userData, isSaving, setErrorMessage, setLoading } = useUser();
   const {
     fetchFullPortfolio,
     getFetchedPortfolio,
@@ -54,21 +49,21 @@ const Edit = (props: any) => {
     makePortfolioPublic,
   } = usePortfolio();
 
-  const { setPages } = usePage();
-
-
   useEffect(() => {
-    setLoading(true);
+    let mounted = true;
+
     const fetchExistingPortfolio = async () => {
       await fetchFullPortfolio();
     };
-    if (portfolioExists) {
+    if (mounted) {
+      setLoading(true);
       fetchExistingPortfolio();
-    } else {
-      const newPage = [{ name: "home", number: 0 }] as TPage[];
-      setPages(newPage);
     }
+
+    // Run on dismount. Should prevent memory leaks.
+    return () => { mounted = false }
   }, []);
+
 
   /** Save the currently edited page to the backend and redirect to display page. */
   const handlePublishAndRedirect = () => {
@@ -124,6 +119,6 @@ const Edit = (props: any) => {
       </ThemeProvider>
     </>
   );
-};
+};;
 
 export default Edit;

@@ -47,9 +47,8 @@ export const usePage = () => {
     return result;
   }
 
-  async function fetchPages() {
+  async function fetchPages(id: number) {
     try {
-      const id = getSavedPortfolioId();
       const pages = await getPages(id)
       setState(pages);
       return pages

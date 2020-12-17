@@ -50,9 +50,6 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
     handleLinkDelete(props.link);
   };
 
-  const preventDefault = (event: React.SyntheticEvent) =>
-    event.preventDefault();
-
   return (
     <div>
       <Tooltip title="Edit link" arrow>

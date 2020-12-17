@@ -96,6 +96,7 @@ export const usePortfolio = () => {
     getConfig,
     getSavedPortfolioId,
     getSavedLightThemeMode,
+    getAccountDetailsFromUsername,
     setSaving,
     setLoading,
     setErrorMessage,
@@ -114,10 +115,10 @@ export const usePortfolio = () => {
 
   const PORTFOLIOS_PATH = "api/portfolios";
 
-  async function fetchPortfolio() {
+  async function fetchPortfolio(id: number) {
     try {
       const portfolioDetails: TPortfolio = await getPortfolio(
-        getSavedPortfolioId(),
+        id,
         getConfig()
       );
       await updateState(portfolioDetails);
@@ -131,10 +132,18 @@ export const usePortfolio = () => {
   /* Will retrieve a portoflio, all of its pages, and the first page's sections.
      Tried to incorporate functionality to fetch all sections corresponding to all pages,
      but ran into a very lame bug with nested list indexing :'( */
-  async function fetchFullPortfolio() {
+  async function fetchFullPortfolio(username?: string) {
     try {
+      var portfolioId = getSavedPortfolioId();
+      if (username) {
+        const accountDetails = await getAccountDetailsFromUsername(username);
+        portfolioId = accountDetails.primary_portfolio;
+      }
       // Run symultanious get requests for speed
-      const [_, pages] = await Promise.all([fetchPortfolio(), fetchPages()]);
+      const [_, pages] = await Promise.all([
+        fetchPortfolio(portfolioId),
+        fetchPages(portfolioId),
+      ]);
       if (pages.length < 1) {
         throw "No pages found for portfolio";
       }

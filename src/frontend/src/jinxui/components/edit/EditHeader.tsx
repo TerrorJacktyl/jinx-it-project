@@ -3,17 +3,13 @@ import { Button } from "@material-ui/core";
 import { SettingsBrightness } from "@material-ui/icons";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import {
-  useUser,
-  HeaderBar,
-  } from "jinxui";
+import { useUser, HeaderBar } from "jinxui";
 
 const EditHeader = () => {
-  const { 
-    switchLightThemeMode, 
+  const {
+    switchLightThemeMode,
     getSavedLightThemeMode,
   } = useUser();
-
 
   return (
     <>
