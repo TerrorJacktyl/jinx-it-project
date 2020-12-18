@@ -42,7 +42,7 @@ const PaperSectionPage = () => {
           {isLoading() ? (
             <>
               <Skelaton variant="text" height={14} width={100} />
-              <Skelaton variant="text" height={34} animation="wave" />
+              <Skelaton variant="text" height={40} animation="wave" />
             </>
           ) : (
             <TextField
@@ -61,6 +61,7 @@ const PaperSectionPage = () => {
                     <CreateIcon />
                   </InputAdornment>
                 ),
+                style: { fontSize: 18, fontWeight: 400 },
               }}
             />
           )}

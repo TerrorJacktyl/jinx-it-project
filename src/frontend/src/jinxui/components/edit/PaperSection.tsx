@@ -126,6 +126,7 @@ const PaperSection = (props: TPaperSection) => {
                   <CreateIcon />
                 </InputAdornment>
               ),
+              style: {fontSize: 18, fontWeight: 400},
             }}
           />
         </StyledDivLeft>
