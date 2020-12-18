@@ -56,7 +56,7 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
         <Button onClick={handleClick}>
           <LinkDisplayIcon icon={props.link?.icon} />
           <Box width="8px"/>
-          <Typography variant="h6">{props.link?.title}</Typography>
+          <Typography variant="button">{props.link?.title}</Typography>
         </Button>
       </Tooltip>
       <PrimaryMenu

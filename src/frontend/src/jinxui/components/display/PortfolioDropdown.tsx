@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import Typography from "@material-ui/core/Typography"
 import Link from "@material-ui/core/Link";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -36,7 +37,6 @@ const DivWrapper = styled.div`
 `;
 
 const StyledName = styled(HeaderButton)`
-  font-size: 20px;
   text-transform: none;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -376,7 +376,9 @@ const PortfolioDropdown = React.forwardRef(
               onClick={handleToggle}
             >
               <PersonalVideoIcon />
-              <StyledInnerName>My Portfolio</StyledInnerName>
+              <StyledInnerName>
+                  My Portfolio
+              </StyledInnerName>
               <ExpandMoreIcon fontSize="small" />
             </StyledName>
           ) : null}

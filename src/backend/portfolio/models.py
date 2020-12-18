@@ -172,11 +172,6 @@ class Link(models.Model):
     address = models.TextField(blank=True)
     number = models.IntegerField(default = 0)
 
-    class Meta:
-        ordering = ['number']
-
-    # objects = managers.LinkManager()
-
     def __str__(self):
         return self.title + " | " + self.address
 

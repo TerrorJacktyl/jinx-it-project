@@ -24,19 +24,4 @@ const StyledPrimaryMenu = React.forwardRef((props: MenuProps, ref: any) => (
   />
 ));
 
-// const StyledPrimaryMenu = (props: any) => (
-//   <Menu
-//     id={props.id}
-//     anchorEl={props.anchorE1}
-//     keepMounted={props.keepMounted}
-//     open={props.open}
-//     onClose={props.handleClose}
-    
-//     elevation={0}
-
-//   >
-//     {props.children}
-//   </Menu>
-// );
-
 export default StyledPrimaryMenu;

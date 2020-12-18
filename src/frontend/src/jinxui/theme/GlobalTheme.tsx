@@ -31,16 +31,14 @@ const DarkTheme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: "Heebo, sans-serif",
-    fontWeightLight: 100,
-    fontWeightMedium: 200,
-    fontWeightRegular: 300,
-    fontWeightBold: 400,
+    fontFamily: "Poppins, sans-serif",
     h3: {
       fontWeight: 200,
       fontSize: "3rem",
     },
     button: {
+      fontSize: "0.98rem",
+      fontWeight: 400,
       textTransform: "none",
     },
   },
@@ -101,18 +99,16 @@ let LightTheme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: "Heebo, sans-serif",
-    fontWeightLight: 100,
-    fontWeightMedium: 200,
-    fontWeightRegular: 300,
-    fontWeightBold: 400,
+    fontFamily: "Poppins, sans-serif",
     h3: {
       fontWeight: 200,
+      fontSize: "3rem",
     },
     button: {
-      textTransform: "none"
+      fontSize: "0.98rem",
+      fontWeight: 400,
+      textTransform: "none",
     },
-
   },
   shadows: [
     "none",

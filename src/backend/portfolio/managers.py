@@ -88,6 +88,3 @@ class PageManager(OrderManager):
 
 class SectionManager(OrderManager):
     parent_field = 'page'
-
-class LinkManager(OrderManager):
-    parent_field = None

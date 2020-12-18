@@ -125,7 +125,7 @@ const HeaderBar = (props: HeaderBarProps) => {
               </StyledDivLeft>
               <StyledDivCenter>
                 <StyledDivTitle>
-                  <Typography variant="h6">
+                  <Typography variant="h5">
                     {props.title ? props.title : ""}
                   </Typography>
                 </StyledDivTitle>

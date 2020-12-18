@@ -18,7 +18,6 @@ import {
 } from "jinxui";
 
 const StyledName = styled(HeaderButton)`
-  font-size: 20px;
   text-transform: none;
   padding-top: 0px;
   padding-bottom: 0px;
