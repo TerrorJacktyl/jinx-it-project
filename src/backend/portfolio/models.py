@@ -140,10 +140,6 @@ class Image(models.Model):
     name = models.CharField(max_length=100)
     path = models.ImageField(upload_to=image_path, null=True)
 
-    # @property
-    # def owner(self):
-    #     return self.portfolio.owner
-
     def __str__(self):
         return self.name
 
@@ -163,13 +159,6 @@ class ImageSection(Section):
 
 
 class Link(models.Model):
-    class LinkIcon(models.TextChoices):
-        LINKEDIN = "LinkedIn"
-        GITHUB = "Github"
-        WEB = "Web"
-        NONE = "None"
-
-
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='links'
     )
@@ -178,13 +167,15 @@ class Link(models.Model):
         max_length = 36,
         primary_key = True
     )
-    icon = models.CharField(
-        max_length = 20,
-        choices = LinkIcon.choices,
-        default = LinkIcon.NONE,
-    )
-    address = models.TextField(blank=True)
     title = models.TextField(blank=True)
+    icon = models.IntegerField(default = 0)
+    address = models.TextField(blank=True)
+    number = models.IntegerField(default = 0)
+
+    class Meta:
+        ordering = ['number']
+
+    # objects = managers.LinkManager()
 
     def __str__(self):
         return self.title + " | " + self.address

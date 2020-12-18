@@ -15,10 +15,10 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import LaunchIcon from "@material-ui/icons/Launch";
 
 import { LinkDisplayIcon, PrimaryMenu, LinkDialog, useLink } from "jinxui";
-import { TLinkData } from "jinxui/types";
+import { TLink } from "jinxui/types";
 
 type TLinkEditMenu = {
-  link: TLinkData;
+  link: TLink;
 };
 const LinkEditMenu = (props: TLinkEditMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -55,6 +55,7 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
       <Tooltip title="Edit link" arrow>
         <Button onClick={handleClick}>
           <LinkDisplayIcon icon={props.link?.icon} />
+          <Box width="8px"/>
           <Typography variant="h6">{props.link?.title}</Typography>
         </Button>
       </Tooltip>

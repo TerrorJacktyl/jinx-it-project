@@ -6,7 +6,7 @@ import {
 } from "jinxui";
 
 import {
-  TLinkData,
+  TLink,
 } from "jinxui/types";
 
 
@@ -15,7 +15,7 @@ const LinksDisplay = () => {
   
   return (
     <>
-      {getFetchedLinks().map((link: TLinkData) => {
+      {getFetchedLinks().map((link: TLink) => {
         if (link) {
           return (
             <LinkEditMenu

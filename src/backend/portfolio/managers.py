@@ -86,9 +86,8 @@ class OrderManager(models.Manager):
 class PageManager(OrderManager):
     parent_field = 'portfolio'
 
-
 class SectionManager(OrderManager):
     parent_field = 'page'
 
-class PageLinkManager(OrderManager):
-    parent_field = 'page'
+class LinkManager(OrderManager):
+    parent_field = None

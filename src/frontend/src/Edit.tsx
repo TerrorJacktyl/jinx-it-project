@@ -23,7 +23,7 @@ const PublishCancelDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row-reverse;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-around;
   margin: 5px;
   padding: 5px;
@@ -39,7 +39,7 @@ const Edit = (props: any) => {
       portfolio created automatically. If no portfolios are found, an error
       should be reported */
 
-  const { userData, isSaving, setErrorMessage, setLoading } = useUser();
+  const { userData, isSaving, setErrorMessage, setLoading, setSaving, } = useUser();
   const {
     fetchFullPortfolio,
     getFetchedPortfolio,
@@ -53,6 +53,7 @@ const Edit = (props: any) => {
     let mounted = true;
 
     const fetchPortfolio = async () => {
+      setSaving(false);
       setLoading(true);
       try {
         await fetchFullPortfolio();

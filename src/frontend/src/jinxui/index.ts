@@ -73,7 +73,6 @@ export { default as PaperSectionDiv } from "./components/edit/PaperSectionDiv"
 export { default as PaperSectionTitle } from "./components/edit/PaperSectionTitle"
 export { default as LinkIconMenu } from "./components/edit/LinkIconMenu"
 export { default as LinkDialog } from "./components/edit/LinkDialog"
-export { default as LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
 export { default as LinkEditMenu } from "./components/edit/LinkEditMenu"
 export { default as LinksDisplay } from "./components/edit/LinksDisplay"
 export { default as LoadingSections } from "./components/edit/LoadingSections"
@@ -81,6 +80,7 @@ export { default as PaperSectionsDisplay } from "./components/edit/PaperSections
 export { default as EditHeader } from "./components/edit/EditHeader"
 export { default as PaperSectionPage } from "./components/edit/PaperSectionPage"
 export { default as SkelatonSectionInput } from "./components/edit/SkelatonSectionInput"
+export { LinkIconEnum, LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

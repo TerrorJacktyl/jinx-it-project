@@ -22,8 +22,8 @@ import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
-import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink } from "jinxui";
-import { TLinkData } from "jinxui/types";
+import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink, LinkIconEnum } from "jinxui";
+import { TLink } from "jinxui/types";
 
 const LinkInputDiv = styled.div`
   display: grid;
@@ -39,7 +39,7 @@ const PublishCancelDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row-reverse;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-around;
   margin: 5px;
   padding: 5px;
@@ -51,13 +51,13 @@ const PublishCancelDiv = styled.div`
  *  Dialog for choosing or modifying a link / icon combination
  */
 type TLinkDialog = {
-  link?: TLinkData;
+  link?: TLink;
   setAnchoEl?: any;
 };
 const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [open, setOpen] = useState(false);
   const [linkIcon, setLinkIcon] = useState(
-    props.link ? props.link.icon : "None"
+    props.link ? props.link.icon : LinkIconEnum.Disabled
   );
   const { updateLink, getFetchedLinks } = useLink();
 
@@ -66,11 +66,12 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   };
 
   // The link to use if not editing an existing one
-  const newLink: TLinkData = {
+  const newLink: TLink = {
     title: "",
     address: "",
-    icon: linkIcon,
+    icon: LinkIconEnum.Disabled,
     id: "",
+    number: 0,
   };
 
   // Set up the link to be worked on
@@ -82,7 +83,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   // Add new link to list / update existing
   const handleUpdate = () => {
     updateLink(activeLink)
-    setLinkIcon("None");
+    setLinkIcon(0);
     setOpen(false);
   };
 

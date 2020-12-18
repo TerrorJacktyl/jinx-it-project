@@ -89,6 +89,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
     getAccountDetailsFromUsername,
     isLoading,
     setLoading,
+    setSaving,
   } = useUser();
 
   const {fetchFullPortfolio, getFetchedPortfolio} = usePortfolio();
@@ -103,6 +104,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
+      setSaving(false)
       setLoading(true)
       setError(false);
       try {

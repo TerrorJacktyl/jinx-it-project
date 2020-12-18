@@ -549,6 +549,7 @@ const sand: Theme = createTheme({
             horizontalAlign: "flex-start",
             textAlign: "left",
             allCaps: "true",
+            disableSubtitleGap: "true",
         },
         section: {
             spacing: 7,

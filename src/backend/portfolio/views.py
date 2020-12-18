@@ -380,6 +380,7 @@ class SectionLinkList(generics.ListCreateAPIView):
 
 
 def link_association_put(view, request, **kwargs):
+
     data_list = []
     assoc_name, assoc_id_name = view.get_keywords()
     for single_request in request.data:

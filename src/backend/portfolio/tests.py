@@ -247,18 +247,42 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
     def test_page_link_create(self):
         data = [
             {
-                "id": "asdasfdsa",
-                "icon": "Github",
+                "id": "z",
+                "icon": 2,
                 "address": "string",
-                "title": "string"
+                "title": "string",
+                "number": 0,
             },
             {
-                "id": "asdasfdsb",
-                "icon": "Github",
+                "id": "y",
+                "icon": 3,
                 "address": "string",
-                "title": "string"
-            }
+                "title": "string",
+                "number": 1,
+            },
+            {
+                "id": "x",
+                "icon": 3,
+                "address": "string",
+                "title": "string",
+                "number": 2,
+            },
+            {
+                "id": "w",
+                "icon": 3,
+                "address": "string",
+                "title": "string",
+                "number": 3,
+            },
+            {
+                "id": "v",
+                "icon": 3,
+                "address": "string",
+                "title": "string",
+                "number": 4,
+            },
         ]
+
         response = self.client.put(
             reverse(
                 'link_list',
@@ -276,15 +300,17 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         data = [
             {
                 "id": "asc",
-                "icon": "Github",
+                "icon": 5,
                 "address": "www.linkedin.com",
-                "title": "My LinkedIn"
+                "title": "My LinkedIn",
+                "number": 0,
             },
             {
                 "id": "asd",
-                "icon": "Github",
+                "icon": 6,
                 "address": "www.linkedin.com",
-                "title": "My LinkedIn"
+                "title": "My LinkedIn",
+                "number": 1,
             }
         ]
         response = self.client.put(
@@ -304,9 +330,10 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         updated_data = [
             {
                 "id": "asc",
-                "icon": "Github",
+                "icon": 3,
                 "address": "www.github.com",
-                "title": "My LinkedIn"
+                "title": "My LinkedIn",
+                "number": 0,
             },
         ]
         response = self.client.put(
@@ -339,15 +366,17 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         data = [
             {
                 "id": "asdasfdsa",
-                "icon": "Github",
+                "icon": 5,
                 "address": "string",
-                "title": "string"
+                "title": "string",
+                "number": 0,
             },
             {
                 "id": "asdasfdsb",
-                "icon": "Github",
+                "icon": 6,
                 "address": "string",
-                "title": "string"
+                "title": "string",
+                "number": 1,
             }
         ]
         response = self.client.put(
@@ -368,15 +397,17 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         data = [
             {
                 "id": "asc",
-                "icon": "LinkedIn",
+                "icon": 2,
                 "address": "www.linkedin.com",
-                "title": "My LinkedIn"
+                "title": "My LinkedIn",
+                "number": 0,
             },
             {
                 "id": "asd",
-                "icon": "Github",
+                "icon": 2,
                 "address": "www.linkedin.com",
-                "title": "My LinkedIn"
+                "title": "My LinkedIn",
+                "number": 1,
             }
         ]
         response = self.client.put(
@@ -398,9 +429,10 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         updated_data = [
             {
                 "id": "asc",
-                "icon": "Github",
+                "icon": 2,
                 "address": "www.github.com",
-                "title": "My LinkedIn"
+                "title": "My LinkedIn",
+                "number": 0,
             },
         ]
         response = self.client.put(

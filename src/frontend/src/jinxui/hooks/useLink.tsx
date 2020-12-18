@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { LinkContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
-import { TLinkData } from "../types/PortfolioTypes";
+import { TLink } from "jinxui/types";
 
 async function putLinks(
   portfolio_id: number,
   page_id: number,
-  links: TLinkData[],
+  links: TLink[],
   config: any,
 ) {
   const path =
@@ -32,7 +32,7 @@ export const useLink = () => {
   const { getConfig, getSavedPortfolioId } = useUser();
 
   function linkIndex(id: string) {
-    return state.findIndex((p: TLinkData) => p.id === id);
+    return state.findIndex((p: TLink) => p.id === id);
   }
 
   async function getPageLinks(portfolio_id: number, page_id: number) {
@@ -40,7 +40,7 @@ export const useLink = () => {
       PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
     const result = API.get(path, getConfig())
       .then((response: any) => {
-        let links = [];
+        let links:TLink[] = [];
         try {
           for (var page_link of response.data) {
             links.push(page_link.link);
@@ -48,6 +48,7 @@ export const useLink = () => {
         } catch (Error) {
           throw Error;
         }
+        links.sort((a, b) => (a.number > b.number) ? 1 : -1)
         return links;
       })
       .catch((error: any) => {
@@ -65,7 +66,14 @@ export const useLink = () => {
     }
   }
 
-  async function setLinks(links: TLinkData[]) {
+  const getCleanedLinks = () => {
+    for (var i = 0; i < state.length; i++) {
+      state[i].number = i;
+    }
+    return state;
+  }
+
+  async function setLinks(links: TLink[]) {
     try {
       await setState(links);
     } catch (e) {
@@ -73,11 +81,11 @@ export const useLink = () => {
     }
   }
 
-  function addLink(link: TLinkData) {
+  function addLink(link: TLink) {
     setState(...state, link);
   }
 
-  function updateLink(link: TLinkData) {
+  function updateLink(link: TLink) {
     updateState(link.id, {
       title: link.title,
       address: link.address,
@@ -91,18 +99,18 @@ export const useLink = () => {
 
   async function saveLinks(portfolio_id: number, page_id: number) {
     try {
-      return await putLinks(portfolio_id, page_id, state, getConfig())
+      return await putLinks(portfolio_id, page_id, getCleanedLinks(), getConfig())
     } catch (e) {
       throw e;
     }
   }
 
-  function handleLinkDelete(link: TLinkData) {
+  function handleLinkDelete(link: TLink) {
     const index = linkIndex(link.id);
     setState([...state.slice(0, index), ...state.slice(index + 1)]);
   }
 
-  function handleLinkMoveUp(link: TLinkData) {
+  function handleLinkMoveUp(link: TLink) {
     const index = linkIndex(link.id);
     if (index === 0) {
       return;
@@ -116,7 +124,7 @@ export const useLink = () => {
     setState(top.concat(link, one_above, rest));
   }
 
-  function handleLinkMoveDown(link: TLinkData) {
+  function handleLinkMoveDown(link: TLink) {
     const index = linkIndex(link.id);
     if (index === state.length - 1) {
       return;

@@ -27,4 +27,4 @@ class AccountInLine(admin.StackedInline):
 
 @admin.register(Account)
 class PageAdmin(admin.ModelAdmin):
-    list_display = ['user', 'primary_portfolio']
+    list_display = ['user', 'primary_portfolio', 'id']

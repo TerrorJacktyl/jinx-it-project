@@ -106,13 +106,11 @@ export const useSection = () => {
    * 3. Remove empty sections entirely
    */
   const getCleanedSections = () => {
-    var cleanSections: TSection[] = [];
-    for (var i = 0; i < state.length; i++) {
-      if (sectionIsNotBlank(state[i])) {
-        var cleanSection = state[i];
-        delete cleanSection.uid;
-        cleanSection.number = i;
-        cleanSections.push(cleanSection);
+    const cleanSections = JSON.parse(JSON.stringify(state));
+    for (var i = 0; i < cleanSections.length; i++) {
+      if (sectionIsNotBlank(cleanSections[i])) {
+        delete cleanSections[i].uid;
+        cleanSections[i].number = i;
       }
     }
     return cleanSections;
@@ -129,7 +127,7 @@ export const useSection = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
   ) => {
-    updateState(key, { title: e.target.value });
+    updateState(key, { name: e.target.value });
   };
 
   function handleSectionChange(targetIndex: number, newSection: TEditSection) {
@@ -171,10 +169,11 @@ export const useSection = () => {
   }
 
   async function saveSections(isNew: boolean, portfolio_id: number, page_id: number) {
+    // Note: cleanup is not required, this is handled automatically on the back end
     try {
       return isNew 
-      ? await putSections(portfolio_id, page_id, state, getConfig())
-      : await putSections(portfolio_id, page_id, state, getConfig())
+      ? await putSections(portfolio_id, page_id, getCleanedSections(), getConfig())
+      : await putSections(portfolio_id, page_id, getCleanedSections(), getConfig())
     } catch(e) {
       throw e;
     }

@@ -49,7 +49,7 @@ class SectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Link)
 class LinkAdmin(admin.ModelAdmin):
-    list_display = ['icon', 'title', 'address', 'id']
+    list_display = ['icon', 'title', 'address', 'id', 'number']
 
 @admin.register(models.PageLink)
 class PageLinkAdmin(admin.ModelAdmin):

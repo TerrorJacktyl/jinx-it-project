@@ -47,9 +47,10 @@ export type TSectionData = {
   alt?: string;
 };
 
-export type TLinkData = {
+export type TLink = {
   title?: string;
   address?: string;
-  icon?: string;
+  icon?: number;
   id: string;
-}// | null;
+  number: number;
+};

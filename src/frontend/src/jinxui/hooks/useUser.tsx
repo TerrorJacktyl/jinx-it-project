@@ -7,7 +7,7 @@ import {
   TSection,
   TPortfolioData,
   TSectionData,
-  TLinkData,
+  TLink,
 } from "../types/PortfolioTypes";
 import {
   IUserContext
@@ -71,7 +71,7 @@ export const useUser = () => {
           errorMessage: "",
         };
         await updateState(stateChanges);
-        return accDetails;
+        return config;
       }
     } catch (e) {
       throw handleError(e);
@@ -107,7 +107,7 @@ export const useUser = () => {
      * Do this before the POST in case already logged out (failing POST would prevent
      * reseting browser state).
      */
-    resetState();
+    await resetState();
     try {
       const response = await API.post(LOGOUT_PATH, {}, state.config);
 
@@ -139,13 +139,12 @@ export const useUser = () => {
         password: password,
         email: email,
       });
-      const accDetails = await login(username, password);
-      if (accDetails) {
+      const config = await login(username, password);
+      if (config) {
         await setAccountDetails(
           firstName, 
           lastName, 
-          accDetails.portfolioId, 
-          accDetails.config
+          config,
         );
       } else {
         throw "Portfolio not found"
@@ -191,7 +190,6 @@ export const useUser = () => {
   async function setAccountDetails(
     first_name?: string,
     last_name?: string,
-    portfolio_id?: number,
     konfig: AxiosRequestConfig = state.config
   ) {
     const result = API.put(
@@ -199,7 +197,6 @@ export const useUser = () => {
       {
         first_name: first_name,
         last_name: last_name,
-        primary_portfolio: portfolio_id,
       },
       konfig
     )

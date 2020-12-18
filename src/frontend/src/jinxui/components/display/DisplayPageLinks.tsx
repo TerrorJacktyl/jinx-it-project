@@ -4,9 +4,9 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useTheme } from "@material-ui/core/styles"
-import { useLink, LinkDisplayIcon } from "jinxui";
+import { useLink, LinkDisplayIcon, LinkIconEnum } from "jinxui";
 
-import { TLinkData } from "jinxui/types";
+import { TLink } from "jinxui/types";
 
 /**
  * Run through all the saved links
@@ -22,11 +22,11 @@ const DisplayPageLinks = (props: TDisplayPageLinks) => {
   const theme = useTheme();
 
   type TGetLinkDisplayIcon = {
-    link: TLinkData,
+    link: TLink,
     size: any,
   }
   const GetLinkDisplayIcon = (props: TGetLinkDisplayIcon) => {
-    if (props.link.icon && props.link.icon != "None") {
+    if (props.link.icon && props.link.icon != LinkIconEnum.Disabled) {
       return <LinkDisplayIcon icon={props.link.icon} size={props.size} />;
     } else {
       return <></>;
@@ -45,7 +45,7 @@ const DisplayPageLinks = (props: TDisplayPageLinks) => {
   // }, []);
 
   type TLinkContent = {
-    link: TLinkData
+    link: TLink
   }
   const LinkContent = (props: TLinkContent) => {
     // const size = linksHaveText() ? 35 : 100
@@ -72,7 +72,7 @@ const DisplayPageLinks = (props: TDisplayPageLinks) => {
           flexDirection={direction}
           alignItems="baseline"
         >
-          {getFetchedLinks().map((link: TLinkData) => {
+          {getFetchedLinks().map((link: TLink) => {
             return (
               <Box key={link.id} marginTop="15px">
                 {link.address && link.address !== "" ? (

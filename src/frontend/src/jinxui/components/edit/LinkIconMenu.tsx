@@ -10,7 +10,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 
-import { PrimaryMenu, LinkDisplayIcon } from "jinxui";
+import { PrimaryMenu, LinkDisplayIcon, LinkIconEnum } from "jinxui";
 
 
 
@@ -26,9 +26,13 @@ const LinkIconMenu = (props: any) => {
     setAnchorE1(null);
   };
 
-  const handleIconChoice = (icon_choice: string) => {
+  const handleIconChoice = (icon_choice: number) => {
     props.setLinkIcon(icon_choice);
   };
+
+  const enumLength = Object.values(LinkIconEnum).length / 2
+
+  const indexArray = Array.from(Array(enumLength).keys());
 
   return (
     <div>
@@ -45,38 +49,19 @@ const LinkIconMenu = (props: any) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem
-          onClick={() => {
-            props.setLinkIcon("None");
-            handleClose();
-          }}
-        >
-          <LinkDisplayIcon icon="None" />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            props.setLinkIcon("Web");
-            handleClose();
-          }}
-        >
-          <LinkDisplayIcon icon="Web" />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            props.setLinkIcon("Github");
-            handleClose();
-          }}
-        >
-          <LinkDisplayIcon icon="Github" />
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            props.setLinkIcon("LinkedIn");
-            handleClose();
-          }}
-        >
-          <LinkDisplayIcon icon="LinkedIn" />
-        </MenuItem>
+        {indexArray.map((i: number) => {
+          return (
+            <MenuItem
+              key={i}
+              onClick={() => {
+                props.setLinkIcon(i);
+                handleClose();
+              }}
+            >
+              <LinkDisplayIcon icon={i} />
+            </MenuItem>
+          )
+        })}
       </PrimaryMenu>
     </div>
   );

@@ -255,7 +255,7 @@ class ImageTextSectionSerializer(SectionSerializer):
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Link
-        fields = ['id', 'icon', 'address', 'title']
+        fields = ['id', 'icon', 'address', 'title','number']
         extra_kwargs = {
             'id': {'validators': []},
         }
@@ -315,7 +315,6 @@ class PageLinkDetailSerializer(serializers.ModelSerializer):
         # Store the data for the link seperately
         owner = validated_data.pop('owner')
         links_data = validated_data.pop('link')
-        
         if links_data:
             link = models.Link.objects.create(owner = owner, **links_data)
         # Create a new PageLink model that connects to the
