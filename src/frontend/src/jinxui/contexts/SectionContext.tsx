@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import {TEditSection} from "jinxui/types";
+import { TEditSection } from "jinxui/types";
 import { v4 as uuidv4 } from "uuid";
-
 
 export const defaultSectionContext: TEditSection = {
   name: "",
@@ -17,14 +16,9 @@ export const defaultSectionContext: TEditSection = {
   links: [],
 };
 
-
-
-export const SectionContext = React.createContext<[TEditSection[], any, any, any]>([
-  [],
-  () => {},
-  () => {},
-  () => {},
-]);
+export const SectionContext = React.createContext<
+  [TEditSection[], any, any, any]
+>([[], () => {}, () => {}, () => {}]);
 
 type TSectionContextProvider = {
   children: any;
@@ -32,19 +26,23 @@ type TSectionContextProvider = {
 export const SectionContextProvider = (props: TSectionContextProvider) => {
   const [state, setState] = useState<TEditSection[]>([]);
 
-  const updateState = (uuid_index: string, fieldsToUpdate: Partial<TEditSection[]>) => {
+  const updateState = (
+    uuid_index: string,
+    fieldsToUpdate: Partial<TEditSection[]>
+  ) => {
     const index = state.findIndex(
       (section: TEditSection) => section.uid === uuid_index
     );
-    var newSection:TEditSection = {...state[index], ...fieldsToUpdate};
-    var newSections:TEditSection[] = state;
-    newSections[index] = newSection;
-    setState(newSections);
+    setState([
+      ...state.slice(0, index),
+      { ...state[index], ...fieldsToUpdate },
+      ...state.slice(index + 1),
+    ]);
   };
 
   const resetState = () => {
     setState([]);
-  }
+  };
 
   return (
     <SectionContext.Provider value={[state, updateState, setState, resetState]}>
