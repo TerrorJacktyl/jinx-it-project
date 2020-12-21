@@ -14,11 +14,18 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import LaunchIcon from "@material-ui/icons/Launch";
 
-import { LinkDisplayIcon, PrimaryMenu, LinkDialog, useLink } from "jinxui";
+import {
+  LinkDisplayIcon,
+  PrimaryMenu,
+  LinkDialog,
+  useLink,
+  useSection,
+} from "jinxui";
 import { TLink } from "jinxui/types";
 
 type TLinkEditMenu = {
   link: TLink;
+  sectionUid?: string;
 };
 const LinkEditMenu = (props: TLinkEditMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -30,6 +37,13 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
     handleLinkMoveDown,
   } = useLink();
 
+  const {
+    getFetchedSectionLinks,
+    handleSectionLinkDelete,
+    handleSectionLinkMoveUp,
+    handleSectionLinkMoveDown,
+  } = useSection();
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,23 +53,47 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
   };
 
   const handleMoveBack = () => {
-    handleLinkMoveUp(props.link);
+    if (props.sectionUid) {
+      handleSectionLinkMoveUp(props.sectionUid, props.link);
+    } else {
+      handleLinkMoveUp(props.link);
+    }
   };
 
   const handleMoveForward = () => {
-    handleLinkMoveDown(props.link);
+    if (props.sectionUid) {
+      handleSectionLinkMoveDown(props.sectionUid, props.link);
+    } else {
+      handleLinkMoveDown(props.link);
+    }
   };
 
   const handleDelete = () => {
-    handleLinkDelete(props.link);
+    if (props.sectionUid) {
+      handleSectionLinkDelete(props.sectionUid, props.link);
+    } else {
+      handleLinkDelete(props.link);
+    }
   };
+
+  const links = props.sectionUid 
+    ? getFetchedSectionLinks(props.sectionUid)
+    : getFetchedLinks();
+
+  const backIsDisabled = props.sectionUid
+    ? linkIndex(props.link.id, links) < 1
+    : linkIndex(props.link.id) < 1;
+
+  const forwardIsDisabled = props.sectionUid
+    ? linkIndex(props.link.id, links) > links.length - 2
+    : linkIndex(props.link.id) > links.length - 2;
 
   return (
     <div>
       <Tooltip title="Edit link" arrow>
         <Button onClick={handleClick}>
           <LinkDisplayIcon icon={props.link?.icon} />
-          <Box width="8px"/>
+          <Box width="8px" />
           <Typography variant="button">{props.link?.title}</Typography>
         </Button>
       </Tooltip>
@@ -98,13 +136,13 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
           <ButtonGroup variant="text" size="large">
             <Button
               onClick={handleMoveBack}
-              disabled={linkIndex(props.link.id) < 1}
+              disabled={backIsDisabled}
             >
               <ArrowBackIcon />
             </Button>
             <Button
               onClick={handleMoveForward}
-              disabled={linkIndex(props.link.id) > getFetchedLinks().length - 2}
+              disabled={forwardIsDisabled}
             >
               <ArrowForwardIcon />
             </Button>

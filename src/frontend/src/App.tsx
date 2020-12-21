@@ -37,44 +37,44 @@ function App() {
   const app = (
     <PortfolioContextProvider>
       <PageContextProvider>
-      <SectionContextProvider>
         <LinkContextProvider>
-        <UserContextProvider>
-          {/** Wrap the whole app in the UserContext so they can all access the user
+          <SectionContextProvider>
+            <UserContextProvider>
+              {/** Wrap the whole app in the UserContext so they can all access the user
       data without passing it as props everywhere */}
-          <Router>
-            <OverallDiv className="App">
-              <Switch>
-                <Route path={Routes.HOME} exact component={Home} />
-                <Route path={Routes.LOGIN} exact component={Login} />
-                <Route path={Routes.SIGNUP} exact component={Signup} />
-                <LoggedInRoute
-                  path={Routes.PORTFOLIO_EDIT}
-                  exact
-                  component={Edit}
-                />
-                <LoggedInRoute
-                  path={Routes.PORTFOLIO_DISPLAY}
-                  exact
-                  component={PortfolioDisplay}
-                />
-                <Route
-                  path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"}
-                  exact
-                  render={({
-                    match,
-                  }: RouteComponentProps<{ username: string }>) => (
-                    <Portfolio username={match.params.username} />
-                  )}
-                />
-                {/* if none of the other routes match, the route below would be matched */}
-                <Route component={NotFound} />
-              </Switch>
-            </OverallDiv>
-          </Router>
-        </UserContextProvider>
+              <Router>
+                <OverallDiv className="App">
+                  <Switch>
+                    <Route path={Routes.HOME} exact component={Home} />
+                    <Route path={Routes.LOGIN} exact component={Login} />
+                    <Route path={Routes.SIGNUP} exact component={Signup} />
+                    <LoggedInRoute
+                      path={Routes.PORTFOLIO_EDIT}
+                      exact
+                      component={Edit}
+                    />
+                    <LoggedInRoute
+                      path={Routes.PORTFOLIO_DISPLAY}
+                      exact
+                      component={PortfolioDisplay}
+                    />
+                    <Route
+                      path={Routes.PORTFOLIO_DISPLAY_BASE + "/:username"}
+                      exact
+                      render={({
+                        match,
+                      }: RouteComponentProps<{ username: string }>) => (
+                        <Portfolio username={match.params.username} />
+                      )}
+                    />
+                    {/* if none of the other routes match, the route below would be matched */}
+                    <Route component={NotFound} />
+                  </Switch>
+                </OverallDiv>
+              </Router>
+            </UserContextProvider>
+          </SectionContextProvider>
         </LinkContextProvider>
-      </SectionContextProvider>
       </PageContextProvider>
     </PortfolioContextProvider>
     // </SmoothProvider >

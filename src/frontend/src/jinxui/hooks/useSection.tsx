@@ -1,8 +1,17 @@
 import { useContext } from "react";
-import { SectionContext, useUser, PORTFOLIOS_PATH } from "jinxui";
+import {
+  SectionContext,
+  useUser,
+  useLink,
+  PORTFOLIOS_PATH,
+  listDelete,
+  listMoveUp,
+  listMoveDown,
+  listAdd,
+} from "jinxui";
 import API from "../../API";
-import { v4 as uuidv4 } from "uuid";
-import { TEditSection, TSection } from "../types/PortfolioTypes";
+import { v4 as uuidv4, validate } from "uuid";
+import { TEditSection, TSection, TLink } from "../types/PortfolioTypes";
 import { defaultSectionContext } from "jinxui/contexts";
 
 const sectionIsNotBlank = (section: TEditSection) => {
@@ -17,21 +26,33 @@ const sectionIsNotBlank = (section: TEditSection) => {
   }
 };
 
+/**
+ *
+ * Get all sections and for each section, get the list of links associated
+ * with it
+ *
+ */
 async function getSections(portfolio_id: number, page_id: number, config: any) {
-  const path =
+  const sectionPath =
     PORTFOLIOS_PATH +
     "/" +
     portfolio_id.toString() +
     "/pages/" +
     page_id.toString() +
     "/sections";
-  const result = API.get(path, config)
-    .then((response: any) => response.data)
-    .catch((error: any) => {
-      console.log(error);
-      throw error;
-    });
-  return result;
+  try {
+    // Get sections
+    const sectionsResult = await API.get(sectionPath, config);
+    for (var sectionResult of sectionsResult.data) {
+      const linksPath = sectionPath + "/" + sectionResult.id + "/links";
+      // Get links for individual section
+      const linkResult = await API.get(linksPath, config);
+      sectionResult["links"] = linkResult.data;
+    }
+    return sectionsResult.data;
+  } catch (e) {
+    throw e;
+  }
 }
 
 async function putSections(
@@ -59,7 +80,7 @@ async function postSection(
   portfolio_id: number,
   page_id: number,
   data: TSection,
-  config: any,
+  config: any
 ) {
   const path =
     PORTFOLIOS_PATH +
@@ -79,15 +100,17 @@ async function postSection(
 export const useSection = () => {
   const [state, updateState, setState, resetState] = useContext(SectionContext);
   const { getConfig, isLoading, setLoading } = useUser();
+  const { linkIndex } = useLink();
 
-  async function fetchSections(portfolio_id: number, page_id: number, ) {
+  async function fetchSections(portfolio_id: number, page_id: number) {
     try {
       const sectionDetails = await getSections(
         portfolio_id,
         page_id,
         getConfig()
       );
-      const IdSections = sectionDetails.map((section: TEditSection) => {
+      // const IdSections = sectionDetails.map((section: TEditSection) => {
+      const IdSections = sectionDetails.map((section: any) => {
         const uidPair = { uid: uuidv4() };
         const newSection = { ...section, ...uidPair };
         return newSection;
@@ -98,6 +121,21 @@ export const useSection = () => {
     } finally {
     }
   }
+
+  function sectionIndex(uuid_index: string) {
+    const index = state.findIndex(
+      (section: TEditSection) => section.uid === uuid_index
+    );
+    if (index > -1) {
+      return index;
+    } else {
+      throw "Section with id: " + uuid_index + " could not be found.";
+    }
+  }
+
+  const getFetchedSection = (uuid_index: string) => {
+    return state[sectionIndex(uuid_index)];
+  };
 
   /**
    * Prepare section data for sending to backend.
@@ -131,52 +169,82 @@ export const useSection = () => {
   };
 
   function handleSectionChange(targetIndex: number, newSection: TEditSection) {
-    setState([
-      ...state.slice(0, targetIndex),
-      newSection,
-      ...state.slice(targetIndex),
-    ]);
+    setState(listAdd(state, targetIndex, newSection));
   }
 
   function handleSectionDelete(targetIndex: number) {
-    setState([...state.slice(0, targetIndex), ...state.slice(targetIndex + 1)]);
+    setState(listDelete(state, targetIndex));
   }
 
   function handleSectionMoveUp(targetIndex: number, section: TEditSection) {
-    if (targetIndex === 0) {
-      return;
-    }
-    const curr_sections = state;
-    const top = curr_sections.slice(0, targetIndex - 1);
-    const one_above = curr_sections.slice(targetIndex - 1, targetIndex);
-    const rest = curr_sections.slice(targetIndex + 1);
-    setState(top.concat(section, one_above, rest));
+    setState(listMoveUp(state, targetIndex))
   }
 
   function handleSectionMoveDown(targetIndex: number, section: TEditSection) {
-    if (targetIndex === state.length - 1) {
-      return;
-    }
-    const curr_sections = state;
-    const top = curr_sections.slice(0, targetIndex);
-    const one_below = curr_sections.slice(targetIndex + 1, targetIndex + 2);
-    const rest = curr_sections.slice(targetIndex + 2);
-    setState(top.concat(one_below, section, rest));
+    setState(listMoveDown(state, targetIndex))
   }
 
   function getFetchedSections() {
     return isLoading() ? [defaultSectionContext] : state;
   }
 
-  async function saveSections(isNew: boolean, portfolio_id: number, page_id: number) {
+  async function saveSections(
+    isNew: boolean,
+    portfolio_id: number,
+    page_id: number
+  ) {
     // Note: cleanup is not required, this is handled automatically on the back end
     try {
-      return isNew 
-      ? await putSections(portfolio_id, page_id, getCleanedSections(), getConfig())
-      : await putSections(portfolio_id, page_id, getCleanedSections(), getConfig())
-    } catch(e) {
+      return isNew
+        ? await putSections(
+            portfolio_id,
+            page_id,
+            getCleanedSections(),
+            getConfig()
+          )
+        : await putSections(
+            portfolio_id,
+            page_id,
+            getCleanedSections(),
+            getConfig()
+          );
+    } catch (e) {
       throw e;
     }
+  }
+
+  function updateSectionLinks(uuid_index: string, links: TLink[]) {
+    updateState(uuid_index, { links: links });
+  }
+
+  function getFetchedSectionLinks(uuid_index: string) {
+    return getFetchedSection(uuid_index).links;
+  }
+
+  function sectionLinkAdd(uuid_index: string, link: TLink) {
+    if (!validate(link.id)){
+      link.id = uuidv4()
+    }
+    const links = getFetchedSectionLinks(uuid_index);
+    updateSectionLinks(uuid_index, [...links, link])
+  }
+
+  function handleSectionLinkDelete(uuid_index: string, link: TLink) {
+    const links = getFetchedSectionLinks(uuid_index);
+    const index = linkIndex(link.id, links);
+    updateSectionLinks(uuid_index, listDelete(links, index));
+  }
+
+  function handleSectionLinkMoveUp(uuid_index: string, link: TLink) {
+    const links = getFetchedSectionLinks(uuid_index);
+    const index = linkIndex(link.id, links);
+    updateSectionLinks(uuid_index, listMoveUp(links, index));
+  }
+
+  function handleSectionLinkMoveDown(uuid_index: string, link: TLink) {
+    const links = getFetchedSectionLinks(uuid_index);
+    const index = linkIndex(link.id, links);
+    updateSectionLinks(uuid_index, listMoveDown(links, index));
   }
 
   function resetSections() {
@@ -194,6 +262,12 @@ export const useSection = () => {
     handleSectionMoveUp,
     handleSectionMoveDown,
     saveSections,
+    updateSectionLinks,
+    getFetchedSectionLinks,
+    sectionLinkAdd,
+    handleSectionLinkDelete,
+    handleSectionLinkMoveUp,
+    handleSectionLinkMoveDown,
     resetSections,
   };
 };

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
-
 
 // import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -22,7 +21,14 @@ import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
-import { LinkIconMenu, PrimaryButton, SecondaryButton, useLink, LinkIconEnum } from "jinxui";
+import {
+  LinkIconMenu,
+  PrimaryButton,
+  SecondaryButton,
+  useLink,
+  useSection,
+  LinkIconEnum,
+} from "jinxui";
 import { TLink } from "jinxui/types";
 
 const LinkInputDiv = styled.div`
@@ -46,12 +52,12 @@ const PublishCancelDiv = styled.div`
   width: 100%;
 `;
 
-
 /**
  *  Dialog for choosing or modifying a link / icon combination
  */
 type TLinkDialog = {
   link?: TLink;
+  sectionUid?: string;
   setAnchoEl?: any;
 };
 const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
@@ -59,7 +65,8 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [linkIcon, setLinkIcon] = useState(
     props.link ? props.link.icon : LinkIconEnum.Disabled
   );
-  const { updateLink, getFetchedLinks } = useLink();
+  const { updateLink, } = useLink();
+  const { sectionLinkAdd, getFetchedSections, } = useSection();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,6 +81,10 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     number: 0,
   };
 
+  useEffect(() => {
+    console.log("USE EFFECTED")
+  }, [getFetchedSections()])
+
   // Set up the link to be worked on
   const activeLink = props.link ? props.link : newLink;
 
@@ -81,13 +92,18 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const okayText = props.link ? "OK" : "ADD";
 
   // Add new link to list / update existing
-  const handleUpdate = () => {
-    updateLink(activeLink)
+  const handleUpdate = () => {    
+    if (props.sectionUid) {
+      sectionLinkAdd(props.sectionUid, activeLink)
+    } else {
+      updateLink(activeLink);
+    }
     setLinkIcon(0);
     setOpen(false);
   };
 
   const handleClose = () => {
+
     setOpen(false);
   };
 

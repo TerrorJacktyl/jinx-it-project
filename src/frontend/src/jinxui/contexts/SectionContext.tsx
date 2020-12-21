@@ -14,6 +14,7 @@ export const defaultSectionContext: TEditSection = {
   type: "skelaton",
   number: 0,
   uid: uuidv4(),
+  links: [],
 };
 
 

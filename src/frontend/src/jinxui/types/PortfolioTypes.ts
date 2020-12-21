@@ -19,6 +19,15 @@ export type TPage = {
   sections: number[];
 };
 
+export type TSectionData = {
+  name: string;
+  content: string;
+  media?: string;
+  image?: number | null;
+  path?: string;
+  alt?: string;
+};
+
 export interface TSection extends TSectionData {
   id?: number;
   type: string;
@@ -26,6 +35,7 @@ export interface TSection extends TSectionData {
 }
 export interface TEditSection extends TSection {
   uid?: string
+  links: TLink[]
 };
 
 export type TPortfolioData = {
@@ -38,14 +48,7 @@ export type TPageData = {
   number?: number;
 };
 
-export type TSectionData = {
-  name: string;
-  content: string;
-  media?: string;
-  image?: number | null;
-  path?: string;
-  alt?: string;
-};
+
 
 export type TLink = {
   title?: string;
