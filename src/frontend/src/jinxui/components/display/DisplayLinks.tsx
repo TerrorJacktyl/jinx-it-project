@@ -17,6 +17,7 @@ import { TLink } from "jinxui/types";
 type TDisplayLinks = {
   horizontalAlign: string;
   sectionId?: number;
+  textColor?: string;
 };
 const DisplayLinks = (props: TDisplayLinks) => {
   const { getFetchedLinks } = useLink();
@@ -49,13 +50,18 @@ const DisplayLinks = (props: TDisplayLinks) => {
 
   type TLinkContent = {
     link: TLink;
+    textColor?: string;
   };
   const LinkContent = (props: TLinkContent) => {
     const size = linksHaveText()
       ? theme.typography.h3.fontSize
       : theme.typography.h1.fontSize;
     return (
-      <Box display="flex" alignItems="center">
+      <Box
+        display="flex"
+        alignItems="center"
+        color={props.textColor ? props.textColor : theme.palette.text.primary}
+      >
         <GetLinkDisplayIcon link={props.link} size={size} />
         <Box width="15px" />
         <Typography variant="h6">{props.link.title}</Typography>
@@ -84,13 +90,13 @@ const DisplayLinks = (props: TDisplayLinks) => {
                       color="textPrimary"
                       underline="none"
                     >
-                      <LinkContent link={link} />
+                      <LinkContent link={link} textColor={props.textColor} />
                     </Link>
                   </Tooltip>
                 ) : (
                   /* Address does not exist */
                   <>
-                    <LinkContent link={link} />
+                    <LinkContent link={link} textColor={props.textColor} />
                   </>
                 )}
               </Box>

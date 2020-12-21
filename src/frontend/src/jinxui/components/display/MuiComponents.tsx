@@ -342,7 +342,10 @@ export const Section = (data: TSection) => {
             ) : null}
             {data.content ? (
               <Grid item xs={12} sm={colsPerItem}>
-                <DisplayLinks horizontalAlign="flex-start" sectionId={data.id} />
+                <DisplayLinks 
+                  horizontalAlign="flex-start" 
+                  sectionId={data.id} 
+                  textColor={textColor}/>
                 <Typography variant="body1" component="span">
                   <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                     {data.content}
