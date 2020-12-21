@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 
 
 import { LightTheme, DarkTheme, useUser } from "jinxui";
@@ -17,16 +17,17 @@ const SnackbarAlert = () => {
     setErrorMessage,
     getSuccessMessage,
     getErrorMessage,
-    isSaving,
   } = useUser();
   const initialAppliedTheme = getSavedLightThemeMode() ? LightTheme : DarkTheme;
   const [appliedTheme, setAppliedTheme] = useState(initialAppliedTheme);
   const [successIsOpen, setSuccessIsOpen] = useState(false);
   const [errorIsOpen, setErrorIsOpen] = useState(false);
+  const successMessage = getSuccessMessage();
+  const errorMessage = getErrorMessage();
   useEffect(() => {
     const newAppliedTheme = getSavedLightThemeMode() ? LightTheme : DarkTheme;
     setAppliedTheme(newAppliedTheme);
-  }, [getSavedLightThemeMode]);
+  }, [getSavedLightThemeMode, appliedTheme]);
 
   const handleErrorClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") {
@@ -52,16 +53,22 @@ const SnackbarAlert = () => {
   };
 
   useEffect(() => {
-    if (getSuccessMessage() !== "" && !successIsOpen) {
+    if (successMessage !== "" && !successIsOpen) {
       setSuccessIsOpen(true);
     }
-  }, [getSuccessMessage()]);
+  // Including successIsOpen in dependency array causes the snackbar message
+  // to disappear before closing 
+  // eslint-disable-next-line
+  }, [successMessage]);
 
   useEffect(() => {
-    if (getErrorMessage() !== "" && !errorIsOpen) {
+    if (errorMessage !== "" && !errorIsOpen) {
       setErrorIsOpen(true);
     }
-  }, [getErrorMessage()]);
+  // Including errorIsOpen in dependency array causes the snackbar message
+  // to disappear before closing
+  // eslint-disable-next-line
+  }, [errorMessage]);
 
 
   return (

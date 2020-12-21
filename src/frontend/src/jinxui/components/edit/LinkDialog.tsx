@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
-// import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -67,7 +66,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     props.link ? props.link.icon : LinkIconEnum.Disabled
   );
   const { updateLink, } = useLink();
-  const { sectionLinkAdd, getFetchedSections, } = useSection();
+  const { sectionLinkAdd, } = useSection();
 
   const handleClickOpen = () => {
     setOpen(true);

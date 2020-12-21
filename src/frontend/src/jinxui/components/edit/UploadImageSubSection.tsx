@@ -66,7 +66,7 @@ const UploadImageSubSection = (props: TUploadImageSubSection) => {
       setImagePath(props.section.path);
       setImageExists(true);
     }
-  });
+  }, [props.section.path]);
 
   return (
     <>

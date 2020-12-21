@@ -34,7 +34,7 @@ async function putLinks(
 export const useLink = () => {
   const [state, updateState, setState, resetState] = useContext(LinkContext);
   const PORTFOLIOS_PATH = "api/portfolios";
-  const { getConfig, getSavedPortfolioId } = useUser();
+  const { getConfig } = useUser();
 
   function linkIndex(id: string, links?: TLink[]) {
     const thisLinks = links ? links : state;

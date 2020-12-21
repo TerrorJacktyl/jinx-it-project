@@ -1,6 +1,4 @@
 // eslint-disable-next-line
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 const LightShadowColour = "20, 60, 126"

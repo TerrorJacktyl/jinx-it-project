@@ -25,10 +25,14 @@ export const PageContextProvider = (props: TPageContextProvider) => {
     index: number,
     fieldsToUpdate: Partial<TPage[]>
   ) => {
-    var newPage: TPage = { ...state[index], ...fieldsToUpdate };
-    var newPages: TPage[] = state;
-    newPages[index] = newPage;
-    setState(newPages);
+    if (index > state.length-1) {
+      setState([...state, {...defaultPageContext,...fieldsToUpdate}])
+    } else {
+      setState([
+        ...state.slice(0, index), 
+        {...state[index], ...fieldsToUpdate},
+        ...state.slice(index + 1)]);
+    }
   };
 
   const resetState = () => {
@@ -36,7 +40,7 @@ export const PageContextProvider = (props: TPageContextProvider) => {
   }
 
   return (
-    <PageContext.Provider value={[state, updateState, setState, resetState]}>
+    <PageContext.Provider value={[state, setState, updateState, resetState]}>
       {props.children}
     </PageContext.Provider>
   );

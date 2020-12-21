@@ -39,7 +39,13 @@ const Edit = (props: any) => {
       portfolio created automatically. If no portfolios are found, an error
       should be reported */
 
-  const { userData, isSaving, setErrorMessage, setLoading, setSaving, } = useUser();
+  const {
+    userData,
+    isSaving,
+    setErrorMessage,
+    setLoading,
+    setSaving,
+  } = useUser();
   const {
     fetchFullPortfolio,
     getFetchedPortfolio,
@@ -50,8 +56,6 @@ const Edit = (props: any) => {
 
   // Updating portfolio/page/section data
   useEffect(() => {
-    let mounted = true;
-
     const fetchPortfolio = async () => {
       setSaving(false);
       setLoading(true);
@@ -60,14 +64,11 @@ const Edit = (props: any) => {
       } catch (e) {
         throw e;
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     fetchPortfolio();
-
-    // Run on dismount. Should prevent memory leaks.
-    return () => { mounted = false; };
-  }, []); 
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* Save the currently edited page to backend and redirect to display page. */
   const handlePublishAndRedirect = () => {

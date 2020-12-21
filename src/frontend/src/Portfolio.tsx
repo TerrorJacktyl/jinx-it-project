@@ -10,22 +10,15 @@ import {
   LightTheme,
   useUser,
   usePortfolio,
-  usePage,
   useSection,
-  useLink,
-  TPortfolio,
-  TPage,
-  TSection,
   HeaderBar,
   Copyright,
   SectionGrid,
   PortfolioHeader,
   PortfolioThemes,
-  defaultPortfolioContext,
 } from "jinxui";
 
 import NotFound from "./NotFound";
-import { findAllByDisplayValue } from "@testing-library/react";
 const getTheme = (portfolio: any, userData: any, thisPageUser: string) => {
   const theme_name =
     userData.authenticated &&
@@ -92,7 +85,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
     setSaving,
   } = useUser();
 
-  const {fetchFullPortfolio, getFetchedPortfolio} = usePortfolio();
+  const { fetchFullPortfolio, getFetchedPortfolio } = usePortfolio();
   const { getCleanedSections } = useSection();
 
   const sections = getCleanedSections();
@@ -104,24 +97,24 @@ const Portfolio = ({ username }: PortfolioProps) => {
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
-      setSaving(false)
-      setLoading(true)
+      setSaving(false);
+      setLoading(true);
       setError(false);
       try {
-        const {
-          first_name,
-          last_name,
-        } = await getAccountDetailsFromUsername(username);
+        const { first_name, last_name } = await getAccountDetailsFromUsername(
+          username
+        );
         await fetchFullPortfolio(username);
         setAuthor(`${first_name} ${last_name}`);
       } catch (e) {
         setError(true);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
     fetchPortfolio();
-  }, [username]); // rendering a portfolio depends on the username
+  // rendering a portfolio depends on the username
+  }, [username]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (error) {
     return (
@@ -148,10 +141,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
           {/* Portfolio theme */}
           <ThemeProvider theme={thisTheme}>
             <CssBaseline />
-            <PortfolioHeader
-
-              subtitle={author}
-            ></PortfolioHeader>
+            <PortfolioHeader subtitle={author}></PortfolioHeader>
             <SectionGrid sections={sections} />
           </ThemeProvider>
           <Copyright text={author} />

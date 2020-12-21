@@ -3,20 +3,12 @@ import Tooltip from "@material-ui/core/Tooltip";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 
-import GitHubIcon from "@material-ui/icons/GitHub";
-import LinkedInIcon from "@material-ui/icons/LinkedIn";
-import LanguageIcon from "@material-ui/icons/Language";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import CancelIcon from "@material-ui/icons/Cancel";
-
 
 import { PrimaryMenu, LinkDisplayIcon, LinkIconEnum } from "jinxui";
 
-
-
 const LinkIconMenu = (props: any) => {
   const [anchorEl, setAnchorE1] = useState<null | HTMLElement>(null);
-  // const [linkIcon, setLinkIcon] = useState("Web");
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorE1(event.currentTarget);
@@ -24,10 +16,6 @@ const LinkIconMenu = (props: any) => {
 
   const handleClose = () => {
     setAnchorE1(null);
-  };
-
-  const handleIconChoice = (icon_choice: number) => {
-    props.setLinkIcon(icon_choice);
   };
 
   const enumLength = Object.values(LinkIconEnum).length / 2

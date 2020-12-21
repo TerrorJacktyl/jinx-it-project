@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { PageContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
 import { TPage } from "../types/PortfolioTypes";
@@ -33,9 +33,11 @@ async function putPage(portfolioId: number, page: TPage, config: any) {
 
 
 export const usePage = () => {
-  const [state, updateState, setState, resetState] = useContext(PageContext);
+  // Update state will be useful when using multiple pages
+  // eslint-disable-next-line
+  const [state, setState, updateState, resetState] = useContext(PageContext);
   const PORTFOLIOS_PATH = "api/portfolios";
-  const { getConfig, getSavedPortfolioId } = useUser();
+  const { getConfig } = useUser();
 
   async function getPages(portfolio_id: number) {
     const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
@@ -49,11 +51,12 @@ export const usePage = () => {
 
   async function fetchPages(id: number) {
     try {
-      const pages = await getPages(id)
-      setState(pages);
-      return pages
+      const pages = await getPages(id);
+      // setState(pages);
+      await setPages(pages);
+      return pages;
     } catch (e) {
-      throw e
+      throw e;
     }
   }
 

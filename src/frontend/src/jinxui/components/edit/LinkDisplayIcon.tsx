@@ -27,6 +27,34 @@ import YouTubeIcon from "@material-ui/icons/YouTube";
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
+export enum LinkIconEnum {
+  Disabled,
+  AltEmail,
+  Camera,
+  Cancel,
+  Facebook,
+  GetApp,
+  GitHub,
+  House,
+  Http,
+  Instagram,
+  Language,
+  Launch,
+  LinkedIn,
+  Link,
+  LiveTv,
+  Mail,
+  Pinterest,
+  PlayArrow,
+  Public,
+  Reddit,
+  Star,
+  Telegram,
+  Twitter,
+  WhatsApp,
+  YouTube,
+}
+
 type TLinkDisplayIcon = {
   icon?: LinkIconEnum,
   size?: number
@@ -199,30 +227,3 @@ export const LinkDisplayIcon = (props: TLinkDisplayIcon) => {
 };
 
 
-export enum LinkIconEnum {
-  Disabled,
-  AltEmail,
-  Camera,
-  Cancel,
-  Facebook,
-  GetApp,
-  GitHub,
-  House,
-  Http,
-  Instagram,
-  Language,
-  Launch,
-  LinkedIn,
-  Link,
-  LiveTv,
-  Mail,
-  Pinterest,
-  PlayArrow,
-  Public,
-  Reddit,
-  Star,
-  Telegram,
-  Twitter,
-  WhatsApp,
-  YouTube,
-}

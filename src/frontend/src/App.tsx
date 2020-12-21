@@ -25,15 +25,12 @@ import {
   PortfolioDisplay,
   Routes,
 } from "jinxui";
-// import { SmoothProvider } from 'react-smooth-scrolling';
 
 const OverallDiv = styled.div`
   overflow-x: hidden;
 `;
 
 function App() {
-  // Smooth scrolling causes pages to overflow (i.e. you can scroll past the end of the page)
-  // <SmoothProvider skew={false}>
   const app = (
     <PortfolioContextProvider>
       <PageContextProvider>
@@ -77,7 +74,6 @@ function App() {
         </LinkContextProvider>
       </PageContextProvider>
     </PortfolioContextProvider>
-    // </SmoothProvider >
   );
   return app;
 }

@@ -1,20 +1,8 @@
 import { useContext } from "react";
 import API from "../../API";
 import { AxiosRequestConfig } from "axios";
-import {
-  TPortfolio,
-  TPage,
-  TSection,
-  TPortfolioData,
-  TSectionData,
-  TLink,
-} from "../types/PortfolioTypes";
-import {
-  IUserContext
-} from "jinxui/types" 
 import { 
-  UserContext, 
-  defaultUserContext,
+  UserContext,
   LOGIN_PATH,
   LOGOUT_PATH,
   ACCOUNT_PATH,
@@ -147,7 +135,7 @@ export const useUser = () => {
           config,
         );
       } else {
-        throw "Portfolio not found"
+        throw Error("Portfolio not found")
       }
       // Manually update state to include first name, since login normally does this
       // but can't because the firstName/lastName haven't been stored yet.

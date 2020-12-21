@@ -97,7 +97,7 @@ async function putSections(
     await Promise.all(
       editSections.map((section: TEditSection) => {
         const linksPath = path + "/" + section.id + "/links";
-        API.put(linksPath, section.links, config);
+        return API.put(linksPath, section.links, config);
       })
     );
 
@@ -107,30 +107,9 @@ async function putSections(
   }
 }
 
-async function postSection(
-  portfolio_id: number,
-  page_id: number,
-  data: TSection,
-  config: any
-) {
-  const path =
-    PORTFOLIOS_PATH +
-    "/" +
-    portfolio_id.toString() +
-    "/pages/" +
-    page_id.toString() +
-    "/sections";
-  try {
-    const response = await API.post(path, data, config);
-    return response.data;
-  } catch (e) {
-    throw e;
-  }
-}
-
 export const useSection = () => {
   const [state, updateState, setState, resetState] = useContext(SectionContext);
-  const { getConfig, isLoading, setLoading } = useUser();
+  const { getConfig, isLoading } = useUser();
   const { linkIndex } = useLink();
 
   async function fetchSections(portfolio_id: number, page_id: number) {
@@ -159,7 +138,7 @@ export const useSection = () => {
     if (index > -1) {
       return index;
     } else {
-      throw "Section with id: " + uuid_index + " could not be found.";
+      throw Error("Section with id: " + uuid_index + " could not be found.");
     }
   }
 
@@ -168,12 +147,16 @@ export const useSection = () => {
     if (index > -1) {
       return index;
     } else {
-      throw "Section with id: " + id + " could not be found.";
+      throw Error("Section with id: " + id + " could not be found.");
     }
   }
 
   const getFetchedSection = (uuid_index: string) => {
-    return state[sectionIndex(uuid_index)];
+    try {
+      return state[sectionIndex(uuid_index)];
+    } catch(e) {
+      throw e
+    }
   };
 
   /**
@@ -208,19 +191,35 @@ export const useSection = () => {
   };
 
   function handleSectionChange(targetIndex: number, newSection: TEditSection) {
-    setState(listAdd(state, targetIndex, newSection));
+    try {
+      setState(listAdd(state, targetIndex, newSection));
+    } catch(e) {
+      throw e;
+    }
   }
 
   function handleSectionDelete(targetIndex: number) {
-    setState(listDelete(state, targetIndex));
+    try {
+      setState(listDelete(state, targetIndex));
+    } catch(e) {
+      throw e;
+    }
   }
 
   function handleSectionMoveUp(targetIndex: number, section: TEditSection) {
-    setState(listMoveUp(state, targetIndex));
+    try {
+      setState(listMoveUp(state, targetIndex));
+    } catch(e) {
+      throw e;
+    }
   }
 
   function handleSectionMoveDown(targetIndex: number, section: TEditSection) {
-    setState(listMoveDown(state, targetIndex));
+    try {
+      setState(listMoveDown(state, targetIndex));
+    } catch (e) {
+      throw e;
+    }
   }
 
   function getFetchedSections() {
@@ -263,8 +262,12 @@ export const useSection = () => {
   }
 
   function getFetchedSectionLinksFromId(id: number) {
-    const index = sectionIndexFromId(id);
-    return state[index].links;
+    try {
+      const index = sectionIndexFromId(id);
+      return state[index].links;
+    } catch (e) {
+      throw e;
+    }
   }
 
   function sectionLinkAdd(uuid_index: string, link: TLink) {
@@ -289,19 +292,31 @@ export const useSection = () => {
   function handleSectionLinkDelete(uuid_index: string, link: TLink) {
     const links = getFetchedSectionLinks(uuid_index);
     const index = linkIndex(link.id, links);
-    updateSectionLinks(uuid_index, listDelete(links, index));
+    try {
+      updateSectionLinks(uuid_index, listDelete(links, index));
+    } catch (e) {
+      throw e;
+    }
   }
 
   function handleSectionLinkMoveUp(uuid_index: string, link: TLink) {
     const links = getFetchedSectionLinks(uuid_index);
     const index = linkIndex(link.id, links);
-    updateSectionLinks(uuid_index, listMoveUp(links, index));
+    try {
+      updateSectionLinks(uuid_index, listMoveUp(links, index));
+    } catch (e) {
+      throw e;
+    }
   }
 
   function handleSectionLinkMoveDown(uuid_index: string, link: TLink) {
     const links = getFetchedSectionLinks(uuid_index);
     const index = linkIndex(link.id, links);
-    updateSectionLinks(uuid_index, listMoveDown(links, index));
+    try {
+      updateSectionLinks(uuid_index, listMoveDown(links, index));
+    } catch (e) {
+      throw e;
+    }
   }
 
   function resetSections() {

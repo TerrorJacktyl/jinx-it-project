@@ -31,7 +31,7 @@ const DisplayLinks = (props: TDisplayLinks) => {
     size: any;
   };
   const GetLinkDisplayIcon = (props: TGetLinkDisplayIcon) => {
-    if (props.link.icon && props.link.icon != LinkIconEnum.Disabled) {
+    if (props.link.icon && props.link.icon !== LinkIconEnum.Disabled) {
       return <LinkDisplayIcon icon={props.link.icon} size={props.size} />;
     } else {
       return <></>;

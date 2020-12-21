@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Typography from "@material-ui/core/Typography"
 import Link from "@material-ui/core/Link";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -302,7 +301,7 @@ const PortfolioDropdown = React.forwardRef(
     const [themeOpen, themeSetOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
     const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
-    const { userData, setSuccessMessage, setErrorMessage } = useUser();
+    const { userData, setSuccessMessage } = useUser();
 
     const handleToggle = () => {
       setOpen((prevOpen) => !prevOpen);

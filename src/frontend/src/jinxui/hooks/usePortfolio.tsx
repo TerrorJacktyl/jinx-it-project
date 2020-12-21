@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {
   PortfolioContext,
   useUser,
@@ -47,7 +47,8 @@ async function changePortfolioPrivacy(
 }
 
 // Note the $s in the function name. Use this if you want to get all of a user's portfolios
-async function getPortfolios(config: any) {
+
+async function getPortfolios(config: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
   const path = PORTFOLIOS_PATH;
   const result = API.get(path, config).then((response: any) => response.data);
   return result;
@@ -67,7 +68,7 @@ async function getPortfolio(portfolio_id: number, config: any) {
 
 async function postPortfolio(data: TPortfolioData, config: any) {
   if (!data) {
-    throw "Portfolio data is null";
+    throw Error("Portfolio data is null");
   }
   try {
     const response = await API.post(
@@ -104,18 +105,16 @@ export const usePortfolio = () => {
     getSavedLightThemeMode,
     getAccountDetailsFromUsername,
     setSaving,
-    setLoading,
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, getFetchedPages, savePage, resetPages } = usePage();
+  const { fetchPages, savePage, resetPages } = usePage();
   const {
     fetchSections,
-    getCleanedSections,
     saveSections,
     resetSections,
   } = useSection();
-  const { fetchPageLinks, getFetchedLinks, saveLinks, resetLinks } = useLink();
+  const { fetchPageLinks, saveLinks, resetLinks } = useLink();
 
   const PORTFOLIOS_PATH = "api/portfolios";
 
@@ -135,18 +134,18 @@ export const usePortfolio = () => {
      but ran into a very lame bug with nested list indexing :'( */
   async function fetchFullPortfolio(username?: string) {
     try {
-
       const portfolioId = username
         ? (await getAccountDetailsFromUsername(username)).primary_portfolio
-        : getSavedPortfolioId()
+        : getSavedPortfolioId();
 
       // Run symultanious get requests for speed
+      // eslint-disable-next-line
       const [_, pages] = await Promise.all([
         fetchPortfolio(portfolioId),
         fetchPages(portfolioId),
       ]);
       if (pages.length < 1) {
-        throw "No pages found for portfolio";
+        throw Error("No pages found for portfolio");
       }
 
       await Promise.all([

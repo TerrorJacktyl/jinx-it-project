@@ -13,14 +13,10 @@ import {
 } from "@material-ui/core/styles";
 import {
   usePortfolio,
-  usePage,
-  useSection,
-  useLink,
   TSection,
   defaultColors,
   DisplayLinks,
 } from "jinxui";
-import { TSectionData } from "jinxui/types";
 
 // Markdown
 import ReactMarkdown from "react-markdown";

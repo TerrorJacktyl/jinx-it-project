@@ -6,7 +6,6 @@ import { TLink, } from "jinxui/types";
 
 type TLinksDisplay = {
   sectionUid?: string;
-  // section?: TEditSection
 };
 const LinksDisplay = (props: TLinksDisplay) => {
   const { getFetchedLinks } = useLink();

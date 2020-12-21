@@ -37,7 +37,7 @@ const PaperSectionsDisplay = () => {
         if (section.type === "skelaton" && section.uid) {
           return <SkelatonSectionInput key={section.uid} />;
         }
-        if (section.type === "text" && section.uid) {
+        else if (section.type === "text" && section.uid) {
           return (
             <TextSectionInput
               key={section.uid}
@@ -66,7 +66,9 @@ const PaperSectionsDisplay = () => {
               section={section}
             />
           );
-        } 
+        } else {
+          return <> </>
+        }
       })}
     </>
   );
