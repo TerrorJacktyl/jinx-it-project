@@ -79,9 +79,9 @@ export { default as LoadingSections } from "./components/edit/LoadingSections"
 export { default as PaperSectionsDisplay } from "./components/edit/PaperSectionsDisplay"
 export { default as EditHeader } from "./components/edit/EditHeader"
 export { default as PaperSectionPage } from "./components/edit/PaperSectionPage"
-export { default as SkelatonSectionInput } from "./components/edit/SkelatonSectionInput"
+export { default as SkeletonSectionInput } from "./components/edit/SkeletonSectionInput"
 export { LinkIconEnum, LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
-export { default as SkelatonLinks } from "./components/edit/SkelatonLinks"
+export { default as SkeletonLinks } from "./components/edit/SkeletonLinks"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

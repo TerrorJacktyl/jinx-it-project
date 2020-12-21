@@ -11,7 +11,7 @@ import {
   ImageSectionInput,
   ImageTextSectionInput,
   PaperSectionPage,
-  SkelatonSectionInput,
+  SkeletonSectionInput,
 } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
@@ -34,8 +34,8 @@ const PaperSectionsDisplay = () => {
       </Backdrop>
       <PaperSectionPage />
       {getFetchedSections().map((section: TEditSection, index: number) => {
-        if (section.type === "skelaton" && section.uid) {
-          return <SkelatonSectionInput key={section.uid} />;
+        if (section.type === "skeleton" && section.uid) {
+          return <SkeletonSectionInput key={section.uid} />;
         }
         else if (section.type === "text" && section.uid) {
           return (

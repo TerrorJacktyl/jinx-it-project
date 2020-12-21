@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import Skelaton from "@material-ui/lab/Skeleton";
+import Skeleton from "@material-ui/lab/Skeleton";
 import Box from "@material-ui/core/Box";
 
-import { PaperSectionBase, SkelatonLinks } from "jinxui";
+import { PaperSectionBase, SkeletonLinks } from "jinxui";
 
-const ButtonsSkelatonDiv = styled.div`
+const ButtonsSkeletonDiv = styled.div`
   display: grid;
   grid-gap: 15px;
   grid-template-columns: repeat(4, auto);
@@ -19,7 +19,7 @@ const TextSectionInput = () => {
   return (
     <>
       <Box display="flex" justifyContent="center">
-        <Skelaton variant="circle" width={48} height={48} />
+        <Skeleton variant="circle" width={48} height={48} />
       </Box>
       <Box
         display="flex"
@@ -27,19 +27,19 @@ const TextSectionInput = () => {
         width="100%"
         justifyContent="space-between"
       >
-        <Skelaton variant="text" width={210} />
-        <ButtonsSkelatonDiv>
-          <Skelaton variant="circle" width={30} height={30} />
-          <Skelaton variant="circle" width={30} height={30} />
-          <Skelaton variant="circle" width={30} height={30} />
-          <Skelaton variant="circle" width={30} height={30} />
-        </ButtonsSkelatonDiv>
+        <Skeleton variant="text" width={210} />
+        <ButtonsSkeletonDiv>
+          <Skeleton variant="circle" width={30} height={30} />
+          <Skeleton variant="circle" width={30} height={30} />
+          <Skeleton variant="circle" width={30} height={30} />
+          <Skeleton variant="circle" width={30} height={30} />
+        </ButtonsSkeletonDiv>
       </Box>
       <PaperSectionBase elevation={3} variant="outlined" square>
         <Box width="100%" height={485} padding="30px" display="flex" flexDirection="column">
-          <SkelatonLinks />
+          <SkeletonLinks />
           <Box height="15px" />
-          <Skelaton
+          <Skeleton
             variant="rect"
             width="100%"
             height="100%"
@@ -49,7 +49,7 @@ const TextSectionInput = () => {
       </PaperSectionBase>
       <Box height="30px" />
       <Box display="flex" justifyContent="center">
-        <Skelaton variant="circle" width={48} height={48} />
+        <Skeleton variant="circle" width={48} height={48} />
       </Box>
     </>
   );

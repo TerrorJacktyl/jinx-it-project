@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { InputAdornment, TextField } from "@material-ui/core";
-import Skelaton from "@material-ui/lab/Skeleton";
+import Skeleton from "@material-ui/lab/Skeleton";
 import CreateIcon from "@material-ui/icons/Create";
 
 import {
@@ -9,7 +9,7 @@ import {
   usePortfolio,
   LinkDialog,
   LinksDisplay,
-  SkelatonLinks,
+  SkeletonLinks,
   PaperSectionStatic,
   OneColumnSectionDiv,
 } from "jinxui";
@@ -37,8 +37,8 @@ const PaperSectionPage = () => {
         <OneColumnSectionDiv>
           {isLoading() ? (
             <>
-              <Skelaton variant="text" height={14} width={100} />
-              <Skelaton variant="text" height={40} animation="wave" />
+              <Skeleton variant="text" height={14} width={100} />
+              <Skeleton variant="text" height={40} animation="wave" />
             </>
           ) : (
             <TextField
@@ -64,7 +64,7 @@ const PaperSectionPage = () => {
           <p></p>
           <LinksDiv>
             {isLoading() ? (
-              <SkelatonLinks />
+              <SkeletonLinks />
             ) : (
               <>
                 <LinksDisplay />

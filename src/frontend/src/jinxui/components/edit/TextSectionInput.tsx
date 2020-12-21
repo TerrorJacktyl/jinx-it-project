@@ -9,8 +9,6 @@ type TTextSectionProps = {
   handleChange: any;
   handlePublish: any;
   handleTitleChange: any;
-  // sections: any;
-  // setSections: any;
 };
 
 const TextSectionInput = (props: TTextSectionProps) => {

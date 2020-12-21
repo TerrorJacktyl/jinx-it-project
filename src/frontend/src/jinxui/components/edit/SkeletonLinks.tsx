@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Skelaton from "@material-ui/lab/Skeleton";
+import Skeleton from "@material-ui/lab/Skeleton";
 import Box from "@material-ui/core/Box"
 
-const LinksSkelatonDiv = styled.div`
+const LinksSkeletonDiv = styled.div`
   display: grid;
   grid-gap: 42px;
   grid-template-columns: repeat(3, auto);
@@ -11,20 +11,20 @@ const LinksSkelatonDiv = styled.div`
   width: max-content;
 `;
 
-const SkelatonLinks = () => {
+const SkeletonLinks = () => {
   return (
-    <LinksSkelatonDiv>
+    <LinksSkeletonDiv>
       <Box padding="6px 8px">
-        <Skelaton variant="circle" width={24} height={24} />
+        <Skeleton variant="circle" width={24} height={24} />
       </Box>
       <Box padding="6px 8px">
-        <Skelaton variant="circle" width={24} height={24}/>
+        <Skeleton variant="circle" width={24} height={24}/>
       </Box>
       <Box padding="6px 8px">
-        <Skelaton variant="circle" width={24} height={24}/>
+        <Skeleton variant="circle" width={24} height={24}/>
       </Box>
-    </LinksSkelatonDiv>
+    </LinksSkeletonDiv>
   );
 };
 
-export default SkelatonLinks
+export default SkeletonLinks

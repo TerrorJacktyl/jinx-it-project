@@ -10,7 +10,7 @@ export const defaultSectionContext: TEditSection = {
   path: "",
   alt: "",
   id: 0,
-  type: "skelaton",
+  type: "skeleton",
   number: 0,
   uid: uuidv4(),
   links: [],
