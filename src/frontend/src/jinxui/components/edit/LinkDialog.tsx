@@ -13,8 +13,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton"
 
 import CreateIcon from "@material-ui/icons/Create";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -110,6 +110,9 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
         <MenuItem
           onClick={() => {
             handleClickOpen();
+            if (props.link) {
+              setLinkIcon(props.link.icon)
+            }
             if (props.setAnchoEl) {
               props.setAnchoEl(null);
             }
@@ -124,14 +127,12 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     } else {
       return (
         <Tooltip title="Add new external link" arrow>
-          <Button
+          <IconButton
             onClick={handleClickOpen}
             color="primary"
-            variant="text"
-            disableElevation
           >
             <AddCircleIcon />
-          </Button>
+          </IconButton>
         </Tooltip>
       );
     }

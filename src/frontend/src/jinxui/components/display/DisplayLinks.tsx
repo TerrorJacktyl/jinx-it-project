@@ -61,6 +61,7 @@ const DisplayLinks = (props: TDisplayLinks) => {
         display="flex"
         alignItems="center"
         color={props.textColor ? props.textColor : theme.palette.text.primary}
+        marginX="15px"
       >
         <GetLinkDisplayIcon link={props.link} size={size} />
         <Box width="15px" />
@@ -78,6 +79,7 @@ const DisplayLinks = (props: TDisplayLinks) => {
           width="max-content"
           flexDirection={direction}
           alignItems="baseline"
+          marginBottom="20px"
         >
           {links.map((link: TLink) => {
             return (
