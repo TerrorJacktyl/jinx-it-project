@@ -16,6 +16,10 @@ export const defaultSectionContext: TEditSection = {
   links: [],
 };
 
+interface TEditSections {
+  [pageId: number]: TEditSection[]
+}
+
 export const SectionContext = React.createContext<
   [TEditSection[], any, any, any]
 >([[], () => {}, () => {}, () => {}]);
@@ -25,6 +29,31 @@ type TSectionContextProvider = {
 };
 export const SectionContextProvider = (props: TSectionContextProvider) => {
   const [state, setState] = useState<TEditSection[]>([]);
+  
+
+  const section1:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
+  const section2:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
+  const section3:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
+  const section4:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
+  const section5:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
+  const section6:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
+  section6.name = "test";
+
+  var allSections:TEditSections = {
+    6: [section1, section2],
+    7: [section3],
+    8: [section4, section5]
+  }
+
+  allSections = {...allSections, 8: [{...section6, path: "path/to/something"}] }
+  console.log(allSections)
+
+
+
+
+
+
+
 
   const updateState = (
     uuid_index: string,
