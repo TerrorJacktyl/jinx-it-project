@@ -18,7 +18,7 @@ import {
   useLink,
   TSection,
   defaultColors,
-  DisplayPageLinks,
+  DisplayLinks,
 } from "jinxui";
 import { TSectionData } from "jinxui/types";
 
@@ -152,7 +152,7 @@ export function PortfolioHeader({ subtitle }: { subtitle?: string }) {
                   {subtitle}
                 </Typography>
                 <Box height="30px" />
-                <DisplayPageLinks horizontalAlign={horizontalAlign}/>
+                <DisplayLinks horizontalAlign={horizontalAlign}/>
               </Box>
             </Grid>
           </Container>
@@ -346,6 +346,7 @@ export const Section = (data: TSection) => {
             ) : null}
             {data.content ? (
               <Grid item xs={12} sm={colsPerItem}>
+                <DisplayLinks horizontalAlign="flex-start" sectionId={data.id} />
                 <Typography variant="body1" component="span">
                   <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                     {data.content}

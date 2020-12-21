@@ -37,7 +37,7 @@ export const LinkContextProvider = (props: TLinkContextProvider) => {
         ...state[index], 
         ...fieldsToUpdate, 
       }
-      setState([...state.slice(0, index), newLink, ...state.slice(index+1)]);
+      setState([...state.slice(0, index), newLink, ...state.slice(index + 1)]);
     } else {            // New link required
       const newLink:TLink = {
         ...defaultLinkContext, 

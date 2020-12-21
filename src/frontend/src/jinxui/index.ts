@@ -40,7 +40,7 @@ export { default as PageDiv } from "./components/display/PageDiv";
 export { default as OneColumnSectionDiv } from "./components/display/OneColumnSectionDiv";
 export { default as TwoColumnSectionDiv } from "./components/display/TwoColumnSectionDiv";
 export { default as PortfolioDropdown } from "./components/display/PortfolioDropdown";
-export { default as DisplayPageLinks } from "./components/display/DisplayPageLinks"
+export { default as DisplayLinks } from "./components/display/DisplayLinks"
 
 /* Display Mui*/
 export {

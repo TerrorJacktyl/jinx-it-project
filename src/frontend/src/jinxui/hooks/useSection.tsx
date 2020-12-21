@@ -11,7 +11,12 @@ import {
 } from "jinxui";
 import API from "../../API";
 import { v4 as uuidv4, validate } from "uuid";
-import { TEditSection, TSection, TLink, TSectionLink } from "../types/PortfolioTypes";
+import {
+  TEditSection,
+  TSection,
+  TLink,
+  TSectionLink,
+} from "../types/PortfolioTypes";
 import { defaultSectionContext } from "jinxui/contexts";
 
 const sectionIsNotBlank = (section: TEditSection) => {
@@ -25,7 +30,6 @@ const sectionIsNotBlank = (section: TEditSection) => {
     return true;
   }
 };
-
 
 interface TSectionLinkResponse {
   data: TSectionLink[];
@@ -49,18 +53,20 @@ async function getSections(portfolio_id: number, page_id: number, config: any) {
     const sectionsResult = await API.get(sectionPath, config);
 
     // Get all links for all sections at once
-    const linkResults:TSectionLinkResponse[] = await Promise.all(sectionsResult.data.map((sectionResult: TEditSection) => {
+    const linkResults: TSectionLinkResponse[] = await Promise.all(
+      sectionsResult.data.map((sectionResult: TEditSection) => {
         const linksPath = sectionPath + "/" + sectionResult.id + "/links";
         // Get links for individual section
         const linkResult = API.get(linksPath, config);
-        return linkResult
-      }))
-      
+        return linkResult;
+      })
+    );
+
     for (var i = 0; i < linkResults.length; i++) {
-      sectionsResult.data[i]["links"] = []
+      sectionsResult.data[i]["links"] = [];
       for (var linkData of linkResults[i].data) {
-        console.assert(sectionsResult.data[i].id === linkData.section)
-        sectionsResult.data[i].links.push(linkData.link)
+        console.assert(sectionsResult.data[i].id === linkData.section);
+        sectionsResult.data[i].links.push(linkData.link);
       }
     }
 
@@ -88,10 +94,12 @@ async function putSections(
     const response = await API.put(path, sections, config);
 
     // Put all section links at the same time.
-    await Promise.all(editSections.map((section: TEditSection) => {
-      const linksPath = path + "/" + section.id + "/links";
-      API.put(linksPath, section.links, config);
-    }))
+    await Promise.all(
+      editSections.map((section: TEditSection) => {
+        const linksPath = path + "/" + section.id + "/links";
+        API.put(linksPath, section.links, config);
+      })
+    );
 
     return response;
   } catch (e) {
@@ -155,6 +163,15 @@ export const useSection = () => {
     }
   }
 
+  function sectionIndexFromId(id: number) {
+    const index = state.findIndex((section: TEditSection) => section.id === id);
+    if (index > -1) {
+      return index;
+    } else {
+      throw "Section with id: " + id + " could not be found.";
+    }
+  }
+
   const getFetchedSection = (uuid_index: string) => {
     return state[sectionIndex(uuid_index)];
   };
@@ -199,11 +216,11 @@ export const useSection = () => {
   }
 
   function handleSectionMoveUp(targetIndex: number, section: TEditSection) {
-    setState(listMoveUp(state, targetIndex))
+    setState(listMoveUp(state, targetIndex));
   }
 
   function handleSectionMoveDown(targetIndex: number, section: TEditSection) {
-    setState(listMoveDown(state, targetIndex))
+    setState(listMoveDown(state, targetIndex));
   }
 
   function getFetchedSections() {
@@ -245,12 +262,28 @@ export const useSection = () => {
     return getFetchedSection(uuid_index).links;
   }
 
+  function getFetchedSectionLinksFromId(id: number) {
+    const index = sectionIndexFromId(id);
+    return state[index].links;
+  }
+
   function sectionLinkAdd(uuid_index: string, link: TLink) {
-    if (!validate(link.id)){
-      link.id = uuidv4()
-    }
     const links = getFetchedSectionLinks(uuid_index);
-    updateSectionLinks(uuid_index, [...links, link])
+    if (!validate(link.id)) {
+      link.id = uuidv4();
+    }
+    const index = links.findIndex(
+      (existingLink: TLink) => existingLink.id === link.id
+    );
+    if (index > -1) {
+      updateSectionLinks(uuid_index, [
+        ...links.slice(0, index),
+        link,
+        ...links.slice(index + 1),
+      ]);
+    } else {
+      updateSectionLinks(uuid_index, [...links, link]);
+    }
   }
 
   function handleSectionLinkDelete(uuid_index: string, link: TLink) {
@@ -288,6 +321,7 @@ export const useSection = () => {
     saveSections,
     updateSectionLinks,
     getFetchedSectionLinks,
+    getFetchedSectionLinksFromId,
     sectionLinkAdd,
     handleSectionLinkDelete,
     handleSectionLinkMoveUp,

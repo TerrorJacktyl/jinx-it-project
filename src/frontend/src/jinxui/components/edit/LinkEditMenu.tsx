@@ -93,10 +93,11 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
       <Tooltip title="Edit link" arrow>
         <Button onClick={handleClick}>
           <LinkDisplayIcon icon={props.link?.icon} />
-          { props.link && props.link.title && props.link.title.length > 0
-            ? <Box width="8px" />
-            : <></>
-          }
+          {props.link && props.link.title && props.link.title.length > 0 ? (
+            <Box width="8px" />
+          ) : (
+            <></>
+          )}
           <Typography variant="button">{props.link?.title}</Typography>
         </Button>
       </Tooltip>
@@ -107,7 +108,11 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <LinkDialog link={props.link} setAnchoEl={setAnchorEl} />
+        {props.sectionUid ? (
+          <LinkDialog link={props.link} setAnchoEl={setAnchorEl} sectionUid={props.sectionUid} />
+        ) : (
+          <LinkDialog link={props.link} setAnchoEl={setAnchorEl} />
+        )}
 
         {props.link.address && props.link.address !== "" ? (
           <Link href={props.link.address} color="textPrimary" underline="none">
@@ -137,16 +142,10 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
         </MenuItem>
         <Box justifyContent="center" display="flex">
           <ButtonGroup variant="text" size="large">
-            <Button
-              onClick={handleMoveBack}
-              disabled={backIsDisabled}
-            >
+            <Button onClick={handleMoveBack} disabled={backIsDisabled}>
               <ArrowBackIcon />
             </Button>
-            <Button
-              onClick={handleMoveForward}
-              disabled={forwardIsDisabled}
-            >
+            <Button onClick={handleMoveForward} disabled={forwardIsDisabled}>
               <ArrowForwardIcon />
             </Button>
           </ButtonGroup>
