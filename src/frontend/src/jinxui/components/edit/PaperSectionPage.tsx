@@ -9,6 +9,7 @@ import {
   usePortfolio,
   LinkDialog,
   LinksDisplay,
+  SkelatonLinks,
   PaperSectionStatic,
   OneColumnSectionDiv,
 } from "jinxui";
@@ -19,12 +20,7 @@ const LinksDiv = styled.div`
   flex-flow: wrap;
 `;
 
-const LinksSkelatonDiv = styled.div`
-  display: grid;
-  grid-gap: 15px;
-  grid-template-columns: repeat(10, auto);
-  padding: 15px;
-`;
+
 
 const PaperSectionPage = () => {
   const {
@@ -68,11 +64,7 @@ const PaperSectionPage = () => {
           <p></p>
           <LinksDiv>
             {isLoading() ? (
-              <LinksSkelatonDiv>
-                <Skelaton variant="circle" width={30} height={30} />
-                <Skelaton variant="circle" width={30} height={30} />
-                <Skelaton variant="circle" width={30} height={30} />
-              </LinksSkelatonDiv>
+              <SkelatonLinks />
             ) : (
               <>
                 <LinksDisplay />

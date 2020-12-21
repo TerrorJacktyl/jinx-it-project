@@ -57,6 +57,7 @@ const PublishCancelDiv = styled.div`
  */
 type TLinkDialog = {
   link?: TLink;
+  // section: TEditSection
   sectionUid?: string;
   setAnchoEl?: any;
 };
@@ -80,10 +81,6 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     id: "",
     number: 0,
   };
-
-  useEffect(() => {
-    console.log("USE EFFECTED")
-  }, [getFetchedSections()])
 
   // Set up the link to be worked on
   const activeLink = props.link ? props.link : newLink;

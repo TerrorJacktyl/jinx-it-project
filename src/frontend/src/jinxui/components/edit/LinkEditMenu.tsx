@@ -93,7 +93,10 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
       <Tooltip title="Edit link" arrow>
         <Button onClick={handleClick}>
           <LinkDisplayIcon icon={props.link?.icon} />
-          <Box width="8px" />
+          { props.link && props.link.title && props.link.title.length > 0
+            ? <Box width="8px" />
+            : <></>
+          }
           <Typography variant="button">{props.link?.title}</Typography>
         </Button>
       </Tooltip>

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Skelaton from "@material-ui/lab/Skeleton";
 import Box from "@material-ui/core/Box";
 
-import { PaperSectionBase } from "jinxui";
+import { PaperSectionBase, SkelatonLinks } from "jinxui";
 
 const ButtonsSkelatonDiv = styled.div`
   display: grid;
@@ -36,7 +36,9 @@ const TextSectionInput = () => {
         </ButtonsSkelatonDiv>
       </Box>
       <PaperSectionBase elevation={3} variant="outlined" square>
-        <Box width="100%" height={427} padding="30px">
+        <Box width="100%" height={485} padding="30px" display="flex" flexDirection="column">
+          <SkelatonLinks />
+          <Box height="15px" />
           <Skelaton
             variant="rect"
             width="100%"

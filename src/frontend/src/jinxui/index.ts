@@ -81,6 +81,7 @@ export { default as EditHeader } from "./components/edit/EditHeader"
 export { default as PaperSectionPage } from "./components/edit/PaperSectionPage"
 export { default as SkelatonSectionInput } from "./components/edit/SkelatonSectionInput"
 export { LinkIconEnum, LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
+export { default as SkelatonLinks } from "./components/edit/SkelatonLinks"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

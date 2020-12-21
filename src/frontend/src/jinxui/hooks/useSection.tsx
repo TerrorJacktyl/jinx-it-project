@@ -11,7 +11,7 @@ import {
 } from "jinxui";
 import API from "../../API";
 import { v4 as uuidv4, validate } from "uuid";
-import { TEditSection, TSection, TLink } from "../types/PortfolioTypes";
+import { TEditSection, TSection, TLink, TSectionLink } from "../types/PortfolioTypes";
 import { defaultSectionContext } from "jinxui/contexts";
 
 const sectionIsNotBlank = (section: TEditSection) => {
@@ -26,6 +26,10 @@ const sectionIsNotBlank = (section: TEditSection) => {
   }
 };
 
+
+interface TSectionLinkResponse {
+  data: TSectionLink[];
+}
 /**
  *
  * Get all sections and for each section, get the list of links associated
@@ -43,12 +47,23 @@ async function getSections(portfolio_id: number, page_id: number, config: any) {
   try {
     // Get sections
     const sectionsResult = await API.get(sectionPath, config);
-    for (var sectionResult of sectionsResult.data) {
-      const linksPath = sectionPath + "/" + sectionResult.id + "/links";
-      // Get links for individual section
-      const linkResult = await API.get(linksPath, config);
-      sectionResult["links"] = linkResult.data;
+
+    // Get all links for all sections at once
+    const linkResults:TSectionLinkResponse[] = await Promise.all(sectionsResult.data.map((sectionResult: TEditSection) => {
+        const linksPath = sectionPath + "/" + sectionResult.id + "/links";
+        // Get links for individual section
+        const linkResult = API.get(linksPath, config);
+        return linkResult
+      }))
+      
+    for (var i = 0; i < linkResults.length; i++) {
+      sectionsResult.data[i]["links"] = []
+      for (var linkData of linkResults[i].data) {
+        console.assert(sectionsResult.data[i].id === linkData.section)
+        sectionsResult.data[i].links.push(linkData.link)
+      }
     }
+
     return sectionsResult.data;
   } catch (e) {
     throw e;
@@ -59,6 +74,7 @@ async function putSections(
   portfolioId: number,
   pageId: number,
   sections: TSection[],
+  editSections: TEditSection[],
   config: any
 ) {
   const path =
@@ -70,6 +86,13 @@ async function putSections(
     "/sections";
   try {
     const response = await API.put(path, sections, config);
+
+    // Put all section links at the same time.
+    await Promise.all(editSections.map((section: TEditSection) => {
+      const linksPath = path + "/" + section.id + "/links";
+      API.put(linksPath, section.links, config);
+    }))
+
     return response;
   } catch (e) {
     throw e;
@@ -109,7 +132,6 @@ export const useSection = () => {
         page_id,
         getConfig()
       );
-      // const IdSections = sectionDetails.map((section: TEditSection) => {
       const IdSections = sectionDetails.map((section: any) => {
         const uidPair = { uid: uuidv4() };
         const newSection = { ...section, ...uidPair };
@@ -200,12 +222,14 @@ export const useSection = () => {
             portfolio_id,
             page_id,
             getCleanedSections(),
+            state,
             getConfig()
           )
         : await putSections(
             portfolio_id,
             page_id,
             getCleanedSections(),
+            state,
             getConfig()
           );
     } catch (e) {

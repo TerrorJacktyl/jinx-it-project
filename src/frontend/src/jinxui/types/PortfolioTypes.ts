@@ -57,3 +57,14 @@ export type TLink = {
   id: string;
   number: number;
 };
+
+export type TPageLink = {
+  page: number;
+  link: TLink;
+}
+
+export type TSectionLink = {
+  section: number;
+  link: TLink;
+}
+
