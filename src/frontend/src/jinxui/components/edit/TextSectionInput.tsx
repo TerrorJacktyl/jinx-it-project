@@ -40,6 +40,7 @@ const TextSectionInput = (props: TTextSectionProps) => {
       >
         <OneColumnSectionDiv>
           <TextFieldSubSection
+            pageId={props.pageId}
             section={props.section}
             handleChange={props.handleChange}
             rows={15}

@@ -44,6 +44,7 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
         <TwoColumnSectionDiv>
 
             <TextFieldSubSection
+              pageId={props.pageId}
               section={props.section}
               handleChange={props.handleChange}
               rows={15}

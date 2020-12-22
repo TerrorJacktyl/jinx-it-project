@@ -109,10 +109,16 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {props.sectionUid ? (
-          <LinkDialog link={props.link} setAnchoEl={setAnchorEl} sectionUid={props.sectionUid} />
+        {props.sectionUid && props.pageId ? (
+          <LinkDialog 
+            link={props.link} 
+            setAnchoEl={setAnchorEl} 
+            pageId={props.pageId}
+            sectionUid={props.sectionUid} />
         ) : (
-          <LinkDialog link={props.link} setAnchoEl={setAnchorEl} />
+          <LinkDialog 
+            link={props.link} 
+            setAnchoEl={setAnchorEl} />
         )}
 
         {props.link.address && props.link.address !== "" ? (

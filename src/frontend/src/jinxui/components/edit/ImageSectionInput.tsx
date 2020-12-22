@@ -15,13 +15,12 @@ type TImageSection = {
   handleTitleChange: any;
   handlePublish: any;
 };
-
 const ImageSectionInput = (props: TImageSection) => {
-  const { getFetchedSections } = useSection();
+  const { sectionIndex } = useSection();
+  const index = props.section.uid 
+    ? sectionIndex(props.pageId, props.section.uid)
+    : 0
 
-  const index = getFetchedSections(props.pageId).findIndex(
-    (p: TEditSection) => p.uid === props.section.uid
-  );
   return (
     <>
       {index === 0 && (

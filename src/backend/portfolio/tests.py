@@ -196,7 +196,7 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
             'name': self.page.name,
             'number': 0,
             'sections': list(map(lambda s: s.id, self.page.sections.all())),
-            'page_links': []
+            'links': []
         })
 
     def test_page_update(self):

@@ -180,10 +180,13 @@ class PageInputSerializer(serializers.ModelSerializer):
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Page
-        fields = ['id', 'name', 'number', 'sections', 'page_links']
+        fields = ['id', 'name', 'number', 'sections', 'links']
 
 
 class SectionSerializer(serializers.ModelSerializer):
+    
+    links = SectionLinkDetailSerializer(many=True, read_only=True)
+
 
     type = serializers.ReadOnlyField()
     # add id explicitly for it to be avaliable in the list serialiser
@@ -192,7 +195,7 @@ class SectionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.Section
-        fields = ['id', 'name', 'type', 'number', 'page', 'section_links']
+        fields = ['id', 'name', 'type', 'number', 'page', 'links']
         extra_kwargs = {
             # don't need to show the page as that can be inferred from the url
             'page': {'write_only': True},
@@ -272,9 +275,6 @@ class PolymorphSectionSerializer(SectionSerializer):
     # polymorphic section serializer based on this stack overflow question:
     # https://stackoverflow.com/q/19976202
     # https://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
-
-    section_links = SectionLinkDetailSerializer(many=True, read_only=True)
-
 
     def get_serializer_map(self):
         return {

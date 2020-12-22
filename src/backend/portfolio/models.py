@@ -186,7 +186,7 @@ class PageLink(models.Model):
     page = models.ForeignKey(
         Page, 
         on_delete = models.CASCADE,
-        related_name = 'page_links',
+        related_name = 'links',
     )
 
 class SectionLink(models.Model):
@@ -198,5 +198,5 @@ class SectionLink(models.Model):
     section = models.ForeignKey(
         Section,
         on_delete = models.CASCADE,
-        related_name = 'section_links',
+        related_name = 'links',
     )

@@ -304,12 +304,12 @@ class PageLinkList(generics.ListCreateAPIView):
         return models.PageLink.objects.filter(page=page)
 
     def get(self, request, *args, **kwargs):
-        page_links = self.get_queryset()
+        links = self.get_queryset()
         page = kwargs['page_id']
 
         # Serialize them into a string
         serializer = serializers.PageLinkSerializer(
-            page_links,
+            links,
             child=serializers.PageLinkDetailSerializer(),
         )
         # Return the JSON string
@@ -351,12 +351,12 @@ class SectionLinkList(generics.ListCreateAPIView):
         return models.SectionLink.objects.filter(section=section)
     
     def get(self, request, *args, **kwargs):
-        section_links = self.get_queryset()
+        links = self.get_queryset()
         section = kwargs['section_id']
 
         # Serialize them into a string
         serializer = serializers.SectionLinkSerializer(
-            section_links,
+            links,
             child=serializers.SectionLinkDetailSerializer(),
         )
         # Return the JSON string

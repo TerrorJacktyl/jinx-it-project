@@ -2,7 +2,7 @@ import React from "react";
 
 import { useLink, useSection, LinkEditMenu } from "jinxui";
 
-import { TLink, } from "jinxui/types";
+import { TLink } from "jinxui/types";
 
 type TLinksDisplay = {
   pageId?: number;
@@ -10,22 +10,27 @@ type TLinksDisplay = {
 };
 const LinksDisplay = (props: TLinksDisplay) => {
   const { getFetchedLinks } = useLink();
-  const { getFetchedSectionLinks, } = useSection();
-  const links = props.pageId && props.sectionUid
-    ? getFetchedSectionLinks(props.pageId, props.sectionUid)
-    : getFetchedLinks();
-  
+  const { getFetchedSectionLinks } = useSection();
+
   return (
     <>
-      {links.map((link: TLink) => {
-          return (
-            <LinkEditMenu
-              key={link.id}
-              link={link}
-              sectionUid={props.sectionUid}
-            />
-          );
-      })}
+      {props.pageId && props.sectionUid
+        // Display section links
+        ? getFetchedSectionLinks(props.pageId, props.sectionUid).map(
+            (link: TLink) => {
+              return (
+                <LinkEditMenu
+                  key={link.id}
+                  link={link}
+                  pageId={props.pageId}
+                />
+              );
+            }
+          )
+        : getFetchedLinks().map((link: TLink) => {
+          // Display page links
+            return <LinkEditMenu key={link.id} link={link} />;
+          })}
     </>
   );
 };

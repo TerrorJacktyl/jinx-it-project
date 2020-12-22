@@ -47,11 +47,12 @@ async function changePortfolioPrivacy(
 }
 
 // Note the $s in the function name. Use this if you want to get all of a user's portfolios
-
+// eslint-disable-next-line
 async function getPortfolios(config: any) {
-  // eslint-disable-line @typescript-eslint/no-unused-vars
   const path = PORTFOLIOS_PATH;
-  const result = API.get(path, config).then((response: any) => response.data);
+  const result = await API.get(path, config).then(
+    (response: any) => response.data
+  );
   return result;
 }
 
@@ -236,16 +237,10 @@ export const usePortfolio = () => {
       try {
         const portfolioResponse = await savePortfolio(isNew);
         const pageResponse = await savePages(isNew, portfolioResponse.data.id);
-        // await saveSections(
-        //   pageResponse.data.id,
-        //   isNew,
-        //   portfolioResponse.data.id,
-        // );
-
         await Promise.all([
           saveSectionsAll(portfolioResponse.data.id),
-          saveLinks(portfolioResponse.data.id, pageResponse[0].data.id)
-          ]);
+          saveLinks(portfolioResponse.data.id, pageResponse[0].data.id),
+        ]);
         await setSuccessMessage("Portfolio saved");
       } catch (e) {
         setErrorMessage("Something went wrong");
