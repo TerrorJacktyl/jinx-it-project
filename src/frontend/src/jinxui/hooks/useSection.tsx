@@ -43,41 +43,41 @@ interface TSectionLinkResponse {
  * with it
  *
  */
-async function getSections(portfolio_id: number, page_id: number, config: any) {
-  const sectionPath =
-    PORTFOLIOS_PATH +
-    "/" +
-    portfolio_id.toString() +
-    "/pages/" +
-    page_id.toString() +
-    "/sections";
-  try {
-    // Get sections
-    const sectionsResult = await API.get(sectionPath, config);
+// async function getSections(portfolio_id: number, page_id: number, config: any) {
+//   const sectionPath =
+//     PORTFOLIOS_PATH +
+//     "/" +
+//     portfolio_id.toString() +
+//     "/pages/" +
+//     page_id.toString() +
+//     "/sections";
+//   try {
+//     // Get sections
+//     const sectionsResult = await API.get(sectionPath, config);
 
-    // Get all links for all sections at once
-    const linkResults: TSectionLinkResponse[] = await Promise.all(
-      sectionsResult.data.map((sectionResult: TEditSection) => {
-        const linksPath = sectionPath + "/" + sectionResult.id + "/links";
-        // Get links for individual section
-        const linkResult = API.get(linksPath, config);
-        return linkResult;
-      })
-    );
+//     // Get all links for all sections at once
+//     const linkResults: TSectionLinkResponse[] = await Promise.all(
+//       sectionsResult.data.map((sectionResult: TEditSection) => {
+//         const linksPath = sectionPath + "/" + sectionResult.id + "/links";
+//         // Get links for individual section
+//         const linkResult = API.get(linksPath, config);
+//         return linkResult;
+//       })
+//     );
 
-    for (var i = 0; i < linkResults.length; i++) {
-      sectionsResult.data[i]["links"] = [];
-      for (var linkData of linkResults[i].data) {
-        console.assert(sectionsResult.data[i].id === linkData.section);
-        sectionsResult.data[i].links.push(linkData.link);
-      }
-    }
+//     for (var i = 0; i < linkResults.length; i++) {
+//       sectionsResult.data[i]["links"] = [];
+//       for (var linkData of linkResults[i].data) {
+//         console.assert(sectionsResult.data[i].id === linkData.section);
+//         sectionsResult.data[i].links.push(linkData.link);
+//       }
+//     }
 
-    return sectionsResult.data;
-  } catch (e) {
-    throw e;
-  }
-}
+//     return sectionsResult.data;
+//   } catch (e) {
+//     throw e;
+//   }
+// }
 
 async function getSectionsAll(portfolioId: number, pages: TPage[], config: any) {
 
@@ -91,8 +91,19 @@ async function getSectionsAll(portfolioId: number, pages: TPage[], config: any) 
         page.id +
         "/sections";
       return API.get(sectionPath, config)
+      // return API.get(sectionPath, config)
     }))
-    console.log(sectionsResult)
+    
+    var cleanResult: TEditSections = {}
+    for (var i = 0; i < pages.length; i++) {
+      const pageId = pages[i].id;
+      const sectionsData = sectionsResult[i].data;
+      for (var sectionData of sectionsData) {
+        sectionData.uid = uuidv4();
+      }
+      cleanResult[pageId] = sectionsResult[i].data
+    }
+    return cleanResult;
   } catch(e) {
     throw e;
   }
@@ -134,24 +145,25 @@ export const useSection = () => {
   const { getConfig, isLoading } = useUser();
   const { linkIndex } = useLink();
 
-  async function fetchSections(portfolioId: number, pageId: number) {
-    try {
-      const sectionDetails = await getSections(
-        portfolioId,
-        pageId,
-        getConfig()
-      );
-      const IdSections = sectionDetails.map((section: any) => {
-        const uidPair = { uid: uuidv4() };
-        const newSection = { ...section, ...uidPair };
-        return newSection;
-      });
-      return IdSections;
-      // await setState({...state, [pageId] : IdSections});
-    } catch (e) {
-      throw e;
-    }
-  }
+  // async function fetchSections(portfolioId: number, pageId: number) {
+  //   // try {
+  //   //   const sectionDetails = await getSections(
+  //   //     portfolioId,
+  //   //     pageId,
+  //   //     getConfig()
+  //   //   );
+  //   //   const IdSections = sectionDetails.map((section: any) => {
+  //   //     const uidPair = { uid: uuidv4() };
+  //   //     const newSection = { ...section, ...uidPair };
+  //   //     return newSection;
+  //   //   });
+  //   //   return IdSections;
+  //   //   // await setState({...state, [pageId] : IdSections});
+  //   // } catch (e) {
+  //   //   throw e;
+  //   // }
+  //   return []
+  // }
 
   async function fetchSectionsAll(portfolioId: number, pages: TPage[]) {
     // try {
@@ -183,13 +195,20 @@ export const useSection = () => {
       // });
     // Promise.all((pages.map((page: TPage))))
     
-    const fetchSectionFunctions = pages.map((page: TPage) => {return fetchSections(portfolioId, page.id)})
-    getSectionsAll(portfolioId, pages, getConfig());
+    // const fetchSectionFunctions = pages.map((page: TPage) => {return fetchSections(portfolioId, page.id)})
+    // console.log(await getSectionsAll(portfolioId, pages, getConfig()));
+    const result = await getSectionsAll(portfolioId, pages, getConfig());
+    console.log(result)
+    setState(result)
+    // console.log(result)
+    // for(var pageSections of result) {
+    //   console.log(pageSections[0].data)
+    // }
   }
 
-  // useEffect(() => {
-  //   console.log(state)
-  // }, [state])
+  useEffect(() => {
+    console.log(state)
+  }, [state])
 
   function sectionIndex(pageId: number, uuid_index: string) {
     const index = state[pageId].findIndex(
@@ -389,7 +408,6 @@ export const useSection = () => {
   }
 
   return {
-    fetchSections,
     fetchSectionsAll,
     getFetchedSections,
     getFetchedSectionsAll,
