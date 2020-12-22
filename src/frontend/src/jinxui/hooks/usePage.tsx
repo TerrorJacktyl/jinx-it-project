@@ -3,6 +3,17 @@ import { PageContext, useUser, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
 import { TPage } from "../types/PortfolioTypes";
 
+async function putPage(portfolioId: number, page: TPage, config: any) {
+  const path =
+    PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
+  try {
+    const response = await API.put(path, page, config);
+    return response;
+  } catch (e) {
+    throw e;
+  }
+}
+
 async function postPage(portfolioId: number, data: TPage, config: any) {
   const path = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages";
   try {
@@ -20,17 +31,35 @@ async function postPage(portfolioId: number, data: TPage, config: any) {
   }
 }
 
-async function putPage(portfolioId: number, page: TPage, config: any) {
-  const path =
-    PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
+async function putPages(portfolioId: number, pages: TPage[], config: any) {
   try {
-    const response = await API.put(path, page, config);
-    return response;
+    const pagesResult = await Promise.all(
+      pages.map((page: TPage) => {
+        const path =
+          PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
+        return API.put(path, page, config);
+      })
+    );
+    return pagesResult
   } catch (e) {
     throw e;
   }
 }
 
+async function postPages(portfolioId: number, pages: TPage[], config: any) {
+  try {
+    const pagesResult = await Promise.all(
+      pages.map((page: TPage) => {
+        const path =
+          PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
+        return API.post(path, page, config);
+      })
+    );
+    return pagesResult
+  } catch (e) {
+    throw e;
+  }
+}
 
 export const usePage = () => {
   // Update state will be useful when using multiple pages
@@ -71,11 +100,21 @@ export const usePage = () => {
     }
   }
 
-  async function savePage(isNew: boolean, portfolio_id: number) {
+  async function savePage(isNew: boolean, portfolio_id: number, index: number) {
     try {
       return isNew
-        ? await postPage(portfolio_id, state[0], getConfig())
-        : await putPage(portfolio_id, state[0], getConfig());
+        ? await postPage(portfolio_id, state[index], getConfig())
+        : await putPage(portfolio_id, state[index], getConfig());
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async function savePages(isNew: boolean, portfolio_id: number) {
+    try {
+      return isNew
+        ? await postPages(portfolio_id, state, getConfig())
+        : await putPages(portfolio_id, state, getConfig());
     } catch (e) {
       throw e;
     }
@@ -90,6 +129,7 @@ export const usePage = () => {
     setPages,
     getFetchedPages,
     savePage,
+    savePages,
     resetPages,
   };
-}
+};

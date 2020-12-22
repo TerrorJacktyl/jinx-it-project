@@ -108,10 +108,10 @@ export const usePortfolio = () => {
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, savePage, resetPages } = usePage();
+  const { fetchPages, savePages, resetPages } = usePage();
   const {
     fetchSectionsAll,
-    saveSections,
+    saveSectionsAll,
     resetSections,
   } = useSection();
   const { fetchPageLinks, saveLinks, resetLinks } = useLink();
@@ -149,7 +149,6 @@ export const usePortfolio = () => {
       }
 
       await Promise.all([
-        // fetchSections(portfolioId, pages[0].id),
         fetchSectionsAll(portfolioId, pages),
         fetchPageLinks(portfolioId, pages[0].id),
       ]);
@@ -239,13 +238,14 @@ export const usePortfolio = () => {
     if (state) {
       try {
         const portfolioResponse = await savePortfolio(isNew);
-        const pageResponse = await savePage(isNew, portfolioResponse.data.id);
-        await saveSections(
-          pageResponse.data.id,
-          isNew,
-          portfolioResponse.data.id,
-        );
-        await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
+        const pageResponse = await savePages(isNew, portfolioResponse.data.id);
+        // await saveSections(
+        //   pageResponse.data.id,
+        //   isNew,
+        //   portfolioResponse.data.id,
+        // );
+        await saveSectionsAll(portfolioResponse.data.id);
+        // await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
         await setSuccessMessage("Portfolio saved");
       } catch (e) {
         setErrorMessage("Something went wrong");

@@ -93,6 +93,24 @@ async function putSections(
   }
 }
 
+async function putSectionsAll(portfolioId: number, allSections: TEditSections, config: any) {
+  const basePath = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/"
+  try {
+    const response = await Promise.all(Object.keys(allSections).map((pageIdString: string) => {
+      const sectionsPath = basePath + pageIdString + "/sections";
+      const pageId = parseInt(pageIdString);
+      const sections = allSections[pageId];
+      const pageResponse = API.put(sectionsPath, sections, config)
+      return pageResponse
+    }))
+    return response
+  } catch(e) {
+    throw e;
+  }
+}
+
+
+
 export const useSection = () => {
   const [state, updateState, setState, resetState] = useContext(SectionContext);
   const { getConfig, isLoading } = useUser();
@@ -142,11 +160,31 @@ export const useSection = () => {
     for (var i = 0; i < cleanSections.length; i++) {
       if (sectionIsNotBlank(cleanSections[i])) {
         delete cleanSections[i].uid;
+        // var cleanLinks = []
+        // for (var linkData of cleanSections[i].section_links) {
+        //   cleanLinks.push(linkData.link)
+        // }
+        // cleanSections[i].section_links = cleanLinks;
         cleanSections[i].number = i;
+        // for(var i = 0; i < cleanSections[i].section)
       }
     }
     return cleanSections;
   };
+
+  const getCleanedSectionsAll = () => {
+    console.log(state)
+    var cleanSectionsAll: any = {}
+    Object.keys(state).map((pageIdString: string) => {
+      const pageId = parseInt(pageIdString);
+      cleanSectionsAll[pageId] = getCleanedSections(pageId)
+      // cleanSectionsAll.push(getCleanedSections(pageId))
+    })
+    console.log(cleanSectionsAll)
+    return cleanSectionsAll
+  }
+
+
 
   const handleContentChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -227,6 +265,16 @@ export const useSection = () => {
           );
     } catch (e) {
       throw e;
+    }
+  }
+
+  async function saveSectionsAll(
+    portfolioId: number
+  ) {
+    try {
+      return putSectionsAll(portfolioId, getCleanedSectionsAll(), getConfig());
+    } catch(e) {
+      throw e
     }
   }
 
@@ -311,7 +359,7 @@ export const useSection = () => {
     handleSectionDelete,
     handleSectionMoveUp,
     handleSectionMoveDown,
-    saveSections,
+    saveSectionsAll,
     updateSectionLinks,
     getFetchedSectionLinks,
     getFetchedSectionLinksFromId,

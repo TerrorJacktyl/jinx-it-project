@@ -27,6 +27,9 @@ const DarkTheme = createMuiTheme({
       default: "#27292b",
       paper: "#373a3e",
     },
+    success: {
+      main: "#40CFB1",
+    },
   },
   typography: {
     fontFamily: "Poppins, sans-serif",
@@ -98,6 +101,9 @@ let LightTheme = createMuiTheme({
     background: {
       default: "#E4ECFF",
       paper: "#F1F7FF",
+    },
+    success: {
+      main: "#40CFB1",
     },
   },
   typography: {

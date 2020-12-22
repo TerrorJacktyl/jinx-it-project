@@ -83,6 +83,7 @@ const SnackbarAlert = () => {
           <Alert
             onClose={handleSuccessClose}
             severity="success"
+            color="success"
             style={{
               fontWeight: 500,
             }}
