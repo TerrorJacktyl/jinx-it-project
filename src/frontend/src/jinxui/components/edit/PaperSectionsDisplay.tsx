@@ -6,7 +6,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   useUser,
   usePortfolio,
-  usePage,
   useSection,
   TextSectionInput,
   ImageSectionInput,
@@ -37,13 +36,10 @@ const PaperSectionsDisplay = () => {
       {Object.keys(allSections).map(      // Map over pages
         (pageIdString: string) => {
           const pageId = parseInt(pageIdString)
-          console.log("PAGE ID")
-          console.log(pageId)
-          console.log(allSections)
-          console.log(allSections[0])
-          {allSections[pageId].map(       // Map over sections
+          return allSections[pageId].map(       // Map over sections
             (section: TEditSection) => {
               if (section.type === "skeleton" && section.uid) {
+                console.log("SKELETON")
                 return <SkeletonSectionInput key={section.uid} />;
               } else if (section.type === "text" && section.uid) {
                 return (
@@ -81,7 +77,7 @@ const PaperSectionsDisplay = () => {
                 return <> </>;
               }
             }
-          )}
+          )
 
         }
       )}

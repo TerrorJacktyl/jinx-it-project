@@ -15,7 +15,7 @@ const ButtonsSkeletonDiv = styled.div`
   padding-right: 10px;
 `;
 
-const TextSectionInput = () => {
+const SkeletonSectionInput = () => {
   return (
     <>
       <Box display="flex" justifyContent="center">
@@ -55,4 +55,4 @@ const TextSectionInput = () => {
   );
 };
 
-export default TextSectionInput;
+export default SkeletonSectionInput;
