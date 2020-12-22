@@ -4,6 +4,7 @@ export type {
   TSection,
   TSectionData,
   TEditSection,
+  TEditSections,
   TPortfolioData,
   TPageData,
   TLink,

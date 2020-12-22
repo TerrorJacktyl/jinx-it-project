@@ -14,6 +14,7 @@ import { PrimaryMenu, DefaultSectionData, useSection } from "jinxui";
 import { TEditSection } from "jinxui/types";
 
 type TNewSectionMenu = {
+  pageId: number;
   section: any;
   placeAbove?: boolean;
 };
@@ -47,7 +48,7 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
   const addSection = (section_type: string) => {
     setAnchorEl(null);
 
-    const index = getFetchedSections().findIndex(
+    const index = getFetchedSections(props.pageId).findIndex(
       (p: TEditSection) => p.uid === props.section.uid
     );
 
@@ -55,7 +56,7 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const newSection = DefaultSectionData();
     newSection.type = section_type;
 
-    handleSectionChange(target_index, newSection);
+    handleSectionChange(props.pageId, target_index, newSection);
   };
 
   return (

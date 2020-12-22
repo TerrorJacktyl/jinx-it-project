@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TEditSection } from "jinxui/types";
+import { TEditSection, TEditSections } from "jinxui/types";
 import { v4 as uuidv4 } from "uuid";
 
 export const defaultSectionContext: TEditSection = {
@@ -16,19 +16,17 @@ export const defaultSectionContext: TEditSection = {
   links: [],
 };
 
-interface TEditSections {
-  [pageId: number]: TEditSection[]
-}
+
 
 export const SectionContext = React.createContext<
-  [TEditSection[], any, any, any]
+  [TEditSections, any, any, any]
 >([[], () => {}, () => {}, () => {}]);
 
 type TSectionContextProvider = {
   children: any;
 };
 export const SectionContextProvider = (props: TSectionContextProvider) => {
-  const [state, setState] = useState<TEditSection[]>([]);
+  const [state, setState] = useState<TEditSections>({});
   
 
   const section1:TEditSection = JSON.parse(JSON.stringify(defaultSectionContext));
@@ -46,7 +44,6 @@ export const SectionContextProvider = (props: TSectionContextProvider) => {
   }
 
   allSections = {...allSections, 8: [{...section6, path: "path/to/something"}] }
-  console.log(allSections)
 
 
 
@@ -56,21 +53,24 @@ export const SectionContextProvider = (props: TSectionContextProvider) => {
 
 
   const updateState = (
+    pageId: number,
     uuid_index: string,
     fieldsToUpdate: Partial<TEditSection[]>
   ) => {
-    const index = state.findIndex(
+    const index = state[pageId].findIndex(
       (section: TEditSection) => section.uid === uuid_index
     );
-    setState([
-      ...state.slice(0, index),
-      { ...state[index], ...fieldsToUpdate },
-      ...state.slice(index + 1),
-    ]);
+    setState({
+      ...state,
+        [pageId]: [
+          ...state[pageId].slice(0, index),
+          { ...state[pageId][index], ...fieldsToUpdate },
+          ...state[pageId].slice(index + 1)]
+      });
   };
 
   const resetState = () => {
-    setState([]);
+    setState({});
   };
 
   return (

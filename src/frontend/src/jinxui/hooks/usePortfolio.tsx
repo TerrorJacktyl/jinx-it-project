@@ -240,9 +240,9 @@ export const usePortfolio = () => {
         const portfolioResponse = await savePortfolio(isNew);
         const pageResponse = await savePage(isNew, portfolioResponse.data.id);
         await saveSections(
+          pageResponse.data.id,
           isNew,
           portfolioResponse.data.id,
-          pageResponse.data.id
         );
         await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
         await setSuccessMessage("Portfolio saved");

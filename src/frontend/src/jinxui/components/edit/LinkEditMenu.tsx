@@ -25,6 +25,7 @@ import { TLink } from "jinxui/types";
 
 type TLinkEditMenu = {
   link: TLink;
+  pageId?: number;
   sectionUid?: string;
 };
 const LinkEditMenu = (props: TLinkEditMenu) => {
@@ -53,31 +54,31 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
   };
 
   const handleMoveBack = () => {
-    if (props.sectionUid) {
-      handleSectionLinkMoveUp(props.sectionUid, props.link);
+    if ( props.pageId && props.sectionUid ) {
+      handleSectionLinkMoveUp(props.pageId, props.sectionUid, props.link);
     } else {
       handleLinkMoveUp(props.link);
     }
   };
 
   const handleMoveForward = () => {
-    if (props.sectionUid) {
-      handleSectionLinkMoveDown(props.sectionUid, props.link);
+    if (props.pageId && props.sectionUid) {
+      handleSectionLinkMoveDown(props.pageId, props.sectionUid, props.link);
     } else {
       handleLinkMoveDown(props.link);
     }
   };
 
   const handleDelete = () => {
-    if (props.sectionUid) {
-      handleSectionLinkDelete(props.sectionUid, props.link);
+    if (props.pageId && props.sectionUid) {
+      handleSectionLinkDelete(props.pageId, props.sectionUid, props.link);
     } else {
       handleLinkDelete(props.link);
     }
   };
 
-  const links = props.sectionUid 
-    ? getFetchedSectionLinks(props.sectionUid)
+  const links = props.pageId && props.sectionUid 
+    ? getFetchedSectionLinks(props.pageId, props.sectionUid)
     : getFetchedLinks();
 
   const backIsDisabled = props.sectionUid

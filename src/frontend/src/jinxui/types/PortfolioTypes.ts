@@ -38,6 +38,10 @@ export interface TEditSection extends TSection {
   links: TLink[]
 };
 
+export interface TEditSections {
+  [pageId: number]: TEditSection[]
+}
+
 export type TPortfolioData = {
   name: string;
   number?: number;

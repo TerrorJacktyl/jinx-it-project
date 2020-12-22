@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PageContext, useUser, PORTFOLIOS_PATH } from "jinxui";
+import { PageContext, useUser, useSection, PORTFOLIOS_PATH } from "jinxui";
 import API from "../../API";
 import { TPage } from "../types/PortfolioTypes";
 
@@ -38,6 +38,7 @@ export const usePage = () => {
   const [state, setState, updateState, resetState] = useContext(PageContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig } = useUser();
+  const { getFetchedSections } = useSection();
 
   async function getPages(portfolio_id: number) {
     const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";

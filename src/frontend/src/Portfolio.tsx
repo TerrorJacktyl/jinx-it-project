@@ -88,7 +88,8 @@ const Portfolio = ({ username }: PortfolioProps) => {
   const { fetchFullPortfolio, getFetchedPortfolio } = usePortfolio();
   const { getCleanedSections } = useSection();
 
-  const sections = getCleanedSections();
+  //!!! hard coded sections just for testing
+  const sections = getCleanedSections(17);
 
   const [author, setAuthor] = useState<string>("");
 
