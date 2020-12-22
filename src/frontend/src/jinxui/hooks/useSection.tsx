@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   SectionContext,
   useUser,
@@ -12,12 +12,15 @@ import {
 import API from "../../API";
 import { v4 as uuidv4, validate } from "uuid";
 import {
+  TPage,
   TEditSection,
+  TEditSections,
   TSection,
   TLink,
   TSectionLink,
 } from "../types/PortfolioTypes";
 import { defaultSectionContext } from "jinxui/contexts";
+import { number } from "yup";
 
 const sectionIsNotBlank = (section: TEditSection) => {
   if (section.type === "text") {
@@ -76,6 +79,25 @@ async function getSections(portfolio_id: number, page_id: number, config: any) {
   }
 }
 
+async function getSectionsAll(portfolioId: number, pages: TPage[], config: any) {
+
+  try {
+    const sectionsResult = await Promise.all(pages.map((page: TPage) => {
+      const sectionPath =
+        PORTFOLIOS_PATH +
+        "/" +
+        portfolioId +
+        "/pages/" +
+        page.id +
+        "/sections";
+      return API.get(sectionPath, config)
+    }))
+    console.log(sectionsResult)
+  } catch(e) {
+    throw e;
+  }
+}
+
 async function putSections(
   portfolioId: number,
   pageId: number,
@@ -112,10 +134,10 @@ export const useSection = () => {
   const { getConfig, isLoading } = useUser();
   const { linkIndex } = useLink();
 
-  async function fetchSections(portfolio_id: number, pageId: number) {
+  async function fetchSections(portfolioId: number, pageId: number) {
     try {
       const sectionDetails = await getSections(
-        portfolio_id,
+        portfolioId,
         pageId,
         getConfig()
       );
@@ -124,12 +146,50 @@ export const useSection = () => {
         const newSection = { ...section, ...uidPair };
         return newSection;
       });
-      await setState({...state, [pageId] : IdSections});
+      return IdSections;
+      // await setState({...state, [pageId] : IdSections});
     } catch (e) {
       throw e;
-    } finally {
     }
   }
+
+  async function fetchSectionsAll(portfolioId: number, pages: TPage[]) {
+    // try {
+    //   const allFetchedSections = await Promise.all(pages.map((page: TPage) => {
+    //     return [page.id, fetchSections(portfolioId, page.id)];
+    //   }))
+    //   var newState: TEditSections = {}
+    //   for (var fetchedSections of allFetchedSections) {
+    //     const key = fetchedSections[0]
+    //     if (typeof key === "number") {
+    //       // console.log(fetchedSections[1])
+    //       newState[key]=fetchedSections[1]
+    //       await setState({...state, [key] : fetchedSections[1]})
+    //     }
+    //   }
+    // } catch(e) {
+    //   throw e;
+    // }
+
+
+    // const fetchSectionFunctions = pages.map((page: TPage) => {return fetchSections(portfolioId, page.id)})
+    
+    // Promise.all(
+    //   pages.map((page: TPage) => {
+      //     return fetchSections(portfolioId, page.id);
+      //   })
+    // ).then((values: any) => {
+      //   console.log(values);
+      // });
+    // Promise.all((pages.map((page: TPage))))
+    
+    const fetchSectionFunctions = pages.map((page: TPage) => {return fetchSections(portfolioId, page.id)})
+    getSectionsAll(portfolioId, pages, getConfig());
+  }
+
+  // useEffect(() => {
+  //   console.log(state)
+  // }, [state])
 
   function sectionIndex(pageId: number, uuid_index: string) {
     const index = state[pageId].findIndex(
@@ -330,6 +390,7 @@ export const useSection = () => {
 
   return {
     fetchSections,
+    fetchSectionsAll,
     getFetchedSections,
     getFetchedSectionsAll,
     getCleanedSections,

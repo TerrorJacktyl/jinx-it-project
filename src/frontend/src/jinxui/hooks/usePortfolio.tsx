@@ -110,7 +110,7 @@ export const usePortfolio = () => {
   } = useUser();
   const { fetchPages, savePage, resetPages } = usePage();
   const {
-    fetchSections,
+    fetchSectionsAll,
     saveSections,
     resetSections,
   } = useSection();
@@ -149,7 +149,8 @@ export const usePortfolio = () => {
       }
 
       await Promise.all([
-        fetchSections(portfolioId, pages[0].id),
+        // fetchSections(portfolioId, pages[0].id),
+        fetchSectionsAll(portfolioId, pages),
         fetchPageLinks(portfolioId, pages[0].id),
       ]);
     } catch (e) {

@@ -25,7 +25,7 @@ const PaperSectionsDisplay = () => {
     handleTitleChange,
   } = useSection();
 
-  const allSections:TEditSections = getFetchedSectionsAll();
+  // const allSections:TEditSections = getFetchedSectionsAll();
 
   return (
     <>
@@ -33,13 +33,12 @@ const PaperSectionsDisplay = () => {
         <CircularProgress color="secondary" />
       </Backdrop>
       <PaperSectionPage />
-      {Object.keys(allSections).map(      // Map over pages
+      {/* {Object.keys(getFetchedSectionsAll()).map(            // Map over pages
         (pageIdString: string) => {
           const pageId = parseInt(pageIdString)
-          return allSections[pageId].map(       // Map over sections
+          return getFetchedSectionsAll()[pageId].map(       // Map over sections
             (section: TEditSection) => {
               if (section.type === "skeleton" && section.uid) {
-                console.log("SKELETON")
                 return <SkeletonSectionInput key={section.uid} />;
               } else if (section.type === "text" && section.uid) {
                 return (
@@ -80,7 +79,7 @@ const PaperSectionsDisplay = () => {
           )
 
         }
-      )}
+      )} */}
     </>
   );
 };
