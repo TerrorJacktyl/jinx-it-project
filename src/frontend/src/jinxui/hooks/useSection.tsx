@@ -16,6 +16,7 @@ import {
   TEditSection,
   TEditSections,
   TLink,
+  TSectionLink,
 } from "../types/PortfolioTypes";
 import { defaultSectionContext } from "jinxui/contexts";
 
@@ -60,8 +61,8 @@ async function getSectionsAll(
         sectionData.uid = uuidv4();
 
         // Extract link from sectionLink object
-        var cleanLinks = []
-        for (var sectionLink of sectionData.links){
+        var cleanLinks = [];
+        for (var sectionLink of sectionData.links) {
           cleanLinks.push(sectionLink.link);
         }
         sectionData.links = cleanLinks;
@@ -72,6 +73,17 @@ async function getSectionsAll(
   } catch (e) {
     throw e;
   }
+}
+
+function cleanSectionLinks(links: TLink[], sectionId: number | undefined) {
+  var cleanLinks: TSectionLink[] = [];
+  const id = sectionId ? sectionId : 0;
+  for (var i = 0; i < links.length; i++) {
+    // links[i].number = i;
+    // links[i] = {section: sectionId, link:links[i]}
+    cleanLinks.push({ section: id, link: { ...links[i], number: i } });
+  }
+  return cleanLinks;
 }
 
 async function putSectionsAll(
@@ -86,10 +98,32 @@ async function putSectionsAll(
         const sectionsPath = basePath + pageIdString + "/sections";
         const pageId = parseInt(pageIdString);
         const sections = allSections[pageId];
-        const pageResponse = API.put(sectionsPath, sections, config);
+        // const linksResponse = Promise.all(
+
+        // )
+        // // const newCleanedSections = []
+        // for (var section of sections) {
+        //   newCleanedSections.push({...section,
+        //     links: cleanSectionLinks(section.links, section.id)
+        //   });
+        // }
+
+        const pageResponse = API.put(sectionsPath, sections, config).then(
+          (response: any) => {
+            Promise.all(
+              response.data.map((responseSection: any, index: number) => {
+                const linksPath =
+                  sectionsPath + "/" + responseSection.id + "/links";
+                const linksResponse = API.put(linksPath, sections[index].links, config)
+                return linksResponse;
+              })
+            );
+          }
+        );
         return pageResponse;
       })
     );
+    console.log(response);
     return response;
   } catch (e) {
     throw e;
@@ -103,7 +137,6 @@ export const useSection = () => {
 
   async function fetchSectionsAll(portfolioId: number, pages: TPage[]) {
     const result = await getSectionsAll(portfolioId, pages, getConfig());
-    console.log(result)
     setState(result);
   }
 
@@ -259,18 +292,13 @@ export const useSection = () => {
   }
 
   function sectionLinkAdd(pageId: number, uuid_index: string, link: TLink) {
-    const sectionLinks: TLink[] = getFetchedSectionLinks(
-      pageId,
-      uuid_index
-    );
+    const sectionLinks: TLink[] = getFetchedSectionLinks(pageId, uuid_index);
     if (!validate(link.id)) {
       link.id = uuidv4();
     }
     const index = sectionLinks.findIndex(
       (existingLink: TLink) => existingLink.id === link.id
     );
-    console.log("ASDasd")
-    console.log(state)
     if (index > -1) {
       updateSectionLinks(pageId, uuid_index, [
         ...sectionLinks.slice(0, index),
@@ -278,12 +306,8 @@ export const useSection = () => {
         ...sectionLinks.slice(index + 1),
       ]);
     } else {
-      updateSectionLinks(pageId, uuid_index, [
-        ...sectionLinks,
-        link,
-      ]);
+      updateSectionLinks(pageId, uuid_index, [...sectionLinks, link]);
     }
-    console.log(state)
   }
 
   function handleSectionLinkDelete(

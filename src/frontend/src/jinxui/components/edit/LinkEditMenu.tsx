@@ -81,11 +81,11 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
     ? getFetchedSectionLinks(props.pageId, props.sectionUid)
     : getFetchedLinks();
 
-  const backIsDisabled = props.sectionUid
+  const backIsDisabled = props.pageId && props.sectionUid
     ? linkIndex(props.link.id, links) < 1
     : linkIndex(props.link.id) < 1;
 
-  const forwardIsDisabled = props.sectionUid
+  const forwardIsDisabled = props.pageId && props.sectionUid
     ? linkIndex(props.link.id, links) > links.length - 2
     : linkIndex(props.link.id) > links.length - 2;
 

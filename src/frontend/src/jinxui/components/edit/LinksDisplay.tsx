@@ -23,6 +23,7 @@ const LinksDisplay = (props: TLinksDisplay) => {
                   key={link.id}
                   link={link}
                   pageId={props.pageId}
+                  sectionUid={props.sectionUid}
                 />
               );
             }

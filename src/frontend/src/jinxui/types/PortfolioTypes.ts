@@ -38,6 +38,10 @@ export interface TEditSection extends TSection {
   links: TLink[]
 };
 
+export interface TSendSection extends TSection {
+  links: TSectionLink[]
+}
+
 export interface TEditSections {
   [pageId: number]: TEditSection[]
 }
