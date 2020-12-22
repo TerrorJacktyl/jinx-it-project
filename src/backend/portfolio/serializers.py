@@ -184,7 +184,6 @@ class PageOutputSerializer(serializers.ModelSerializer):
 
 
 class SectionSerializer(serializers.ModelSerializer):
-    section_links = SectionLinkDetailSerializer(many=True)
 
     type = serializers.ReadOnlyField()
     # add id explicitly for it to be avaliable in the list serialiser
@@ -231,9 +230,6 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class SectionListSerializer(serializers.ListSerializer):
 
-    section_links = LinkSerializer(many=True)
-
-
     def __init__(self, *args, **kwargs):
         self.child = kwargs.pop('child', copy.deepcopy(self.child))
         self.allow_empty = kwargs.pop('allow_empty', True)
@@ -276,6 +272,9 @@ class PolymorphSectionSerializer(SectionSerializer):
     # polymorphic section serializer based on this stack overflow question:
     # https://stackoverflow.com/q/19976202
     # https://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
+
+    section_links = SectionLinkDetailSerializer(many=True, read_only=True)
+
 
     def get_serializer_map(self):
         return {

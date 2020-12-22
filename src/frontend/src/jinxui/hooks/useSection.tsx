@@ -173,14 +173,12 @@ export const useSection = () => {
   };
 
   const getCleanedSectionsAll = () => {
-    console.log(state)
     var cleanSectionsAll: any = {}
     Object.keys(state).map((pageIdString: string) => {
       const pageId = parseInt(pageIdString);
       cleanSectionsAll[pageId] = getCleanedSections(pageId)
       // cleanSectionsAll.push(getCleanedSections(pageId))
     })
-    console.log(cleanSectionsAll)
     return cleanSectionsAll
   }
 

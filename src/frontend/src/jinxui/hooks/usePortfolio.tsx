@@ -31,13 +31,13 @@ async function changePortfolioPrivacy(
         config
       )
         .then((response: any) => {
-          updateState({private: response.data.private})
+          updateState({ private: response.data.private });
         })
         .catch((error: any) => {
           console.log(error);
           throw error;
         });
-        return result;
+      return result;
     })
     .catch((error: any) => {
       console.log(error);
@@ -48,7 +48,8 @@ async function changePortfolioPrivacy(
 
 // Note the $s in the function name. Use this if you want to get all of a user's portfolios
 
-async function getPortfolios(config: any) { // eslint-disable-line @typescript-eslint/no-unused-vars
+async function getPortfolios(config: any) {
+  // eslint-disable-line @typescript-eslint/no-unused-vars
   const path = PORTFOLIOS_PATH;
   const result = API.get(path, config).then((response: any) => response.data);
   return result;
@@ -109,11 +110,7 @@ export const usePortfolio = () => {
     setSuccessMessage,
   } = useUser();
   const { fetchPages, savePages, resetPages } = usePage();
-  const {
-    fetchSectionsAll,
-    saveSectionsAll,
-    resetSections,
-  } = useSection();
+  const { fetchSectionsAll, saveSectionsAll, resetSections } = useSection();
   const { fetchPageLinks, saveLinks, resetLinks } = useLink();
 
   const PORTFOLIOS_PATH = "api/portfolios";
@@ -244,8 +241,11 @@ export const usePortfolio = () => {
         //   isNew,
         //   portfolioResponse.data.id,
         // );
-        await saveSectionsAll(portfolioResponse.data.id);
-        // await saveLinks(portfolioResponse.data.id, pageResponse.data.id);
+
+        await Promise.all([
+          saveSectionsAll(portfolioResponse.data.id),
+          saveLinks(portfolioResponse.data.id, pageResponse[0].data.id)
+          ]);
         await setSuccessMessage("Portfolio saved");
       } catch (e) {
         setErrorMessage("Something went wrong");
@@ -257,11 +257,21 @@ export const usePortfolio = () => {
   }
 
   async function makePortfolioPublic(portfolio_id: number) {
-    return await changePortfolioPrivacy(portfolio_id, false, getConfig(), updateState);
+    return await changePortfolioPrivacy(
+      portfolio_id,
+      false,
+      getConfig(),
+      updateState
+    );
   }
 
   async function makePortfolioPrivate(portfolio_id: number) {
-    return await changePortfolioPrivacy(portfolio_id, true, getConfig(), updateState);
+    return await changePortfolioPrivacy(
+      portfolio_id,
+      true,
+      getConfig(),
+      updateState
+    );
   }
 
   function resetFullPortfolio() {

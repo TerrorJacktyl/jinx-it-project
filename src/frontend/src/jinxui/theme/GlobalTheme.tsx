@@ -28,7 +28,7 @@ const DarkTheme = createMuiTheme({
       paper: "#373a3e",
     },
     success: {
-      main: "#40CFB1",
+      main: "#37b399",
     },
   },
   typography: {
@@ -103,7 +103,7 @@ let LightTheme = createMuiTheme({
       paper: "#F1F7FF",
     },
     success: {
-      main: "#40CFB1",
+      main: "#37b399",
     },
   },
   typography: {
