@@ -82,6 +82,7 @@ export { default as PaperSectionPage } from "./components/edit/PaperSectionPage"
 export { default as SkeletonSectionInput } from "./components/edit/SkeletonSectionInput"
 export { LinkIconEnum, LinkDisplayIcon } from "./components/edit/LinkDisplayIcon"
 export { default as SkeletonLinks } from "./components/edit/SkeletonLinks"
+export { default as PageEdit } from "./components/edit/PageEdit"
 
 /* Home */
 export { default as HomeTemplates } from "./components/home/HomeTemplates";

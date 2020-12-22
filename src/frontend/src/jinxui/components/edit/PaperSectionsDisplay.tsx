@@ -7,19 +7,22 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   useUser,
   usePortfolio,
+  usePage,
   useSection,
   TextSectionInput,
   ImageSectionInput,
   ImageTextSectionInput,
   PaperSectionPage,
   SkeletonSectionInput,
+  PageEdit,
 } from "jinxui";
 
-import { TEditSection, } from "jinxui/types";
+import { TEditSection } from "jinxui/types";
 
 const PaperSectionsDisplay = () => {
   const { isSaving } = useUser();
   const { saveFullPortfolio } = usePortfolio();
+  const { getFetchedPages } = usePage();
   const {
     getFetchedSectionsAll,
     handleContentChange,
@@ -34,18 +37,11 @@ const PaperSectionsDisplay = () => {
       <PaperSectionPage />
       {Object.keys(getFetchedSectionsAll()).map(
         // Map over pages
-        (pageIdString: string) => {
+        (pageIdString: string, index: number) => {
           const pageId = parseInt(pageIdString);
           return (
             <Box key={pageIdString}>
-              <Box
-                width="100vw"
-                height="40px"
-                bgcolor="background.paper"
-                position="absolute"
-                left="0px"
-              />
-              <Box height="40px" marginY="15px" />
+              <PageEdit pageIndex={index}/>
               {getFetchedSectionsAll()[pageId].map(
                 // Map over sections
                 (section: TEditSection) => {
@@ -88,6 +84,7 @@ const PaperSectionsDisplay = () => {
                   }
                 }
               )}
+              {index === getFetchedPages().length - 1 ? <PageEdit /> : <> </>}
             </Box>
           );
         }

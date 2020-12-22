@@ -1,5 +1,14 @@
 import { useContext } from "react";
-import { PageContext, useUser, PORTFOLIOS_PATH } from "jinxui";
+import {
+  PageContext,
+  useUser,
+  useSection,
+  PORTFOLIOS_PATH,
+  listDelete,
+  listMoveUp,
+  listMoveDown,
+  listAdd,
+} from "jinxui";
 import API from "../../API";
 import { TPage } from "../types/PortfolioTypes";
 
@@ -40,7 +49,7 @@ async function putPages(portfolioId: number, pages: TPage[], config: any) {
         return API.put(path, page, config);
       })
     );
-    return pagesResult
+    return pagesResult;
   } catch (e) {
     throw e;
   }
@@ -55,7 +64,7 @@ async function postPages(portfolioId: number, pages: TPage[], config: any) {
         return API.post(path, page, config);
       })
     );
-    return pagesResult
+    return pagesResult;
   } catch (e) {
     throw e;
   }
@@ -67,6 +76,16 @@ export const usePage = () => {
   const [state, setState, updateState, resetState] = useContext(PageContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig } = useUser();
+  const { handleSectionDeletePage } = useSection();
+
+  function pageIndex(pageId: number) {
+    const index = state.findIndex((page: TPage) => page.id === pageId);
+    if (index > -1) {
+      return index;
+    } else {
+      throw Error("Page with id: " + pageId + " could not be found.");
+    }
+  }
 
   async function getPages(portfolio_id: number) {
     const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
@@ -120,6 +139,16 @@ export const usePage = () => {
     }
   }
 
+  function handlePageDelete(index: number) {
+    // const index = pageIndex(pageId);
+    try {
+      setState(listDelete(state, index));
+      handleSectionDeletePage(state[index].id)
+    } catch (e) {
+      throw e;
+    }
+  }
+
   function resetPages() {
     resetState();
   }
@@ -130,6 +159,7 @@ export const usePage = () => {
     getFetchedPages,
     savePage,
     savePages,
+    handlePageDelete,
     resetPages,
   };
 };

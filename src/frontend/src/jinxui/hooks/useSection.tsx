@@ -98,16 +98,8 @@ async function putSectionsAll(
         const sectionsPath = basePath + pageIdString + "/sections";
         const pageId = parseInt(pageIdString);
         const sections = allSections[pageId];
-        // const linksResponse = Promise.all(
 
-        // )
-        // // const newCleanedSections = []
-        // for (var section of sections) {
-        //   newCleanedSections.push({...section,
-        //     links: cleanSectionLinks(section.links, section.id)
-        //   });
-        // }
-
+        // Put all links for an individual section at once
         const pageResponse = API.put(sectionsPath, sections, config).then(
           (response: any) => {
             Promise.all(
@@ -123,7 +115,6 @@ async function putSectionsAll(
         return pageResponse;
       })
     );
-    console.log(response);
     return response;
   } catch (e) {
     throw e;
@@ -232,6 +223,10 @@ export const useSection = () => {
     } catch (e) {
       throw e;
     }
+  }
+
+  function handleSectionDeletePage(pageId: number) {
+    delete state[pageId];
   }
 
   function handleSectionMoveUp(pageId: number, targetIndex: number) {
@@ -367,6 +362,7 @@ export const useSection = () => {
     handleTitleChange,
     handleSectionChange,
     handleSectionDelete,
+    handleSectionDeletePage,
     handleSectionMoveUp,
     handleSectionMoveDown,
     saveSectionsAll,
