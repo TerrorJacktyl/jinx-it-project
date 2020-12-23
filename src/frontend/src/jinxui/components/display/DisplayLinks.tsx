@@ -16,7 +16,7 @@ import { TLink } from "jinxui/types";
  */
 type TDisplayLinks = {
   horizontalAlign: string;
-  pageId?: number;
+  pageId?: string;
   sectionId?: number;
   textColor?: string;
 };

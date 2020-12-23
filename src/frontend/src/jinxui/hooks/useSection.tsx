@@ -131,7 +131,7 @@ export const useSection = () => {
     setState(result);
   }
 
-  function sectionIndex(pageId: number, uuid_index: string) {
+  function sectionIndex(pageId: string, uuid_index: string) {
     const index = state[pageId].findIndex(
       (section: TEditSection) => section.uid === uuid_index
     );
@@ -142,7 +142,7 @@ export const useSection = () => {
     }
   }
 
-  function sectionIndexFromId(pageId: number, id: number) {
+  function sectionIndexFromId(pageId: string, id: number) {
     const index = state[pageId].findIndex(
       (section: TEditSection) => section.id === id
     );
@@ -153,7 +153,7 @@ export const useSection = () => {
     }
   }
 
-  const getFetchedSection = (pageId: number, uuid_index: string) => {
+  const getFetchedSection = (pageId: string, uuid_index: string) => {
     try {
       return state[pageId][sectionIndex(pageId, uuid_index)];
     } catch (e) {
@@ -167,7 +167,7 @@ export const useSection = () => {
    * 2. Override section numbers
    * 3. Remove empty sections entirely
    */
-  const getCleanedSections = (pageId: number) => {
+  const getCleanedSections = (pageId: string) => {
     const cleanSections = JSON.parse(JSON.stringify(state[pageId]));
     for (var i = 0; i < cleanSections.length; i++) {
       if (sectionIsNotBlank(cleanSections[i])) {
@@ -180,8 +180,7 @@ export const useSection = () => {
 
   const getCleanedSectionsAll = () => {
     var cleanSectionsAll: any = {};
-    Object.keys(state).map((pageIdString: string) => {
-      const pageId = parseInt(pageIdString);
+    Object.keys(state).map((pageId: string) => {
       cleanSectionsAll[pageId] = getCleanedSections(pageId);
       return cleanSectionsAll[pageId];
     });
@@ -203,7 +202,7 @@ export const useSection = () => {
   };
 
   function handleSectionChange(
-    pageId: number,
+    pageId: string,
     targetIndex: number,
     newSection: TEditSection
   ) {
@@ -217,7 +216,15 @@ export const useSection = () => {
     }
   }
 
-  function handleSectionDelete(pageId: number, targetIndex: number) {
+  function handleSectionAddPage(pageId: string) {
+    if (pageId in state) {
+      throw Error("Tried to add new page with an existing page ID")
+    } else {
+      setState({...state, [pageId]: []})
+    }
+  }
+
+  function handleSectionDelete(pageId: string, targetIndex: number) {
     try {
       setState({ ...state, [pageId]: listDelete(state[pageId], targetIndex) });
     } catch (e) {
@@ -225,11 +232,11 @@ export const useSection = () => {
     }
   }
 
-  function handleSectionDeletePage(pageId: number) {
+  function handleSectionDeletePage(pageId: string) {
     delete state[pageId];
   }
 
-  function handleSectionMoveUp(pageId: number, targetIndex: number) {
+  function handleSectionMoveUp(pageId: string, targetIndex: number) {
     try {
       setState({ ...state, [pageId]: listMoveUp(state[pageId], targetIndex) });
     } catch (e) {
@@ -237,7 +244,7 @@ export const useSection = () => {
     }
   }
 
-  function handleSectionMoveDown(pageId: number, targetIndex: number) {
+  function handleSectionMoveDown(pageId: string, targetIndex: number) {
     try {
       setState({
         ...state,
@@ -248,7 +255,7 @@ export const useSection = () => {
     }
   }
 
-  function getFetchedSections(pageId: number) {
+  function getFetchedSections(pageId: string) {
     return isLoading() ? [defaultSectionContext] : state[pageId];
   }
 
@@ -265,19 +272,19 @@ export const useSection = () => {
   }
 
   function updateSectionLinks(
-    pageId: number,
+    pageId: string,
     uuid_index: string,
     links: TLink[]
   ) {
     updateState(pageId, uuid_index, { links: links });
   }
 
-  function getFetchedSectionLinks(pageId: number, uuid_index: string) {
+  function getFetchedSectionLinks(pageId: string, uuid_index: string) {
     const fetchedSection = getFetchedSection(pageId, uuid_index);
     return fetchedSection.links;
   }
 
-  function getFetchedSectionLinksFromId(pageId: number, id: number) {
+  function getFetchedSectionLinksFromId(pageId: string, id: number) {
     try {
       const index = sectionIndexFromId(pageId, id);
       return state[pageId][index].links;
@@ -286,7 +293,7 @@ export const useSection = () => {
     }
   }
 
-  function sectionLinkAdd(pageId: number, uuid_index: string, link: TLink) {
+  function sectionLinkAdd(pageId: string, uuid_index: string, link: TLink) {
     const sectionLinks: TLink[] = getFetchedSectionLinks(pageId, uuid_index);
     if (!validate(link.id)) {
       link.id = uuidv4();
@@ -306,7 +313,7 @@ export const useSection = () => {
   }
 
   function handleSectionLinkDelete(
-    pageId: number,
+    pageId: string,
     uuid_index: string,
     link: TLink
   ) {
@@ -320,7 +327,7 @@ export const useSection = () => {
   }
 
   function handleSectionLinkMoveUp(
-    pageId: number,
+    pageId: string,
     uuid_index: string,
     link: TLink
   ) {
@@ -334,7 +341,7 @@ export const useSection = () => {
   }
 
   function handleSectionLinkMoveDown(
-    pageId: number,
+    pageId: string,
     uuid_index: string,
     link: TLink
   ) {
@@ -361,6 +368,7 @@ export const useSection = () => {
     handleContentChange,
     handleTitleChange,
     handleSectionChange,
+    handleSectionAddPage,
     handleSectionDelete,
     handleSectionDeletePage,
     handleSectionMoveUp,

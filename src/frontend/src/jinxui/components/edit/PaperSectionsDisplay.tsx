@@ -17,32 +17,32 @@ import {
   PageEdit,
 } from "jinxui";
 
-import { TEditSection } from "jinxui/types";
+import { TEditSection, TPage } from "jinxui/types";
 
 const PaperSectionsDisplay = () => {
   const { isSaving } = useUser();
   const { saveFullPortfolio } = usePortfolio();
   const { getFetchedPages } = usePage();
   const {
-    getFetchedSectionsAll,
+    getFetchedSections,
     handleContentChange,
     handleTitleChange,
   } = useSection();
 
+  const pages = getFetchedPages();
   return (
     <>
       <Backdrop open={isSaving()} style={{ zIndex: 2000 }}>
         <CircularProgress color="secondary" />
       </Backdrop>
       <PaperSectionPage />
-      {Object.keys(getFetchedSectionsAll()).map(
+      {pages.map(
         // Map over pages
-        (pageIdString: string, index: number) => {
-          const pageId = parseInt(pageIdString);
+        (page: TPage, index: number) => {
           return (
-            <Box key={pageIdString}>
+            <Box key={page.id}>
               <PageEdit pageIndex={index}/>
-              {getFetchedSectionsAll()[pageId].map(
+              {getFetchedSections(page.id).map(
                 // Map over sections
                 (section: TEditSection) => {
                   if (section.type === "skeleton" && section.uid) {
@@ -54,7 +54,7 @@ const PaperSectionsDisplay = () => {
                         handleChange={handleContentChange}
                         handleTitleChange={handleTitleChange}
                         handlePublish={saveFullPortfolio}
-                        pageId={pageId}
+                        pageId={page.id}
                         section={section}
                       />
                     );
@@ -64,7 +64,7 @@ const PaperSectionsDisplay = () => {
                         key={section.uid}
                         handleTitleChange={handleTitleChange}
                         handlePublish={saveFullPortfolio}
-                        pageId={pageId}
+                        pageId={page.id}
                         section={section}
                       />
                     );
@@ -75,7 +75,7 @@ const PaperSectionsDisplay = () => {
                         handleChange={handleContentChange}
                         handleTitleChange={handleTitleChange}
                         handlePublish={saveFullPortfolio}
-                        pageId={pageId}
+                        pageId={page.id}
                         section={section}
                       />
                     );

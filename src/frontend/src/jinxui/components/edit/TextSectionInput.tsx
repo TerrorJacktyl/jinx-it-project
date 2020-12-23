@@ -5,7 +5,7 @@ import { NewSectionMenu, useSection } from "jinxui";
 
 type TTextSectionProps = {
   key: string;
-  pageId: number,
+  pageId: string,
   section: TEditSection;
   handleChange: any;
   handlePublish: any;

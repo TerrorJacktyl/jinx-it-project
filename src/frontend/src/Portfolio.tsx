@@ -89,7 +89,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
   const { getCleanedSections } = useSection();
 
   //!!! hard coded sections just for testing
-  const sections = getCleanedSections(17);
+  const sections = getCleanedSections("17");
 
   const [author, setAuthor] = useState<string>("");
 

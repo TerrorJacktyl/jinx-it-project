@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TPage } from "jinxui/types";
 
 export const defaultPageContext: TPage = {
-  id: 0,
+  id: "0",
   name: "Home",
   number: 0,
   sections: []

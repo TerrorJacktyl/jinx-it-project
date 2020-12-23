@@ -57,7 +57,7 @@ const PublishCancelDiv = styled.div`
 type TLinkDialog = {
   link?: TLink;
   // section: TEditSection
-  pageId?: number,
+  pageId?: string,
   sectionUid?: string;
   setAnchoEl?: any;
 };

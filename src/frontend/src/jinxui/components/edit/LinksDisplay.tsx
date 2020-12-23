@@ -5,7 +5,7 @@ import { useLink, useSection, LinkEditMenu } from "jinxui";
 import { TLink } from "jinxui/types";
 
 type TLinksDisplay = {
-  pageId?: number;
+  pageId?: string;
   sectionUid?: string;
 };
 const LinksDisplay = (props: TLinksDisplay) => {

@@ -13,7 +13,7 @@ import { TEditSection } from "jinxui/types";
 
 type TImageTextSectionInput = {
   key: string;
-  pageId: number,
+  pageId: string,
   section: TEditSection;
   handleChange: any;
   handleTitleChange: any;

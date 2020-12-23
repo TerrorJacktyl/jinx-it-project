@@ -10,7 +10,7 @@ import { TEditSection } from "jinxui/types";
 
 type TImageSection = {
   key: string;
-  pageId: number;
+  pageId: string;
   section: TEditSection;
   handleTitleChange: any;
   handlePublish: any;

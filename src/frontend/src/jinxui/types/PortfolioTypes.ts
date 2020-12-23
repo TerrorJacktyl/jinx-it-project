@@ -13,7 +13,7 @@ export type TPortfolio = {
 };// | null;
 
 export type TPage = {
-  id: number;
+  id: string;
   name: string;
   number: number;
   sections: number[];
@@ -43,7 +43,7 @@ export interface TSendSection extends TSection {
 }
 
 export interface TEditSections {
-  [pageId: number]: TEditSection[]
+  [pageId: string]: TEditSection[]
 }
 
 export type TPortfolioData = {

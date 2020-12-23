@@ -19,7 +19,7 @@ export const defaultSectionContext: TEditSection = {
 
 
 export const SectionContext = React.createContext<
-  [TEditSections, any, any, any]
+  [any, any, any, any]
 >([[], () => {}, () => {}, () => {}]);
 
 type TSectionContextProvider = {
@@ -29,7 +29,7 @@ export const SectionContextProvider = (props: TSectionContextProvider) => {
   const [state, setState] = useState<TEditSections>({});
 
   const updateState = (
-    pageId: number,
+    pageId: string,
     uuid_index: string,
     fieldsToUpdate: Partial<TEditSection[]>
   ) => {

@@ -11,6 +11,9 @@ import {
 } from "jinxui";
 import API from "../../API";
 import { TPage } from "../types/PortfolioTypes";
+import { defaultPageContext } from "jinxui/contexts";
+import { v4 as uuidv4, validate } from "uuid";
+
 
 async function putPage(portfolioId: number, page: TPage, config: any) {
   const path =
@@ -76,9 +79,9 @@ export const usePage = () => {
   const [state, setState, updateState, resetState] = useContext(PageContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig } = useUser();
-  const { handleSectionDeletePage } = useSection();
+  const { handleSectionDeletePage, handleSectionAddPage } = useSection();
 
-  function pageIndex(pageId: number) {
+  function pageIndex(pageId: string) {
     const index = state.findIndex((page: TPage) => page.id === pageId);
     if (index > -1) {
       return index;
@@ -87,8 +90,8 @@ export const usePage = () => {
     }
   }
 
-  async function getPages(portfolio_id: number) {
-    const path = PORTFOLIOS_PATH + "/" + portfolio_id + "/pages";
+  async function getPages(portfolioId: number) {
+    const path = PORTFOLIOS_PATH + "/" + portfolioId + "/pages";
     const result = API.get(path, getConfig())
       .then((response: any) => response.data)
       .catch((error: any) => {
@@ -97,9 +100,9 @@ export const usePage = () => {
     return result;
   }
 
-  async function fetchPages(id: number) {
+  async function fetchPages(portfolioId: number) {
     try {
-      const pages = await getPages(id);
+      const pages = await getPages(portfolioId);
       await setPages(pages);
       return pages;
     } catch (e) {
@@ -149,6 +152,13 @@ export const usePage = () => {
     }
   }
 
+  function handlePageAdd(index: number) {
+    const newPage = JSON.parse(JSON.stringify(defaultPageContext))
+    newPage.id = uuidv4()
+    setState(listAdd(state, index, newPage))
+    handleSectionAddPage(newPage.id)
+  }
+
   function resetPages() {
     resetState();
   }
@@ -160,6 +170,7 @@ export const usePage = () => {
     savePage,
     savePages,
     handlePageDelete,
+    handlePageAdd,
     resetPages,
   };
 };

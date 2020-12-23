@@ -54,7 +54,7 @@ const StyledButton = styled(Button)`
 `;
 
 type TPaperSection = {
-  pageId: number;
+  pageId: string;
   section: TEditSection;
   children: any;
   hideEditButtons?: boolean;

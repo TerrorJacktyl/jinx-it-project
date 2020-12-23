@@ -11,11 +11,17 @@ type TPageEdit = {
   pageIndex?: number;
 };
 const PageEdit = (props: TPageEdit) => {
-  const { handlePageDelete, getFetchedPages } = usePage();
+  const { handlePageDelete, handlePageAdd, getFetchedPages } = usePage();
 
   function handleDelete() {
     if (props.pageIndex !== undefined) {
       handlePageDelete(props.pageIndex);
+    }
+  }
+
+  function handleAdd() {
+    if (props.pageIndex !== undefined) {
+      handlePageAdd(props.pageIndex)
     }
   }
 
@@ -31,7 +37,10 @@ const PageEdit = (props: TPageEdit) => {
       <Box height="40px" marginY="15px" display="flex" position="relative">
         <Box></Box>
         <Box>
-          <PostAddIcon />
+          <Button onClick={handleAdd}>
+            <PostAddIcon />
+
+          </Button>
         </Box>
         <Box>
           {props.pageIndex !== undefined ? (

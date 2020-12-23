@@ -25,7 +25,7 @@ import { TLink } from "jinxui/types";
 
 type TLinkEditMenu = {
   link: TLink;
-  pageId?: number;
+  pageId?: string;
   sectionUid?: string;
 };
 const LinkEditMenu = (props: TLinkEditMenu) => {

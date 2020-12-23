@@ -14,7 +14,7 @@ import { PrimaryMenu, DefaultSectionData, useSection } from "jinxui";
 import { TEditSection } from "jinxui/types";
 
 type TNewSectionMenu = {
-  pageId: number;
+  pageId: string;
   section: any;
   placeAbove?: boolean;
 };

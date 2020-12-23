@@ -5,7 +5,7 @@ import { TEditSection } from "jinxui"
 
 
 type TTextFieldSubSection = {
-  pageId: number
+  pageId: string
   section: TEditSection;
   handleChange: any;
   rows: number;
