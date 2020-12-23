@@ -191,7 +191,8 @@ class PageInputSerializer(serializers.ModelSerializer):
             number = attrs.get('number')
         else:
             number = self.instance.number
-        validators.number_in_range(number, siblings)
+        # This causes problems for asynchronous updates
+        # validators.number_in_range(number, siblings)
         return attrs
 
     def to_internal_value(self, data: dict):

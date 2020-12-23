@@ -11,7 +11,13 @@ type TPageEdit = {
   pageIndex?: number;
 };
 const PageEdit = (props: TPageEdit) => {
-  const { handlePageDelete, handlePageAdd, getFetchedPages } = usePage();
+  const {
+    handlePageDelete,
+    handlePageAdd,
+    handlePageMoveUp,
+    handlePageMoveDown,
+    getFetchedPages,
+  } = usePage();
 
   function handleDelete() {
     if (props.pageIndex !== undefined) {
@@ -21,7 +27,19 @@ const PageEdit = (props: TPageEdit) => {
 
   function handleAdd() {
     if (props.pageIndex !== undefined) {
-      handlePageAdd(props.pageIndex)
+      handlePageAdd(props.pageIndex);
+    }
+  }
+
+  function handleMoveUp() {
+    if (props.pageIndex !== undefined) {
+      handlePageMoveUp(props.pageIndex);
+    }
+  }
+
+  function handleMoveDown() {
+    if (props.pageIndex !== undefined) {
+      handlePageMoveDown(props.pageIndex)
     }
   }
 
@@ -39,14 +57,19 @@ const PageEdit = (props: TPageEdit) => {
         <Box>
           <Button onClick={handleAdd}>
             <PostAddIcon />
-
           </Button>
         </Box>
         <Box>
           {props.pageIndex !== undefined ? (
             <>
+            <Button onClick={handleMoveDown} disabled={props.pageIndex > getFetchedPages().length - 1}>
+
               <ArrowDownwardIcon />
+            </Button>
+              <Button onClick={handleMoveUp} disabled={props.pageIndex < 1}>
+
               <ArrowUpwardIcon />
+              </Button>
               <Button
                 onClick={handleDelete}
                 disabled={getFetchedPages().length < 2}

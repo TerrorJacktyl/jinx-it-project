@@ -2,7 +2,6 @@ import { useContext } from "react";
 import {
   SectionContext,
   useUser,
-  usePage,
   useLink,
   PORTFOLIOS_PATH,
   listDelete,
@@ -18,7 +17,6 @@ import {
   TEditSection,
   TEditSections,
   TLink,
-  TSectionLink,
 } from "../types/PortfolioTypes";
 import { defaultSectionContext } from "jinxui/contexts";
 
@@ -77,57 +75,6 @@ async function getSectionsAll(
   }
 }
 
-// function cleanSectionLinks(links: TLink[], sectionId: number | undefined) {
-//   var cleanLinks: TSectionLink[] = [];
-//   const id = sectionId ? sectionId : 0;
-//   for (var i = 0; i < links.length; i++) {
-//     // links[i].number = i;
-//     // links[i] = {section: sectionId, link:links[i]}
-//     cleanLinks.push({ section: id, link: { ...links[i], number: i } });
-//   }
-//   return cleanLinks;
-// }
-
-// async function putSectionsAll(
-//   portfolioId: number,
-//   allSections: TEditSections,
-//   config: any
-// ) {
-//   const basePath = PORTFOLIOS_PATH + "/" + portfolioId + "/pages/";
-//   try {
-//     const response = await Promise.all(
-//       Object.keys(allSections).map((pageUid: string) => {
-//         // !!! TEST NUMBER
-//         const pageId = 2;
-//         const sectionsPath = basePath + pageId + "/sections";
-//         const sections = allSections[pageUid];
-
-//         // Put all links for an individual section at once
-//         const pageResponse = API.put(sectionsPath, sections, config).then(
-//           (response: any) => {
-//             Promise.all(
-//               response.data.map((responseSection: any, index: number) => {
-//                 const linksPath =
-//                   sectionsPath + "/" + responseSection.id + "/links";
-//                 const linksResponse = API.put(
-//                   linksPath,
-//                   sections[index].links,
-//                   config
-//                 );
-//                 return linksResponse;
-//               })
-//             );
-//           }
-//         );
-//         return pageResponse;
-//       })
-//     );
-//     return response;
-//   } catch (e) {
-//     throw e;
-//   }
-// }
-
 // Call from UsePage to prevent circular dependency issues
 export async function putSections(
   portfolioId: number,
@@ -135,7 +82,6 @@ export async function putSections(
   sections: TEditSection[],
   config: any
 ) {
-  console.log(config)
   const basePath =
     PORTFOLIOS_PATH + "/" + portfolioId + "/pages/" + pageId + "/sections";
 
@@ -205,15 +151,6 @@ export const useSection = () => {
       }
     }
     return cleanSections;
-  };
-
-  const getCleanedSectionsAll = () => {
-    var cleanSectionsAll: any = {};
-    Object.keys(state).map((pageUid: string) => {
-      cleanSectionsAll[pageUid] = getCleanedSections(pageUid);
-      return cleanSectionsAll[pageUid];
-    });
-    return cleanSectionsAll;
   };
 
   const handleContentChange = (
@@ -297,14 +234,6 @@ export const useSection = () => {
   function getFetchedSectionsAll() {
     return isLoading() ? { 1: [defaultSectionContext] } : state;
   }
-
-  // async function saveSectionsAll(portfolioId: number) {
-  //   try {
-  //     return putSectionsAll(portfolioId, getCleanedSectionsAll(), getConfig());
-  //   } catch (e) {
-  //     throw e;
-  //   }
-  // }
 
   async function saveSections(
     portfolioId: number,
