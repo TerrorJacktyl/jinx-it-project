@@ -57,7 +57,7 @@ const PublishCancelDiv = styled.div`
 type TLinkDialog = {
   link?: TLink;
   // section: TEditSection
-  pageId?: string,
+  pageUid?: string,
   sectionUid?: string;
   setAnchoEl?: any;
 };
@@ -90,8 +90,8 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
 
   // Add new link to list / update existing
   const handleUpdate = () => {    
-    if (props.sectionUid && props.pageId) {
-      sectionLinkAdd(props.pageId, props.sectionUid, activeLink)
+    if (props.sectionUid && props.pageUid) {
+      sectionLinkAdd(props.pageUid, props.sectionUid, activeLink)
     } else {
       updateLink(activeLink);
     }

@@ -5,7 +5,7 @@ import { TEditSection } from "jinxui"
 
 
 type TTextFieldSubSection = {
-  pageId: string
+  pageUid: string
   section: TEditSection;
   handleChange: any;
   rows: number;
@@ -27,8 +27,8 @@ const TextFieldSubSection = (props: TTextFieldSubSection) => {
         flexWrap="wrap"
         marginBottom="15px"
       >
-        <LinksDisplay sectionUid={props.section.uid} pageId={props.pageId} />
-        <LinkDialog sectionUid={props.section.uid} pageId={props.pageId} />
+        <LinksDisplay sectionUid={props.section.uid} pageUid={props.pageUid} />
+        <LinkDialog sectionUid={props.section.uid} pageUid={props.pageUid} />
       </Box>
       <TextField
         name={props.section.uid}

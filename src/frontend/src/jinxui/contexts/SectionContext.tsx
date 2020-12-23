@@ -29,19 +29,19 @@ export const SectionContextProvider = (props: TSectionContextProvider) => {
   const [state, setState] = useState<TEditSections>({});
 
   const updateState = (
-    pageId: string,
+    pageUid: string,
     uuid_index: string,
     fieldsToUpdate: Partial<TEditSection[]>
   ) => {
-    const index = state[pageId].findIndex(
+    const index = state[pageUid].findIndex(
       (section: TEditSection) => section.uid === uuid_index
     );
     setState({
       ...state,
-        [pageId]: [
-          ...state[pageId].slice(0, index),
-          { ...state[pageId][index], ...fieldsToUpdate },
-          ...state[pageId].slice(index + 1)]
+        [pageUid]: [
+          ...state[pageUid].slice(0, index),
+          { ...state[pageUid][index], ...fieldsToUpdate },
+          ...state[pageUid].slice(index + 1)]
       });
   };
 

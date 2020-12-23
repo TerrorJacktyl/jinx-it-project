@@ -25,7 +25,7 @@ import { TLink } from "jinxui/types";
 
 type TLinkEditMenu = {
   link: TLink;
-  pageId?: string;
+  pageUid?: string;
   sectionUid?: string;
 };
 const LinkEditMenu = (props: TLinkEditMenu) => {
@@ -54,38 +54,38 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
   };
 
   const handleMoveBack = () => {
-    if ( props.pageId && props.sectionUid ) {
-      handleSectionLinkMoveUp(props.pageId, props.sectionUid, props.link);
+    if ( props.pageUid && props.sectionUid ) {
+      handleSectionLinkMoveUp(props.pageUid, props.sectionUid, props.link);
     } else {
       handleLinkMoveUp(props.link);
     }
   };
 
   const handleMoveForward = () => {
-    if (props.pageId && props.sectionUid) {
-      handleSectionLinkMoveDown(props.pageId, props.sectionUid, props.link);
+    if (props.pageUid && props.sectionUid) {
+      handleSectionLinkMoveDown(props.pageUid, props.sectionUid, props.link);
     } else {
       handleLinkMoveDown(props.link);
     }
   };
 
   const handleDelete = () => {
-    if (props.pageId && props.sectionUid) {
-      handleSectionLinkDelete(props.pageId, props.sectionUid, props.link);
+    if (props.pageUid && props.sectionUid) {
+      handleSectionLinkDelete(props.pageUid, props.sectionUid, props.link);
     } else {
       handleLinkDelete(props.link);
     }
   };
 
-  const links = props.pageId && props.sectionUid 
-    ? getFetchedSectionLinks(props.pageId, props.sectionUid)
+  const links = props.pageUid && props.sectionUid 
+    ? getFetchedSectionLinks(props.pageUid, props.sectionUid)
     : getFetchedLinks();
 
-  const backIsDisabled = props.pageId && props.sectionUid
+  const backIsDisabled = props.pageUid && props.sectionUid
     ? linkIndex(props.link.id, links) < 1
     : linkIndex(props.link.id) < 1;
 
-  const forwardIsDisabled = props.pageId && props.sectionUid
+  const forwardIsDisabled = props.pageUid && props.sectionUid
     ? linkIndex(props.link.id, links) > links.length - 2
     : linkIndex(props.link.id) > links.length - 2;
 
@@ -109,11 +109,11 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {props.sectionUid && props.pageId ? (
+        {props.sectionUid && props.pageUid ? (
           <LinkDialog 
             link={props.link} 
             setAnchoEl={setAnchorEl} 
-            pageId={props.pageId}
+            pageUid={props.pageUid}
             sectionUid={props.sectionUid} />
         ) : (
           <LinkDialog 

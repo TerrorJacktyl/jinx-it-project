@@ -1,6 +1,7 @@
 export type {
   TPortfolio,
   TPage,
+  TEditPage,
   TSection,
   TSectionData,
   TEditSection,

@@ -10,12 +10,11 @@ import {
   listAdd,
 } from "jinxui";
 import API from "../../API";
-import { TPage } from "../types/PortfolioTypes";
+import { TPage, TEditPage } from "../types/PortfolioTypes";
 import { defaultPageContext } from "jinxui/contexts";
 import { v4 as uuidv4, validate } from "uuid";
 
-
-async function putPage(portfolioId: number, page: TPage, config: any) {
+async function putPage(portfolioId: number, page: TEditPage, config: any) {
   const path =
     PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
   try {
@@ -26,7 +25,7 @@ async function putPage(portfolioId: number, page: TPage, config: any) {
   }
 }
 
-async function postPage(portfolioId: number, data: TPage, config: any) {
+async function postPage(portfolioId: number, data: TEditPage, config: any) {
   const path = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages";
   try {
     const response = await API.post(
@@ -43,13 +42,43 @@ async function postPage(portfolioId: number, data: TPage, config: any) {
   }
 }
 
-async function putPages(portfolioId: number, pages: TPage[], config: any) {
+async function putPages(
+  portfolioId: number,
+  pages: TEditPage[],
+  updatePages: any,
+  saveSections: any,
+  config: any
+) {
+  const basePath = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages";
   try {
     const pagesResult = await Promise.all(
-      pages.map((page: TPage) => {
-        const path =
-          PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
-        return API.put(path, page, config);
+      pages.map((page: TEditPage, index: number) => {
+        page.number = index;
+        if (page.isNew) {
+          return API.post(
+            basePath,
+            { name: page.name, number: page.number },
+            config
+          )
+            .then((response: any) => {
+              saveSections(portfolioId, response.data.id, page.uid);
+              updatePages(index, { id: response.data.id, isNew: false });
+
+              return response;
+            })
+            .catch((error: any) => {
+              console.log(error);
+              throw error;
+            });
+        } else {
+          console.assert(page.id > 0)
+          const pagePath = basePath + "/" + page.id;
+          return API.put(pagePath, page, config).then(
+            (response: any) => {
+              saveSections(portfolioId, response.data.id, page.uid);
+            }
+          );
+        }
       })
     );
     return pagesResult;
@@ -58,10 +87,10 @@ async function putPages(portfolioId: number, pages: TPage[], config: any) {
   }
 }
 
-async function postPages(portfolioId: number, pages: TPage[], config: any) {
+async function postPages(portfolioId: number, pages: TEditPage[], config: any) {
   try {
     const pagesResult = await Promise.all(
-      pages.map((page: TPage) => {
+      pages.map((page: TEditPage) => {
         const path =
           PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" + page.id;
         return API.post(path, page, config);
@@ -79,14 +108,18 @@ export const usePage = () => {
   const [state, setState, updateState, resetState] = useContext(PageContext);
   const PORTFOLIOS_PATH = "api/portfolios";
   const { getConfig } = useUser();
-  const { handleSectionDeletePage, handleSectionAddPage } = useSection();
+  const {
+    handleSectionDeletePage,
+    handleSectionAddPage,
+    saveSections,
+  } = useSection();
 
-  function pageIndex(pageId: string) {
-    const index = state.findIndex((page: TPage) => page.id === pageId);
+  function pageIndex(pageUid: string) {
+    const index = state.findIndex((page: TEditPage) => page.uid === pageUid);
     if (index > -1) {
       return index;
     } else {
-      throw Error("Page with id: " + pageId + " could not be found.");
+      throw Error("Page with id: " + pageUid + " could not be found.");
     }
   }
 
@@ -103,6 +136,10 @@ export const usePage = () => {
   async function fetchPages(portfolioId: number) {
     try {
       const pages = await getPages(portfolioId);
+      for (var page of pages) {
+        page.uid = uuidv4();
+        page.isNew = false;
+      }
       await setPages(pages);
       return pages;
     } catch (e) {
@@ -114,7 +151,16 @@ export const usePage = () => {
     return state;
   }
 
-  async function setPages(pages: TPage[]) {
+  function getFetchedPageId(uid: string) {
+    for (var page of state) {
+      if (page.uid === uid) {
+        return page.id;
+      }
+    }
+    return "";
+  }
+
+  async function setPages(pages: TEditPage[]) {
     try {
       await setState(pages);
     } catch (e) {
@@ -122,41 +168,44 @@ export const usePage = () => {
     }
   }
 
-  async function savePage(isNew: boolean, portfolio_id: number, index: number) {
+  async function savePage(isNew: boolean, portfolioId: number, index: number) {
     try {
       return isNew
-        ? await postPage(portfolio_id, state[index], getConfig())
-        : await putPage(portfolio_id, state[index], getConfig());
+        ? await postPage(portfolioId, state[index], getConfig())
+        : await putPage(portfolioId, state[index], getConfig());
     } catch (e) {
       throw e;
     }
   }
 
-  async function savePages(isNew: boolean, portfolio_id: number) {
+  async function savePages(portfolioId: number) {
     try {
-      return isNew
-        ? await postPages(portfolio_id, state, getConfig())
-        : await putPages(portfolio_id, state, getConfig());
+      return await putPages(
+        portfolioId,
+        state,
+        updateState,
+        saveSections,
+        getConfig(),
+      );
     } catch (e) {
       throw e;
     }
   }
 
   function handlePageDelete(index: number) {
-    // const index = pageIndex(pageId);
     try {
       setState(listDelete(state, index));
-      handleSectionDeletePage(state[index].id)
+      handleSectionDeletePage(state[index].uid);
     } catch (e) {
       throw e;
     }
   }
 
   function handlePageAdd(index: number) {
-    const newPage = JSON.parse(JSON.stringify(defaultPageContext))
-    newPage.id = uuidv4()
-    setState(listAdd(state, index, newPage))
-    handleSectionAddPage(newPage.id)
+    const newPage = JSON.parse(JSON.stringify(defaultPageContext));
+    newPage.uid = uuidv4();
+    setState(listAdd(state, index, newPage));
+    handleSectionAddPage(newPage.uid);
   }
 
   function resetPages() {
@@ -167,6 +216,7 @@ export const usePage = () => {
     fetchPages,
     setPages,
     getFetchedPages,
+    getFetchedPageId,
     savePage,
     savePages,
     handlePageDelete,

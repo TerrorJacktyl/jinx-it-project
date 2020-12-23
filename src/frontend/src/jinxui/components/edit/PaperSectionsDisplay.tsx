@@ -17,7 +17,7 @@ import {
   PageEdit,
 } from "jinxui";
 
-import { TEditSection, TPage } from "jinxui/types";
+import { TEditSection, TEditPage } from "jinxui/types";
 
 const PaperSectionsDisplay = () => {
   const { isSaving } = useUser();
@@ -29,20 +29,20 @@ const PaperSectionsDisplay = () => {
     handleTitleChange,
   } = useSection();
 
-  const pages = getFetchedPages();
+  // const pages = getFetchedPages();
   return (
     <>
       <Backdrop open={isSaving()} style={{ zIndex: 2000 }}>
         <CircularProgress color="secondary" />
       </Backdrop>
       <PaperSectionPage />
-      {pages.map(
+      {getFetchedPages().map(
         // Map over pages
-        (page: TPage, index: number) => {
+        (page: TEditPage, index: number) => {
           return (
-            <Box key={page.id}>
-              <PageEdit pageIndex={index}/>
-              {getFetchedSections(page.id).map(
+            <Box key={page.uid}>
+              <PageEdit pageIndex={index} />
+              {getFetchedSections(page.uid).map(
                 // Map over sections
                 (section: TEditSection) => {
                   if (section.type === "skeleton" && section.uid) {
@@ -54,7 +54,7 @@ const PaperSectionsDisplay = () => {
                         handleChange={handleContentChange}
                         handleTitleChange={handleTitleChange}
                         handlePublish={saveFullPortfolio}
-                        pageId={page.id}
+                        pageUid={page.uid}
                         section={section}
                       />
                     );
@@ -64,7 +64,7 @@ const PaperSectionsDisplay = () => {
                         key={section.uid}
                         handleTitleChange={handleTitleChange}
                         handlePublish={saveFullPortfolio}
-                        pageId={page.id}
+                        pageUid={page.uid}
                         section={section}
                       />
                     );
@@ -75,7 +75,7 @@ const PaperSectionsDisplay = () => {
                         handleChange={handleContentChange}
                         handleTitleChange={handleTitleChange}
                         handlePublish={saveFullPortfolio}
-                        pageId={page.id}
+                        pageUid={page.uid}
                         section={section}
                       />
                     );

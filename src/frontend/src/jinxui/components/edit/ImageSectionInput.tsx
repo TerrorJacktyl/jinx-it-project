@@ -10,7 +10,7 @@ import { TEditSection } from "jinxui/types";
 
 type TImageSection = {
   key: string;
-  pageId: string;
+  pageUid: string;
   section: TEditSection;
   handleTitleChange: any;
   handlePublish: any;
@@ -18,20 +18,20 @@ type TImageSection = {
 const ImageSectionInput = (props: TImageSection) => {
   const { sectionIndex } = useSection();
   const index = props.section.uid 
-    ? sectionIndex(props.pageId, props.section.uid)
+    ? sectionIndex(props.pageUid, props.section.uid)
     : 0
 
   return (
     <>
       {index === 0 && (
         <NewSectionMenu
-          pageId={props.pageId}
+          pageUid={props.pageUid}
           section={props.section}
           placeAbove={true}
         />
       )}
       <PaperSection
-        pageId={props.pageId}
+        pageUid={props.pageUid}
         section={props.section}
         handleTitleChange={props.handleTitleChange}
       >
@@ -40,7 +40,7 @@ const ImageSectionInput = (props: TImageSection) => {
         </OneColumnSectionDiv>
       </PaperSection>
       <NewSectionMenu
-        pageId={props.pageId}
+        pageUid={props.pageUid}
         section={props.section}
       />
     </>

@@ -2,6 +2,8 @@
    with variables and components. Should be OK to not do this for prop 
    types defined within your file */
 
+import { boolean } from "yup";
+
 export type TPortfolio = {
   id: number;
   owner: number;
@@ -13,11 +15,16 @@ export type TPortfolio = {
 };// | null;
 
 export type TPage = {
-  id: string;
+  id: number;
   name: string;
   number: number;
   sections: number[];
 };
+
+export interface TEditPage extends TPage {
+  uid: string;
+  isNew: boolean;
+}
 
 export type TSectionData = {
   name: string;
@@ -43,7 +50,7 @@ export interface TSendSection extends TSection {
 }
 
 export interface TEditSections {
-  [pageId: string]: TEditSection[]
+  [pageUid: string]: TEditSection[]
 }
 
 export type TPortfolioData = {

@@ -16,7 +16,7 @@ import { TLink } from "jinxui/types";
  */
 type TDisplayLinks = {
   horizontalAlign: string;
-  pageId?: string;
+  PageUid?: string;
   sectionId?: number;
   textColor?: string;
 };
@@ -24,8 +24,8 @@ const DisplayLinks = (props: TDisplayLinks) => {
   const { getFetchedLinks } = useLink();
   const { getFetchedSectionLinksFromId } = useSection();
   const theme = useTheme();
-  const links =  props.pageId && props.sectionId
-    ? getFetchedSectionLinksFromId(props.pageId, props.sectionId)
+  const links =  props.PageUid && props.sectionId
+    ? getFetchedSectionLinksFromId(props.PageUid, props.sectionId)
     : getFetchedLinks();
 
   type TGetLinkDisplayIcon = {

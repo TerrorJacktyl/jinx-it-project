@@ -5,7 +5,7 @@ import { useLink, useSection, LinkEditMenu } from "jinxui";
 import { TLink } from "jinxui/types";
 
 type TLinksDisplay = {
-  pageId?: string;
+  pageUid?: string;
   sectionUid?: string;
 };
 const LinksDisplay = (props: TLinksDisplay) => {
@@ -14,15 +14,15 @@ const LinksDisplay = (props: TLinksDisplay) => {
 
   return (
     <>
-      {props.pageId && props.sectionUid
+      {props.pageUid && props.sectionUid
         // Display section links
-        ? getFetchedSectionLinks(props.pageId, props.sectionUid).map(
+        ? getFetchedSectionLinks(props.pageUid, props.sectionUid).map(
             (link: TLink) => {
               return (
                 <LinkEditMenu
                   key={link.id}
                   link={link}
-                  pageId={props.pageId}
+                  pageUid={props.pageUid}
                   sectionUid={props.sectionUid}
                 />
               );

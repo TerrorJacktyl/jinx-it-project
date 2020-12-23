@@ -54,7 +54,7 @@ const StyledButton = styled(Button)`
 `;
 
 type TPaperSection = {
-  pageId: string;
+  pageUid: string;
   section: TEditSection;
   children: any;
   hideEditButtons?: boolean;
@@ -71,33 +71,33 @@ const PaperSection = (props: TPaperSection) => {
     handleSectionMoveDown,
   } = useSection();
 
-  const index = getFetchedSections(props.pageId).findIndex(
+  const index = getFetchedSections(props.pageUid).findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
 
   let deleteDisabled = false;
   let upArrowDisabled = false;
   let downArrowDisabled = false;
-  if (getFetchedSections(props.pageId).length === 1) {
+  if (getFetchedSections(props.pageUid).length === 1) {
     deleteDisabled = true;
   }
   if (index === 0) {
     upArrowDisabled = true;
   }
-  if (index === getFetchedSections(props.pageId).length - 1) {
+  if (index === getFetchedSections(props.pageUid).length - 1) {
     downArrowDisabled = true;
   }
 
   const handleDelete = () => {
-    handleSectionDelete(props.pageId, index);
+    handleSectionDelete(props.pageUid, index);
   };
 
   const handleMoveUp = () => {
-    handleSectionMoveUp(props.pageId, index);
+    handleSectionMoveUp(props.pageUid, index);
   };
 
   const handleMoveDown = () => {
-    handleSectionMoveDown(props.pageId, index);
+    handleSectionMoveDown(props.pageUid, index);
   }
 
   const handleSave = () => {
