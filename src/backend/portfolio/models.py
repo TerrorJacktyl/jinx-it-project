@@ -200,3 +200,15 @@ class SectionLink(models.Model):
         on_delete = models.CASCADE,
         related_name = 'links',
     )
+
+class PortfolioLink(models.Model):
+    link = models.OneToOneField(
+        Link,
+        primary_key = True,
+        on_delete = models.CASCADE,
+    )
+    portfolio = models.ForeignKey(
+        Portfolio,
+        on_delete = models.CASCADE,
+        related_name = 'links'
+    )

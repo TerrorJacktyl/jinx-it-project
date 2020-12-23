@@ -287,6 +287,49 @@ class ImageList(generics.ListCreateAPIView):
         super().perform_destroy(instance)
         models.Section.objects.normalise(parent_id)
 
+
+class PortfolioLinkList(generics.ListCreateAPIView):
+    serializer_class = serializers.LinkSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        try:
+            portfolio_id = self.kwargs['portfolio_id']
+            portfolio = models.Portfolio.objects.get(
+                id=portfolio_id)
+        except (models.Portfolio.DoesNotExist) as exc:
+            raise Http404 from exc
+
+        return models.PortfolioLink.objects.filter(portfolio=portfolio)
+
+    def get(self, request, *args, **kwargs):
+        links = self.get_queryset()
+        portfolio = kwargs['portfolio_id']
+
+        # Serialize them into a string
+        serializer = serializers.PortfolioLinkSerializer(
+            links,
+            child=serializers.PortfolioLinkDetailSerializer(),
+        )
+        # Return the JSON string
+        return Response(serializer.data)
+
+    def set_serializer(self, data_list):
+        return serializers.PortfolioLinkSerializer(
+            self.get_queryset(),
+            data=data_list,
+            child=serializers.PortfolioLinkDetailSerializer(),
+        )
+
+    def get_keywords(self):
+        return "portfolio", "portfolio_id"
+
+    def put(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
 class PageLinkList(generics.ListCreateAPIView):
     serializer_class = serializers.LinkSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

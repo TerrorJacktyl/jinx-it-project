@@ -44,6 +44,17 @@ class SectionLinkSerializer(serializers.ListSerializer):
         return LinkAssociationUpdate(self, validated_data, link_mapping)
 
 
+class PortfolioLinkSerializer(serializers.ListSerializer):
+    link = LinkSerializer()
+
+    class Meta:
+        model = models.PortfolioLink
+        fields = ['portfolio', 'link']
+    
+    def update(self, instance, validated_data):
+        link_mapping = {portfolio_link.link.id: portfolio_link for portfolio_link in instance}
+        return LinkAssociationUpdate(self, validated_data, link_mapping)
+
 def LinkAssociationUpdate(serializer, validated_data, instance_mapping):
     ret = []
     for data in validated_data:
@@ -113,6 +124,32 @@ class SectionLinkDetailSerializer(serializers.ModelSerializer):
         )
 
         return section_link
+
+    def update(self, instance, validated_data):
+        return association_link_detail_update(instance, validated_data)
+
+
+class PortfolioLinkDetailSerializer(serializers.ModelSerializer):
+    link = LinkSerializer()
+
+    class Meta:
+        list_serializer_class = PortfolioLinkSerializer
+        model = models.PortfolioLink
+        fields = ['portfolio', 'link']
+
+    def create(self, validated_data):
+        owner = validated_data.pop('owner')
+        links_data = validated_data.pop('link')
+
+        if links_data:
+            link = models.Link.objects.create(owner=owner, **links_data)
+
+        portfolio_link = models.PortfolioLink.objects.create(
+            link=link,
+            **validated_data
+        )
+
+        return portfolio_link
 
     def update(self, instance, validated_data):
         return association_link_detail_update(instance, validated_data)

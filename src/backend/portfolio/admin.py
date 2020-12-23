@@ -51,6 +51,14 @@ class SectionAdmin(admin.ModelAdmin):
 class LinkAdmin(admin.ModelAdmin):
     list_display = ['icon', 'title', 'address', 'id', 'number']
 
+@admin.register(models.PortfolioLink)
+class PortfolioLinkAdmin(admin.ModelAdmin):
+    list_display = ['link_id', 'portfolio_id']
+
 @admin.register(models.PageLink)
 class PageLinkAdmin(admin.ModelAdmin):
     list_display = ['link_id', 'page_id']
+
+@admin.register(models.SectionLink)
+class SectionLinkAdmin(admin.ModelAdmin):
+    list_display = ['link_id', 'section_id']
