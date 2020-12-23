@@ -32,10 +32,10 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const {
     linkIndex,
-    getFetchedLinks,
-    handleLinkDelete,
-    handleLinkMoveUp,
-    handleLinkMoveDown,
+    getFetchedPortfolioLinks,
+    handlePortfolioLinkDelete,
+    handlePortfolioLinkMoveUp,
+    handlePortfolioLinkMoveDown,
   } = useLink();
 
   const {
@@ -57,7 +57,7 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
     if ( props.pageUid && props.sectionUid ) {
       handleSectionLinkMoveUp(props.pageUid, props.sectionUid, props.link);
     } else {
-      handleLinkMoveUp(props.link);
+      handlePortfolioLinkMoveUp(props.link);
     }
   };
 
@@ -65,7 +65,7 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
     if (props.pageUid && props.sectionUid) {
       handleSectionLinkMoveDown(props.pageUid, props.sectionUid, props.link);
     } else {
-      handleLinkMoveDown(props.link);
+      handlePortfolioLinkMoveDown(props.link);
     }
   };
 
@@ -73,13 +73,13 @@ const LinkEditMenu = (props: TLinkEditMenu) => {
     if (props.pageUid && props.sectionUid) {
       handleSectionLinkDelete(props.pageUid, props.sectionUid, props.link);
     } else {
-      handleLinkDelete(props.link);
+      handlePortfolioLinkDelete(props.link);
     }
   };
 
   const links = props.pageUid && props.sectionUid 
     ? getFetchedSectionLinks(props.pageUid, props.sectionUid)
-    : getFetchedLinks();
+    : getFetchedPortfolioLinks();
 
   const backIsDisabled = props.pageUid && props.sectionUid
     ? linkIndex(props.link.id, links) < 1

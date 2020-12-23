@@ -10,9 +10,8 @@ import {
 import API from "../../API";
 import { TLink } from "jinxui/types";
 
-async function putLinks(
+async function putPortfolioLinks(
   portfolio_id: number,
-  page_id: number,
   links: TLink[],
   config: any
 ) {
@@ -20,8 +19,6 @@ async function putLinks(
     PORTFOLIOS_PATH +
     "/" +
     portfolio_id.toString() +
-    "/pages/" +
-    page_id.toString() +
     "/links";
   try {
     const response = await API.put(path, links, config);
@@ -41,9 +38,9 @@ export const useLink = () => {
     return thisLinks.findIndex((p: TLink) => p.id === id);
   }
 
-  async function getPageLinks(portfolio_id: number, page_id: number) {
+  async function getPortfolioLinks(portfolio_id: number) {
     const path =
-      PORTFOLIOS_PATH + "/" + portfolio_id + "/pages/" + page_id + "/links";
+      PORTFOLIOS_PATH + "/" + portfolio_id + "/links";
     const result = API.get(path, getConfig())
       .then((response: any) => {
         let links: TLink[] = [];
@@ -64,15 +61,15 @@ export const useLink = () => {
     return result;
   }
 
-  async function fetchPageLinks(portfolio_id: number, page_id: number) {
+  async function fetchPortfolioLinks(portfolio_id: number) {
     try {
-      setState(await getPageLinks(portfolio_id, page_id));
+      setState(await getPortfolioLinks(portfolio_id));
     } catch (e) {
       throw e;
     }
   }
 
-  const getCleanedLinks = (externalLinks?: TLink[]) => {
+  const getCleanedPortfolioLinks = (externalLinks?: TLink[]) => {
     var cleanLinks = externalLinks ? externalLinks : state;
     for (var i = 0; i < cleanLinks.length; i++) {
       cleanLinks[i].number = i;
@@ -80,7 +77,7 @@ export const useLink = () => {
     return cleanLinks;
   };
 
-  async function setLinks(links: TLink[]) {
+  async function setPortfolioLink(links: TLink[]) {
     try {
       await setState(links);
     } catch (e) {
@@ -88,7 +85,7 @@ export const useLink = () => {
     }
   }
 
-  function addLink(link: TLink, links?: TLink[], setLinks?: any) {
+  function addPortfolioLink(link: TLink, links?: TLink[], setLinks?: any) {
     if (links) {
       setLinks(...links, link);
     } else {
@@ -96,7 +93,7 @@ export const useLink = () => {
     }
   }
 
-  function updateLink(link: TLink, externalUpdateLink?: any) {
+  function updatePortfolioLink(link: TLink, externalUpdateLink?: any) {
     if (externalUpdateLink) {
       externalUpdateLink(link.id, {
         title: link.title,
@@ -112,16 +109,15 @@ export const useLink = () => {
     }
   }
 
-  function getFetchedLinks() {
+  function getFetchedPortfolioLinks() {
     return state;
   }
 
-  async function saveLinks(portfolio_id: number, page_id: number) {
+  async function savePortfolioLinks(portfolio_id: number) {
     try {
-      return await putLinks(
+      return await putPortfolioLinks(
         portfolio_id,
-        page_id,
-        getCleanedLinks(),
+        getCleanedPortfolioLinks(),
         getConfig()
       );
     } catch (e) {
@@ -129,36 +125,36 @@ export const useLink = () => {
     }
   }
 
-  function handleLinkDelete(link: TLink) {
+  function handlePortfolioLinkDelete(link: TLink) {
     const index = linkIndex(link.id);
     setState(listDelete(state, index));
   }
 
-  function handleLinkMoveUp(link: TLink) {
+  function handlePortfolioLinkMoveUp(link: TLink) {
     const index = linkIndex(link.id);
     setState(listMoveUp(state, index));
   }
 
-  function handleLinkMoveDown(link: TLink) {
+  function handlePortfolioLinkMoveDown(link: TLink) {
     const index = linkIndex(link.id);
     setState(listMoveDown(state, index))
   }
 
-  function resetLinks() {
+  function resetPortfolioLinks() {
     resetState();
   }
 
   return {
     linkIndex,
-    fetchPageLinks,
-    setLinks,
-    getFetchedLinks,
-    addLink,
-    updateLink,
-    saveLinks,
-    handleLinkDelete,
-    handleLinkMoveUp,
-    handleLinkMoveDown,
-    resetLinks,
+    fetchPortfolioLinks,
+    setPortfolioLink,
+    getFetchedPortfolioLinks,
+    addPortfolioLink,
+    updatePortfolioLink,
+    savePortfolioLinks,
+    handlePortfolioLinkDelete,
+    handlePortfolioLinkMoveUp,
+    handlePortfolioLinkMoveDown,
+    resetPortfolioLinks,
   };
 };

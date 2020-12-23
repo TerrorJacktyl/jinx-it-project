@@ -66,7 +66,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
   const [linkIcon, setLinkIcon] = useState(
     props.link ? props.link.icon : LinkIconEnum.Disabled
   );
-  const { updateLink, } = useLink();
+  const { updatePortfolioLink, } = useLink();
   const { sectionLinkAdd, } = useSection();
 
   const handleClickOpen = () => {
@@ -93,7 +93,7 @@ const LinkDialog = React.forwardRef((props: TLinkDialog, ref: any) => {
     if (props.sectionUid && props.pageUid) {
       sectionLinkAdd(props.pageUid, props.sectionUid, activeLink)
     } else {
-      updateLink(activeLink);
+      updatePortfolioLink(activeLink);
     }
     setLinkIcon(0);
     setOpen(false);

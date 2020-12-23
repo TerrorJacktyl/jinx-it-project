@@ -21,12 +21,12 @@ type TDisplayLinks = {
   textColor?: string;
 };
 const DisplayLinks = (props: TDisplayLinks) => {
-  const { getFetchedLinks } = useLink();
+  const { getFetchedPortfolioLinks } = useLink();
   const { getFetchedSectionLinksFromId } = useSection();
   const theme = useTheme();
   const links =  props.PageUid && props.sectionId
     ? getFetchedSectionLinksFromId(props.PageUid, props.sectionId)
-    : getFetchedLinks();
+    : getFetchedPortfolioLinks();
 
   type TGetLinkDisplayIcon = {
     link: TLink;

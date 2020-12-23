@@ -9,7 +9,7 @@ type TLinksDisplay = {
   sectionUid?: string;
 };
 const LinksDisplay = (props: TLinksDisplay) => {
-  const { getFetchedLinks } = useLink();
+  const { getFetchedPortfolioLinks } = useLink();
   const { getFetchedSectionLinks } = useSection();
 
   return (
@@ -28,7 +28,7 @@ const LinksDisplay = (props: TLinksDisplay) => {
               );
             }
           )
-        : getFetchedLinks().map((link: TLink) => {
+        : getFetchedPortfolioLinks().map((link: TLink) => {
           // Display page links
             return <LinkEditMenu key={link.id} link={link} />;
           })}
