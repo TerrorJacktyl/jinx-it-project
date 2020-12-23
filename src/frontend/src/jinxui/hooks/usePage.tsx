@@ -140,6 +140,7 @@ export const usePage = () => {
         page.uid = uuidv4();
         page.isNew = false;
       }
+      pages.sort((a:TPage, b:TPage) => (a.number > b.number ? 1 : -1));
       await setPages(pages);
       return pages;
     } catch (e) {
