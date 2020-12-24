@@ -39,54 +39,55 @@ const PaperSectionsDisplay = () => {
       {getFetchedPages().map(
         // Map over pages
         (page: TEditPage, index: number) => {
-          return (
-            <Box key={page.uid}>
-              <PageEdit pageIndex={index} />
-              {getFetchedSections(page.uid).map(
-                // Map over sections
-                (section: TEditSection) => {
-                  if (section.type === "skeleton" && section.uid) {
-                    return <SkeletonSectionInput key={section.uid} />;
-                  } else if (section.type === "text" && section.uid) {
-                    return (
-                      <TextSectionInput
-                        key={section.uid}
-                        handleChange={handleContentChange}
-                        handleTitleChange={handleTitleChange}
-                        handlePublish={saveFullPortfolio}
-                        pageUid={page.uid}
-                        section={section}
-                      />
-                    );
-                  } else if (section.type === "image" && section.uid) {
-                    return (
-                      <ImageSectionInput
-                        key={section.uid}
-                        handleTitleChange={handleTitleChange}
-                        handlePublish={saveFullPortfolio}
-                        pageUid={page.uid}
-                        section={section}
-                      />
-                    );
-                  } else if (section.type === "image_text" && section.uid) {
-                    return (
-                      <ImageTextSectionInput
-                        key={section.uid}
-                        handleChange={handleContentChange}
-                        handleTitleChange={handleTitleChange}
-                        handlePublish={saveFullPortfolio}
-                        pageUid={page.uid}
-                        section={section}
-                      />
-                    );
-                  } else {
-                    return <> </>;
+            return (
+              <Box key={page.uid}>
+                <PageEdit pageIndex={index} />
+                { page.sections.length > 0 ? (
+                  getFetchedSections(page.uid).map(
+                  // Map over sections
+                  (section: TEditSection) => {
+                    if (section.type === "skeleton" && section.uid) {
+                      return <SkeletonSectionInput key={section.uid} />;
+                    } else if (section.type === "text" && section.uid) {
+                      return (
+                        <TextSectionInput
+                          key={section.uid}
+                          handleChange={handleContentChange}
+                          handleTitleChange={handleTitleChange}
+                          handlePublish={saveFullPortfolio}
+                          pageUid={page.uid}
+                          section={section}
+                        />
+                      );
+                    } else if (section.type === "image" && section.uid) {
+                      return (
+                        <ImageSectionInput
+                          key={section.uid}
+                          handleTitleChange={handleTitleChange}
+                          handlePublish={saveFullPortfolio}
+                          pageUid={page.uid}
+                          section={section}
+                        />
+                      );
+                    } else if (section.type === "image_text" && section.uid) {
+                      return (
+                        <ImageTextSectionInput
+                          key={section.uid}
+                          handleChange={handleContentChange}
+                          handleTitleChange={handleTitleChange}
+                          handlePublish={saveFullPortfolio}
+                          pageUid={page.uid}
+                          section={section}
+                        />
+                      );
+                    } else {
+                      return <> </>;
+                    }
                   }
-                }
-              )}
-              {index === getFetchedPages().length - 1 ? <PageEdit /> : <> </>}
-            </Box>
-          );
+                )) : (<> </>)}
+                {index === getFetchedPages().length - 1 ? <PageEdit /> : <> </>}
+              </Box>
+            );
         }
       )}
     </>

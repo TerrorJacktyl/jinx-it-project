@@ -238,6 +238,63 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
             0
         )
 
+
+class PageListTest(UserMixin, PortfolioMixin, APITestCase):
+    def setUp(self):
+        """Code run before each test. Setup API access simulation."""
+        self.setUpUser()
+        self.setUpPortfolio()
+
+    def test_page_list_create(self):
+        data = [
+            {
+                'name': 'Home page',
+                'number': 0,
+                'sections': [
+                    {
+                        'name': 'About me',
+                        'number': 0,
+                        'type': 'text',
+                        'content': 'lorem ipsum',
+                    },
+                    {
+                        'name': 'Contact',
+                        'number': 1,
+                        'type': 'text',
+                        'content': 'lorem two',
+                    },
+                ]
+            },
+            {
+                'name': 'Projects',
+                'number': 1,
+                'sections': [
+                    {
+                        'name': 'Project 1',
+                        'number': 0,
+                        'type': 'text',
+                        'content': 'Project 1 info',
+                    },
+                    {
+                        'name': 'Project 2',
+                        'number': 1,
+                        'type': 'text',
+                        'content': 'Project 2 info',
+                    },
+                ]
+            },
+        ]
+        # data = [{'name': 'Home page','number': 0,'sections': [{'name': 'About me','number': 0,'type': 'text','content': 'lorem ipsum',},{'name': 'Contact','number': 1,'type': 'text','content': 'lorem two',},]},{'name': 'Projects','number': 1,'sections': [{'name': 'Project 1','number': 0,'type': 'text','content': 'Project 1 info',},{'name': 'Project 2','number': 1,'type': 'text','content': 'Project 2 info',},]},]
+        response = self.client.post(
+            reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
+            data,
+            format='json'
+        )
+        print(response.data)
+        self.assertEqual(response.status_code, 201)
+
+
+
 class LinkTest(UserMixin, PortfolioMixin, APITestCase):
     def setUp(self):
         """Code run before each test. Setup API access simulation."""

@@ -77,7 +77,6 @@ def LinkAssociationUpdate(serializer, validated_data, instance_mapping):
 
 class PageLinkDetailSerializer(serializers.ModelSerializer):
     link = LinkSerializer()
-    # link = serializers.CharField()
 
     class Meta:
         list_serializer_class = PageLinkSerializer
@@ -174,51 +173,6 @@ class PortfolioOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Portfolio
         fields = ['id', 'owner', 'name', 'pages', 'private', 'theme', 'background']
-
-
-class PageInputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Page
-        fields = ['id', 'name', 'number']
-
-    def validate(self, attrs):
-        siblings = len(models.Page.objects.filter(
-            portfolio=attrs['portfolio']))
-        # Python is stupid and will try to calculate the value for self.instance.number
-        # if it is used as the default value in dict.get. However, it may sometimes fail!
-        # This is why we need to use a if else statement.
-        if 'number' in attrs:
-            number = attrs.get('number')
-        else:
-            number = self.instance.number
-        # This causes problems for asynchronous updates
-        # validators.number_in_range(number, siblings)
-        return attrs
-
-    def to_internal_value(self, data: dict):
-        val = super().to_internal_value(data)
-        val['portfolio'] = models.Portfolio.objects.get(
-            pk=self.context['portfolio_id'])
-        return val
-
-    def update(self, instance, validated_data):
-        # update the ordering later
-        number = validated_data.pop('number', None)
-
-        # update the other fields
-        super().update(instance, validated_data)
-
-        # move the item
-        if number is not None:
-            models.Page.objects.move(instance, number)
-
-        return instance
-
-
-class PageOutputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Page
-        fields = ['id', 'name', 'number', 'sections', 'links']
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -411,3 +365,91 @@ class ImageTextSectionSerializer(SectionSerializer):
         model = models.ImageTextSection
         fields = SectionSerializer.Meta.fields + ['image', 'content', 'path']
 
+
+class PageListInputSerializer(serializers.ListSerializer):
+    sections = SectionListSerializer()
+
+    class Meta:
+        model = models.Page
+        fields = ['id', 'name', 'number', 'sections']
+    
+    def update(self, instance, validated_data):
+        print("UPDATING")
+        number = validated_data.pop('number', None)
+
+        super().update(instance, validated_data)
+
+        return instance
+
+
+class PageInputSerializer(serializers.ModelSerializer):
+    sections = SectionSerializer(many = True)
+
+    class Meta:
+        model = models.Page
+        fields = ['id', 'name', 'number', 'sections']
+
+    def validate(self, attrs):
+        siblings = len(models.Page.objects.filter(
+            portfolio=attrs['portfolio']))
+        # Python is stupid and will try to calculate the value for self.instance.number
+        # if it is used as the default value in dict.get. However, it may sometimes fail!
+        # This is why we need to use a if else statement.
+        if 'number' in attrs:
+            number = attrs.get('number')
+        else:
+            number = self.instance.number
+        # This causes problems for asynchronous updates
+        # validators.number_in_range(number, siblings)
+        return attrs
+
+    def to_internal_value(self, data: dict):
+        val = super().to_internal_value(data)
+        val['portfolio'] = models.Portfolio.objects.get(
+            pk=self.context['portfolio_id'])
+        return val
+
+    def update(self, instance, validated_data):
+        # update the ordering later
+        number = validated_data.pop('number', None)
+        sections = validated_data.pop('sections', None)
+        temp = self.data['id']
+        pageObj = models.Page.objects.get(id=self.data['id'])
+        asda = models.Page.objects.filter(id=self.data['id']).values('id')
+        dsf = pageObj.sections.all()
+        asd = dsf.values()
+        existingSections = pageObj.sections.all().values('id')
+        mapping = {section.id: section for section in dsf}
+        # mapping = {section.id for section in existingSections}
+        bla = models.Section.objects.filter(page = instance.id)
+        # sectionQueryset = models.Section.objects.filter(page=instance.id)
+        # sections = sectionQueryset.sections.all()
+        # print(sectionQueryset)
+        # for query in sectionQueryset:
+        #     temp = models.Section.objects.get(query)
+        #     print(query)
+        
+        for newSection in validated_data:
+            temp = newSection
+
+        section_mapping = {section.id: section for section in sections}
+        # for section in sections:
+        #     sectionData
+        #     print(section)
+        SectionListSerializer.update(instance.sections, sections)
+
+
+        # update the other fields
+        super().update(instance, validated_data)
+
+        # move the item
+        if number is not None:
+            models.Page.objects.move(instance, number)
+
+        return instance
+
+
+class PageOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Page
+        fields = ['id', 'name', 'number', 'sections', 'links']

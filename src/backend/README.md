@@ -99,3 +99,8 @@ Here's what to do with the frontend:
 The default portfolio will be added as a new user's primary portfolio.
 
 To change the default portfolio, edit the `create_default_portfolio` function in the portfolio's  [models](portfolio/models.py) file.
+
+
+## How to test serializers on their own
+
+Follow [this guide](https://www.django-rest-framework.org/tutorial/1-serialization/#working-with-serializers) on using the DJango shell to test the serializer directly

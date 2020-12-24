@@ -97,6 +97,19 @@ class PageList(generics.ListCreateAPIView):
         context['portfolio_id'] = self.kwargs['portfolio_id']
         return context
 
+    def put(self, request, *args, **kwargs):
+        # console.log(request.data)
+        serializer = serializers.PageListInputSerializer(
+            self.get_queryset(),
+            data=request.data,
+            child=serializers.PageInputSerializer(),
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
     swagger_schema = swagger.PortfolioAutoSchema
 
 
@@ -114,6 +127,8 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['portfolio_id'] = self.kwargs['portfolio_id']
+        context['page'] = context['request'].data['id']
+        # context['page'] = context['request']['data']['id']
         return context
 
     def perform_destroy(self, instance):
@@ -164,7 +179,6 @@ class SectionList(generics.ListCreateAPIView):
 
     # bulk section creation/update
     def put(self, request, *args, **kwargs):
-        
         
         request.data.sort(key=(lambda s: s['number']))
         for i, section in enumerate(request.data):

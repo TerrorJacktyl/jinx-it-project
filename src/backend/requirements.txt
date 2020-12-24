@@ -37,3 +37,6 @@ urllib3==1.25.10
 
 ## Image processing
 Pillow==7.2.0
+
+## Debugging
+ptvsd==4.3.2

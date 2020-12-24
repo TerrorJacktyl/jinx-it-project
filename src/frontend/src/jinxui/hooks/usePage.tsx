@@ -81,16 +81,17 @@ async function putPages(
 ) {
   const basePath = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages";
   try {
-    const pagesResult = await Promise.all(
-      pages.map((page: TEditPage, index: number) => {
+    // const pagesResult = await Promise.all(
+      // pages.map((page: TEditPage, index: number) => {
+      const pagesResult = pages.map((page: TEditPage, index: number) => {
         page.number = index;
         console.assert(page.id > 0);
         const pagePath = basePath + "/" + page.id;
         return API.put(pagePath, page, config).then((response: any) => {
           saveSections(portfolioId, response.data.id, page.uid);
         });
-      })
-    );
+      });
+    // );
     return pagesResult;
   } catch (e) {
     throw e;
@@ -200,8 +201,16 @@ export const usePage = () => {
   }
 
   async function savePages(portfolioId: number) {
-    const newPages = state.filter((page) => page.isNew === true);
-    const existingPages = state.filter((page) => page.isNew === false);
+    const newPages = [];
+    const existingPages = [];
+
+    for (var page of state){
+      if (page.isNew === true) {
+        newPages.push(page)
+      } else {
+        existingPages.push(page)
+      }
+    }
 
     try {
       await postPages(
@@ -211,7 +220,7 @@ export const usePage = () => {
         saveSections,
         getConfig()
       );
-      await putPages(portfolioId, existingPages, updateState, getConfig());
+      await putPages(portfolioId, existingPages, saveSections, getConfig());
       await deleteOldPages(portfolioId, state, getConfig());
     } catch (e) {
       throw e;

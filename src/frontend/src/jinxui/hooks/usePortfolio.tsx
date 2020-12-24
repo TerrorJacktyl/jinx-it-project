@@ -10,7 +10,7 @@ import {
   PORTFOLIOS_PATH,
 } from "jinxui";
 import API from "../../API";
-import { TPortfolio, TPortfolioData } from "../types/PortfolioTypes";
+import { TPortfolio, TPortfolioData, TEditPage, TEditSections, TEditSection } from "../types/PortfolioTypes";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 async function changePortfolioPrivacy(
@@ -110,9 +110,9 @@ export const usePortfolio = () => {
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, savePages, resetPages } = usePage();
-  const { fetchSectionsAll, resetSections } = useSection();
-  const { fetchPortfolioLinks, savePortfolioLinks, resetPortfolioLinks } = useLink();
+  const { fetchPages, savePages, resetPages, getFetchedPages } = usePage();
+  const { fetchSectionsAll, resetSections, getFetchedSectionsAll } = useSection();
+  const { fetchPortfolioLinks, savePortfolioLinks, resetPortfolioLinks, getFetchedPortfolioLinks } = useLink();
 
   const PORTFOLIOS_PATH = "api/portfolios";
 
@@ -233,13 +233,53 @@ export const usePortfolio = () => {
 
   async function saveFullPortfolio(isNew: boolean) {
     setSaving(true);
+    // if (state) {
+    //   try {
+    //     const portfolioResponse = await savePortfolio(isNew);
+    //     await Promise.all([
+    //       savePages(portfolioResponse.data.id),
+    //       savePortfolioLinks(portfolioResponse.data.id)
+    //     ]);
+    //     await setSuccessMessage("Portfolio saved");
+    //   } catch (e) {
+    //     setErrorMessage("Something went wrong");
+    //     throw e;
+    //   } finally {
+    //     setSaving(false);
+    //   }
+    // }
     if (state) {
       try {
         const portfolioResponse = await savePortfolio(isNew);
-        await Promise.all([
-          savePages(portfolioResponse.data.id),
-          savePortfolioLinks(portfolioResponse.data.id)
-        ]);
+        const oldPages = getFetchedPages()
+        const oldSections:TEditSection[] = getFetchedSectionsAll();
+
+        const pages = JSON.parse(JSON.stringify(oldPages))
+        const sections = JSON.parse(JSON.stringify(oldSections))
+
+        // // const sections:TEditSections = JSON.parse(JSON.stringify(getFetchedSections(portfolioResponse.data.id)))
+
+        for(var page of pages) {
+          page.sections = sections[page.uid]
+        }
+
+        console.log(pages)
+
+        const singlePage = pages[0]
+        const singleSection = sections[pages[0].uid][0];
+        const path = PORTFOLIOS_PATH + "/" + portfolioResponse.data.id + "/pages"
+        const pagePath = path + "/" + singlePage.id
+        const sectionsPath = pagePath + "/sections";
+        const sectionPath = sectionsPath + "/" + singleSection.id
+        // await API.put(sectionPath, singleSection, getConfig())
+        await API.put(pagePath, pages[0], getConfig())
+        // await API.put(sectionsPath, pages[0].sections, getConfig())
+        // console.log(pages)
+        // await API.put(path, pages, getConfig())
+        // await Promise.all([
+        //   savePages(portfolioResponse.data.id),
+        //   savePortfolioLinks(portfolioResponse.data.id)
+        // ]);
         await setSuccessMessage("Portfolio saved");
       } catch (e) {
         setErrorMessage("Something went wrong");
