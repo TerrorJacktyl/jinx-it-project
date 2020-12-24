@@ -242,22 +242,24 @@ class SectionListSerializer(serializers.ListSerializer):
         # Maps for id->instance and id->data item.
         section_mapping = {section.id: section for section in instance}
 
-        # Perform creations and updates.
-        ret = []
-        for data in validated_data:
-            section = section_mapping.get(data.pop('id', None), None)
-            if section is None:
-                ret.append(self.child.create(data))
-            else:
-                data.pop('type', None)
-                ret.append(self.child.update(section, data))
+        return sectionListUpdate(self.child, section_mapping, validated_data)
 
-        # Perform deletions.
-        for section_id, section in section_mapping.items():
-            if section_id not in map(lambda s: s.id, ret):
-                section.delete()
+        # # Perform creations and updates.
+        # ret = []
+        # for data in validated_data:
+        #     section = section_mapping.get(data.pop('id', None), None)
+        #     if section is None:
+        #         ret.append(self.child.create(data))
+        #     else:
+        #         data.pop('type', None)
+        #         ret.append(self.child.update(section, data))
 
-        return ret
+        # # Perform deletions.
+        # for section_id, section in section_mapping.items():
+        #     if section_id not in map(lambda s: s.id, ret):
+        #         section.delete()
+
+        # return ret
 
 
 class PolymorphSectionSerializer(SectionSerializer):
@@ -278,7 +280,8 @@ class PolymorphSectionSerializer(SectionSerializer):
 
     def to_representation(self, instance):
         try:
-            serializer = self.get_serializer_map()[instance.type]
+            # serializer = self.get_serializer_map()[instance.type]
+            serializer = self.get_serializer_map()['text']
             return serializer(instance, context=self.context).to_representation(instance)
         except KeyError as ex:
             raise serializers.ValidationError(
@@ -383,7 +386,7 @@ class PageListInputSerializer(serializers.ListSerializer):
 
 
 class PageInputSerializer(serializers.ModelSerializer):
-    sections = SectionSerializer(many = True)
+    sections = PolymorphSectionSerializer(many=True)
 
     class Meta:
         model = models.Page
@@ -413,43 +416,79 @@ class PageInputSerializer(serializers.ModelSerializer):
         # update the ordering later
         number = validated_data.pop('number', None)
         sections = validated_data.pop('sections', None)
-        temp = self.data['id']
-        pageObj = models.Page.objects.get(id=self.data['id'])
-        asda = models.Page.objects.filter(id=self.data['id']).values('id')
-        dsf = pageObj.sections.all()
-        asd = dsf.values()
-        existingSections = pageObj.sections.all().values('id')
-        mapping = {section.id: section for section in dsf}
-        # mapping = {section.id for section in existingSections}
-        bla = models.Section.objects.filter(page = instance.id)
-        # sectionQueryset = models.Section.objects.filter(page=instance.id)
-        # sections = sectionQueryset.sections.all()
-        # print(sectionQueryset)
-        # for query in sectionQueryset:
-        #     temp = models.Section.objects.get(query)
-        #     print(query)
-        
-        for newSection in validated_data:
-            temp = newSection
 
-        section_mapping = {section.id: section for section in sections}
-        # for section in sections:
-        #     sectionData
-        #     print(section)
-        SectionListSerializer.update(instance.sections, sections)
-
-
-        # update the other fields
+        # # update the other fields
         super().update(instance, validated_data)
 
         # move the item
         if number is not None:
             models.Page.objects.move(instance, number)
 
+
+
+
+
+        sections_dict = [dict(section) for section in sections]
+
+        pageObj = models.Page.objects.get(id=instance.id)
+        sectionInstances = pageObj.sections.all()
+        section_mapping = {section.id: section for section in sectionInstances}
+
+        context = self.context
+        context['in_list'] = True
+        # dslkfj = serializers.PolymorphSectionSerializer()
+        # child_serializer = serializers.PolymorphSectionSerializer(
+            # context=context)
+
+        child_serializer = PolymorphSectionSerializer(context=context)
+
+
+        # SectionListSerializer.update(newSelf, sectionInstances, sections_dict)
+
+        out = sectionListUpdate(child_serializer, section_mapping, sections_dict)
+        # instance['sections'] = out
+        for s in out:
+            # s.type='text'
+            instance.sections.add(s)
+            # instance.type='text'
+        
         return instance
+
+        # return out
+
+
+
+
+        # # return instance
+
+        # number = validated_data.pop('number', None)
+        # sections = validated_data.pop('sections', None)
+        # instance.name = validated_data['name']
+        # return instance
 
 
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Page
         fields = ['id', 'name', 'number', 'sections', 'links']
+
+def sectionListUpdate(child_serializer, section_mapping, validated_data):
+    # Perform creations and updates.
+    # child_serializer= serializers.PolymorphSectionSerializer(context=context)
+    ret = []
+    for data in validated_data:
+        section = section_mapping.get(data.pop('id', None), None)
+        if section is None:
+            # ret.append(self.child.create(data))
+            ret.append(child_serializer.create(data))
+        else:
+            # data.pop('type', None)
+            # ret.append(self.child.update(section, data))
+            ret.append(child_serializer.update(section, data))
+
+    # Perform deletions.
+    for section_id, section in section_mapping.items():
+        if section_id not in map(lambda s: s.id, ret):
+            section.delete()
+
+    return ret
