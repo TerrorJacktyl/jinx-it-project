@@ -30,14 +30,14 @@ export const SectionContextProvider = (props: TSectionContextProvider) => {
 
   const updateState = (
     pageUid: string,
-    uuid_index: string,
+    sectionUid: string,
     fieldsToUpdate: Partial<TEditSection[]>
   ) => {
     if (!(pageUid in state)) {
       throw Error("Sections for page " + pageUid + " not found.")
     }
     const index = state[pageUid].findIndex(
-      (section: TEditSection) => section.uid === uuid_index
+      (section: TEditSection) => section.uid === sectionUid
     );
     setState({
       ...state,

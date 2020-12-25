@@ -415,7 +415,9 @@ class PageInputSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # update the ordering later
         number = validated_data.pop('number', None)
+        # update sections seperately
         sections = validated_data.pop('sections', None)
+        sections_dict = [dict(section) for section in sections]
 
         # # update the other fields
         super().update(instance, validated_data)
@@ -423,49 +425,28 @@ class PageInputSerializer(serializers.ModelSerializer):
         # move the item
         if number is not None:
             models.Page.objects.move(instance, number)
-
-
-
-
-
-        sections_dict = [dict(section) for section in sections]
-
+        
+        # get the existing section objects
         pageObj = models.Page.objects.get(id=instance.id)
         sectionInstances = pageObj.sections.all()
-        section_mapping = {section.id: section for section in sectionInstances}
 
+        # set up appropriate elements for sectionListUpdate function
+        section_mapping = {section.id: section for section in sectionInstances}
         context = self.context
         context['in_list'] = True
-        # dslkfj = serializers.PolymorphSectionSerializer()
-        # child_serializer = serializers.PolymorphSectionSerializer(
-            # context=context)
-
         child_serializer = PolymorphSectionSerializer(context=context)
 
+        # update sections
+        updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
 
-        # SectionListSerializer.update(newSelf, sectionInstances, sections_dict)
-
-        out = sectionListUpdate(child_serializer, section_mapping, sections_dict)
-        # instance['sections'] = out
-        for s in out:
-            # s.type='text'
-            instance.sections.add(s)
-            # instance.type='text'
+        # add updated section to return instance
+        for updatedSectionInstance in updatedSectionInstances:
+            # updatedSectionInstance['type']='text'
+            # setattr(updatedSectionInstance, 'type', 'text')
+            updatedSectionInstance.type.add('text')
+            instance.sections.add(updatedSectionInstance)
         
         return instance
-
-        # return out
-
-
-
-
-        # # return instance
-
-        # number = validated_data.pop('number', None)
-        # sections = validated_data.pop('sections', None)
-        # instance.name = validated_data['name']
-        # return instance
-
 
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:

@@ -104,3 +104,35 @@ To change the default portfolio, edit the `create_default_portfolio` function in
 ## How to test serializers on their own
 
 Follow [this guide](https://www.django-rest-framework.org/tutorial/1-serialization/#working-with-serializers) on using the DJango shell to test the serializer directly
+
+## How to debug in VSCode
+This is based off [this guide](https://testdriven.io/blog/django-debugging-vs-code/)
+
+  1. Create a new `launch.json` in your `.vscode` folder
+  2. Give it the following settings:
+``` json 
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Django",
+      "type": "python",
+      "request": "attach",
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/src/backend",
+          "remoteRoot": "/backend"
+        }
+      ],
+      "port": 3001,
+      "host": "127.0.0.1",
+    }
+  ]
+}
+```
+  3. Open `manage.py`
+  4. Uncomment section surrounded by `# start debug section` and `# end debug section`
+  5. Set some break points
+  6. Spin up docker
+  7. Press the little `Start Debugging` button. Keep in mind, you need to do this in order for DJango to start up.
+  8. Now if you open up `http://localhost:3000` and do anything to hit one of the breakpoints, it should pause and give you a debugging session in VSCode.

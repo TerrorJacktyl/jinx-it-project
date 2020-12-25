@@ -117,7 +117,7 @@ const PaperSection = (props: TPaperSection) => {
             name={props.section.uid}
             defaultValue={props.section.name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              props.handleTitleChange(e, props.section.uid)
+              props.handleTitleChange(e, props.pageUid, props.section.uid)
             }
             placeholder="Section Title"
             color="secondary"

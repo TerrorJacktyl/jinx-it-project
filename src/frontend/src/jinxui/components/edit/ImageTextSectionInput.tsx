@@ -13,15 +13,16 @@ import { TEditSection } from "jinxui/types";
 
 type TImageTextSectionInput = {
   key: string;
-  pageUid: string,
+  pageUid: string;
   section: TEditSection;
-  handleChange: any;
-  handleTitleChange: any;
-  handlePublish: any;
 };
 
 const ImageTextSectionInput = (props: TImageTextSectionInput) => {
-  const { getFetchedSections } = useSection();
+  const {
+    getFetchedSections,
+    handleTitleChange,
+    handleContentChange,
+  } = useSection();
 
   const index = getFetchedSections(props.pageUid).findIndex(
     (p: TEditSection) => p.uid === props.section.uid
@@ -39,26 +40,19 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
       <PaperSection
         pageUid={props.pageUid}
         section={props.section}
-        handleTitleChange={props.handleTitleChange}
+        handleTitleChange={handleTitleChange}
       >
         <TwoColumnSectionDiv>
-
-            <TextFieldSubSection
-              pageUid={props.pageUid}
-              section={props.section}
-              handleChange={props.handleChange}
-              rows={15}
-            />
-            <UploadImageSubSection 
-              section={props.section} 
-            />
-
+          <TextFieldSubSection
+            pageUid={props.pageUid}
+            section={props.section}
+            handleChange={handleContentChange}
+            rows={15}
+          />
+          <UploadImageSubSection section={props.section} />
         </TwoColumnSectionDiv>
       </PaperSection>
-      <NewSectionMenu
-        pageUid={props.pageUid}
-        section={props.section}
-      />
+      <NewSectionMenu pageUid={props.pageUid} section={props.section} />
     </>
   );
 };

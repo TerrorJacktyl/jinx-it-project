@@ -7,13 +7,10 @@ type TTextSectionProps = {
   key: string;
   pageUid: string,
   section: TEditSection;
-  handleChange: any;
-  handlePublish: any;
-  handleTitleChange: any;
 };
 
 const TextSectionInput = (props: TTextSectionProps) => {
-  const { getFetchedSections } = useSection();
+  const { getFetchedSections, handleTitleChange, handleContentChange } = useSection();
 
   const index = getFetchedSections(props.pageUid).findIndex(
     (p: TEditSection) => p.uid === props.section.uid
@@ -36,13 +33,13 @@ const TextSectionInput = (props: TTextSectionProps) => {
       <PaperSection
         pageUid={props.pageUid}
         section={props.section}
-        handleTitleChange={props.handleTitleChange}
+        handleTitleChange={handleTitleChange}
       >
         <OneColumnSectionDiv>
           <TextFieldSubSection
             pageUid={props.pageUid}
             section={props.section}
-            handleChange={props.handleChange}
+            handleChange={handleContentChange}
             rows={15}
           />
         </OneColumnSectionDiv>

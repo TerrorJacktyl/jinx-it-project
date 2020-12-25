@@ -155,16 +155,18 @@ export const useSection = () => {
 
   const handleContentChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    key: string
+    pageUid: string,
+    sectionUid: string,
   ) => {
-    updateState(key, { content: e.target.value });
+    updateState(pageUid, sectionUid, { content: e.target.value });
   };
 
   const handleTitleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    key: string
+    pageUid: string,
+    sectionUid: string,
   ) => {
-    updateState(key, { name: e.target.value });
+    updateState(pageUid, sectionUid, { name: e.target.value });
   };
 
   function handleSectionChange(
@@ -250,10 +252,10 @@ export const useSection = () => {
 
   function updateSectionLinks(
     pageUid: string,
-    uuid_index: string,
+    sectionUid: string,
     links: TLink[]
   ) {
-    updateState(pageUid, uuid_index, { links: links });
+    updateState(pageUid, sectionUid, { links: links });
   }
 
   function getFetchedSectionLinks(pageUid: string, uuid_index: string) {

@@ -25,8 +25,8 @@ const PaperSectionsDisplay = () => {
   const { getFetchedPages } = usePage();
   const {
     getFetchedSections,
-    handleContentChange,
-    handleTitleChange,
+    // handleContentChange,
+    // handleTitleChange,
   } = useSection();
 
   // const pages = getFetchedPages();
@@ -52,9 +52,9 @@ const PaperSectionsDisplay = () => {
                       return (
                         <TextSectionInput
                           key={section.uid}
-                          handleChange={handleContentChange}
-                          handleTitleChange={handleTitleChange}
-                          handlePublish={saveFullPortfolio}
+                          // handleChange={handleContentChange}
+                          // handleTitleChange={handleTitleChange}
+                          // handlePublish={saveFullPortfolio}
                           pageUid={page.uid}
                           section={section}
                         />
@@ -63,8 +63,8 @@ const PaperSectionsDisplay = () => {
                       return (
                         <ImageSectionInput
                           key={section.uid}
-                          handleTitleChange={handleTitleChange}
-                          handlePublish={saveFullPortfolio}
+                          // handleTitleChange={handleTitleChange}
+                          // handlePublish={saveFullPortfolio}
                           pageUid={page.uid}
                           section={section}
                         />
@@ -73,9 +73,9 @@ const PaperSectionsDisplay = () => {
                       return (
                         <ImageTextSectionInput
                           key={section.uid}
-                          handleChange={handleContentChange}
-                          handleTitleChange={handleTitleChange}
-                          handlePublish={saveFullPortfolio}
+                          // handleChange={handleContentChange}
+                          // handleTitleChange={handleTitleChange}
+                          // handlePublish={saveFullPortfolio}
                           pageUid={page.uid}
                           section={section}
                         />

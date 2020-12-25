@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, Box } from "@material-ui/core";
 import { LinksDisplay, LinkDialog } from "jinxui"
-import { TEditSection } from "jinxui"
+import { TEditSection } from "jinxui/types"
 
 
 type TTextFieldSubSection = {
@@ -19,6 +19,9 @@ type TTextFieldSubSection = {
 //      text before starting to write something of their own.
 
 const TextFieldSubSection = (props: TTextFieldSubSection) => {
+  const [content, setContent] = useState("")
+
+
   return (
     <Box>
       <Box
@@ -42,7 +45,8 @@ const TextFieldSubSection = (props: TTextFieldSubSection) => {
           "[This displays as a link](https://app.jinx.systems/)"
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          props.handleChange(e, props.section.uid)
+          props.handleChange(e, props.pageUid, props.section.uid)
+          // setContent(e.target.value)
         }
         id="standard-full-width"
         style={{ margin: 0, marginBottom: 15 }}
