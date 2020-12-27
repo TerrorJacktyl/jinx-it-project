@@ -460,8 +460,8 @@ class PageListInputSerializer(serializers.ListSerializer):
         return instance
 
 
-# class PageInputSerializer(serializers.ModelSerializer):
-class PageInputSerializer(WritableNestedModelSerializer):
+class PageInputSerializer(serializers.ModelSerializer):
+# class PageInputSerializer(WritableNestedModelSerializer):
     sections = PolymorphSectionSerializer(many=True)
 
     class Meta:
@@ -488,42 +488,42 @@ class PageInputSerializer(WritableNestedModelSerializer):
             pk=self.context['portfolio_id'])
         return val
 
-    # def update(self, instance, validated_data):
-    #     # update the ordering later
-    #     number = validated_data.pop('number', None)
-    #     # update sections seperately
-    #     sections = validated_data.pop('sections', None)
-    #     sections_dict = [dict(section) for section in sections]
+    def update(self, instance, validated_data):
+        # update the ordering later
+        number = validated_data.pop('number', None)
+        # update sections seperately
+        sections = validated_data.pop('sections', None)
+        sections_dict = [dict(section) for section in sections]
 
-    #     # # update the other fields
-    #     super().update(instance, validated_data)
+        # # update the other fields
+        super().update(instance, validated_data)
 
-    #     # move the item
-    #     if number is not None:
-    #         models.Page.objects.move(instance, number)
+        # move the item
+        if number is not None:
+            models.Page.objects.move(instance, number)
         
-    #     # get the existing section objects
-    #     pageObj = models.Page.objects.get(id=instance.id)
-    #     sectionInstances = pageObj.sections.all()
+        # get the existing section objects
+        pageObj = models.Page.objects.get(id=instance.id)
+        sectionInstances = pageObj.sections.all()
 
-    #     # set up appropriate elements for sectionListUpdate function
-    #     section_mapping = {section.id: section for section in sectionInstances}
-    #     context = self.context
-    #     context['in_list'] = True
-    #     child_serializer = PolymorphSectionSerializer(context=context)
+        # set up appropriate elements for sectionListUpdate function
+        section_mapping = {section.id: section for section in sectionInstances}
+        context = self.context
+        context['in_list'] = True
+        child_serializer = PolymorphSectionSerializer(context=context)
 
-    #     # update sections
-    #     updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
+        # update sections
+        updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
 
-    #     # add updated section to return instance
-    #     for (section, updatedSectionInstance) in zip(sections, updatedSectionInstances):
-    #         # updatedSectionInstance['type']='text'
-    #         # setattr(updatedSectionInstance, 'type', 'text')
-    #         # updatedSectionInstance.type.add('text')
-    #         # updatedSectionInstance.section_type = section['type']
-    #         instance.sections.add(updatedSectionInstance)
+        # add updated section to return instance
+        for (section, updatedSectionInstance) in zip(sections, updatedSectionInstances):
+            # updatedSectionInstance['type']='text'
+            # setattr(updatedSectionInstance, 'type', 'text')
+            # updatedSectionInstance.type.add('text')
+            # updatedSectionInstance.section_type = section['type']
+            instance.sections.add(updatedSectionInstance)
         
-    #     return instance
+        return instance
 
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
