@@ -1,6 +1,8 @@
 import copy
 
 from rest_framework import serializers
+from drf_writable_nested.serializers import WritableNestedModelSerializer
+
 
 from . import models
 from . import validators
@@ -279,8 +281,12 @@ class PolymorphSectionSerializer(SectionSerializer):
         }
 
     def to_representation(self, instance):
+        print(type(instance))
+        if hasattr(instance, 'section_type'):
+            print("Something")
         try:
-            # serializer = self.get_serializer_map()[instance.type]
+            # serializer = self.get_serializer_map()[instance.section_type]
+
             serializer = self.get_serializer_map()['text']
             return serializer(instance, context=self.context).to_representation(instance)
         except KeyError as ex:
@@ -289,9 +295,15 @@ class PolymorphSectionSerializer(SectionSerializer):
             ) from ex
 
     def to_internal_value(self, data):
+        
+
+        section_type = ''
         if self.instance:
-            section_type = self.instance.type
-        else:
+            try: 
+                section_type = self.instance.type
+            except KeyError:
+                pass
+        if section_type == '':
             try:
                 section_type = data['type']
             except KeyError as ex:
@@ -312,6 +324,69 @@ class PolymorphSectionSerializer(SectionSerializer):
         # validators strip keys that are not in the model, so add the type key back
         validated_data['type'] = section_type
         return validated_data
+
+        # # if self.instance:
+        # #     try:
+        # #         section_type = self.instance.type
+        # #     except KeyError:
+        # #         # Continut
+        # # else:
+        # # print(type(self.instance))
+        # # if self.instance:
+        # #     if (isinstance(self.instance, models.Section)):
+        # #         print("Is section")
+        # #     if hasattr(self.instance, 'type'):
+        # #         a='c'
+        # #     try:
+        # #         section_type = self.instance.type
+        # #     except KeyError as ex:
+        # #         print(ex)
+
+        # #     if hasattr(self.instance, 'type'):
+        # #         a = 'b'
+        # #     section_type = ''
+        # # try: 
+        # #     section_type = self.instance.type
+        # # except KeyError or AttributeError:
+        
+        # # if self.instance:
+        # #     try:
+        # #         section_type = self.instance.type
+        # #     except
+
+
+
+
+
+        
+        
+        # try:
+        #     section_type='blah'
+        #     temp = data['type']
+        #     section_type = data['type']
+        #     temp = data['type']
+        #     serializer = self.get_serializer_map()[section_type]
+        #     print('below the')
+        # except:
+        #     print("Something went wrong")
+        #     # except KeyError as ex:
+        #     #     raise serializers.ValidationError(
+        #     #         {'type': 'this field is missing'}
+        #     #     ) from ex
+        # try:
+        #     serializer = self.get_serializer_map()[section_type]
+        # except KeyError as ex:
+        #     raise serializers.ValidationError(
+        #         {'type': 'this type does not exist'}
+        #     ) from ex
+        # validated_data = serializer(
+        #     context=self.context,
+        #     partial=self.partial,
+        # ).to_internal_value(data)
+
+        # # validators strip keys that are not in the model, so add the type key back
+        # validated_data['type'] = section_type
+        # return validated_data
 
     def create(self, validated_data):
         # remove type as it is not a real fields on the model
@@ -385,7 +460,8 @@ class PageListInputSerializer(serializers.ListSerializer):
         return instance
 
 
-class PageInputSerializer(serializers.ModelSerializer):
+# class PageInputSerializer(serializers.ModelSerializer):
+class PageInputSerializer(WritableNestedModelSerializer):
     sections = PolymorphSectionSerializer(many=True)
 
     class Meta:
@@ -412,41 +488,42 @@ class PageInputSerializer(serializers.ModelSerializer):
             pk=self.context['portfolio_id'])
         return val
 
-    def update(self, instance, validated_data):
-        # update the ordering later
-        number = validated_data.pop('number', None)
-        # update sections seperately
-        sections = validated_data.pop('sections', None)
-        sections_dict = [dict(section) for section in sections]
+    # def update(self, instance, validated_data):
+    #     # update the ordering later
+    #     number = validated_data.pop('number', None)
+    #     # update sections seperately
+    #     sections = validated_data.pop('sections', None)
+    #     sections_dict = [dict(section) for section in sections]
 
-        # # update the other fields
-        super().update(instance, validated_data)
+    #     # # update the other fields
+    #     super().update(instance, validated_data)
 
-        # move the item
-        if number is not None:
-            models.Page.objects.move(instance, number)
+    #     # move the item
+    #     if number is not None:
+    #         models.Page.objects.move(instance, number)
         
-        # get the existing section objects
-        pageObj = models.Page.objects.get(id=instance.id)
-        sectionInstances = pageObj.sections.all()
+    #     # get the existing section objects
+    #     pageObj = models.Page.objects.get(id=instance.id)
+    #     sectionInstances = pageObj.sections.all()
 
-        # set up appropriate elements for sectionListUpdate function
-        section_mapping = {section.id: section for section in sectionInstances}
-        context = self.context
-        context['in_list'] = True
-        child_serializer = PolymorphSectionSerializer(context=context)
+    #     # set up appropriate elements for sectionListUpdate function
+    #     section_mapping = {section.id: section for section in sectionInstances}
+    #     context = self.context
+    #     context['in_list'] = True
+    #     child_serializer = PolymorphSectionSerializer(context=context)
 
-        # update sections
-        updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
+    #     # update sections
+    #     updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
 
-        # add updated section to return instance
-        for updatedSectionInstance in updatedSectionInstances:
-            # updatedSectionInstance['type']='text'
-            # setattr(updatedSectionInstance, 'type', 'text')
-            updatedSectionInstance.type.add('text')
-            instance.sections.add(updatedSectionInstance)
+    #     # add updated section to return instance
+    #     for (section, updatedSectionInstance) in zip(sections, updatedSectionInstances):
+    #         # updatedSectionInstance['type']='text'
+    #         # setattr(updatedSectionInstance, 'type', 'text')
+    #         # updatedSectionInstance.type.add('text')
+    #         # updatedSectionInstance.section_type = section['type']
+    #         instance.sections.add(updatedSectionInstance)
         
-        return instance
+    #     return instance
 
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:

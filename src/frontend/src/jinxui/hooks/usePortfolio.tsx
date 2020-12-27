@@ -282,7 +282,7 @@ export const usePortfolio = () => {
         // ]);
         await setSuccessMessage("Portfolio saved");
       } catch (e) {
-        setErrorMessage("Something went wrong");
+        setErrorMessage(e.message);
         throw e;
       } finally {
         setSaving(false);
