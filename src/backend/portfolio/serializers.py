@@ -179,10 +179,10 @@ class PortfolioOutputSerializer(serializers.ModelSerializer):
 
 class SectionSerializer(serializers.ModelSerializer):
     
-    links = SectionLinkDetailSerializer(many=True, read_only=True)
+    links = SectionLinkDetailSerializer(many=True)
 
 
-    type = serializers.ReadOnlyField()
+    # type = serializers.ReadOnlyField()
     # add id explicitly for it to be avaliable in the list serialiser
     id = serializers.IntegerField(required=False)
 
@@ -200,6 +200,7 @@ class SectionSerializer(serializers.ModelSerializer):
         owner = value.owner
         if self.context['request'].user != owner:
             raise serializers.ValidationError('You do not own this page')
+        temp = super().to_internal_value(value)
         return value
 
     def validate(self, attrs):
@@ -222,7 +223,25 @@ class SectionSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict):
         if 'page' not in data:
             data['page'] = self.context['page']
-        return super().to_internal_value(data)
+        
+        # # serialized = super(SectionSerializer, self)
+        # # internal = serialized.to_internal_value(data)
+
+        # # temp = 5
+
+        # # return internal
+
+
+        # # serialized = SectionLinkDetailSerializer(context = self.context, partial=False)
+        # # links_data = data['links']
+        # # validated_link = serialized.to_internal_value(links_data)
+        # # temp = 4
+
+        # internalised = super().to_internal_value(data)
+
+        # return internalized
+
+        return data
 
 
 class SectionListSerializer(serializers.ListSerializer):
@@ -246,23 +265,6 @@ class SectionListSerializer(serializers.ListSerializer):
 
         return sectionListUpdate(self.child, section_mapping, validated_data)
 
-        # # Perform creations and updates.
-        # ret = []
-        # for data in validated_data:
-        #     section = section_mapping.get(data.pop('id', None), None)
-        #     if section is None:
-        #         ret.append(self.child.create(data))
-        #     else:
-        #         data.pop('type', None)
-        #         ret.append(self.child.update(section, data))
-
-        # # Perform deletions.
-        # for section_id, section in section_mapping.items():
-        #     if section_id not in map(lambda s: s.id, ret):
-        #         section.delete()
-
-        # return ret
-
 
 class PolymorphSectionSerializer(SectionSerializer):
     """
@@ -271,6 +273,8 @@ class PolymorphSectionSerializer(SectionSerializer):
     # polymorphic section serializer based on this stack overflow question:
     # https://stackoverflow.com/q/19976202
     # https://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
+
+    links = SectionLinkDetailSerializer(many=True)
 
     def get_serializer_map(self):
         return {
@@ -295,7 +299,7 @@ class PolymorphSectionSerializer(SectionSerializer):
             ) from ex
 
     def to_internal_value(self, data):
-        
+        # val = super().to_internal_value(data)
 
         section_type = ''
         if self.instance:
@@ -316,77 +320,17 @@ class PolymorphSectionSerializer(SectionSerializer):
             raise serializers.ValidationError(
                 {'type': 'this type does not exist'}
             ) from ex
-        validated_data = serializer(
-            context=self.context,
-            partial=self.partial,
-        ).to_internal_value(data)
+
+        serialized = serializer(
+            context = self.context,
+            partial = self.partial,
+        )
+        
+        validated_data = serialized.to_internal_value(data)
 
         # validators strip keys that are not in the model, so add the type key back
         validated_data['type'] = section_type
         return validated_data
-
-        # # if self.instance:
-        # #     try:
-        # #         section_type = self.instance.type
-        # #     except KeyError:
-        # #         # Continut
-        # # else:
-        # # print(type(self.instance))
-        # # if self.instance:
-        # #     if (isinstance(self.instance, models.Section)):
-        # #         print("Is section")
-        # #     if hasattr(self.instance, 'type'):
-        # #         a='c'
-        # #     try:
-        # #         section_type = self.instance.type
-        # #     except KeyError as ex:
-        # #         print(ex)
-
-        # #     if hasattr(self.instance, 'type'):
-        # #         a = 'b'
-        # #     section_type = ''
-        # # try: 
-        # #     section_type = self.instance.type
-        # # except KeyError or AttributeError:
-        
-        # # if self.instance:
-        # #     try:
-        # #         section_type = self.instance.type
-        # #     except
-
-
-
-
-
-        
-        
-        # try:
-        #     section_type='blah'
-        #     temp = data['type']
-        #     section_type = data['type']
-        #     temp = data['type']
-        #     serializer = self.get_serializer_map()[section_type]
-        #     print('below the')
-        # except:
-        #     print("Something went wrong")
-        #     # except KeyError as ex:
-        #     #     raise serializers.ValidationError(
-        #     #         {'type': 'this field is missing'}
-        #     #     ) from ex
-        # try:
-        #     serializer = self.get_serializer_map()[section_type]
-        # except KeyError as ex:
-        #     raise serializers.ValidationError(
-        #         {'type': 'this type does not exist'}
-        #     ) from ex
-        # validated_data = serializer(
-        #     context=self.context,
-        #     partial=self.partial,
-        # ).to_internal_value(data)
-
-        # # validators strip keys that are not in the model, so add the type key back
-        # validated_data['type'] = section_type
-        # return validated_data
 
     def create(self, validated_data):
         # remove type as it is not a real fields on the model
@@ -399,6 +343,8 @@ class PolymorphSectionSerializer(SectionSerializer):
         # update the ordering later
         number = validated_data.pop('number', None)
 
+        links = validated_data.pop('links', None)
+
         # update the other fields
         super().update(instance, validated_data)
 
@@ -410,6 +356,7 @@ class PolymorphSectionSerializer(SectionSerializer):
 
 
 class TextSectionSerializer(SectionSerializer):
+    links = SectionLinkDetailSerializer(many=True)
     class Meta(SectionSerializer.Meta):
         model = models.TextSection
         fields = SectionSerializer.Meta.fields + ['content']
@@ -417,6 +364,7 @@ class TextSectionSerializer(SectionSerializer):
 
 
 class MediaSectionSerializer(SectionSerializer):
+    links = SectionLinkDetailSerializer(many=True)
     class Meta(SectionSerializer.Meta):
         model = models.MediaSection
         fields = SectionSerializer.Meta.fields + ['media']
@@ -516,11 +464,7 @@ class PageInputSerializer(serializers.ModelSerializer):
         updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
 
         # add updated section to return instance
-        for (section, updatedSectionInstance) in zip(sections, updatedSectionInstances):
-            # updatedSectionInstance['type']='text'
-            # setattr(updatedSectionInstance, 'type', 'text')
-            # updatedSectionInstance.type.add('text')
-            # updatedSectionInstance.section_type = section['type']
+        for updatedSectionInstance in updatedSectionInstances:
             instance.sections.add(updatedSectionInstance)
         
         return instance
