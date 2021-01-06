@@ -98,7 +98,6 @@ class PageList(generics.ListCreateAPIView):
         return context
 
     def put(self, request, *args, **kwargs):
-        # console.log(request.data)
         serializer = serializers.PageListInputSerializer(
             self.get_queryset(),
             data=request.data,
@@ -108,7 +107,6 @@ class PageList(generics.ListCreateAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     swagger_schema = swagger.PortfolioAutoSchema
 

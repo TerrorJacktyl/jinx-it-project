@@ -31,7 +31,7 @@ class PageLinkSerializer(serializers.ListSerializer):
 
     def update(self, instance, validated_data):
         link_mapping = {page_link.link.id: page_link for page_link in instance}
-        return LinkAssociationUpdate(self, validated_data, link_mapping)
+        return LinkAssociationUpdate(self.child, validated_data, link_mapping)
 
 
 class SectionLinkSerializer(serializers.ListSerializer):
@@ -43,7 +43,7 @@ class SectionLinkSerializer(serializers.ListSerializer):
 
     def update(self, instance, validated_data):
         link_mapping = {page_link.link.id: page_link for page_link in instance}
-        return LinkAssociationUpdate(self, validated_data, link_mapping)
+        return LinkAssociationUpdate(self.child, validated_data, link_mapping)
 
 
 class PortfolioLinkSerializer(serializers.ListSerializer):
@@ -55,18 +55,18 @@ class PortfolioLinkSerializer(serializers.ListSerializer):
     
     def update(self, instance, validated_data):
         link_mapping = {portfolio_link.link.id: portfolio_link for portfolio_link in instance}
-        return LinkAssociationUpdate(self, validated_data, link_mapping)
+        return LinkAssociationUpdate(self.child, validated_data, link_mapping)
 
-def LinkAssociationUpdate(serializer, validated_data, instance_mapping):
+def LinkAssociationUpdate(child_serializer, validated_data, instance_mapping):
     ret = []
     for data in validated_data:
         this_link = data['link']
         this_id = this_link['id']
         existing_link = instance_mapping.get(this_id, None)
         if existing_link is None:
-            ret.append(serializer.child.create(data))
+            ret.append(child_serializer.create(data))
         else:
-            ret.append(serializer.child.update(existing_link, data))
+            ret.append(child_serializer.update(existing_link, data))
 
     # Perform deletions
     updated_ids = [x.link.id for x in ret]
@@ -223,23 +223,6 @@ class SectionSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data: dict):
         if 'page' not in data:
             data['page'] = self.context['page']
-        
-        # # serialized = super(SectionSerializer, self)
-        # # internal = serialized.to_internal_value(data)
-
-        # # temp = 5
-
-        # # return internal
-
-
-        # # serialized = SectionLinkDetailSerializer(context = self.context, partial=False)
-        # # links_data = data['links']
-        # # validated_link = serialized.to_internal_value(links_data)
-        # # temp = 4
-
-        # internalised = super().to_internal_value(data)
-
-        # return internalized
 
         return data
 
@@ -343,7 +326,16 @@ class PolymorphSectionSerializer(SectionSerializer):
         # update the ordering later
         number = validated_data.pop('number', None)
 
+        # update links seperately
         links = validated_data.pop('links', None)
+        links_dict = [{
+            'owner': instance.owner,
+            'section': instance, 
+            'link': dict(link)
+            } for link in links]
+
+        # page not needed for super update
+        page = validated_data.pop('page', None)
 
         # update the other fields
         super().update(instance, validated_data)
@@ -351,6 +343,19 @@ class PolymorphSectionSerializer(SectionSerializer):
         # move the item
         if number is not None:
             models.Section.objects.move(instance, number)
+
+        # get the existing link objects
+        sectionObj = models.Section.objects.get(id=instance.id)
+        sectionLinkInstances = sectionObj.links.all()
+
+        # set up appropriate elements for LinkAssociationUpdate
+        link_mapping = {sectionLink.link.id: sectionLink for sectionLink in sectionLinkInstances}
+        child_serializer = SectionLinkDetailSerializer()
+
+        link_instances = LinkAssociationUpdate(child_serializer, links_dict, link_mapping)
+
+        for link_instance in link_instances:
+            instance.links.add(link_instance)
 
         return instance
 
@@ -400,12 +405,14 @@ class PageListInputSerializer(serializers.ListSerializer):
         fields = ['id', 'name', 'number', 'sections']
     
     def update(self, instance, validated_data):
-        print("UPDATING")
         number = validated_data.pop('number', None)
 
         super().update(instance, validated_data)
 
-        return instance
+        page_mapping = {page.id: page for page in instance}
+        return sectionListUpdate(self.child, page_mapping, validated_data)
+
+        # return instance
 
 
 class PageInputSerializer(serializers.ModelSerializer):
@@ -461,7 +468,7 @@ class PageInputSerializer(serializers.ModelSerializer):
         child_serializer = PolymorphSectionSerializer(context=context)
 
         # update sections
-        updatedSectionInstances = sectionListUpdate(child_serializer, section_mapping, sections_dict)
+        updatedSectionInstances = sectionListUpdate(child_serializer, sections_dict, section_mapping,)
 
         # add updated section to return instance
         for updatedSectionInstance in updatedSectionInstances:
@@ -474,18 +481,14 @@ class PageOutputSerializer(serializers.ModelSerializer):
         model = models.Page
         fields = ['id', 'name', 'number', 'sections', 'links']
 
-def sectionListUpdate(child_serializer, section_mapping, validated_data):
+def sectionListUpdate(child_serializer, validated_data, section_mapping, ):
     # Perform creations and updates.
-    # child_serializer= serializers.PolymorphSectionSerializer(context=context)
     ret = []
     for data in validated_data:
         section = section_mapping.get(data.pop('id', None), None)
         if section is None:
-            # ret.append(self.child.create(data))
             ret.append(child_serializer.create(data))
         else:
-            # data.pop('type', None)
-            # ret.append(self.child.update(section, data))
             ret.append(child_serializer.update(section, data))
 
     # Perform deletions.

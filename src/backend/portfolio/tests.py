@@ -155,13 +155,15 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
         name = 'deteriorating tubes'
         data = {
             'name': name,
-            'number': 0
+            'number': 0,
+            'sections': []
         }
         response = self.client.post(
             reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
             data,
             format='json',
         )
+        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data.get('name'), name)
 
