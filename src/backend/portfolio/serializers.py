@@ -409,6 +409,8 @@ class PageListInputSerializer(serializers.ListSerializer):
 
         super().update(instance, validated_data)
 
+        # !!! Up to, haven't tried page list update yet
+        
         page_mapping = {page.id: page for page in instance}
         return sectionListUpdate(self.child, page_mapping, validated_data)
 
