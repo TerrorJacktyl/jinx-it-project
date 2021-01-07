@@ -22,6 +22,7 @@ from . import serializers
 import io
 from rest_framework.parsers import JSONParser
 
+
 class UserMixin():
     def setUpUser(self):
         self.user = User.objects.create_user(
@@ -163,7 +164,6 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
             data,
             format='json',
         )
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data.get('name'), name)
 
@@ -241,60 +241,79 @@ class PageTest(UserMixin, PortfolioMixin, APITestCase):
         )
 
 
-class PageListTest(UserMixin, PortfolioMixin, APITestCase):
+class PageNestTest(UserMixin, PortfolioMixin, APITestCase):
     def setUp(self):
         """Code run before each test. Setup API access simulation."""
         self.setUpUser()
         self.setUpPortfolio()
 
-    def test_page_list_create(self):
-        data = [
-            {
-                'name': 'Home page',
-                'number': 0,
-                'sections': [
-                    {
-                        'name': 'About me',
-                        'number': 0,
-                        'type': 'text',
-                        'content': 'lorem ipsum',
-                    },
-                    {
-                        'name': 'Contact',
-                        'number': 1,
-                        'type': 'text',
-                        'content': 'lorem two',
-                    },
-                ]
-            },
-            {
-                'name': 'Projects',
-                'number': 1,
-                'sections': [
+    def test_page_nest_update(self):
+        data1 = {
+            'name': 'Home page',
+            'sections': [
+                {
+                    'name': 'About me',
+                    'number': 0,
+                    'type': 'text',
+                    'content': 'lorem ipsum',
+                    'id': 1,
+                    'links': [],
+                },
+                {
+                    'name': 'Contact',
+                    'number': 1,
+                    'type': 'text',
+                    'content': 'lorem two',
+                    'id': 2,
+                    'links': [
+                        {
+                            'address': 'http://facebook.com',
+                            'icon': 4,
+                            'id': '90b3b5c6-5a49-4bd5-bce4-7194b71507d0',
+                            'number': 0,
+                            'title': 'facebook'
+                        },
+                        {
+                            'address': 'http://github.com',
+                            'icon': 5,
+                            'id': '91b3b5c6-5a49-4bd5-bce4-7194b71507d0',
+                            'number': 1,
+                            'title': 'github'
+                        }
+                    ]
+                },
+            ]
+        }
+        data2 = {
+            'name': 'Projects',
+            'number': 1,
+            'sections': [
                     {
                         'name': 'Project 1',
                         'number': 0,
                         'type': 'text',
                         'content': 'Project 1 info',
                     },
-                    {
+                {
                         'name': 'Project 2',
                         'number': 1,
                         'type': 'text',
                         'content': 'Project 2 info',
                     },
-                ]
-            },
-        ]
-        # data = [{'name': 'Home page','number': 0,'sections': [{'name': 'About me','number': 0,'type': 'text','content': 'lorem ipsum',},{'name': 'Contact','number': 1,'type': 'text','content': 'lorem two',},]},{'name': 'Projects','number': 1,'sections': [{'name': 'Project 1','number': 0,'type': 'text','content': 'Project 1 info',},{'name': 'Project 2','number': 1,'type': 'text','content': 'Project 2 info',},]},]
-        response = self.client.post(
-            reverse('page_list', kwargs={'portfolio_id': self.portfolio.id}),
-            data,
+            ]
+        }
+        response = self.client.patch(
+            reverse(
+                'page_detail', 
+                kwargs={
+                    'portfolio_id': self.portfolio.id,
+                    'page_id': self.page.id
+                }
+            ),
+            data1,
             format='json'
         )
-        print(response.data)
-        self.assertEqual(response.status_code, 201)
-
+        self.assertEqual(response.status_code, 200)
 
 
 class LinkTest(UserMixin, PortfolioMixin, APITestCase):
@@ -302,7 +321,7 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
         """Code run before each test. Setup API access simulation."""
         self.setUpUser()
         self.setUpPortfolio()
-    
+
     def test_page_link_create(self):
         data = [
             {
@@ -354,7 +373,7 @@ class LinkTest(UserMixin, PortfolioMixin, APITestCase):
             format='json'
         )
         self.assertEqual(response.status_code, 201)
-    
+
     def test_page_link_update(self):
         data = [
             {
@@ -616,7 +635,8 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
             self.assertEqual(response.data.get(field), val)
 
         with self.subTest(field='name'):
-            initial_data = copy.deepcopy(serializers.TextSectionSerializer(self.section).data)
+            initial_data = copy.deepcopy(
+                serializers.TextSectionSerializer(self.section).data)
 
             update_field('name', name)
 
@@ -630,7 +650,8 @@ class TextSectionTest(UserMixin, PortfolioMixin, APITestCase):
             self.assertEqual(self.section.content, initial_data.get('content'))
 
         with self.subTest(field='content'):
-            initial_data = copy.deepcopy(serializers.TextSectionSerializer(self.section).data)
+            initial_data = copy.deepcopy(
+                serializers.TextSectionSerializer(self.section).data)
 
             update_field('content', content)
 
@@ -797,7 +818,7 @@ class SectionOrderingMachine(stateful.RuleBasedStateMachine, UserMixin):
         }
         response = self.client.post(
             reverse(
-                'section_list', 
+                'section_list',
                 kwargs={
                     'portfolio_id': self.portfolio.id,
                     'page_id': self.page.id,
@@ -865,7 +886,7 @@ class SectionOrderingMachine(stateful.RuleBasedStateMachine, UserMixin):
     def invariant(self):
         response = self.client.get(
             reverse(
-                'section_list', 
+                'section_list',
                 kwargs={
                     'portfolio_id': self.portfolio.id,
                     'page_id': self.page.id,
@@ -1080,7 +1101,7 @@ class PermissionTest(APITestCase):
             format='json',
         )
         self.assertEqual(response.status_code, status_codes[1])
-    
+
     def portfolio_detail_helper(self, portfolio_id, status_codes):
         response = self.client.get(
             reverse(
@@ -1116,7 +1137,7 @@ class PermissionTest(APITestCase):
             )
         )
         self.assertEqual(response.status_code, status_codes[0])
-    
+
         response = self.client.post(
             reverse(
                 'page_list',

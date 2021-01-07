@@ -1,7 +1,6 @@
 import copy
 
 from rest_framework import serializers
-from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
 from . import models
@@ -200,24 +199,23 @@ class SectionSerializer(serializers.ModelSerializer):
         owner = value.owner
         if self.context['request'].user != owner:
             raise serializers.ValidationError('You do not own this page')
-        temp = super().to_internal_value(value)
         return value
 
     def validate(self, attrs):
-        # skip number validation if the section is in a list
-        if self.context.get('in_list', False):
-            return attrs
+        # # skip number validation if the section is in a list
+        # if self.context.get('in_list', False):
+        #     return attrs
 
-        if 'page' in attrs:
-            page = attrs.get('page')
-        else:
-            page = self.instance.page
-        if 'number' in attrs:
-            number = attrs.get('number')
-        else:
-            number = self.instance.number
-        siblings = len(models.Section.objects.filter(page=page))
-        validators.number_in_range(number, siblings)
+        # if 'page' in attrs:
+        #     page = attrs.get('page')
+        # else:
+        #     page = self.instance.page
+        # if 'number' in attrs:
+        #     number = attrs.get('number')
+        # else:
+        #     number = self.instance.number
+        # siblings = len(models.Section.objects.filter(page=page))
+        # validators.number_in_range(number, siblings)
         return attrs
 
     def to_internal_value(self, data: dict):
@@ -268,12 +266,7 @@ class PolymorphSectionSerializer(SectionSerializer):
         }
 
     def to_representation(self, instance):
-        print(type(instance))
-        if hasattr(instance, 'section_type'):
-            print("Something")
         try:
-            # serializer = self.get_serializer_map()[instance.section_type]
-
             serializer = self.get_serializer_map()['text']
             return serializer(instance, context=self.context).to_representation(instance)
         except KeyError as ex:
@@ -303,6 +296,9 @@ class PolymorphSectionSerializer(SectionSerializer):
             raise serializers.ValidationError(
                 {'type': 'this type does not exist'}
             ) from ex
+        
+
+        self.context['page'] = data['id']
 
         serialized = serializer(
             context = self.context,
@@ -445,12 +441,18 @@ class PageInputSerializer(serializers.ModelSerializer):
             pk=self.context['portfolio_id'])
         return val
 
+    def create(self, validated_data):
+        sections = validated_data.pop('sections')
+        page = models.Page.objects.create(**validated_data)
+        for section in sections:
+            models.Section.objects.create(**section)
+        return page
+
     def update(self, instance, validated_data):
         # update the ordering later
         number = validated_data.pop('number', None)
         # update sections seperately
         sections = validated_data.pop('sections', None)
-        sections_dict = [dict(section) for section in sections]
 
         # # update the other fields
         super().update(instance, validated_data)
@@ -463,18 +465,25 @@ class PageInputSerializer(serializers.ModelSerializer):
         pageObj = models.Page.objects.get(id=instance.id)
         sectionInstances = pageObj.sections.all()
 
-        # set up appropriate elements for sectionListUpdate function
-        section_mapping = {section.id: section for section in sectionInstances}
-        context = self.context
-        context['in_list'] = True
-        child_serializer = PolymorphSectionSerializer(context=context)
 
-        # update sections
-        updatedSectionInstances = sectionListUpdate(child_serializer, sections_dict, section_mapping,)
+        if sections:
+            # set up appropriate elements for sectionListUpdate function
+            sections_dict = [dict(section) for section in sections]
+            section_mapping = {section.id: section for section in sectionInstances}
+            context = self.context
+            context['in_list'] = True
+            child_serializer = PolymorphSectionSerializer(context=context)
 
-        # add updated section to return instance
-        for updatedSectionInstance in updatedSectionInstances:
-            instance.sections.add(updatedSectionInstance)
+            # update sections
+            updatedSectionInstances = sectionListUpdate(
+                child_serializer, 
+                sections_dict, 
+                section_mapping,
+                )
+
+            # add updated section to return instance
+            for updatedSectionInstance in updatedSectionInstances:
+                instance.sections.add(updatedSectionInstance)
         
         return instance
 

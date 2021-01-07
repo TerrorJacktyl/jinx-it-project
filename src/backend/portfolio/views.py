@@ -125,7 +125,8 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['portfolio_id'] = self.kwargs['portfolio_id']
-        context['page'] = context['request'].data['id']
+        if 'id' in context['request'].data:
+            context['page'] = context['request'].data['id']
         # context['page'] = context['request']['data']['id']
         return context
 
