@@ -110,8 +110,8 @@ export const usePortfolio = () => {
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, savePages, resetPages, getFetchedPages } = usePage();
-  const { fetchSectionsAll, resetSections, getFetchedSectionsAll } = useSection();
+  const { fetchPages, savePages, resetPages, getIndexedFetchedPages } = usePage();
+  const { fetchSectionsAll, resetSections, getFetchedSectionsAll, getSectionsCopyIndexedAll } = useSection();
   const { fetchPortfolioLinks, savePortfolioLinks, resetPortfolioLinks, getFetchedPortfolioLinks } = useLink();
 
   const PORTFOLIOS_PATH = "api/portfolios";
@@ -251,28 +251,37 @@ export const usePortfolio = () => {
     if (state) {
       try {
         const portfolioResponse = await savePortfolio(isNew);
-        const oldPages = getFetchedPages()
-        const oldSections:TEditSection[] = getFetchedSectionsAll();
+        // const oldPages1 = getFetchedPages();
+        const oldPages = getIndexedFetchedPages()
+        // const oldSections:TEditSections = await getFetchedSectionsIndexedAll();
 
         const pages = JSON.parse(JSON.stringify(oldPages))
-        const sections = JSON.parse(JSON.stringify(oldSections))
+        // const allSections = JSON.parse(JSON.stringify(oldSections))
+        const allSections = getSectionsCopyIndexedAll();
 
         // // const sections:TEditSections = JSON.parse(JSON.stringify(getFetchedSections(portfolioResponse.data.id)))
 
         for(var page of pages) {
-          page.sections = sections[page.uid]
+          page.sections = allSections[page.uid]
         }
 
+        // for (var page_index = 0; page_index < pages.length; page_index++) {
+        //   const sections = allSections[pages[page_index].uid]
+        //   for (var section_index = 0; )
+        //   pages[page_index].sections = sections
+        // }
+
+        console.log(oldPages)
         console.log(pages)
 
         const singlePage = pages[0]
-        const singleSection = sections[pages[0].uid][0];
+        const singleSection = allSections[pages[0].uid][0];
         const path = PORTFOLIOS_PATH + "/" + portfolioResponse.data.id + "/pages"
         const pagePath = path + "/" + singlePage.id
         const sectionsPath = pagePath + "/sections";
         const sectionPath = sectionsPath + "/" + singleSection.id
         // await API.put(sectionPath, singleSection, getConfig())
-        await API.put(pagePath, pages[0], getConfig())
+        await API.patch(pagePath, pages[0], getConfig())
         // await API.put(sectionsPath, pages[0].sections, getConfig())
         // console.log(pages)
         // await API.put(path, pages, getConfig())

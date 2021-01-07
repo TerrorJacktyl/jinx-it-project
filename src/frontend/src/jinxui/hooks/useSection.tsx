@@ -237,6 +237,27 @@ export const useSection = () => {
     return isLoading() ? { 1: [defaultSectionContext] } : state;
   }
 
+  // async function getFetchedSectionsIndexedAll() {
+  //   for (const [pageUid, sections] of Object.entries(state)) {
+  //     for(var i = 0; i < sections.length; i++) {
+  //       const sectionUid = sections[i].uid
+  //       // const section = sections[i]
+  //       await updateState(pageUid, sectionUid, {'number': i})
+  //     }
+  //   }
+  //   return state
+  // }
+
+  function getSectionsCopyIndexedAll() {
+    const allSections:TEditSections = JSON.parse(JSON.stringify(state));
+      for (const [, sections] of Object.entries(allSections)) {
+        for(var i = 0; i < sections.length; i++) {
+          sections[i].number = i
+        }
+      }
+    return allSections
+  }
+
   async function saveSections(
     portfolioId: number,
     pageId: number,
@@ -343,6 +364,7 @@ export const useSection = () => {
     getFetchedSection,
     getFetchedSections,
     getFetchedSectionsAll,
+    getSectionsCopyIndexedAll,
     getCleanedSections,
     handleContentChange,
     handleTitleChange,

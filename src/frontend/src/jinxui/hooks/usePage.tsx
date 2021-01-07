@@ -173,6 +173,13 @@ export const usePage = () => {
     return state;
   }
 
+  function getIndexedFetchedPages(){
+    for (var i = 0; i < state.length; i++) {
+      updateState(i, {number: i})
+    }
+    return state
+  } 
+
   function getFetchedPageId(uid: string) {
     for (var page of state) {
       if (page.uid === uid) {
@@ -268,6 +275,7 @@ export const usePage = () => {
     fetchPages,
     setPages,
     getFetchedPages,
+    getIndexedFetchedPages,
     getFetchedPageId,
     savePage,
     savePages,

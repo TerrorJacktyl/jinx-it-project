@@ -19,8 +19,8 @@ export const defaultSectionContext: TEditSection = {
 
 
 export const SectionContext = React.createContext<
-  [any, any, any, any]
->([[], () => {}, () => {}, () => {}]);
+  [TEditSections, any, any, any]
+>([ {}, () => {}, () => {}, () => {}]);
 
 type TSectionContextProvider = {
   children: any;
