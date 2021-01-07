@@ -138,21 +138,6 @@ class PageDetail(generics.RetrieveUpdateDestroyAPIView):
         super().perform_destroy(instance)
         models.Page.objects.normalise(parent_id)
 
-    # def put(self, request, *args, **kwargs):
-    #     context = self.get_serializer_context()
-    #     context['in_list'] = True
-    #     serializer = serializers.PageInputSerializer(
-    #         self.get_queryset(),
-    #         data=request.data,
-    #         child=serializers.PolymorphSectionSerializer(
-    #             context=context
-    #         )
-    #     )
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class SectionList(generics.ListCreateAPIView):
     serializer_class = serializers.PolymorphSectionSerializer
     permission_classes = [(IsNotPrivate & IsReadOnly) | IsOwner]

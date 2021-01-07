@@ -181,7 +181,6 @@ class SectionSerializer(serializers.ModelSerializer):
     links = SectionLinkDetailSerializer(many=True)
 
 
-    # type = serializers.ReadOnlyField()
     # add id explicitly for it to be avaliable in the list serialiser
     id = serializers.IntegerField(required=False)
 
@@ -216,6 +215,9 @@ class SectionSerializer(serializers.ModelSerializer):
         #     number = self.instance.number
         # siblings = len(models.Section.objects.filter(page=page))
         # validators.number_in_range(number, siblings)
+
+
+        # Page number sorting now done on client side.
         return attrs
 
     def to_internal_value(self, data: dict):
