@@ -110,8 +110,8 @@ export const usePortfolio = () => {
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, savePages, resetPages, getIndexedFetchedPages } = usePage();
-  const { fetchSectionsAll, resetSections, getFetchedSectionsAll, getSectionsCopyIndexedAll } = useSection();
+  const { fetchPages, savePages, resetPages, getPagesIndexedCopy } = usePage();
+  const { fetchSectionsAll, resetSections, getFetchedSectionsAll, getSectionsIndexedCopyAll } = useSection();
   const { fetchPortfolioLinks, savePortfolioLinks, resetPortfolioLinks, getFetchedPortfolioLinks } = useLink();
 
   const PORTFOLIOS_PATH = "api/portfolios";
@@ -233,62 +233,21 @@ export const usePortfolio = () => {
 
   async function saveFullPortfolio(isNew: boolean) {
     setSaving(true);
-    // if (state) {
-    //   try {
-    //     const portfolioResponse = await savePortfolio(isNew);
-    //     await Promise.all([
-    //       savePages(portfolioResponse.data.id),
-    //       savePortfolioLinks(portfolioResponse.data.id)
-    //     ]);
-    //     await setSuccessMessage("Portfolio saved");
-    //   } catch (e) {
-    //     setErrorMessage("Something went wrong");
-    //     throw e;
-    //   } finally {
-    //     setSaving(false);
-    //   }
-    // }
     if (state) {
       try {
         const portfolioResponse = await savePortfolio(isNew);
-        // const oldPages1 = getFetchedPages();
-        const oldPages = getIndexedFetchedPages()
-        // const oldSections:TEditSections = await getFetchedSectionsIndexedAll();
-
-        const pages = JSON.parse(JSON.stringify(oldPages))
-        // const allSections = JSON.parse(JSON.stringify(oldSections))
-        const allSections = getSectionsCopyIndexedAll();
-
-        // // const sections:TEditSections = JSON.parse(JSON.stringify(getFetchedSections(portfolioResponse.data.id)))
-
+        const pages = getPagesIndexedCopy()
+        const allSections = getSectionsIndexedCopyAll();
         for(var page of pages) {
           page.sections = allSections[page.uid]
         }
 
-        // for (var page_index = 0; page_index < pages.length; page_index++) {
-        //   const sections = allSections[pages[page_index].uid]
-        //   for (var section_index = 0; )
-        //   pages[page_index].sections = sections
-        // }
-
-        console.log(oldPages)
-        console.log(pages)
-
         const singlePage = pages[0]
-        const singleSection = allSections[pages[0].uid][0];
         const path = PORTFOLIOS_PATH + "/" + portfolioResponse.data.id + "/pages"
         const pagePath = path + "/" + singlePage.id
-        const sectionsPath = pagePath + "/sections";
-        const sectionPath = sectionsPath + "/" + singleSection.id
-        // await API.put(sectionPath, singleSection, getConfig())
-        await API.patch(pagePath, pages[0], getConfig())
-        // await API.put(sectionsPath, pages[0].sections, getConfig())
-        // console.log(pages)
-        // await API.put(path, pages, getConfig())
-        // await Promise.all([
-        //   savePages(portfolioResponse.data.id),
-        //   savePortfolioLinks(portfolioResponse.data.id)
-        // ]);
+
+        await API.patch(pagePath, singlePage, getConfig())
+
         await setSuccessMessage("Portfolio saved");
       } catch (e) {
         setErrorMessage(e.message);

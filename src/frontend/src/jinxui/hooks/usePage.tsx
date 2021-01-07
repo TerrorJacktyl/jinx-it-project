@@ -173,12 +173,20 @@ export const usePage = () => {
     return state;
   }
 
-  function getIndexedFetchedPages(){
-    for (var i = 0; i < state.length; i++) {
-      updateState(i, {number: i})
+  function getPagesIndexedCopy() {
+    const pages = JSON.parse(JSON.stringify(state));
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].number = i
     }
-    return state
-  } 
+    return pages
+  }
+
+  // function getIndexedFetchedPages(){
+  //   for (var i = 0; i < state.length; i++) {
+  //     updateState(i, {number: i})
+  //   }
+  //   return state
+  // } 
 
   function getFetchedPageId(uid: string) {
     for (var page of state) {
@@ -275,7 +283,8 @@ export const usePage = () => {
     fetchPages,
     setPages,
     getFetchedPages,
-    getIndexedFetchedPages,
+    // getIndexedFetchedPages,
+    getPagesIndexedCopy,
     getFetchedPageId,
     savePage,
     savePages,
