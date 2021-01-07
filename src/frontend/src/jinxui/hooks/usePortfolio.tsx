@@ -110,7 +110,7 @@ export const usePortfolio = () => {
     setErrorMessage,
     setSuccessMessage,
   } = useUser();
-  const { fetchPages, savePages, resetPages, getPagesIndexedCopy } = usePage();
+  const { fetchPages, resetPages, getPagesIndexedCopy } = usePage();
   const { fetchSectionsAll, resetSections, getFetchedSectionsAll, getSectionsIndexedCopyAll } = useSection();
   const { fetchPortfolioLinks, savePortfolioLinks, resetPortfolioLinks, getFetchedPortfolioLinks } = useLink();
 

@@ -5,12 +5,14 @@ import PostAddIcon from "@material-ui/icons/PostAdd";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import { usePage } from "jinxui";
+import { useUser, usePortfolio, usePage } from "jinxui";
 
 type TPageEdit = {
   pageIndex?: number;
 };
 const PageEdit = (props: TPageEdit) => {
+  const { setSuccessMessage, setErrorMessage } = useUser();
+  const { getFetchedPortfolio } = usePortfolio();
   const {
     handlePageDelete,
     handlePageAdd,
@@ -21,13 +23,24 @@ const PageEdit = (props: TPageEdit) => {
 
   function handleDelete() {
     if (props.pageIndex !== undefined) {
-      handlePageDelete(props.pageIndex);
+      handlePageDelete(getFetchedPortfolio().id, props.pageIndex)
+        .then(() => {
+          setSuccessMessage("Page deleted");
+        })
+        .catch((error: any) => {
+          setErrorMessage(error.message);
+        });
     }
   }
 
   function handleAdd() {
     if (props.pageIndex !== undefined) {
-      handlePageAdd(props.pageIndex);
+      try {
+        handlePageAdd(getFetchedPortfolio().id, props.pageIndex);
+        setSuccessMessage("New page added");
+      } catch (e) {
+        setErrorMessage(e.message);
+      }
     }
   }
 
@@ -39,7 +52,7 @@ const PageEdit = (props: TPageEdit) => {
 
   function handleMoveDown() {
     if (props.pageIndex !== undefined) {
-      handlePageMoveDown(props.pageIndex)
+      handlePageMoveDown(props.pageIndex);
     }
   }
 
@@ -62,13 +75,14 @@ const PageEdit = (props: TPageEdit) => {
         <Box>
           {props.pageIndex !== undefined ? (
             <>
-            <Button onClick={handleMoveDown} disabled={props.pageIndex > getFetchedPages().length - 1}>
-
-              <ArrowDownwardIcon />
-            </Button>
+              <Button
+                onClick={handleMoveDown}
+                disabled={props.pageIndex > getFetchedPages().length - 1}
+              >
+                <ArrowDownwardIcon />
+              </Button>
               <Button onClick={handleMoveUp} disabled={props.pageIndex < 1}>
-
-              <ArrowUpwardIcon />
+                <ArrowUpwardIcon />
               </Button>
               <Button
                 onClick={handleDelete}

@@ -363,7 +363,6 @@ export const useSection = () => {
     handleSectionDeletePage,
     handleSectionMoveUp,
     handleSectionMoveDown,
-    // saveSectionsAll,
     saveSections,
     updateSectionLinks,
     getFetchedSectionLinks,

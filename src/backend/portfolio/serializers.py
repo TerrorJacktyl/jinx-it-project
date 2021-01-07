@@ -299,8 +299,8 @@ class PolymorphSectionSerializer(SectionSerializer):
                 {'type': 'this type does not exist'}
             ) from ex
         
-
-        self.context['page'] = data['id']
+        if data['id'] > 0:
+            self.context['page'] = data['id']
 
         serialized = serializer(
             context = self.context,
@@ -363,6 +363,21 @@ class TextSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
         model = models.TextSection
         fields = SectionSerializer.Meta.fields + ['content']
+
+    def create(self, validated_data):
+        for item in ['image', 'media', 'path', 'uid']:
+            validated_data.pop(item, None)
+
+        links_data = validated_data.pop('links', None)
+        # !!! LINKS NOT ADDRESSED
+        page_id = validated_data.pop('page', None)
+        # page_id = self.context['page']
+        pageObj = models.Page.objects.get(id=page_id)
+        text_section = models.TextSection.objects.create(
+            page=pageObj,
+            **validated_data
+        )
+        return text_section
 
 
 

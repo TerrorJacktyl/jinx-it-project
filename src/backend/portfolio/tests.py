@@ -264,7 +264,7 @@ class PageNestTest(UserMixin, PortfolioMixin, APITestCase):
                     'number': 1,
                     'type': 'text',
                     'content': 'lorem two',
-                    'id': 2,
+                    'id': 22,
                     'links': [
                         {
                             'address': 'http://facebook.com',

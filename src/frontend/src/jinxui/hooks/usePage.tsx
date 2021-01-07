@@ -33,6 +33,7 @@ async function postPage(portfolioId: number, data: TEditPage, config: any) {
       {
         name: data.name,
         number: data.number,
+        sections: data.sections,
       },
       config
     );
@@ -42,33 +43,13 @@ async function postPage(portfolioId: number, data: TEditPage, config: any) {
   }
 }
 
-async function postPages(
-  portfolioId: number,
-  pages: TEditPage[],
-  updatePages: any,
-  saveSections: any,
-  config: any
-) {
-  const basePath = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages";
+async function deletePage(portfolioId: number, pageId: number, config: any) {
+  const path = PORTFOLIOS_PATH + "/" + portfolioId.toString() + "/pages/" 
+    + pageId.toString();
   try {
-    pages.map((page: TEditPage, index: number) => {
-      const outerResponse = API.post(
-        basePath,
-        { name: page.name, number: page.number },
-        config
-      )
-        .then((response: any) => {
-          saveSections(portfolioId, response.data.id, page.uid);
-          updatePages(index, { id: response.data.id, isNew: false });
-          return response;
-        })
-        .catch((error: any) => {
-          console.log(error);
-          throw error;
-        });
-      return outerResponse;
-    });
-  } catch (e) {
+    const response = await API.delete(path, config)
+    return response.data;
+  } catch(e) {
     throw e;
   }
 }
@@ -181,13 +162,6 @@ export const usePage = () => {
     return pages
   }
 
-  // function getIndexedFetchedPages(){
-  //   for (var i = 0; i < state.length; i++) {
-  //     updateState(i, {number: i})
-  //   }
-  //   return state
-  // } 
-
   function getFetchedPageId(uid: string) {
     for (var page of state) {
       if (page.uid === uid) {
@@ -215,34 +189,12 @@ export const usePage = () => {
     }
   }
 
-  async function savePages(portfolioId: number) {
-    const newPages = [];
-    const existingPages = [];
-
-    for (var page of state){
-      if (page.isNew === true) {
-        newPages.push(page)
-      } else {
-        existingPages.push(page)
-      }
-    }
-
+  async function handlePageDelete(portfolioId: number, index: number) {
     try {
-      await postPages(
-        portfolioId,
-        newPages,
-        updateState,
-        saveSections,
-        getConfig()
-      );
-      await putPages(portfolioId, existingPages, saveSections, getConfig());
-      await deleteOldPages(portfolioId, state, getConfig());
+      await deletePage(portfolioId, state[index].id, getConfig())
     } catch (e) {
       throw e;
     }
-  }
-
-  function handlePageDelete(index: number) {
     try {
       setState(listDelete(state, index));
       handleSectionDeletePage(state[index].uid);
@@ -251,11 +203,12 @@ export const usePage = () => {
     }
   }
 
-  function handlePageAdd(index: number) {
+  async function handlePageAdd(portfolioId: number, index: number, ) {
     const newPage = JSON.parse(JSON.stringify(defaultPageContext));
-    newPage.uid = uuidv4();
-    setState(listAdd(state, index, newPage));
-    handleSectionAddPage(newPage.uid);
+    const postedPage = await postPage(portfolioId, newPage, getConfig());
+    postedPage.uid = uuidv4();
+    setState(listAdd(state, index, postedPage));
+    handleSectionAddPage(postedPage.uid);
   }
 
   function handlePageMoveUp(index: number) {
@@ -283,11 +236,10 @@ export const usePage = () => {
     fetchPages,
     setPages,
     getFetchedPages,
-    // getIndexedFetchedPages,
     getPagesIndexedCopy,
     getFetchedPageId,
     savePage,
-    savePages,
+    // savePages,
     handlePageDelete,
     handlePageAdd,
     handlePageMoveUp,
