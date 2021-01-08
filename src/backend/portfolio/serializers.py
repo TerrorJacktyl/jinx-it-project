@@ -1,4 +1,5 @@
 import copy
+import numbers
 
 from rest_framework import serializers
 
@@ -267,29 +268,11 @@ class PolymorphSectionSerializer(SectionSerializer):
             'image_text' : ImageTextSectionSerializer,
         }
 
-    def to_representation(self, instance):
+    def get_section_type(self, instance, data):
         section_type = ''
-        try:
-            section_type = instance.type
-        except KeyError:
-            pass
-        if section_type == '':
+        if instance:
             try:
-                section_type = self.context['type']
-            except KeyError as ex:
-                raise serializers.ValidationError(
-                    {'type': 'this type does not exist'}
-                ) from ex
-        serializer = self.get_serializer_map()[section_type]
-        return serializer(instance, context=self.context).to_representation(instance)
-
-    def to_internal_value(self, data):
-        # val = super().to_internal_value(data)
-
-        section_type = ''
-        if self.instance:
-            try: 
-                section_type = self.instance.type
+                section_type = instance.type
             except KeyError:
                 pass
         if section_type == '':
@@ -299,6 +282,17 @@ class PolymorphSectionSerializer(SectionSerializer):
                 raise serializers.ValidationError(
                     {'type': 'this field is missing'}
                 ) from ex
+        return section_type
+
+    def to_representation(self, instance):
+        section_type = self.get_section_type(instance, self.context)
+        serializer = self.get_serializer_map()[section_type]
+        return serializer(instance, context=self.context).to_representation(instance)
+
+    def to_internal_value(self, data):
+        # val = super().to_internal_value(data)
+        section_type = self.get_section_type(self.instance, data)
+        
         try:
             serializer = self.get_serializer_map()[section_type]
         except KeyError as ex:
@@ -306,8 +300,8 @@ class PolymorphSectionSerializer(SectionSerializer):
                 {'type': 'this type does not exist'}
             ) from ex
         
-        if data['id'] > 0:
-            self.context['page'] = data['id']
+        # if data['id'] > 0:
+        #     self.context['page'] = data['id']
 
         serialized = serializer(
             context = self.context,
@@ -330,6 +324,8 @@ class PolymorphSectionSerializer(SectionSerializer):
         self.context['type'] = validated_data.pop('type', None)
         # update the ordering later
         number = validated_data.pop('number', None)
+        # uid not used
+        validated_data.pop('uid', None)
 
         # update links seperately
         links = validated_data.pop('links', None)
@@ -340,9 +336,14 @@ class PolymorphSectionSerializer(SectionSerializer):
             } for link in links]
 
         # page not needed for super update
-        validated_data.pop('page', None)
+        # validated_data.pop('page', None)
+        
+        if (
+            'page' in validated_data and 
+            isinstance(validated_data['page'], numbers.Number)):
+                page_obj = models.Page.objects.get(id=validated_data['page'])
+                validated_data['page'] = page_obj
 
-        temp_super = super()
 
         # update the other fields
         super().update(instance, validated_data)
@@ -364,7 +365,6 @@ class PolymorphSectionSerializer(SectionSerializer):
         for link_instance in link_instances:
             instance.links.add(link_instance)
 
-        # instance.type = type
         return instance
 
 
