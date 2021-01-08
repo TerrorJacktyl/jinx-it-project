@@ -340,7 +340,9 @@ class PolymorphSectionSerializer(SectionSerializer):
             } for link in links]
 
         # page not needed for super update
-        page = validated_data.pop('page', None)
+        validated_data.pop('page', None)
+
+        temp_super = super()
 
         # update the other fields
         super().update(instance, validated_data)
@@ -424,6 +426,9 @@ class ImageSectionSerializer(SectionSerializer):
             fields,
             models.ImageSection
         )
+
+    def update(self, instance, validated_data):
+        super.update(instance, validated_data)
 
         
 class ImageTextSectionSerializer(SectionSerializer):
