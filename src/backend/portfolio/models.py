@@ -153,11 +153,6 @@ class ImageSection(Section):
     image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
 
 
-# class ProjectSection(Section):
-
-#     content = models.TextField(blank=True)
-
-
 class Link(models.Model):
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='links'

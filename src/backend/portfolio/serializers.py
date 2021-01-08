@@ -268,13 +268,20 @@ class PolymorphSectionSerializer(SectionSerializer):
         }
 
     def to_representation(self, instance):
+        section_type = ''
         try:
-            serializer = self.get_serializer_map()['text']
-            return serializer(instance, context=self.context).to_representation(instance)
-        except KeyError as ex:
-            raise serializers.ValidationError(
-                {'type': 'this type does not exist'}
-            ) from ex
+            section_type = instance.type
+        except KeyError:
+            pass
+        if section_type == '':
+            try:
+                section_type = self.context['type']
+            except KeyError as ex:
+                raise serializers.ValidationError(
+                    {'type': 'this type does not exist'}
+                ) from ex
+        serializer = self.get_serializer_map()[section_type]
+        return serializer(instance, context=self.context).to_representation(instance)
 
     def to_internal_value(self, data):
         # val = super().to_internal_value(data)
@@ -320,7 +327,7 @@ class PolymorphSectionSerializer(SectionSerializer):
         return serializer(context=self.context).create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data.pop('type', None)
+        self.context['type'] = validated_data.pop('type', None)
         # update the ordering later
         number = validated_data.pop('number', None)
 
@@ -355,8 +362,20 @@ class PolymorphSectionSerializer(SectionSerializer):
         for link_instance in link_instances:
             instance.links.add(link_instance)
 
+        # instance.type = type
         return instance
 
+
+class ImageInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Image
+        fields = ['id', 'name', 'path']
+
+
+class ImageOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Image
+        fields = ['id', 'owner', 'name', 'path']
 
 class TextSectionSerializer(SectionSerializer):
     links = SectionLinkDetailSerializer(many=True)
@@ -365,50 +384,103 @@ class TextSectionSerializer(SectionSerializer):
         fields = SectionSerializer.Meta.fields + ['content']
 
     def create(self, validated_data):
-        for item in ['image', 'media', 'path', 'uid']:
-            validated_data.pop(item, None)
-
-        links_data = validated_data.pop('links', None)
-        # !!! LINKS NOT ADDRESSED
-        page_id = validated_data.pop('page', None)
-        # page_id = self.context['page']
-        pageObj = models.Page.objects.get(id=page_id)
-        text_section = models.TextSection.objects.create(
-            page=pageObj,
-            **validated_data
+        return create_section(
+            self.context,
+            validated_data,
+            self.fields.fields.keys(),
+            models.TextSection
         )
-        return text_section
-
-
 
 class MediaSectionSerializer(SectionSerializer):
     links = SectionLinkDetailSerializer(many=True)
     class Meta(SectionSerializer.Meta):
         model = models.MediaSection
         fields = SectionSerializer.Meta.fields + ['media']
-
-class ImageInputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Image
-        fields = ['id', 'name', 'path']
-
-class ImageOutputSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Image
-        fields = ['id', 'owner', 'name', 'path']
+    
+    def create(self, validated_data):
+        return create_section(
+            self.context,
+            validated_data,
+            self.fields.fields.keys(),
+            models.MediaSection
+        )
 
 class ImageSectionSerializer(SectionSerializer):
     path = serializers.ImageField(source='image.path', read_only = True)
+    # image = ImageOutputSerializer(many=False, read_only=True)
     class Meta(SectionSerializer.Meta):
         model = models.ImageSection
         fields = SectionSerializer.Meta.fields + ['image', 'path']
+    
+    def create(self, validated_data):
+        image_id = validated_data.pop('image')
+        image_obj = models.Image.objects.get(id=image_id)
+        validated_data['image'] = image_obj
+        fields = list(self.fields.fields.keys())
+        fields.remove('path')
+        return create_section(
+            self.context,
+            validated_data,
+            fields,
+            models.ImageSection
+        )
+
         
 class ImageTextSectionSerializer(SectionSerializer):
     path = serializers.ImageField(source='image.path', read_only = True)
     class Meta(SectionSerializer.Meta):
         model = models.ImageTextSection
         fields = SectionSerializer.Meta.fields + ['image', 'content', 'path']
+    
+    def create(self, validated_data):
+        image_id = validated_data.pop('image')
+        image_obj = models.Image.objects.get(id=image_id)
+        validated_data['image'] = image_obj
+        fields = list(self.fields.fields.keys())
+        fields.remove('path')
+        return create_section(
+            self.context,
+            validated_data,
+            fields,
+            models.ImageTextSection,
+        )
 
+
+def create_section(context, validated_data, fields, section_model):
+    links = validated_data.pop('links', None)
+    page_id = validated_data.pop('page', None)
+    page_obj = models.Page.objects.get(id=page_id)
+
+    # Get just the data required for creation of section
+    section_data = {}
+    for item in validated_data:
+        if item in fields:
+            section_data[item] = validated_data[item]
+
+    # Create the section object
+    section = section_model.objects.create(
+        page=page_obj,
+        **section_data
+    )
+
+    # Gather links information
+    links_data = []
+    for link in links:
+        links_data.append(
+            {
+                'owner': context['owner'],
+                'section': section,
+                'link': link,
+            }
+        )
+
+    # Create section link
+    SectionLinkSerializer(
+        context=context,
+        child=SectionLinkDetailSerializer(),
+    ).create(links_data)
+
+    return section
 
 class PageListInputSerializer(serializers.ListSerializer):
     sections = SectionListSerializer()
@@ -489,6 +561,7 @@ class PageInputSerializer(serializers.ModelSerializer):
             section_mapping = {section.id: section for section in sectionInstances}
             context = self.context
             context['in_list'] = True
+            context['owner'] = instance.owner
             child_serializer = PolymorphSectionSerializer(context=context)
 
             # update sections
