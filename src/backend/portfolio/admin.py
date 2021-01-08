@@ -45,7 +45,7 @@ class MediaSectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'page', 'number']
+    list_display = ['name', 'page', 'number', 'id']
 
 @admin.register(models.Link)
 class LinkAdmin(admin.ModelAdmin):

@@ -407,7 +407,7 @@ class MediaSectionSerializer(SectionSerializer):
 
 class ImageSectionSerializer(SectionSerializer):
     path = serializers.ImageField(source='image.path', read_only = True)
-    # image = ImageOutputSerializer(many=False, read_only=True)
+    image = ImageOutputSerializer(many=False, read_only=True)
     class Meta(SectionSerializer.Meta):
         model = models.ImageSection
         fields = SectionSerializer.Meta.fields + ['image', 'path']
@@ -530,6 +530,23 @@ class PageInputSerializer(serializers.ModelSerializer):
             pk=self.context['portfolio_id'])
         return val
 
+    def delete_unused_images(self, owner):
+        user_images = models.Image.objects.filter(owner=owner)
+        for user_image in user_images:
+            image_id = user_image.id
+            image_is_for_deletion = True
+            try:
+                models.ImageSection.objects.get(image_id=image_id)
+                image_is_for_deletion = False
+            except models.ImageSection.DoesNotExist:
+                pass
+            try:
+                models.ImageTextSection.objects.get(image_id=image_id)
+            except models.ImageTextSection.DoesNotExist:
+                pass
+            if image_is_for_deletion:
+                user_image.delete()
+    
     def create(self, validated_data):
         sections = validated_data.pop('sections')
         page = models.Page.objects.create(**validated_data)
@@ -574,8 +591,14 @@ class PageInputSerializer(serializers.ModelSerializer):
             # add updated section to return instance
             for updatedSectionInstance in updatedSectionInstances:
                 instance.sections.add(updatedSectionInstance)
-        
+    
+        self.delete_unused_images(instance.owner)
+
         return instance
+
+
+
+
 
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
