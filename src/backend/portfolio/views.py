@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.db.models import Q
+from django.db import transaction
 
 from rest_framework import generics
 from rest_framework import permissions
@@ -156,18 +157,21 @@ class SectionList(generics.ListCreateAPIView):
         context = super().get_serializer_context()
         # kind of redundant as context['view'] would have the kwargs but just in case
         # the urls change
-        context['page_id'] = self.kwargs['page_id']
+        context['page'] = self.kwargs['page_id']
         return context
 
     swagger_schema = swagger.PortfolioAutoSchema
 
     # bulk section creation/update
     def put(self, request, *args, **kwargs):
+        
+        
         request.data.sort(key=(lambda s: s['number']))
         for i, section in enumerate(request.data):
             section['number'] = i
         context = self.get_serializer_context()
         context['in_list'] = True
+
         serializer = serializers.SectionListSerializer(
             self.get_queryset(),
             data=request.data,
@@ -175,6 +179,7 @@ class SectionList(generics.ListCreateAPIView):
                 context=context
             ),
         )
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -200,7 +205,7 @@ class SectionDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['page_id'] = self.kwargs['page_id']
+        context['page'] = self.kwargs['page_id']
         return context
 
     # modified based on code from GenericAPIView default implementation
@@ -281,3 +286,110 @@ class ImageList(generics.ListCreateAPIView):
         # pylint: disable=no-member
         super().perform_destroy(instance)
         models.Section.objects.normalise(parent_id)
+
+class PageLinkList(generics.ListCreateAPIView):
+    serializer_class = serializers.LinkSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        try:
+            portfolio_id = self.kwargs['portfolio_id']
+            page = self.kwargs['page_id']
+            portfolio = models.Portfolio.objects.get(
+                id=portfolio_id)
+            page = portfolio.pages.get(id=page)
+        except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
+            raise Http404 from exc
+
+        return models.PageLink.objects.filter(page=page)
+
+    def get(self, request, *args, **kwargs):
+        page_links = self.get_queryset()
+        page = kwargs['page_id']
+
+        # Serialize them into a string
+        serializer = serializers.PageLinkSerializer(
+            page_links,
+            child=serializers.PageLinkDetailSerializer(),
+        )
+        # Return the JSON string
+        return Response(serializer.data)
+
+    def set_serializer(self, data_list):
+        return serializers.PageLinkSerializer(
+            self.get_queryset(),
+            data=data_list,
+            child=serializers.PageLinkDetailSerializer(),
+        )
+
+    def get_keywords(self):
+        return "page", "page_id"
+        
+    def put(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+
+class SectionLinkList(generics.ListCreateAPIView):
+    serializer_class = serializers.LinkSerializer
+    permission_class = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        try:
+            portfolio_id = self.kwargs['portfolio_id']
+            page = self.kwargs['page_id']
+            section = self.kwargs['section_id']
+            portfolio = models.Portfolio.objects.get(
+                id=portfolio_id)
+            page = portfolio.pages.get(id=page)
+            section = page.sections.get(id=section)
+        except (models.Portfolio.DoesNotExist, models.Page.DoesNotExist) as exc:
+            raise Http404 from exc
+
+        return models.SectionLink.objects.filter(section=section)
+    
+    def get(self, request, *args, **kwargs):
+        section_links = self.get_queryset()
+        section = kwargs['section_id']
+
+        # Serialize them into a string
+        serializer = serializers.SectionLinkSerializer(
+            section_links,
+            child=serializers.SectionLinkDetailSerializer(),
+        )
+        # Return the JSON string
+        return Response(serializer.data)
+
+    def set_serializer(self, data_list):
+        return serializers.SectionLinkSerializer(
+            self.get_queryset(),
+            data=data_list,
+            child=serializers.SectionLinkDetailSerializer(),
+        )
+
+    def get_keywords(self):
+        return "section", "section_id"
+
+    def put(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return link_association_put(self, request, **kwargs)
+
+
+def link_association_put(view, request, **kwargs):
+
+    data_list = []
+    assoc_name, assoc_id_name = view.get_keywords()
+    for single_request in request.data:
+        data_list.append(
+            {assoc_name: kwargs[assoc_id_name], "link": single_request})
+
+    serializer = view.set_serializer(data_list)
+
+    if(serializer.is_valid()):
+        serializer.save(owner=view.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

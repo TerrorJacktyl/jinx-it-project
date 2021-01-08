@@ -64,7 +64,7 @@ class PageInputSerializer(serializers.ModelSerializer):
 class PageOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Page
-        fields = ['id', 'name', 'number', 'sections']
+        fields = ['id', 'name', 'number', 'sections', 'page_links']
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -106,7 +106,7 @@ class SectionSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data: dict):
         if 'page' not in data:
-            data['page'] = self.context['page_id']
+            data['page'] = self.context['page']
         return super().to_internal_value(data)
 
 
@@ -251,3 +251,113 @@ class ImageTextSectionSerializer(SectionSerializer):
     class Meta(SectionSerializer.Meta):
         model = models.ImageTextSection
         fields = SectionSerializer.Meta.fields + ['image', 'content', 'path']
+
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Link
+        fields = ['id', 'icon', 'address', 'title','number']
+        extra_kwargs = {
+            'id': {'validators': []},
+        }
+
+class PageLinkSerializer(serializers.ListSerializer):
+    link = LinkSerializer()
+    class Meta:
+        model = models.PageLink
+        fields = ['page', 'link']
+
+    def update(self, instance, validated_data):
+        link_mapping = {page_link.link.id: page_link for page_link in instance}
+        return LinkAssociationUpdate(self, validated_data, link_mapping)
+
+
+class SectionLinkSerializer(serializers.ListSerializer):
+    link = LinkSerializer()
+    class Meta:
+        model = models.SectionLink
+        fields = ['section', 'link']
+    
+    def update(self, instance, validated_data):
+        link_mapping = {page_link.link.id: page_link for page_link in instance}
+        return LinkAssociationUpdate(self, validated_data, link_mapping)
+
+def LinkAssociationUpdate(serializer, validated_data, instance_mapping):
+    ret = []
+    for data in validated_data:
+        this_link = data['link']
+        this_id = this_link['id']
+        existing_link = instance_mapping.get(this_id, None)
+        if existing_link is None:
+            ret.append(serializer.child.create(data))
+        else:
+            ret.append(serializer.child.update(existing_link, data))
+
+    # Perform deletions
+    updated_ids = [x.link.id for x in ret]
+    for link_id, link in instance_mapping.items():
+        if link_id not in updated_ids:
+            link.link.delete()
+            link.delete()
+    return ret
+
+
+
+class PageLinkDetailSerializer(serializers.ModelSerializer):
+    link = LinkSerializer()
+    # link = serializers.CharField()
+
+    class Meta:
+        list_serializer_class = PageLinkSerializer
+        model = models.PageLink
+        fields = ['page', 'link']
+
+    def create(self, validated_data):
+        # Store the data for the link seperately
+        owner = validated_data.pop('owner')
+        links_data = validated_data.pop('link')
+        if links_data:
+            link = models.Link.objects.create(owner = owner, **links_data)
+        # Create a new PageLink model that connects to the
+        # newly created Link model
+        page_link = models.PageLink.objects.create(
+            link = link,
+            **validated_data
+        )
+        # Return the nested JSON data
+        return page_link
+    
+    def update(self, instance, validated_data):
+        return association_link_detail_update(instance, validated_data)
+
+class SectionLinkDetailSerializer(serializers.ModelSerializer):
+    link = LinkSerializer()
+
+    class Meta:
+        list_serializer_class = SectionLinkSerializer
+        model = models.SectionLink
+        fields = ['section', 'link']
+    
+    def create(self, validated_data):
+        owner = validated_data.pop('owner')
+        links_data = validated_data.pop('link')
+
+        if links_data:
+            link = models.Link.objects.create(owner = owner, **links_data)
+        
+        section_link = models.SectionLink.objects.create(
+            link = link,
+            **validated_data
+        )
+
+        return section_link
+
+    def update(self, instance, validated_data):
+        return association_link_detail_update(instance, validated_data)
+
+def association_link_detail_update(instance, validated_data):
+    new_link = validated_data.pop('link')
+    for key, value in new_link.items():
+        setattr(instance.link, key, value)
+
+    instance.link.save()
+    return instance

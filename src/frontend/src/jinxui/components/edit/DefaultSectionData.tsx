@@ -13,6 +13,7 @@ const DefaultSectionData: any = () => {
     path: "",
     image: null,
     uid: uuidv4(),
+    links: [],
   };
   return defaultSection;
 };

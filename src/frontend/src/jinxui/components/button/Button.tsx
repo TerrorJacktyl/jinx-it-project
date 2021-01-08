@@ -1,9 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { ButtonProps } from "@material-ui/core";
 import {
-  StylesProvider,
   makeStyles,
   createStyles,
 } from "@material-ui/core/styles";

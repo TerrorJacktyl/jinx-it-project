@@ -9,9 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import {
   LightTheme,
   useUser,
-  TPortfolio,
-  TPage,
-  TSection,
+  usePortfolio,
+  useSection,
   HeaderBar,
   Copyright,
   SectionGrid,
@@ -80,44 +79,42 @@ const SkeletonPage = () => (
 const Portfolio = ({ username }: PortfolioProps) => {
   const {
     userData,
-    getFullPortfolio,
     getAccountDetailsFromUsername,
+    isLoading,
+    setLoading,
+    setSaving,
   } = useUser();
 
+  const { fetchFullPortfolio, getFetchedPortfolio } = usePortfolio();
+  const { getCleanedSections } = useSection();
+
+  const sections = getCleanedSections();
+
   const [author, setAuthor] = useState<string>("");
-  const [portfolio, setPortfolio] = useState<TPortfolio>(null);
-  // eslint-disable-next-line
-  const [pages, setPages] = useState<TPage[]>([]);
-  // eslint-disable-next-line
-  const [currPage] = useState<number>(0);
-  // Define as TSection[][] when incorporating multiple pages
-  const [sections, setSections] = useState<TSection[]>([]);
 
   const [error, setError] = useState<boolean>(false);
 
   // Updating portfolio/page/section data
   useEffect(() => {
     const fetchPortfolio = async () => {
+      setSaving(false);
+      setLoading(true);
       setError(false);
       try {
-        const {
-          primary_portfolio,
-          first_name,
-          last_name,
-        } = await getAccountDetailsFromUsername(username);
-        const { portfolio, pages, sections } = await getFullPortfolio(
-          primary_portfolio
+        const { first_name, last_name } = await getAccountDetailsFromUsername(
+          username
         );
+        await fetchFullPortfolio(username);
         setAuthor(`${first_name} ${last_name}`);
-        setPortfolio(portfolio);
-        setPages(pages);
-        setSections(sections);
       } catch (e) {
         setError(true);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPortfolio();
-  }, [username]); // rendering a portfolio depends on the username
+  // rendering a portfolio depends on the username
+  }, [username]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (error) {
     return (
@@ -128,9 +125,9 @@ const Portfolio = ({ username }: PortfolioProps) => {
     );
   }
 
-  const thisTheme = getTheme(portfolio, userData, username);
+  const thisTheme = getTheme(getFetchedPortfolio(), userData, username);
 
-  if (thisTheme.portfolio.theme.name !== "Loading") {
+  if (!isLoading()) {
     // Main Page
     return (
       <>
@@ -144,10 +141,7 @@ const Portfolio = ({ username }: PortfolioProps) => {
           {/* Portfolio theme */}
           <ThemeProvider theme={thisTheme}>
             <CssBaseline />
-            <PortfolioHeader
-              title={portfolio?.name}
-              subtitle={author}
-            ></PortfolioHeader>
+            <PortfolioHeader subtitle={author}></PortfolioHeader>
             <SectionGrid sections={sections} />
           </ThemeProvider>
           <Copyright text={author} />

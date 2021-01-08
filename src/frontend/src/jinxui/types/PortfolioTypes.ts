@@ -7,9 +7,10 @@ export type TPortfolio = {
   owner: number;
   name: string;
   pages: number[];
+  private: boolean;
   theme: string;
   background: string;
-} | null;
+};// | null;
 
 export type TPage = {
   id: number;
@@ -18,13 +19,23 @@ export type TPage = {
   sections: number[];
 };
 
+export type TSectionData = {
+  name: string;
+  content: string;
+  media?: string;
+  image?: number | null;
+  path?: string;
+  alt?: string;
+};
+
 export interface TSection extends TSectionData {
   id?: number;
   type: string;
   number: number;
 }
 export interface TEditSection extends TSection {
-  uid: string
+  uid?: string
+  links: TLink[]
 };
 
 export type TPortfolioData = {
@@ -37,11 +48,23 @@ export type TPageData = {
   number?: number;
 };
 
-export type TSectionData = {
-  name: string;
-  content: string;
-  media?: string;
-  image?: number | null;
-  path?: string;
-  alt?: string;
+
+
+export type TLink = {
+  title?: string;
+  address?: string;
+  icon?: number;
+  id: string;
+  number: number;
 };
+
+export type TPageLink = {
+  page: number;
+  link: TLink;
+}
+
+export type TSectionLink = {
+  section: number;
+  link: TLink;
+}
+

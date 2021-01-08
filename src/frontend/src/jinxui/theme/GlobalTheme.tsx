@@ -1,6 +1,4 @@
 // eslint-disable-next-line
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 
 const LightShadowColour = "20, 60, 126"
@@ -20,7 +18,7 @@ const DarkTheme = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
-      main: "#0081CA",
+      main: "#70C2F2",
     },
     secondary: {
       main: "#00FFC2",
@@ -31,17 +29,19 @@ const DarkTheme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: "Heebo, sans-serif",
-    fontWeightLight: 100,
-    fontWeightMedium: 200,
-    fontWeightRegular: 300,
-    fontWeightBold: 400,
+    fontFamily: "Poppins, sans-serif",
+    body1: {
+      fontSize: "0.95rem",
+      fontWeight: 300,
+    },
     h3: {
       fontWeight: 200,
-      fontSize: "3rem"
+      fontSize: "3rem",
     },
     button: {
-      textTransform: "none"
+      fontSize: "0.98rem",
+      fontWeight: 400,
+      textTransform: "none",
     },
   },
   shadows: [
@@ -72,19 +72,17 @@ const DarkTheme = createMuiTheme({
     "0px 20px 18px -7px rgba(" + DarkShadowColour +  "  0.15),0px 16px 40px 3px rgba( " +  LightShadowColour + ", 0.06),0px 9px 46px 8px rgba(" + LightShadowColour + ", 0.04)",
   ], 
   shape: {
-    borderRadius: 0
+    borderRadius: 0,
   },
   overrides: {
     MuiTooltip: {
       tooltip: {
         fontSize: "0.95em",
         fontWeight: 500,
-      }
+      },
     },
   },
-  portfolio: {
-
-  }
+  portfolio: {},
 });
 
 let LightTheme = createMuiTheme({
@@ -103,18 +101,20 @@ let LightTheme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily: "Heebo, sans-serif",
-    fontWeightLight: 100,
-    fontWeightMedium: 200,
-    fontWeightRegular: 300,
-    fontWeightBold: 400,
+    fontFamily: "Poppins, sans-serif",
     h3: {
       fontWeight: 200,
+      fontSize: "3rem",
+    },
+    body1: {
+      fontSize: "0.95rem",
+      fontWeight: 300,
     },
     button: {
-      textTransform: "none"
+      fontSize: "0.98rem",
+      fontWeight: 400,
+      textTransform: "none",
     },
-
   },
   shadows: [
     "none",

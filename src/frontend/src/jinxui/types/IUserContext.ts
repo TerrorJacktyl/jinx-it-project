@@ -11,6 +11,9 @@ export interface IUserContext {
   lightThemeMode: boolean;
   portfolioId: number;
   theme: string;
-  isSaving: boolean; 
+  isSaving: boolean;
+  isLoading: boolean;
+  successMessage: string;
+  errorMessage: string;
   config: AxiosRequestConfig;
 }

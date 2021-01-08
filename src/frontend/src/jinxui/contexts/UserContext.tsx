@@ -13,6 +13,9 @@ export const defaultUserContext: IUserContext = {
   theme: "",
   lightThemeMode: true,
   isSaving: false,
+  isLoading: false,
+  successMessage: "",
+  errorMessage: "",
   config: {},
 };
 
@@ -28,6 +31,7 @@ export const UserContext = React.createContext<[IUserContext, any, any]>([defaul
  * @param userData new copy of userData to save - ideally the latest context state
  */
 export function storeUserData(userData: IUserContext) {
+  
   localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
 }
 

@@ -6,7 +6,6 @@ import {
   Slide,
   useScrollTrigger,
   StylesProvider,
-  Tooltip,
 } from "@material-ui/core";
 
 import {
@@ -18,6 +17,7 @@ import {
   useUser,
   SecondaryButton,
   Routes,
+  SnackbarAlert,
 } from "jinxui";
 
 import styled from "styled-components";
@@ -96,60 +96,66 @@ const HeaderBar = (props: HeaderBarProps) => {
   const headerGrad =
     props.darkTheme === true ? DarkHeaderGrad : LightHeaderGrad;
 
+  
   return (
-    <StylesProvider injectFirst>
-      <Slide appear={false} direction="down" in={!trigger}>
-        <StyledAppBar
-          color={
-            userData.authenticated || props.hideBGLoggedOut !== true
-              ? "inherit"
-              : "transparent"
-          }
-          elevation={
-            userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0
-          }
-          style={
-            userData.authenticated || props.hideBGLoggedOut !== true
-              ? { background: headerGrad }
-              : {}
-          }
-        >
-          <StyledDivOuter>
-            <StyledDivLeft>
-              {!props.hideLogo ? (
-                <LogoLink lightTheme={!props.darkTheme} />
-              ) : null}
-            </StyledDivLeft>
-            <StyledDivCenter>
-              <StyledDivTitle>
-                <Typography variant="h6">
-                  {props.title ? props.title : ""}
-                </Typography>
-              </StyledDivTitle>
-            </StyledDivCenter>
-            <StyledDivRight>
-              {props.children}
-              {userData.authenticated || props.hideLogin ? null : (
-                <StyledLink
-                  href={
-                    userData.authenticated
-                      ? Routes.PORTFOLIO_DISPLAY_BASE + "/" + userData.username
-                      : Routes.LOGIN
-                  }
-                >
-                  <StyledLogin>Login</StyledLogin>
-                </StyledLink>
-              )}
-              <UserAvatarDropdown />
+    <>
+      <SnackbarAlert />
+      <StylesProvider injectFirst>
+        <Slide appear={false} direction="down" in={!trigger}>
+          <StyledAppBar
+            color={
+              userData.authenticated || props.hideBGLoggedOut !== true
+                ? "inherit"
+                : "transparent"
+            }
+            elevation={
+              userData.authenticated || props.hideBGLoggedOut !== true ? 4 : 0
+            }
+            style={
+              userData.authenticated || props.hideBGLoggedOut !== true
+                ? { background: headerGrad }
+                : {}
+            }
+          >
+            <StyledDivOuter>
+              <StyledDivLeft>
+                {!props.hideLogo ? (
+                  <LogoLink lightTheme={!props.darkTheme} />
+                ) : null}
+              </StyledDivLeft>
+              <StyledDivCenter>
+                <StyledDivTitle>
+                  <Typography variant="h5">
+                    {props.title ? props.title : ""}
+                  </Typography>
+                </StyledDivTitle>
+              </StyledDivCenter>
+              <StyledDivRight>
+                {props.children}
+                {userData.authenticated || props.hideLogin ? null : (
+                  <StyledLink
+                    href={
+                      userData.authenticated
+                        ? Routes.PORTFOLIO_DISPLAY_BASE +
+                          "/" +
+                          userData.username
+                        : Routes.LOGIN
+                    }
+                  >
+                    <StyledLogin>Login</StyledLogin>
+                  </StyledLink>
+                )}
+                <UserAvatarDropdown />
                 <PortfolioDropdown
                   isUserView={props.isUserView}
                   isUserEdit={props.isUserEdit}
                 />
-            </StyledDivRight>
-          </StyledDivOuter>
-        </StyledAppBar>
-      </Slide>
-    </StylesProvider>
+              </StyledDivRight>
+            </StyledDivOuter>
+          </StyledAppBar>
+        </Slide>
+      </StylesProvider>
+    </>
   );
 };
 

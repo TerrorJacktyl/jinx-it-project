@@ -1,27 +1,28 @@
 import React from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import MenuItem from "@material-ui/core/MenuItem";
+import Tooltip from "@material-ui/core/Tooltip";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddIcon from "@material-ui/icons/Add";
 import SubjectSharp from "@material-ui/icons/SubjectSharp";
 import InsertPhotoSharp from "@material-ui/icons/InsertPhotoSharp";
 import VerticalSplitSharp from "@material-ui/icons/VerticalSplitSharp";
-import Tooltip from "@material-ui/core/Tooltip"
 
-import { PrimaryMenu, DefaultSectionData } from "jinxui";
+import { PrimaryMenu, DefaultSectionData, useSection } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
 
 type TNewSectionMenu = {
   section: any;
-  sections: any;
-  setSections: any;
   placeAbove?: boolean;
 };
 
+
+
 const NewSectionMenu = (props: TNewSectionMenu) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { getFetchedSections, handleSectionChange } = useSection();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -46,7 +47,7 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
   const addSection = (section_type: string) => {
     setAnchorEl(null);
 
-    const index = props.sections.findIndex(
+    const index = getFetchedSections().findIndex(
       (p: TEditSection) => p.uid === props.section.uid
     );
 
@@ -54,18 +55,12 @@ const NewSectionMenu = (props: TNewSectionMenu) => {
     const newSection = DefaultSectionData();
     newSection.type = section_type;
 
-    props.setSections((sections: any) => [
-      ...sections.slice(0, target_index),
-      newSection,
-      ...sections.slice(target_index),
-    ]);
-
+    handleSectionChange(target_index, newSection);
   };
 
   return (
     <div>
       <Tooltip title="Add new section" arrow>
-
       <IconButton onClick={handleClick}>
         <AddIcon />
       </IconButton>

@@ -96,7 +96,7 @@ const sunset: Theme = createTheme({
         }
     },
     palette: {
-        type: "light",
+        type: "dark",
         primary: {
             "main": "#ffa183",
         },
@@ -522,6 +522,10 @@ const sand: Theme = createTheme({
             fontSize: "1.6rem",
             lineHeight: 2,
         },
+        h6: {
+            fontWeight: 400,
+            fontSize: "1.1rem",
+        },
         body1: {
             fontSize: "1.3rem",
             lineHeight: 1.5,
@@ -545,6 +549,7 @@ const sand: Theme = createTheme({
             horizontalAlign: "flex-start",
             textAlign: "left",
             allCaps: "true",
+            disableSubtitleGap: "true",
         },
         section: {
             spacing: 7,

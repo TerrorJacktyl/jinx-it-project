@@ -6,6 +6,7 @@ import {
   TwoColumnSectionDiv,
   TextFieldSubSection,
   NewSectionMenu,
+  useSection,
 } from "jinxui";
 
 import { TEditSection } from "jinxui/types";
@@ -16,12 +17,12 @@ type TImageTextSectionInput = {
   handleChange: any;
   handleTitleChange: any;
   handlePublish: any;
-  sections: any;
-  setSections: any;
 };
 
 const ImageTextSectionInput = (props: TImageTextSectionInput) => {
-  const index = props.sections.findIndex(
+  const { getFetchedSections } = useSection();
+
+  const index = getFetchedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
 
@@ -30,17 +31,12 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
-          sections={props.sections}
-          setSections={props.setSections}
           placeAbove={true}
         />
       )}
       <PaperSection
         section={props.section}
-        sections={props.sections}
-        setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
-        handlePublish={props.handlePublish}
       >
         <TwoColumnSectionDiv>
 
@@ -57,8 +53,6 @@ const ImageTextSectionInput = (props: TImageTextSectionInput) => {
       </PaperSection>
       <NewSectionMenu
         section={props.section}
-        sections={props.sections}
-        setSections={props.setSections}
       />
     </>
   );

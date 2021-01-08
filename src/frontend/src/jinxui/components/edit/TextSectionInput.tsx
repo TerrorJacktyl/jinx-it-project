@@ -1,7 +1,7 @@
 import React from "react";
 import { PaperSection, TextFieldSubSection, OneColumnSectionDiv } from "jinxui";
 import { TEditSection } from "jinxui/types";
-import { NewSectionMenu } from "jinxui";
+import { NewSectionMenu, useSection } from "jinxui";
 
 type TTextSectionProps = {
   key: string;
@@ -9,12 +9,14 @@ type TTextSectionProps = {
   handleChange: any;
   handlePublish: any;
   handleTitleChange: any;
-  sections: any;
-  setSections: any;
+  // sections: any;
+  // setSections: any;
 };
 
 const TextSectionInput = (props: TTextSectionProps) => {
-  const index = props.sections.findIndex(
+  const { getFetchedSections } = useSection();
+
+  const index = getFetchedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
 
@@ -25,8 +27,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
-          sections={props.sections}
-          setSections={props.setSections}
           placeAbove={true}
         />
       )}
@@ -35,10 +35,7 @@ const TextSectionInput = (props: TTextSectionProps) => {
 
       <PaperSection
         section={props.section}
-        sections={props.sections}
-        setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
-        handlePublish={props.handlePublish}
       >
         <OneColumnSectionDiv>
           <TextFieldSubSection
@@ -53,8 +50,6 @@ const TextSectionInput = (props: TTextSectionProps) => {
 
       <NewSectionMenu
         section={props.section}
-        sections={props.sections}
-        setSections={props.setSections}
       />
     </>
   );

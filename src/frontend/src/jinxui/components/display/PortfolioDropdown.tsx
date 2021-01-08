@@ -23,6 +23,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import {
   HeaderButton,
   useUser,
+  usePortfolio,
   HeaderMediaWidth,
   PrimaryMenu,
   Routes,
@@ -35,12 +36,11 @@ const DivWrapper = styled.div`
 `;
 
 const StyledName = styled(HeaderButton)`
-  font-size: 20px;
   text-transform: none;
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left: 10px;
-  padding-right: 10px
+  padding-right: 10px;
 `;
 
 const StyledInnerName = styled.div`
@@ -217,52 +217,48 @@ const ThemeMenuItem = React.forwardRef((props: TThemeMenu, ref: any) => {
 
 type TShareMenuItem = {
   handleShareLink: any;
-  isPrivate: boolean;
   rest_disabled: boolean;
 };
-const ShareMenuItem = React.forwardRef((props: TShareMenuItem, ref: any) => (
+const ShareMenuItem = React.forwardRef((props: TShareMenuItem, ref: any) => {
+const { isPrivate } = usePortfolio();
+return(
   <MenuItem
     ref={ref}
     onClick={props.handleShareLink}
-    disabled={props.rest_disabled || props.isPrivate}
+    disabled={props.rest_disabled || isPrivate()}
   >
     <ListItemIcon>
       <ShareIcon />
     </ListItemIcon>
     <ListItemText primary="Copy Link" />
   </MenuItem>
-));
+)});
 
 type TPrivateMenuItem = {
   setOpen: any;
   rest_disabled: boolean;
-  isPrivate: boolean;
-  setIsPrivate: any;
-  setSuccessMessage: any;
-  setErrorMessage: any;
 };
-
 const PrivacyMenuItem = React.forwardRef(
   (props: TPrivateMenuItem, ref: any) => {
+    const { userData, setSuccessMessage, setErrorMessage } = useUser();
+
     const {
-      userData,
       makePortfolioPrivate,
       makePortfolioPublic,
-      getPortfolio,
-    } = useUser();
+      isPrivate,
+    } = usePortfolio();
 
     const handleMakePublic = () => {
       props.setOpen(false);
       makePortfolioPublic(userData.portfolioId)
-      .then((response: any) => {
-        props.setSuccessMessage("Portfolio is now public")
-          if (response) {
-            props.setIsPrivate(response.data.private);
-          }
+        .then((response: any) => {
+          setSuccessMessage("Portfolio is now public");
         })
         .catch((error: any) => {
           console.log(error);
-          props.setErrorMessage("Unable to set portfolio to private, something went wrong")
+          setErrorMessage(
+            "Unable to set portfolio to private, something went wrong"
+          );
         });
     };
 
@@ -270,48 +266,26 @@ const PrivacyMenuItem = React.forwardRef(
       props.setOpen(false);
       makePortfolioPrivate(userData.portfolioId)
         .then((response: any) => {
-          props.setSuccessMessage("Portfolio is now private")
-          if (response) {
-            props.setIsPrivate(response.data.private);
-          }
+          setSuccessMessage("Portfolio is now private")
         })
         .catch((error: any) => {
-          props.setErrorMessage("Unable to set portfolio to private, something went wrong")
+          setErrorMessage(
+            "Unable to set portfolio to private, something went wrong"
+          );
           console.log(error);
         });
     };
-
-    React.useEffect(() => {
-      let isMounted = true;
-      if (userData.authenticated) {
-        const fetchPrivacy = async () => {
-          getPortfolio(userData.portfolioId)
-            .then((response: any) => {
-              if (isMounted) {
-                props.setIsPrivate(response.private);
-              }
-            })
-            .catch((error: any) => {
-              console.log(error);
-            });
-        };
-        fetchPrivacy();
-      }
-      return () => {
-        isMounted = false;
-      };
-    }, []);
-
+    
     return (
       <MenuItem
         ref={ref}
-        onClick={props.isPrivate ? handleMakePublic : handleMakePrivate}
+        onClick={isPrivate() ? handleMakePublic : handleMakePrivate}
         disabled={props.rest_disabled}
       >
         <ListItemIcon>
-          {props.isPrivate ? <LockIcon /> : <LockOpenIcon />}
+          {isPrivate() ? <LockIcon /> : <LockOpenIcon />}
         </ListItemIcon>
-        <ListItemText primary={props.isPrivate ? "Make Public" : "Make Private"} />
+        <ListItemText primary={isPrivate() ? "Make Public" : "Make Private"} />
       </MenuItem>
     );
   }
@@ -325,12 +299,9 @@ const PortfolioDropdown = React.forwardRef(
   (props: TPortfolioMenu, ref: any) => {
     const [open, setOpen] = React.useState(false);
     const [themeOpen, themeSetOpen] = React.useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
-    const [isPrivate, setIsPrivate] = React.useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
     const themeAnchorRef = React.useRef<HTMLButtonElement>(null);
-    const { userData } = useUser();
+    const { userData, setSuccessMessage } = useUser();
 
     const handleToggle = () => {
       setOpen((prevOpen) => !prevOpen);
@@ -384,7 +355,7 @@ const PortfolioDropdown = React.forwardRef(
       setOpen(false);
       const path = process.env.REACT_APP_FRONT_URL + "u/" + userData.username;
       navigator.clipboard.writeText(path);
-      setSuccessMessage("Portfolio link copied to clipboard")
+      setSuccessMessage("Portfolio link copied to clipboard");
     };
 
     const view_disabled = props.isUserView === true;
@@ -394,66 +365,58 @@ const PortfolioDropdown = React.forwardRef(
 
     return (
       <>
-        <SnackbarAlert
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
-        />
-      <DivWrapper>
-        {userData.username ? (
-          <StyledName
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-          >
-            <PersonalVideoIcon />
-            <StyledInnerName>My Portfolio</StyledInnerName>
-            <ExpandMoreIcon fontSize="small" />
-          </StyledName>
-        ) : null}
-        <ClickAwayListener onClickAway={handleClose}>
-          <PrimaryMenu
-            id="menu-list-grow"
-            anchorEl={anchorRef.current}
-            role={undefined}
-            disablePortal
-            open={open}
-            onClose={handleClose}
-            onKeyDown={handleListKeyDown}
-          >
-            <EditMenuItem edit_disabled={edit_disabled} />
+        <SnackbarAlert />
+        <DivWrapper>
+          {userData.username ? (
+            <StyledName
+              ref={anchorRef}
+              aria-controls={open ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+            >
+              <PersonalVideoIcon />
+              <StyledInnerName>
+                  My Portfolio
+              </StyledInnerName>
+              <ExpandMoreIcon fontSize="small" />
+            </StyledName>
+          ) : null}
+          <ClickAwayListener onClickAway={handleClose}>
+            <PrimaryMenu
+              id="menu-list-grow"
+              anchorEl={anchorRef.current}
+              role={undefined}
+              disablePortal
+              open={open}
+              onClose={handleClose}
+              onKeyDown={handleListKeyDown}
+            >
+              <EditMenuItem edit_disabled={edit_disabled} />
 
-            <ViewMenuItem
-              view_disabled={view_disabled}
-              edit_disabled={edit_disabled}
-            />
+              <ViewMenuItem
+                view_disabled={view_disabled}
+                edit_disabled={edit_disabled}
+              />
 
-            <ThemeSelectorToggle
-              handleThemeToggle={handleThemeToggle}
-              rest_disabled={rest_disabled}
-              themeOpen={themeOpen}
-            />
+              <ThemeSelectorToggle
+                handleThemeToggle={handleThemeToggle}
+                rest_disabled={rest_disabled}
+                themeOpen={themeOpen}
+              />
 
-            <ThemeMenuItems themeOpen={themeOpen} setOpen={setOpen} />
+              <ThemeMenuItems themeOpen={themeOpen} setOpen={setOpen} />
 
-            <ShareMenuItem
-              rest_disabled={rest_disabled}
-              isPrivate={isPrivate}
-              handleShareLink={handleShareLink}
-            />
-            <PrivacyMenuItem
-              setOpen={setOpen}
-              rest_disabled={rest_disabled}
-              isPrivate={isPrivate}
-              setIsPrivate={setIsPrivate}
-              setSuccessMessage={setSuccessMessage}
-              setErrorMessage={setErrorMessage}
-            />
-          </PrimaryMenu>
-        </ClickAwayListener>
-      </DivWrapper>
+              <ShareMenuItem
+                rest_disabled={rest_disabled}
+                handleShareLink={handleShareLink}
+              />
+              <PrivacyMenuItem
+                setOpen={setOpen}
+                rest_disabled={rest_disabled}
+              />
+            </PrimaryMenu>
+          </ClickAwayListener>
+        </DivWrapper>
       </>
     );
   }

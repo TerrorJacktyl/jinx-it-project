@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import signals
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 from datetime import datetime
 from django.dispatch import receiver
@@ -139,10 +140,6 @@ class Image(models.Model):
     name = models.CharField(max_length=100)
     path = models.ImageField(upload_to=image_path, null=True)
 
-    # @property
-    # def owner(self):
-    #     return self.portfolio.owner
-
     def __str__(self):
         return self.name
 
@@ -155,3 +152,51 @@ class ImageTextSection(Section):
 class ImageSection(Section):
     image = models.ForeignKey(Image, null=True, on_delete=models.SET_NULL)
 
+
+# class ProjectSection(Section):
+
+#     content = models.TextField(blank=True)
+
+
+class Link(models.Model):
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='links'
+    )
+
+    id = models.CharField(
+        max_length = 36,
+        primary_key = True
+    )
+    title = models.TextField(blank=True)
+    icon = models.IntegerField(default = 0)
+    address = models.TextField(blank=True)
+    number = models.IntegerField(default = 0)
+
+    def __str__(self):
+        return self.title + " | " + self.address
+
+
+class PageLink(models.Model):
+    link = models.OneToOneField(
+        Link, 
+        primary_key = True, 
+        on_delete = models.CASCADE
+    )
+    
+    page = models.ForeignKey(
+        Page, 
+        on_delete = models.CASCADE,
+        related_name = 'page_links',
+    )
+
+class SectionLink(models.Model):
+    link = models.OneToOneField(
+        Link,
+        primary_key = True,
+        on_delete = models.CASCADE,
+    )
+    section = models.ForeignKey(
+        Section,
+        on_delete = models.CASCADE,
+        related_name = 'section_links',
+    )

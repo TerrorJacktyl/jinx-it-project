@@ -4,20 +4,21 @@ import {
   OneColumnSectionDiv,
   UploadImageSubSection,
   NewSectionMenu,
+  useSection,
 } from "jinxui";
 import { TEditSection } from "jinxui/types";
 
 type TImageSection = {
   key: string;
   section: TEditSection;
-  sections: any;
-  setSections: any;
   handleTitleChange: any;
   handlePublish: any;
 };
 
 const ImageSectionInput = (props: TImageSection) => {
-  const index = props.sections.findIndex(
+  const { getFetchedSections } = useSection();
+
+  const index = getFetchedSections().findIndex(
     (p: TEditSection) => p.uid === props.section.uid
   );
   return (
@@ -25,17 +26,12 @@ const ImageSectionInput = (props: TImageSection) => {
       {index === 0 && (
         <NewSectionMenu
           section={props.section}
-          sections={props.sections}
-          setSections={props.setSections}
           placeAbove={true}
         />
       )}
       <PaperSection
         section={props.section}
-        sections={props.sections}
-        setSections={props.setSections}
         handleTitleChange={props.handleTitleChange}
-        handlePublish={props.handlePublish}
       >
         <OneColumnSectionDiv>
           <UploadImageSubSection section={props.section} />
@@ -43,8 +39,6 @@ const ImageSectionInput = (props: TImageSection) => {
       </PaperSection>
       <NewSectionMenu
         section={props.section}
-        sections={props.sections}
-        setSections={props.setSections}
       />
     </>
   );

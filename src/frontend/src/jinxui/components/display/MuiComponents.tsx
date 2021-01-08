@@ -11,14 +11,18 @@ import {
   useTheme,
   responsiveFontSizes,
 } from "@material-ui/core/styles";
-import { TSection, defaultColors } from "jinxui";
+import {
+  usePortfolio,
+  TSection,
+  defaultColors,
+  DisplayLinks,
+} from "jinxui";
 
 // Markdown
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-
 
 /* A block that takes up at minimum the height of the screen. Takes an optional */
 export function ScreenBlock(props: any) {
@@ -74,13 +78,9 @@ export function BackgroundImage(props: any) {
   );
 }
 
-export function PortfolioHeader({
-  title,
-  subtitle,
-}: {
-  title?: string;
-  subtitle?: string;
-}) {
+export function PortfolioHeader({ subtitle }: { subtitle?: string }) {
+  const { getFetchedPortfolio } = usePortfolio();
+  const title = getFetchedPortfolio().name;
   const theme = responsiveFontSizes(useTheme());
 
   // Set default values if not defined
@@ -119,10 +119,13 @@ export function PortfolioHeader({
                   theme.portfolio.section?.borderPadding?.toString() + "px"
                 }
                 marginBottom={marginBottom}
-                style={headerBG.isDark === true 
-                  ? { color: theme.palette.common.white } 
-                  : headerBG.isDark === false
-                    ? { color: theme.palette.common.black } : {}}
+                style={
+                  headerBG.isDark === true
+                    ? { color: theme.palette.common.white }
+                    : headerBG.isDark === false
+                    ? { color: theme.palette.common.black }
+                    : {}
+                }
               >
                 <Typography
                   variant="h1"
@@ -144,6 +147,8 @@ export function PortfolioHeader({
                 >
                   {subtitle}
                 </Typography>
+                <Box height="30px" />
+                <DisplayLinks horizontalAlign={horizontalAlign}/>
               </Box>
             </Grid>
           </Container>
@@ -161,7 +166,11 @@ const themeColors = (theme: Theme, index: number) => {
   return [backgroundColor, textColor, isFullHeight];
 };
 
-export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
+// export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
+type TSectionGrid = {
+  sections: TSection[];
+};
+export const SectionGrid = (props: TSectionGrid) => {
   const theme = useTheme();
 
   // Add logic for mapping data to different section components (i.e. timeline) in here
@@ -200,7 +209,7 @@ export const SectionGrid = ({ sections }: { sections: TSection[] }) => {
   return (
     <Box style={isFullHeight ? { background: backgroundColor } : {}}>
       <CentredGrid
-        components={sections.map((section, index) =>
+        components={props.sections.map((section, index) =>
           applyColors(layoutData(section), index)
         )}
       />
@@ -215,7 +224,7 @@ export function CentredGrid({ components }: { components: JSX.Element[] }) {
   return (
     <Grid container spacing={0}>
       {components.map((component, index) => (
-        <Grid item xs={12} key={index} >
+        <Grid item xs={12} key={index}>
           {component}
         </Grid>
       ))}
@@ -327,12 +336,16 @@ export const Section = (data: TSection) => {
                   src={data.path == null ? "" : data.path}
                   alt={data.alt}
                   className={classes.img}
-                  style={{marginTop: "25px"}} // compensate for markdown
+                  style={{ marginTop: "25px" }} // compensate for markdown
                 />
               </Grid>
             ) : null}
             {data.content ? (
               <Grid item xs={12} sm={colsPerItem}>
+                <DisplayLinks 
+                  horizontalAlign="flex-start" 
+                  sectionId={data.id} 
+                  textColor={textColor}/>
                 <Typography variant="body1" component="span">
                   <ReactMarkdown plugins={[gfm]} renderers={renderers}>
                     {data.content}
@@ -348,12 +361,11 @@ export const Section = (data: TSection) => {
 };
 
 export function Copyright({ text }: { text: string }) {
-
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       container: {
-        paddingTop: '2em',
-        paddingBottom: '1em',
+        paddingTop: "2em",
+        paddingBottom: "1em",
       },
     })
   );
@@ -364,15 +376,14 @@ export function Copyright({ text }: { text: string }) {
     <Container maxWidth="sm" className={classes.container}>
       <CopyrightText text={text} />
     </Container>
-  )
+  );
 }
 
 export function CopyrightText({ text }: { text: string }) {
   return (
     <Typography variant="h6" align="center">
       {"Copyright © "}
-      {text}{" "}
-      {new Date().getFullYear()}
+      {text} {new Date().getFullYear()}
       {"."}
     </Typography>
   );
