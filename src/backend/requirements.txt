@@ -36,4 +36,4 @@ uritemplate==3.0.1
 urllib3==1.25.10
 
 ## Image processing
-Pillow==7.2.0
+Pillow==8.1.1
